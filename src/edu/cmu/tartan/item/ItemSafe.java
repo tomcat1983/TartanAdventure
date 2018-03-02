@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 public class ItemSafe extends Item implements Hostable, Openable {
 
+    private int value=10;
+
     public ItemSafe(String d, String sd, String[] a) {
         super(d, sd, a);
         this.installedItem = null;
@@ -56,4 +58,14 @@ public class ItemSafe extends Item implements Hostable, Openable {
 
     protected Item installedItem;
     protected String pin;
+
+    @Override
+    public int value() {
+        return 10;
+    }
+
+    @Override
+    public void setValue(int value) {
+
+    }
 }

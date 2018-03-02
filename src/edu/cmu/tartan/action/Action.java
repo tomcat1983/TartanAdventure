@@ -7,6 +7,7 @@ public enum Action {
     // No object
     ActionLook(new String[]{"lookAround", "l"}, Type.TYPE_HASNOOBJECT),
     ActionDig(new String[]{"dig"}, Type.TYPE_HASNOOBJECT),
+
     ActionJump(new String[]{"jump"}, Type.TYPE_HASNOOBJECT),
     ActionClimb(new String[]{"climb"}, Type.TYPE_HASNOOBJECT),
     ActionViewItems(new String[]{"inventory", "items", "i"}, Type.TYPE_HASNOOBJECT),
@@ -25,9 +26,11 @@ public enum Action {
     ActionGoDown(new String[]{"down", "d"}, Type.TYPE_DIRECTIONAL),
     ActionGoUp(new String[]{"up", "u"}, Type.TYPE_DIRECTIONAL),
 
-    // Diretct Object. Has one direct object e.g. Break shovel, throw lamp
+    // Direct Object. Has one direct object e.g. Break shovel, throw lamp
+    ActionAcquire(new String[]{"acquire"}, Type.TYPE_HASNOOBJECT),
+    ActionBurn(new String[]{"burn"}, Type.TYPE_HASNOOBJECT),
     ActionPickUp(new String[]{"pickup", "get", "take", "acquire", "grab"}, Type.TYPE_HASDIRECTOBJECT),
-    ActionBreak(new String[]{"break", "smash", "destroy", "obliterate"}, Type.TYPE_HASDIRECTOBJECT),
+    ActionDestroy(new String[]{"break", "smash", "destroy", "obliterate"}, Type.TYPE_HASDIRECTOBJECT),
     ActionInspect(new String[]{"inspect", "examine", "read", "view"}, Type.TYPE_HASDIRECTOBJECT),
     ActionDrop(new String[]{"drop"}, Type.TYPE_HASDIRECTOBJECT),
     ActionThrow(new String[]{"throw", "chuck"}, Type.TYPE_HASDIRECTOBJECT),
@@ -36,9 +39,9 @@ public enum Action {
     ActionPush(new String[]{"push", "call"}, Type.TYPE_HASDIRECTOBJECT), // used with elevator
     ActionEat(new String[]{"eat", "chew", "consume", "bite", "swallow", "drink"}, Type.TYPE_HASDIRECTOBJECT), // used with elevator
     ActionWear(new String[]{"wear"}, Type.TYPE_HASDIRECTOBJECT),
-    ActionKill(new String[]{"kill", "murder", "asphixiate", "slaughter", "strangle"}, Type.TYPE_HASDIRECTOBJECT),
+    ActionKill(new String[]{"kill", "murder", "stab", "shoot", "strangle"}, Type.TYPE_HASDIRECTOBJECT),
     ActionOpen(new String[]{"open", "unlock"}, Type.TYPE_HASDIRECTOBJECT),
-    ActionDetonate(new String[]{"detonate", "explode"}, Type.TYPE_HASDIRECTOBJECT),
+    ActionExplode(new String[]{"detonate", "explode"}, Type.TYPE_HASDIRECTOBJECT),
 
     // Indirect Object. Has one direct object and one indirect object, e.g. Put cpu in computer
     ActionPut(new String[]{"put", "install"}, Type.TYPE_HASINDIRECTOBJECT),

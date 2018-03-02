@@ -1,11 +1,23 @@
 package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Holdable;
+import edu.cmu.tartan.properties.Valuable;
 
 import java.util.Scanner;
 import java.util.Stack;
 
-public class ItemWatch extends Item implements Holdable {
+public class ItemWatch extends Item implements Holdable, Valuable {
+
+    private Integer value=15;
+    @Override
+    public int value() {
+        return value;
+    }
+
+    @Override
+    public void setValue(int value) {
+        this.value = value;
+    }
 
     public ItemWatch(String d, String sd, String[] a) {
         super(d, sd, a);

@@ -2,9 +2,12 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Explodable;
 import edu.cmu.tartan.properties.Holdable;
+import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.RoomObscured;
 
-public class ItemDynamite extends Item implements Explodable, Holdable {
+public class ItemDynamite extends Item implements Explodable, Holdable, Valuable {
+    private Integer value;
+
     public ItemDynamite(String s, String sd, String[] a) {
         super(s, sd, a);
         this.exploded = false;
@@ -30,4 +33,14 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
     }
 
     protected boolean exploded;
+
+    @Override
+    public int value() {
+        return value;
+    }
+
+    @Override
+    public void setValue(int value) {
+        this.value = value;
+    }
 }

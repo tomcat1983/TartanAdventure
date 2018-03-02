@@ -12,7 +12,21 @@ import java.util.LinkedList;
 
 public class Player {
 
+    public int getScore() {
+        return score;
+    }
+
+    public Item getDisguise() {
+        return disguise;
+    }
+
+    public Room getCurrentRoom() {
+        return currentRoom;
+    }
+
     private int score;
+
+    private int possiblePoints;
 
     public Item disguise;
 
@@ -20,14 +34,15 @@ public class Player {
 
     private Room currentRoom;
 
-    public Player(Room currentRoom) {
-        this(currentRoom, new LinkedList<Item>());
-        this.score = 0;
+    public Player(Room currentRoom, int p) {
+        this(currentRoom, new LinkedList<Item>(), p);
     }
 
-    public Player(Room currentRoom, LinkedList<Item> items) {
+    public Player(Room currentRoom, LinkedList<Item> items, int p) {
         this.items = items;
         this.disguise = null;
+        this.score = 0;
+        this.possiblePoints = p;
 
         //this.currentRoom = currentRoom;
         this.currentRoom = currentRoom;
@@ -204,11 +219,18 @@ public class Player {
 
     public void score(Valuable object) {
         int score = object.value();
+        score(score);
+    }
+    public void score(int s) {
         System.out.println("You scored " + score + " points.");
-        this.score+=score;
+        score += s;
     }
     public void die() {
-        System.out.println("You scored " + this.score + " out of 90 possible points. You are dead.");
+        System.out.println("You scored " + this.score + " out of  " + possiblePoints + "possible points. You are dead.");
         System.exit(0);
     }
-}	
+
+    public void addPossiblePoints(int p) {
+        possiblePoints += p;
+    }
+}

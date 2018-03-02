@@ -1,5 +1,6 @@
 package edu.cmu.tartan.properties;
 
-public interface Openable {
+public interface Openable extends Valuable  {
 	void open();
+
 }

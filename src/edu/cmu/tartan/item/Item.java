@@ -45,7 +45,7 @@ public class Item implements Comparable, Inspectable, Visible {
         sharedInstances.add(new ItemVendingMachine("machine", "vending machine with assorted candies and treats", new String[]{"machine", "vendor"}));
         sharedInstances.add(new ItemSafe("safe", "bullet-proof safe", new String[]{"safe"}));
         sharedInstances.add(new ItemFolder("folder", "manilla folder", new String[]{"folder"}));
-        sharedInstances.add(new ItemDocument("dossier", "top secret dossier on Amrid Al-Asad", new String[]{"document", "dossier"}));
+        sharedInstances.add(new ItemDocument("document", "Secret document", new String[]{"document"}));
         sharedInstances.add(new ItemGrate("grate", "metal grate", new String[]{"grate", "vent"}));
         sharedInstances.add(new ItemLock("fan", "ventilation fan", new String[]{"fan"}));
         sharedInstances.add(new ItemMetalPole("pole", "metal pole", new String[]{"pole", "rod"}));
@@ -129,6 +129,10 @@ public class Item implements Comparable, Inspectable, Visible {
 
     public String detailDescription() {
         return this.detailDescription;
+    }
+
+    public String description() {
+        return this.description;
     }
 
     public void setDescription(String s) {

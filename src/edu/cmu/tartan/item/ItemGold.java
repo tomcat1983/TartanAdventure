@@ -8,7 +8,7 @@ public class ItemGold extends Item implements Installable, Holdable, Valuable {
 
     public ItemGold(String s, String sd, String[] a) {
         super(s, sd, a);
-        this.value = 0;
+        this.value = 500;
     }
 
     public int value() {

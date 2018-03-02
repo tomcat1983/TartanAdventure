@@ -29,7 +29,7 @@ public class PlayerInterpreter {
             String s = string[0];
             Action action = null;
             out:{
-                for(Action a : Action.values()) {
+                for( Action a : Action.values()) {
                     for(String alias : a.getAliases()) {
                         if(s.compareTo(alias) == 0) {
                             action = a;

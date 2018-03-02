@@ -10,13 +10,15 @@ public class ItemDiamond extends Item implements Holdable, Installable, Valuable
         super(s, sd, a);
     }
 
+    @Override
     public int value() {
-        return this.value;
+        return value;
     }
 
+    @Override
     public void setValue(int value) {
         this.value = value;
     }
 
-    protected int value;
+    private int value=1000;
 }

@@ -1,6 +1,7 @@
 package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.action.Type;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemMagicBox;
 import edu.cmu.tartan.item.ItemWatchMenu;
@@ -21,6 +22,7 @@ public class Game {
     protected Player player;
     private File savedGameFile = null;
     private String gameName = "";
+    private int possiblePoints=0;
 
     public Game() {
 
@@ -37,11 +39,12 @@ public class Game {
 
         // Parse inventory from file
         LinkedList<Item> items = new LinkedList<Item>();
+
         if(items != null) {
-            this.player = new Player(startingRoom, items);
+            this.player = new Player(startingRoom, items, this.possiblePoints);
         }
         else {
-            this.player = new Player(startingRoom);
+            this.player = new Player(startingRoom, this.possiblePoints);
         }
     }
 
@@ -76,22 +79,30 @@ public class Game {
             switch(choice) {
                 case 0:
                     gameName = "Level 1";
-                    return Map.level1();
+                    return Map.level1( this);
                 case 1:
                     gameName = "NJIT";
-                    return Map.njit();
+                    return Map.njit( this);
 
                 case 2:
                     gameName = "Spy Mission";
-                    return Map.mission();
+                    return Map.mission( this );
                 case 3:
                     gameName = "Demo";
-                    return Map.demo();
+                    return Map.demo(this);
                 default:
                     System.out.println("Unknown game.");
                     continue;
             }
         }
+    }
+
+    public void addPossiblePoints(int v) {
+        this.possiblePoints += v;
+    }
+
+    public int getPossiblePoints() {
+        return this.possiblePoints;
     }
 
     private void executeAction(Action a) {
@@ -102,6 +113,10 @@ public class Game {
                 move(a);
                 break;
             case TYPE_HASDIRECTOBJECT:
+                Item val = a.directObject();
+                if (val instanceof Valuable) {
+                    player.score((Valuable) val);
+                }
                 switch(a) {
                     case ActionPickUp: {
                         Item o = a.directObject();
@@ -130,7 +145,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionBreak: {
+                    case ActionDestroy: {
                         Item item = a.directObject();
                         if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if (item instanceof Destroyable) {
@@ -279,7 +294,7 @@ public class Game {
                             }
                             else {
                                 if(item instanceof Holdable) {
-                                    System.out.println("As you forcefully shove the " + a.directObject() + " down your throat, you begin to choke.");
+                                    System.out.println("As you  shove the " + a.directObject() + " down your throat, you begin to choke.");
                                     this.player.die();
                                 }
                                 else {
@@ -328,7 +343,8 @@ public class Game {
                         Item item = a.directObject();
                         if(this.player.hasItem(item) || this.player.currentRoom().hasItem(item)) {
                             if(item instanceof Openable) {
-                                ((Openable)item).open();
+                                Openable o = ((Openable)item);
+                                player.score(o.value());
                             }
                             else {
                                 System.out.println("You cannot open this.");
@@ -339,7 +355,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionDetonate: {
+                    case ActionExplode: {
                         Item dynamite = a.directObject();
                         if(this.player.hasItem(dynamite) || this.player.currentRoom().hasItem(dynamite)) {
                             if(dynamite instanceof Explodable) {
@@ -426,7 +442,6 @@ public class Game {
                         else {
                             System.out.println("You are not allowed to dig here");
                         }
-
                         break;
                     case ActionClimb:
                         move(Action.ActionGoUp);
@@ -444,7 +459,7 @@ public class Game {
                         }
                         else {
                             for(Item item : this.player.getItems()) {
-                                System.out.println("You have a " + item.detailDescription() + ".");
+                                System.out.println("You have a " + item.description() + ".");
                             }
                         }
                         break;
@@ -480,6 +495,10 @@ public class Game {
         }
     }
 
+    /**
+     *
+     * @throws NullPointerException
+     */
     public void start() throws NullPointerException {
 
         this.player.lookAround();
@@ -500,6 +519,20 @@ public class Game {
                 }
                 else if (input.compareTo("help") == 0) {
                     help(this.player);
+                }
+                else if (input.compareTo("status") == 0) {
+                    System.out.println("The current game is '" + gameName + "'");
+                    System.out.println("---\nCurrent status:  " + player.currentRoom());
+                    System.out.println("---\nCurrent score: " + player.getScore());
+
+                    System.out.println("---\nCurrent inventory: ");
+                    if (player.getItems().size() == 0) {
+                        System.out.println("You don't have any items.");
+                    } else {
+                        for (Item i : player.getItems()) {
+                            System.out.println(i.toString() + " ");
+                        }
+                    }
                 }
                 else if (input.compareTo("save") == 0) {
                     // TODO: Save the state of the game
@@ -533,22 +566,34 @@ public class Game {
     private void help(Player player) {
 
         System.out.println(" -- TartanAdvaenture RPG Help Menu -- ");
-        System.out.println("The current game is " + gameName);
-
         System.out.println("To view your current items: type \"inventory\"");
-        System.out.println("You are currently in " + player.currentRoom());
-        System.out.println("The items in this room and their actions:");
-        StringBuilder opts = new StringBuilder();
+        System.out.println("Actions available:");
 
-        for (Item i : this.player.currentRoom().items) {
-            if (i instanceof Hostable) {
+        StringBuilder directions = new StringBuilder("Direction: go [");
+        StringBuilder dirobj = new StringBuilder("Manipulate object directly: [");
+        StringBuilder indirobj = new StringBuilder("Manipulate objects indirectly, e.g. Put cpu in computer: [");
+        StringBuilder misc = new StringBuilder("Misc. actions [");
 
+        for( Action a : Action.values()) {
+            if (a.type() == Type.TYPE_DIRECTIONAL) {
+                for (String s : a.getAliases()) directions.append("'" + s + "' ");
+            } else if (a.type() == Type.TYPE_HASDIRECTOBJECT) {
+                for (String s : a.getAliases()) dirobj.append("'" + s + "' ");
+            } else if (a.type() == Type.TYPE_HASINDIRECTOBJECT) {
+                for (String s : a.getAliases()) indirobj.append("'" + s + "' ");
+            } else if (a.type() == Type.TYPE_UNKNOWN) {
+                for (String s : a.getAliases()) misc.append("'" + s + "' ");
             }
-
         }
+        directions.append("]");
+        dirobj.append("]");
+        indirobj.append("]");
+        misc.append("]");
+        System.out.println(directions.toString());
+        System.out.println(dirobj.toString());
+        System.out.println(indirobj.toString());
+        System.out.println(misc.toString());
 
-        System.out.println("To travel in a direction like north, type \"Go North\"");
-        System.out.println("You can inspect an inspectable item by typing \"Inspect <item>\"");
         System.out.println("You can inspect an inspectable item by typing \"Inspect <item>\"");
     }
 }
