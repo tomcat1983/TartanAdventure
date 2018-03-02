@@ -1,0 +1,9 @@
+package edu.cmu.tartan.action;
+
+public enum Type {
+	TYPE_DIRECTIONAL,
+	TYPE_HASDIRECTOBJECT,
+	TYPE_HASINDIRECTOBJECT,
+	TYPE_HASNOOBJECT,
+	TYPE_UNKNOWN
+}
