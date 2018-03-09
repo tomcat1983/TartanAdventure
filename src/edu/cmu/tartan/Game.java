@@ -2,6 +2,10 @@ package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.Type;
+import edu.cmu.tartan.goal.GameCollectGoal;
+import edu.cmu.tartan.goal.GameExploreGoal;
+import edu.cmu.tartan.goal.GameGoal;
+import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemMagicBox;
 import edu.cmu.tartan.item.ItemWatchMenu;
@@ -12,8 +16,8 @@ import edu.cmu.tartan.room.RoomExcavatable;
 import edu.cmu.tartan.room.RoomRequiredItem;
 
 import java.io.File;
-import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class Game {
 
@@ -22,7 +26,7 @@ public class Game {
     protected Player player;
     private File savedGameFile = null;
     private String gameName = "";
-    private int possiblePoints=0;
+    private Vector<GameGoal> goals = new Vector<>();
 
     public Game() {
 
@@ -33,32 +37,25 @@ public class Game {
             // TODO: load saved game state from a file
         }
 
-        Room startingRoom = chooseGame();
+        configureGame();
 
         this.interpreter = new PlayerInterpreter();
 
-        // Parse inventory from file
-        LinkedList<Item> items = new LinkedList<Item>();
-
-        if(items != null) {
-            this.player = new Player(startingRoom, items, this.possiblePoints);
-        }
-        else {
-            this.player = new Player(startingRoom, this.possiblePoints);
+        for (GameGoal g : goals) {
+            this.player.addGoal(g);
         }
     }
 
-    private Room chooseGame() {
+    private void configureGame() {
 
         ItemWatchMenu menu = new ItemWatchMenu("Choose a game from the options to below: \n");
 
-        ItemWatchMenu m1 = new ItemWatchMenu("Level 1");
-        ItemWatchMenu m2 = new ItemWatchMenu("NJIT");
-        ItemWatchMenu m3 = new ItemWatchMenu("Spy Mission");
-        ItemWatchMenu m4 = new ItemWatchMenu("Demo");
+        ItemWatchMenu m1 = new ItemWatchMenu("Collect");
+//        ItemWatchMenu m2 = new ItemWatchMenu("NJIT");
+        ItemWatchMenu m3 = new ItemWatchMenu("Points");
+        ItemWatchMenu m4 = new ItemWatchMenu("Explore");
 
         menu.add(m1);
-        menu.add(m2);
         menu.add(m3);
         menu.add(m4);
 
@@ -78,31 +75,21 @@ public class Game {
 
             switch(choice) {
                 case 0:
-                    gameName = "Level 1";
-                    return Map.level1( this);
+                    gameName = "Collect";
+                    Map.collectGame(this);
+                    return;
                 case 1:
-                    gameName = "NJIT";
-                    return Map.njit( this);
-
+                    gameName = "Points";
+                    Map.pointsGame( this );
+                    return;
                 case 2:
-                    gameName = "Spy Mission";
-                    return Map.mission( this );
-                case 3:
-                    gameName = "Demo";
-                    return Map.demo(this);
+                    gameName = "Explore";
+                    Map.exploreGame(this);
+                    return;
                 default:
                     System.out.println("Unknown game.");
-                    continue;
             }
         }
-    }
-
-    public void addPossiblePoints(int v) {
-        this.possiblePoints += v;
-    }
-
-    public int getPossiblePoints() {
-        return this.possiblePoints;
     }
 
     private void executeAction(Action a) {
@@ -126,6 +113,7 @@ public class Game {
                                 System.out.println("Taken.");
                                 this.player.currentRoom().remove(o);
                                 this.player.pickup(o);
+
                             }
                             else {
                                 System.out.println("You cannot pick up this item.");
@@ -450,7 +438,7 @@ public class Game {
                         move(Action.ActionGoDown);
                         break;
                     case ActionViewItems:
-                        LinkedList<Item> items = this.player.getItems();
+                        Vector<Item> items = this.player.getCollectedItems();
                         if(this.player.disguise() != null) {
                             System.out.println("You are wearing a " + this.player.disguise() + ".");
                         }
@@ -458,7 +446,7 @@ public class Game {
                             System.out.println("You don't have any items.");
                         }
                         else {
-                            for(Item item : this.player.getItems()) {
+                            for(Item item : this.player.getCollectedItems()) {
                                 System.out.println("You have a " + item.description() + ".");
                             }
                         }
@@ -522,15 +510,24 @@ public class Game {
                 }
                 else if (input.compareTo("status") == 0) {
                     System.out.println("The current game is '" + gameName + "'");
-                    System.out.println("---\nCurrent status:  " + player.currentRoom());
+                    System.out.println("---\nCurrent room:  " + player.currentRoom());
                     System.out.println("---\nCurrent score: " + player.getScore());
 
                     System.out.println("---\nCurrent inventory: ");
-                    if (player.getItems().size() == 0) {
+                    if (player.getCollectedItems().size() == 0) {
                         System.out.println("You don't have any items.");
                     } else {
-                        for (Item i : player.getItems()) {
+                        for (Item i : player.getCollectedItems()) {
                             System.out.println(i.toString() + " ");
+                        }
+                    }
+                    System.out.println("---\nRooms visited: ");
+                    Vector<Room> rooms = player.getRoomsVisited();
+                    if (rooms.size() == 0) {
+                        System.out.println("You have not been to any rooms.");
+                    } else {
+                        for (Room r : rooms) {
+                            System.out.println(r.description() + " ");
                         }
                     }
                 }
@@ -539,6 +536,11 @@ public class Game {
                 }
                 else {
                     executeAction(this.interpreter.interpretString(input));
+                    // every time an action is executed the game state must be evaluated
+                    if (evaluateGame()) {
+                        winGame();
+                        break;
+                    }
                 }
             }
         } catch(Exception e) {
@@ -547,11 +549,40 @@ public class Game {
             start();
         }
 
-        System.out.println("Quitting game...");
+        System.out.println("Game Over :)");
+    }
+
+    private void winGame() {
+        System.out.println("You've won the '" + gameName + "' game!" );
+        System.out.println("---\nFinal score: " + player.getScore());
+
+        System.out.println("---\nFinal inventory: ");
+        if (player.getCollectedItems().size() == 0) {
+            System.out.println("You don't have any items.");
+        } else {
+            for (Item i : player.getCollectedItems()) {
+                System.out.println(i.toString() + " ");
+            }
+        }
+    }
+
+    private Boolean evaluateGame() {
+        Vector<GameGoal> goals = player.getGoals();
+        for (GameGoal g : goals) {
+            // Now assess the goal
+            if (g.isAchieved()) {
+                goals.remove(g);
+            }
+        }
+        return goals.isEmpty();
     }
 
     private void move(Action a) {
         this.player.move(a);
+    }
+
+    public Player getPlayer() {
+        return player;
     }
     private Item containerForItem(Item item) {
         for(Item i : this.player.currentRoom().items) {
@@ -595,5 +626,13 @@ public class Game {
         System.out.println(misc.toString());
 
         System.out.println("You can inspect an inspectable item by typing \"Inspect <item>\"");
+    }
+
+    public void addGoal(GameGoal g) {
+       goals.add(g);
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }

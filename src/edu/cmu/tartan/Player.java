@@ -1,6 +1,7 @@
 package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemMagicBox;
 import edu.cmu.tartan.properties.Hostable;
@@ -9,8 +10,11 @@ import edu.cmu.tartan.room.*;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Vector;
 
 public class Player {
+
+    private Vector<Room> roomsVisited = new Vector<>();
 
     public int getScore() {
         return score;
@@ -24,25 +28,26 @@ public class Player {
         return currentRoom;
     }
 
-    private int score;
+    private int score=0;
 
-    private int possiblePoints;
+    private int possiblePoints=0;
 
-    public Item disguise;
+    public Item disguise = null;
 
-    private LinkedList<Item> items;
+    private Vector<Item> items = new Vector<>();
 
-    private Room currentRoom;
+    private Vector<GameGoal> goals = new Vector<>();
 
-    public Player(Room currentRoom, int p) {
-        this(currentRoom, new LinkedList<Item>(), p);
+    private Room currentRoom = null;
+
+    public Player(Room currentRoom) {
+        this(currentRoom, new Vector<Item>());
     }
 
-    public Player(Room currentRoom, LinkedList<Item> items, int p) {
+    public Player(Room currentRoom, Vector<Item> items) {
         this.items = items;
         this.disguise = null;
         this.score = 0;
-        this.possiblePoints = p;
 
         //this.currentRoom = currentRoom;
         this.currentRoom = currentRoom;
@@ -98,7 +103,7 @@ public class Player {
         }
         return false;
     }
-    public LinkedList<Item> getItems() {
+    public Vector<Item> getCollectedItems() {
         return this.items;
     }
 
@@ -150,6 +155,7 @@ public class Player {
         }
 
         this.currentRoom = nextRoom;
+        saveRoom(currentRoom);
         System.out.println(this.currentRoom.description());
 
         if(nextRoom instanceof RoomSky) {
@@ -158,9 +164,12 @@ public class Player {
         }
     }
 
-    public void showOptions() {
+    private void saveRoom(Room room) {
+        roomsVisited.add(room);
+    }
 
-
+    public Vector<Room> getRoomsVisited() {
+        return roomsVisited;
     }
 
     public void move(Action a) {
@@ -202,6 +211,7 @@ public class Player {
                     return;
                 }
             }
+
             move(nextRoom);
         }
         else {
@@ -211,6 +221,10 @@ public class Player {
 
     public Room currentRoom() {
         return this.currentRoom;
+    }
+
+    public void addGoal(GameGoal g) {
+        goals.add(g);
     }
 
     public void lookAround() {
@@ -232,5 +246,13 @@ public class Player {
 
     public void addPossiblePoints(int p) {
         possiblePoints += p;
+    }
+
+    public int getPossiblePoints() {
+        return possiblePoints;
+    }
+
+    public Vector<GameGoal> getGoals() {
+        return goals;
     }
 }

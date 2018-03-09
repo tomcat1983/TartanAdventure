@@ -1,5 +1,6 @@
 package edu.cmu.tartan.action;
 
+import edu.cmu.tartan.Game;
 import edu.cmu.tartan.item.Item;
 
 public enum Action {

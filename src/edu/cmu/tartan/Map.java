@@ -1,40 +1,43 @@
 package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.goal.GameCollectGoal;
+import edu.cmu.tartan.goal.GameExploreGoal;
+import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.*;
-import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.Vector;
 
 public class Map {
 
-	public static Room demo(Game game) {
-		Room room1 = new Room("You are in the first room. There seems to be a room to the North.", "First Room.");
-		Room room2 = new Room("You are in the second room. You can go South to return to the beginning.", "Second Room.");
+	public static Room exploreGame(Game game) {
+
+		Room room1 = new Room("You are in the first room. There seems to be a room to the North.", "Room1");
+		Room room2 = new Room("You are in the second room. You can go South to return to the beginning and you can go East to get to Room 3.", "Room2");
+		Room room3 = new Room("You are in the third room. You can go West to return to the Room 2.", "Room3");
 
 		// player would type 'go north'
 		room1.setAdjacentRoom(Action.ActionGoNorth, room2);
+		room2.setAdjacentRoom(Action.ActionGoEast, room3);
 
 		// player would type 'drink coffee'
-
 		ItemCoffee coffee = (ItemCoffee) Item.getInstance("coffee");
-		game.addPossiblePoints(coffee.value());
 		room2.putItem(coffee);
 
+		Vector<String> goalItems = new Vector<>();
+		goalItems.add("room1");
+		goalItems.add("room2");
+		goalItems.add("room3");
 
-		ItemDiamond diamond = (ItemDiamond) Item.getInstance("diamond");
-		game.addPossiblePoints(diamond.value());
-		room1.putItem(diamond);
+		game.addGoal(new GameExploreGoal(goalItems,  game.getPlayer()));
 
 		return room1;
 	}
 
-	public static Room level1(Game game) {
+	public static void collectGame(Game game) {
 
 		Room mid1 = new Room("There is a fork", "Fork");
 		Room mid2 = new Room("Ferocious bear", "bear");
@@ -53,10 +56,21 @@ public class Map {
 		start.setAdjacentRoom(Action.ActionGoEast, mid2);
 		start.setAdjacentRoom(Action.ActionGoWest, end);
 		start.putItems(startItems);
-		return start;
+
+		// Now we configure the goal based on picking up items
+		Vector<String> goalItems = new Vector<>();
+		goalItems.add("brick");
+		goalItems.add("key");
+		goalItems.add("gold");
+
+		Player player = new Player(start);
+		game.setPlayer(player);
+		game.addGoal(new GameCollectGoal(goalItems, player));
+
+		return;
 	}
 
-	public static Room njit(Game game) {
+	public static void njit(Game game) {
 
 		String hallwayDesription = "You are in a hallway. \nThere are conference rooms to the W, bathrooms to the N, \nand a stairwell to the E. with a lock on the door";
 		String hallwayShortDescription = "Fourth floor hallway";
@@ -263,10 +277,13 @@ public class Map {
 		acm.setDeathMessage("As you take your first step within the dark room, you trip on a mysterious object. You fall toward the floor, and hit your head against a large rock.");
 
 		roof.setOneWayAdjacentRoom(Action.ActionGoEast, acm);
-		return acm;
+
+		Player player = new Player(acm);
+		game.setPlayer(player);
+		return;
 	}
 
-	public static Room mission(Game game) {
+	public static void pointsGame(Game game) {
 
 		String officeD = "You are in an office. It seems that the occupant has only recently left.";
 		String officeSD = "Office.";
@@ -277,23 +294,25 @@ public class Map {
 		ItemSafe safe = (ItemSafe)Item.getInstance("safe");
 		safe.setInspectMessage("This safe appears to require a 4 digit PIN number.");
 		safe.setPIN("9292");
-		ItemDocument document = (ItemDocument) Item.getInstance("document");
 
+		ItemDocument document = (ItemDocument) Item.getInstance("document");
 		document.setVisible(false);
 		document.setInspectMessage("The document is encrypted with a cipher. The cryptographers at the CIA will need to decrypt it.");
 		safe.install(document);
 
 		office.putItem(safe);
 		office.putItem(computer);
+
 		ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee");
 		office.putItem(coffee);
 		office.putItem(Item.getInstance("light"));
 
 		// Keep scores for things in this room
-		game.addPossiblePoints(document.value());
-		game.addPossiblePoints(coffee.value());
-		game.addPossiblePoints(safe.value());
+		int points = document.value() + coffee.value() + safe.value();
 
-		return office;
+		Player player = new Player(office);
+		game.setPlayer(player);
+		game.addGoal(new GamePointsGoal(points, player));
+		return;
 	}
 }
