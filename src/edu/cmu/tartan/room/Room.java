@@ -5,7 +5,6 @@ import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Visible;
-import edu.cmu.tartan.properties.Wearable;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -112,7 +111,7 @@ public class Room implements Comparable {
 
     public Item remove(Item item) {
         if (this.items.contains(item)) {
-            if (item instanceof Holdable || item instanceof Wearable) {
+            if (item instanceof Holdable) {
                 this.items.remove(item);
                 return item;
             }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Vector;
 
-public class Map {
+public class GameConfiguration {
 
 	public static Room exploreGame(Game game) {
 
@@ -32,6 +32,8 @@ public class Map {
 		goalItems.add("room2");
 		goalItems.add("room3");
 
+		Player player = new Player(room1);
+		game.setPlayer(player);
 		game.addGoal(new GameExploreGoal(goalItems,  game.getPlayer()));
 
 		return room1;

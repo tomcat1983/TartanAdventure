@@ -44,7 +44,7 @@ public class RoomRequiredItem extends Room {
 	}
 
 	public boolean shouldDieForAction(Action a) {
-		return !this.safeDirections.contains(a) && !this.player.hasItem(this.requiredItem) && !(this.player.disguise == this.requiredItem);
+		return !this.safeDirections.contains(a) && !this.player.hasItem(this.requiredItem);
 	}
 
 	public void setDeathMessage(String s) {
@@ -65,7 +65,7 @@ public class RoomRequiredItem extends Room {
 
 	public String toString() {
 
-		if(this.player.hasItem(this.requiredItem) || this.player.disguise == this.requiredItem) {
+		if(this.player.hasItem(this.requiredItem)) {
 			return super.toString();
 		}
 		else {
@@ -73,7 +73,7 @@ public class RoomRequiredItem extends Room {
 		}
 	}
 	public String description() {
-		if(this.player.hasItem(this.requiredItem) || this.player.disguise == this.requiredItem) {
+		if(this.player.hasItem(this.requiredItem)) {
 			String s = this.roomWasVisited ? this.shortDescription : this.description + visibleItems();
 			this.roomWasVisited = true;
 			return s;

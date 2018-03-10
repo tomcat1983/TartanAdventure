@@ -2,10 +2,7 @@ package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.Type;
-import edu.cmu.tartan.goal.GameCollectGoal;
-import edu.cmu.tartan.goal.GameExploreGoal;
 import edu.cmu.tartan.goal.GameGoal;
-import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemMagicBox;
 import edu.cmu.tartan.item.ItemWatchMenu;
@@ -76,15 +73,15 @@ public class Game {
             switch(choice) {
                 case 0:
                     gameName = "Collect";
-                    Map.collectGame(this);
+                    GameConfiguration.collectGame(this);
                     return;
                 case 1:
                     gameName = "Points";
-                    Map.pointsGame( this );
+                    GameConfiguration.pointsGame( this );
                     return;
                 case 2:
                     gameName = "Explore";
-                    Map.exploreGame(this);
+                    GameConfiguration.exploreGame(this);
                     return;
                 default:
                     System.out.println("Unknown game.");
@@ -113,6 +110,7 @@ public class Game {
                                 System.out.println("Taken.");
                                 this.player.currentRoom().remove(o);
                                 this.player.pickup(o);
+
 
                             }
                             else {
@@ -279,6 +277,8 @@ public class Game {
                         if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if(item instanceof Edible) {
                                 ((Edible)item).eat();
+                                // Once we eat it, then it's gone
+                                this.player.currentRoom().remove(item);
                             }
                             else {
                                 if(item instanceof Holdable) {
@@ -289,41 +289,6 @@ public class Game {
                                     System.out.println("That cannot be consumed.");
                                 }
                             }
-                        }
-                        break;
-                    }
-                    case ActionWear: {
-                        Item item = a.directObject();
-                        if(this.player.currentRoom().hasItem(item)) {
-                            if(item instanceof Wearable) {
-                                System.out.println("Worn.");
-                                this.player.currentRoom().remove(item);
-                                this.player.wearDisguise(item);
-                            }
-                            else {
-                                System.out.println("You can not wear this item.");
-                            }
-                        }
-                        else if(this.player.disguise() == item) {
-                            System.out.println("You are already wearing that.");
-                        }
-                        else {
-                            System.out.println("I don't see that here.");
-                        }
-                        break;
-                    }
-                    case ActionKill: {
-                        Item item = a.directObject();
-                        if(this.player.currentRoom().hasItem(item)) {
-                            if(item instanceof Killable) {
-                                ((Killable)item).kill();
-                            }
-                            else {
-                                System.out.println("You cannot kill this.");
-                            }
-                        }
-                        else {
-                            System.out.println("I don't see that here.");
                         }
                         break;
                     }
@@ -439,9 +404,6 @@ public class Game {
                         break;
                     case ActionViewItems:
                         Vector<Item> items = this.player.getCollectedItems();
-                        if(this.player.disguise() != null) {
-                            System.out.println("You are wearing a " + this.player.disguise() + ".");
-                        }
                         if (items.size() == 0) {
                             System.out.println("You don't have any items.");
                         }
@@ -451,7 +413,7 @@ public class Game {
                             }
                         }
                         break;
-                    case ActionSuicide:
+                    case ActionDie:
                         this.player.die();
                         break;
                     case ActionHelp:

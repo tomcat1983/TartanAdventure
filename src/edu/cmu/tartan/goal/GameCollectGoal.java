@@ -26,4 +26,14 @@ public class GameCollectGoal implements GameGoal {
         }
         return count == itemsList.size();
     }
+
+    @Override
+    public String describe() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("The objective of this type of game is to collect the following items:");
+        for (String i : itemsList) {
+            sb.append(" * " + i + "\n");
+        }
+        return sb.toString();
+    }
 }

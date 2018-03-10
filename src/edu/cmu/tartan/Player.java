@@ -9,7 +9,6 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.*;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Vector;
 
 public class Player {
@@ -20,10 +19,6 @@ public class Player {
         return score;
     }
 
-    public Item getDisguise() {
-        return disguise;
-    }
-
     public Room getCurrentRoom() {
         return currentRoom;
     }
@@ -31,8 +26,6 @@ public class Player {
     private int score=0;
 
     private int possiblePoints=0;
-
-    public Item disguise = null;
 
     private Vector<Item> items = new Vector<>();
 
@@ -46,7 +39,6 @@ public class Player {
 
     public Player(Room currentRoom, Vector<Item> items) {
         this.items = items;
-        this.disguise = null;
         this.score = 0;
 
         //this.currentRoom = currentRoom;
@@ -86,7 +78,6 @@ public class Player {
 
     public boolean hasItem(Item item) {
         if(item == null) return false;
-        if(this.disguise == item) return true;
         return this.items.contains(item);
     }
 
@@ -112,15 +103,6 @@ public class Player {
         if(indirect instanceof ItemMagicBox && direct instanceof Valuable) {
             score((Valuable)direct);
         }
-    }
-    public void wearDisguise(Item disguise) {
-        if(this.disguise != null) {
-            this.currentRoom.putItem(this.disguise);
-        }
-        this.disguise = disguise;
-    }
-    public Item disguise() {
-        return this.disguise;
     }
 
     public void move(Room nextRoom) {
