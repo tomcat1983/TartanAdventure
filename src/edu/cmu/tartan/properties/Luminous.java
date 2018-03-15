@@ -1,3 +1,3 @@
 package edu.cmu.tartan.properties;
 
-public interface Luminous  {  }
+public interface Luminous {  }

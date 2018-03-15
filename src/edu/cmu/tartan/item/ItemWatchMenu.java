@@ -10,9 +10,9 @@ public class ItemWatchMenu {
         this.text = null;
         this.menus = new LinkedList<ItemWatchMenu>();
 
-        String prev = "Go Back.";
+        String prev = "Quit";
         if (!this.title.equals(prev)) {
-            ItemWatchMenu exit = new ItemWatchMenu("Go Back.");
+            ItemWatchMenu exit = new ItemWatchMenu("Quit.");
             this.menus.add(exit);
         }
     }

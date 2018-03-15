@@ -1,5 +1,5 @@
 package edu.cmu.tartan.properties;
 
-public interface Explodable  {
-	void explode();
+public interface Explodable extends Valuable {
+	Boolean explode();
 }

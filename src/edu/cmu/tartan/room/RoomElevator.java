@@ -6,6 +6,13 @@ import java.util.ArrayList;
 
 public class RoomElevator extends Room {
 
+    protected int currentFloor;
+    protected ArrayList<String> descriptions;
+    protected ArrayList<Room> floors;
+    protected ArrayList<Integer> restrictedFloors;
+    protected Action directionOfFloors;
+    // should be a single direction, that points to every floor.
+
 	public RoomElevator(String description, String shortDescription) {
 		super(description, shortDescription);
 		this.restrictedFloors = new ArrayList<Integer>();
@@ -51,13 +58,4 @@ public class RoomElevator extends Room {
 		int index = this.floors.indexOf(floor);
 		call(index);
 	}
-
-	protected int currentFloor;
-	protected ArrayList<String> descriptions;
-	protected ArrayList<Room> floors;
-	protected ArrayList<Integer> restrictedFloors;
-	protected Action directionOfFloors; // should be a single direction, that points to every floor. 
-					    // This class does not support elevators 
-					    // with doors on either side of it. 
-	
 }

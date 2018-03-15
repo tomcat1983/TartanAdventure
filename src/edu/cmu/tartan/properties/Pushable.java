@@ -1,5 +1,5 @@
 package edu.cmu.tartan.properties;
 
-public interface Pushable {
+public interface Pushable  {
 	void push();
 }

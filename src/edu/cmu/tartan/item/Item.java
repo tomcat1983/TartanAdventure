@@ -1,12 +1,24 @@
 package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Inspectable;
+import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 import edu.cmu.tartan.room.Room;
 
 import java.util.LinkedList;
 
-public class Item implements Comparable, Inspectable, Visible {
+public class Item implements Comparable, Inspectable, Visible, Valuable {
+
+    // every item is visible by default
+    protected boolean visible = true;
+    protected Integer value = null;
+    protected String description;
+    protected String detailDescription;
+    protected String[] aliases;
+    protected static LinkedList<Item> sharedInstances;
+    protected Room relatedRoom; // items can open rooms, call elevators, etc (e.g., an ItemButton instance)
+    protected Item relatedItem; // items can also affect other items, like setting other items breakable (like a junction box);
+    protected String inspectMessage;
 
     public Item(String description, String detailDescription, String[] a) {
         this.description = description;
@@ -15,6 +27,7 @@ public class Item implements Comparable, Inspectable, Visible {
         this.relatedRoom = null;
         this.relatedItem = null;
         this.inspectMessage = null;
+        this.value = null;
     }
 
     private static void initSharedInstances() {
@@ -31,30 +44,21 @@ public class Item implements Comparable, Inspectable, Visible {
         sharedInstances.add(new ItemClayPot("pot", "clay pot", new String[]{"pot", "pottery"}));
         sharedInstances.add(new ItemDiamond("diamond", "white diamond", new String[]{"diamond", "jewel"}));
         sharedInstances.add(new ItemGold("gold", "shiny gold bar", new String[]{"gold", "bar"}));
-        sharedInstances.add(new ItemRMS("statue", "wax statuette of Richard M Stallman", new String[]{"statue", "statuette", "rms"}));
         sharedInstances.add(new ItemMicrowave("microwave", "microwave that stinks of month old popcorn", new String[]{"microwave", "appliance"}));
         sharedInstances.add(new ItemFridge("fridge", "white refrigerator", new String[]{"fridge", "refrigerator"}));
         sharedInstances.add(new ItemFlashlight("flashlight", "battery operated flashlight", new String[]{"flashlight"}));
         sharedInstances.add(new ItemTorch("torch", "metal torch", new String[]{"torch", "candle"}));
-        sharedInstances.add(new ItemGuard("guard", "sleeping guard", new String[]{"guard", "henchman"}));
-        sharedInstances.add(new ItemParachute("parachute", "packed parachute", new String[]{"chute", "parachute"}));
         sharedInstances.add(new ItemWatch("watch", "smart watch", new String[]{"watch"}));
-        sharedInstances.add(new ItemGhillieSuit("camouflage", "Ghillie Suit", new String[]{"suit", "disguise", "ghillie", "camo", "camouflage"}));
-        sharedInstances.add(new ItemJunctionBox("box", "junction box", new String[]{"box", "junction", "meter", "electric", "electricity", "power"}));
         sharedInstances.add(new ItemMagicBox("pit", "bottomless pit", new String[]{"pit", "hole"}));
         sharedInstances.add(new ItemVendingMachine("machine", "vending machine with assorted candies and treats", new String[]{"machine", "vendor"}));
         sharedInstances.add(new ItemSafe("safe", "bullet-proof safe", new String[]{"safe"}));
         sharedInstances.add(new ItemFolder("folder", "manilla folder", new String[]{"folder"}));
         sharedInstances.add(new ItemDocument("document", "Secret document", new String[]{"document"}));
-        sharedInstances.add(new ItemGrate("grate", "metal grate", new String[]{"grate", "vent"}));
         sharedInstances.add(new ItemLock("fan", "ventilation fan", new String[]{"fan"}));
-        sharedInstances.add(new ItemMetalPole("pole", "metal pole", new String[]{"pole", "rod"}));
-        sharedInstances.add(new ItemGuestList("list", "guest list", new String[]{"list", "guestlist"}));
-        sharedInstances.add(new ItemComputer("iMac G3", "translucent blue iMac G3", new String[]{"apple", "computer", "keyboard", "imac"}));
+        sharedInstances.add(new ItemComputer("computer", "Apple computer", new String[]{"apple", "computer", "keyboard", "imac"}));
         sharedInstances.add(new ItemCoffee("coffee", "steaming cup of coffee", new String[]{"coffee", "beverage", "mug"}));
         sharedInstances.add(new ItemDeskLight("light", "desk light", new String[]{"light"}));
         sharedInstances.add(new ItemDynamite("dynamite", "bundle of dynamite", new String[]{"dynamite", "explosive", "explosives"}));
-
         sharedInstances.add(new ItemButton("Button", "Elevator Button", new String[]{"button"}));
         sharedInstances.add(new ItemButton("Floor 1 Button", "Elevator Floor 1 Button", new String[]{"1"}));
         sharedInstances.add(new ItemButton("Floor 2 Button", "Elevator Floor 2 Button", new String[]{"2"}));
@@ -162,26 +166,28 @@ public class Item implements Comparable, Inspectable, Visible {
     }
 
     // Inspectable
-    public void inspect() {
+    public Boolean inspect() {
         if (this.inspectMessage != null) {
             System.out.println(this.inspectMessage);
         } else {
             System.out.println("It appears to be a " + this + ".");
         }
+        return true;
     }
 
     public void setInspectMessage(String message) {
         this.inspectMessage = message;
     }
 
-    protected boolean visible = true;
-    protected String description;
-    protected String detailDescription;
-    protected String[] aliases;
-    protected static LinkedList<Item> sharedInstances;
-    protected Room relatedRoom; // items can open rooms, call elevators, etc (e.g., an ItemButton instance)
-    protected Item relatedItem; // items can also affect other items, like setting other items breakable (like a junction box);
-    protected String inspectMessage;
+    @Override
+    public int value() {
+        return this.value;
+    }
+
+    @Override
+    public void setValue(int value) {
+        this.value = value;
+    }
 }
 
 

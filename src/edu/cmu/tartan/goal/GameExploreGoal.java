@@ -31,7 +31,7 @@ public class GameExploreGoal implements GameGoal {
         int count=0;
         for (String place : itinerary) {
             for (Room room : player.getRoomsVisited()) {
-                if (place.equals(room.shortDescription())) {
+                if (place.equalsIgnoreCase(room.shortDescription())) {
                     count++;
                 }
             }

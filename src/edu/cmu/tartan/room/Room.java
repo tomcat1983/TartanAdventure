@@ -4,6 +4,7 @@ import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.properties.Holdable;
+import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 
 import java.util.HashMap;
@@ -111,7 +112,7 @@ public class Room implements Comparable {
 
     public Item remove(Item item) {
         if (this.items.contains(item)) {
-            if (item instanceof Holdable) {
+            if (item instanceof Valuable) {
                 this.items.remove(item);
                 return item;
             }

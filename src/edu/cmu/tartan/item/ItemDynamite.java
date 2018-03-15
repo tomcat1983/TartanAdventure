@@ -5,15 +5,16 @@ import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.RoomObscured;
 
-public class ItemDynamite extends Item implements Explodable, Holdable, Valuable {
-    private Integer value;
+public class ItemDynamite extends Item implements Explodable, Holdable {
+    protected boolean exploded;
 
     public ItemDynamite(String s, String sd, String[] a) {
         super(s, sd, a);
         this.exploded = false;
+        setValue(25);
     }
 
-    public void explode() {
+    public Boolean explode() {
         if (!this.exploded) {
             if (this.relatedRoom != null && this.relatedRoom instanceof RoomObscured) {
                 ((RoomObscured) this.relatedRoom).setObscured(false);
@@ -24,6 +25,7 @@ public class ItemDynamite extends Item implements Explodable, Holdable, Valuable
         } else {
             System.out.println("The dynamite has already been detonated.");
         }
+        return exploded;
     }
 
     public void setExplodeMessage(String s) {
@@ -32,15 +34,7 @@ public class ItemDynamite extends Item implements Explodable, Holdable, Valuable
         }
     }
 
-    protected boolean exploded;
-
-    @Override
-    public int value() {
-        return value;
-    }
-
-    @Override
-    public void setValue(int value) {
-        this.value = value;
+    public Boolean getExploded() {
+        return exploded;
     }
 }

@@ -5,6 +5,7 @@ import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemMagicBox;
 import edu.cmu.tartan.properties.Hostable;
+import edu.cmu.tartan.properties.Luminous;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.*;
 
@@ -81,16 +82,11 @@ public class Player {
         return this.items.contains(item);
     }
 
-    public boolean hasItemOfType(String str) {
-        try {
-            for(Item item : this.items) {
-                if(Class.forName(str).isInstance(item)) {
-                    return true;
-                }
+    public boolean hasLuminousItem() {
+        for (Item item : this.items) {
+            if (item instanceof Luminous) {
+                return true;
             }
-        }
-        catch(ClassNotFoundException e) {
-
         }
         return false;
     }
@@ -166,7 +162,7 @@ public class Player {
         }
         else if(this.currentRoom instanceof RoomDark) {
             RoomDark room = (RoomDark)this.currentRoom;
-            if(room.isDark() && room.willDieInDirection(a) && !this.hasItemOfType("Luminous")) {
+            if(room.isDark() && room.willDieInDirection(a) && !this.hasLuminousItem()) {
                 System.out.println(room.deathMessage());
                 this.die();
             }
@@ -218,7 +214,7 @@ public class Player {
         score(score);
     }
     public void score(int s) {
-        System.out.println("You scored " + score + " points.");
+        System.out.println("You scored " + s + " points.");
         score += s;
     }
     public void die() {

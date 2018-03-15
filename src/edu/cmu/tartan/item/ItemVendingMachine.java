@@ -7,6 +7,7 @@ public class ItemVendingMachine extends Item implements Shakeable {
     public ItemVendingMachine(String d, String sd, String[] a) {
         super(d, sd, a);
         this.count = 0;
+        setValue(15);
     }
 
     public boolean deadly() {

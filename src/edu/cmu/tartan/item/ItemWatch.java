@@ -8,24 +8,16 @@ import java.util.Stack;
 
 public class ItemWatch extends Item implements Holdable, Valuable {
 
-    private Integer value=15;
-    @Override
-    public int value() {
-        return value;
-    }
-
-    @Override
-    public void setValue(int value) {
-        this.value = value;
-    }
+    protected Stack<ItemWatchMenu> stack;
 
     public ItemWatch(String d, String sd, String[] a) {
         super(d, sd, a);
         this.stack = new Stack<ItemWatchMenu>();
+        setValue(75);
     }
 
     // Inspectable
-    public void inspect() {
+    public Boolean inspect() {
 
         Scanner s = new Scanner(System.in);
         String input = "";
@@ -73,6 +65,7 @@ public class ItemWatch extends Item implements Holdable, Valuable {
             }
         }
         System.out.println("You turn off the watch and lower your wrist.");
+        return true;
     }
 
     public void setMenu(ItemWatchMenu main) {
@@ -86,6 +79,4 @@ public class ItemWatch extends Item implements Holdable, Valuable {
             // pass
         }
     }
-
-    protected Stack<ItemWatchMenu> stack;
 }

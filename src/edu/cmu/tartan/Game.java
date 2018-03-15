@@ -2,17 +2,20 @@ package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.Type;
+import edu.cmu.tartan.configuration.*;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemMagicBox;
-import edu.cmu.tartan.item.ItemWatchMenu;
 import edu.cmu.tartan.properties.*;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomElevator;
 import edu.cmu.tartan.room.RoomExcavatable;
 import edu.cmu.tartan.room.RoomRequiredItem;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -24,6 +27,7 @@ public class Game {
     private File savedGameFile = null;
     private String gameName = "";
     private Vector<GameGoal> goals = new Vector<>();
+    private String gameDescription = "";
 
     public Game() {
 
@@ -43,20 +47,27 @@ public class Game {
         }
     }
 
+    private void printMenu(Vector<GameConfiguration> menu) {
+
+        StringBuilder sb = new StringBuilder("Choose a game from the options to below: \n");
+        for (int i = 0; i < menu.size(); i++) {
+            sb.append( (i+1) + ":  " + menu.elementAt(i).name + "\n");
+        }
+        System.out.println(sb.toString());
+    }
+
     private void configureGame() {
 
-        ItemWatchMenu menu = new ItemWatchMenu("Choose a game from the options to below: \n");
+        Vector<GameConfiguration> menu = new Vector<GameConfiguration>();
 
-        ItemWatchMenu m1 = new ItemWatchMenu("Collect");
-//        ItemWatchMenu m2 = new ItemWatchMenu("NJIT");
-        ItemWatchMenu m3 = new ItemWatchMenu("Points");
-        ItemWatchMenu m4 = new ItemWatchMenu("Explore");
+        menu.add(new CollectGame());
+        menu.add(new PointsGame());
+        menu.add(new ExploreGame());
+        menu.add(new DarkRoomGame());
+        menu.add(new LockRoomGame());
+        menu.add(new RideElevatorGame());
 
-        menu.add(m1);
-        menu.add(m3);
-        menu.add(m4);
-
-        System.out.println(menu.toString());
+        printMenu(menu);
 
         int choice = 0;
         while(true) {
@@ -69,24 +80,18 @@ public class Game {
                 System.out.println("Invalid selection.");
                 continue;
             }
-
-            switch(choice) {
-                case 0:
-                    gameName = "Collect";
-                    GameConfiguration.collectGame(this);
-                    return;
-                case 1:
-                    gameName = "Points";
-                    GameConfiguration.pointsGame( this );
-                    return;
-                case 2:
-                    gameName = "Explore";
-                    GameConfiguration.exploreGame(this);
-                    return;
-                default:
-                    System.out.println("Unknown game.");
+            try {
+                GameConfiguration gameConfig = menu.elementAt(choice);
+                gameName = gameConfig.name;
+                gameConfig.configure(this);
+                break;
+            }
+            catch (InvalidGameException ige) {
+                System.out.println("Game improperly configured, please try again.");
             }
         }
+
+        this.showIntro();
     }
 
     private void executeAction(Action a) {
@@ -98,9 +103,7 @@ public class Game {
                 break;
             case TYPE_HASDIRECTOBJECT:
                 Item val = a.directObject();
-                if (val instanceof Valuable) {
-                    player.score((Valuable) val);
-                }
+
                 switch(a) {
                     case ActionPickUp: {
                         Item o = a.directObject();
@@ -108,10 +111,10 @@ public class Game {
                         if(this.player.currentRoom().hasItem(o)) {
                             if(o instanceof Holdable) {
                                 System.out.println("Taken.");
+
                                 this.player.currentRoom().remove(o);
                                 this.player.pickup(o);
-
-
+                                this.player.score( ((Holdable)o).value());
                             }
                             else {
                                 System.out.println("You cannot pick up this item.");
@@ -122,6 +125,8 @@ public class Game {
                             System.out.println("Taken.");
                             ((Hostable)container).uninstall(o);
                             this.player.pickup(o);
+                            Holdable h = (Holdable) o;
+                            this.player.score( ((Holdable)o).value());
                         }
                         else if(this.player.hasItem(o)) {
                             System.out.println("You already have that item in your inventory.");
@@ -142,6 +147,8 @@ public class Game {
                                 if (((Destroyable)item).disappears()) {
                                     this.player.drop(item);
                                     this.player.currentRoom().remove(item);
+                                    // Get points!
+                                    this.player.score(item.value());
                                 }
 
                                 if(item instanceof Hostable) {
@@ -251,16 +258,17 @@ public class Game {
                         Item item = a.directObject();
                         if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if(item instanceof Pushable) {
-                                ((Pushable)item).push();
+
+                                // Pushing the button is worth points
+                                Pushable p = (Pushable) item;
+                                p.push();
+                                this.player.score(item.value());
+
                                 if(item.relatedRoom() instanceof RoomElevator) { // player is next to an elevator
                                     ((RoomElevator)item.relatedRoom()).call(this.player.currentRoom());
                                 }
                                 else if(this.player.currentRoom() instanceof RoomElevator) { // player is in an elevator
                                     ((RoomElevator)this.player.currentRoom()).call(Integer.parseInt(item.getAliases()[0])-1);
-                                }
-                                else {
-                                    // for teleportation machine
-                                    this.player.move(item.relatedRoom());
                                 }
                             }
                             else {
@@ -276,7 +284,10 @@ public class Game {
                         Item item = a.directObject();
                         if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if(item instanceof Edible) {
-                                ((Edible)item).eat();
+                                // eating something gives scores
+                                Edible e = (Edible)item;
+                                e.eat();
+                                player.score(item.value());
                                 // Once we eat it, then it's gone
                                 this.player.currentRoom().remove(item);
                             }
@@ -297,7 +308,11 @@ public class Game {
                         if(this.player.hasItem(item) || this.player.currentRoom().hasItem(item)) {
                             if(item instanceof Openable) {
                                 Openable o = ((Openable)item);
-                                player.score(o.value());
+                                // if you can open the item , you score!
+                                if (o.open() == true) {
+                                    player.score(item.value());
+                                    this.player.currentRoom().remove(item);
+                                }
                             }
                             else {
                                 System.out.println("You cannot open this.");
@@ -313,7 +328,9 @@ public class Game {
                         if(this.player.hasItem(dynamite) || this.player.currentRoom().hasItem(dynamite)) {
                             if(dynamite instanceof Explodable) {
                                 if(this.player.currentRoom().isAdjacentToRoom(dynamite.relatedRoom())) {
-                                    ((Explodable)dynamite).explode();
+                                    Explodable explode = (Explodable)dynamite;
+                                    explode.explode();
+                                    this.player.score(explode.value());
                                 }
                                 else {
                                     System.out.println("There isn't anything to blow up here.");
@@ -472,6 +489,7 @@ public class Game {
                 }
                 else if (input.compareTo("status") == 0) {
                     System.out.println("The current game is '" + gameName + "'");
+                    System.out.println("The game objective is '" + gameDescription + "'");
                     System.out.println("---\nCurrent room:  " + player.currentRoom());
                     System.out.println("---\nCurrent score: " + player.getScore());
 
@@ -511,29 +529,33 @@ public class Game {
             start();
         }
 
-        System.out.println("Game Over :)");
+        displayAsciiArt("Game Over");
     }
 
     private void winGame() {
-        System.out.println("You've won the '" + gameName + "' game!" );
-        System.out.println("---\nFinal score: " + player.getScore());
 
+        displayAsciiArt("CONGRATS");
+
+        System.out.println("---\nYou've won the '" + gameName + "' game!" );
+        System.out.println("---\nFinal score: " + player.getScore());
         System.out.println("---\nFinal inventory: ");
         if (player.getCollectedItems().size() == 0) {
             System.out.println("You don't have any items.");
-        } else {
+        }
+        else {
             for (Item i : player.getCollectedItems()) {
                 System.out.println(i.toString() + " ");
             }
         }
+        System.out.println("---\n");
     }
 
     private Boolean evaluateGame() {
         Vector<GameGoal> goals = player.getGoals();
-        for (GameGoal g : goals) {
-            // Now assess the goal
+        for (Iterator<GameGoal> iterator = goals.iterator(); iterator.hasNext(); ) {
+            GameGoal g = iterator.next();
             if (g.isAchieved()) {
-                goals.remove(g);
+                iterator.remove();
             }
         }
         return goals.isEmpty();
@@ -558,7 +580,7 @@ public class Game {
     }
     private void help(Player player) {
 
-        System.out.println(" -- TartanAdvaenture RPG Help Menu -- ");
+        System.out.println(" -- TartanAdventure RPG Help Menu -- ");
         System.out.println("To view your current items: type \"inventory\"");
         System.out.println("Actions available:");
 
@@ -582,12 +604,14 @@ public class Game {
         dirobj.append("]");
         indirobj.append("]");
         misc.append("]");
+
         System.out.println(directions.toString());
         System.out.println(dirobj.toString());
         System.out.println(indirobj.toString());
         System.out.println(misc.toString());
-
         System.out.println("You can inspect an inspectable item by typing \"Inspect <item>\"");
+        System.out.println("You can quit by typing \"quit\"");
+
     }
 
     public void addGoal(GameGoal g) {
@@ -596,5 +620,42 @@ public class Game {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    private void displayAsciiArt(String msg) {
+        BufferedImage image = new BufferedImage(144, 32, BufferedImage.TYPE_INT_RGB);
+        Graphics g = image.getGraphics();
+        g.setFont(new Font("Dialog", Font.PLAIN, 18));
+        Graphics2D graphics = (Graphics2D) g;
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+        graphics.drawString(msg, 6, 24);
+
+        for (int y = 0; y < 32; y++) {
+            StringBuilder sb = new StringBuilder();
+            for (int x = 0; x < 144; x++)
+                sb.append(image.getRGB(x, y) == -16777216 ? " " : image.getRGB(x, y) == -1 ? "#" : "*");
+            if (sb.toString().trim().isEmpty()) continue;
+
+            System.out.println(sb);
+        }
+    }
+
+    public void showIntro() {
+        displayAsciiArt(gameName);
+        System.out.println("---\n" + gameDescription + " ... let's begin\n ---\n");
+    }
+
+    public void setDescription(String description) {
+        this.gameDescription = description;
+    }
+
+    /**
+     * Ensure that the game parameters are all set
+     * @return true if valid, false otherwise
+     */
+    public boolean validate() {
+        return (gameName!= null &&gameDescription != null && !goals.isEmpty() && player != null);
     }
 }

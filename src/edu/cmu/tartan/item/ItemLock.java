@@ -1,20 +1,21 @@
 package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Hostable;
+import edu.cmu.tartan.properties.Openable;
 import edu.cmu.tartan.room.RoomLockable;
 
-public class ItemLock extends Item implements Hostable {
+public class ItemLock extends Item implements Hostable, Openable {
+
+    protected Item installedItem;
 
     public ItemLock(String s, String sd, String[] a) {
+
         super(s, sd, a);
+        setValue(100);
     }
 
     public void install(Item i) {
         this.installedItem = i;
-
-        if (this.relatedRoom != null && this.relatedRoom instanceof RoomLockable) {
-            ((RoomLockable) this.relatedRoom).unlock(this.installedItem);
-        }
     }
 
     public boolean uninstall(Item i) {
@@ -32,6 +33,12 @@ public class ItemLock extends Item implements Hostable {
         return this.installedItem;
     }
 
-    protected Item installedItem;
-    protected boolean disappears;
+    @Override
+    public Boolean open() {
+        if (this.relatedRoom != null && this.relatedRoom instanceof RoomLockable) {
+            ((RoomLockable) this.relatedRoom).unlock(this.installedItem);
+            return true;
+        }
+        return false;
+    }
 }

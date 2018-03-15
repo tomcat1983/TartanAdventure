@@ -5,9 +5,12 @@ import edu.cmu.tartan.room.RoomObscured;
 
 public class ItemFridge extends Item implements Pushable {
 
+    protected boolean wasPushed;
+
     public ItemFridge(String s, String sd, String[] a) {
         super(s, sd, a);
         this.wasPushed = false;
+        setValue(1);
     }
 
     // Pushable
@@ -20,6 +23,4 @@ public class ItemFridge extends Item implements Pushable {
             this.wasPushed = true;
         }
     }
-
-    protected boolean wasPushed;
 }

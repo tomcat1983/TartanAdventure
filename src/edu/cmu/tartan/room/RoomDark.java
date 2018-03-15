@@ -38,14 +38,11 @@ public class RoomDark extends Room {
 	public void setDeathMessage(String s) {
 		this.deathMessage = s;
 	}
+
 	public String toString() {
 
 		if(this.isDark) {
-			
-
-			if(this.player.hasItemOfType("Luminous")) {
-
-
+			if(this.player.hasLuminousItem()) {
 				return super.toString();
 			}
 			else {
@@ -58,7 +55,7 @@ public class RoomDark extends Room {
 	}
 	public String description() {
 		if(this.isDark) {
-			if(this.player.hasItemOfType("Luminous")) {
+			if(this.player.hasLuminousItem()) {
 				String s = this.roomWasVisited ? this.shortDescription : this.description + "\n" + visibleItems();
 				this.roomWasVisited = true;
 				return s;

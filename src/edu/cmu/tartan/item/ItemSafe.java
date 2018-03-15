@@ -7,19 +7,20 @@ import java.util.Scanner;
 
 public class ItemSafe extends Item implements Hostable, Openable {
 
-    private int value=10;
+    protected Item installedItem = null;
+    protected Integer pin = null;
 
     public ItemSafe(String d, String sd, String[] a) {
         super(d, sd, a);
         this.installedItem = null;
         this.pin = null;
+        setValue(750);
     }
 
-    public void setPIN(String pin) {
+    public void setPIN(Integer pin) {
         this.pin = pin;
     }
 
-    // Hostable
     public void install(Item i) {
         this.installedItem = i;
     }
@@ -40,32 +41,22 @@ public class ItemSafe extends Item implements Hostable, Openable {
     }
 
     // Openable
-    public void open() {
+    public Boolean open() {
         Scanner s = new Scanner(System.in);
         String input = "";
         System.out.println("Enter the four-digit PIN number.");
-        input = s.nextLine();
-        if (input.equals(this.pin)) {
+        Integer p = Integer.parseInt(s.nextLine());
+        if (p.intValue() == this.pin.intValue()) {
+
             this.installedItem.setVisible(true);
             System.out.println("The safe door swings open.");
             if (this.installedItem != null) {
-                System.out.println("You have revealed a " + this.installedItem.detailDescription() + ".");
+                System.out.println("You have revealed a '" + this.installedItem.detailDescription() + "'.");
             }
+            return true;
         } else {
             System.out.println("Incorrect PIN.");
         }
-    }
-
-    protected Item installedItem;
-    protected String pin;
-
-    @Override
-    public int value() {
-        return 10;
-    }
-
-    @Override
-    public void setValue(int value) {
-
+        return false;
     }
 }

@@ -5,14 +5,17 @@ import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Valuable;
 
-public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable, Valuable {
-    private Integer value=3;
+public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable {
+
+    protected String destroyMessage;
+    protected Item installedItem;
+    protected boolean disappears;
 
     public ItemClayPot(String s, String sd, String[] a) {
         super(s, sd, a);
         this.installedItem = null;
+        setValue(3);
     }
-
     public void setDestroyMessage(String s) {
         this.destroyMessage = s;
     }
@@ -46,19 +49,5 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
 
     public Item installedItem() {
         return this.installedItem;
-    }
-
-    protected String destroyMessage;
-    protected Item installedItem;
-    protected boolean disappears;
-
-    @Override
-    public int value() {
-        return value;
-    }
-
-    @Override
-    public void setValue(int value) {
-        this.value = value;
     }
 }

@@ -4,9 +4,13 @@ import edu.cmu.tartan.properties.Hostable;
 
 public class ItemKeycardReader extends Item implements Hostable {
 
+    protected Item installedItem;
+    protected String installMessage;
+
     public ItemKeycardReader(String s, String sd, String[] a) {
         super(s, sd, a);
         this.installMessage = null;
+        setValue(25);
     }
 
     public void install(Item item) {
@@ -45,6 +49,5 @@ public class ItemKeycardReader extends Item implements Hostable {
         this.installMessage = s;
     }
 
-    protected Item installedItem;
-    protected String installMessage;
+
 }

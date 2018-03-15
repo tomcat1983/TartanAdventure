@@ -6,12 +6,15 @@ import edu.cmu.tartan.properties.Startable;
 
 public class ItemMicrowave extends Item implements Hostable, Startable {
 
+    protected Item installedItem;
+
     public ItemMicrowave(String s, String sd, String[] a) {
         super(s, sd, a);
         this.installedItem = null;
+        setValue(5);
     }
 
-    public void start() {
+    public Boolean start() {
 
         for (int i = 0; i < 3; i++) {
             System.out.println("...");
@@ -22,11 +25,15 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
             }
         }
         System.out.println("Beep beep beep");
+
+        // Only meltable things can be microwaved
         if (this.installedItem instanceof Meltable) {
             Item item = ((Meltable) this.installedItem).meltItem();
             System.out.println("You melted the " + this.installedItem.detailDescription() + ", and it revealed a " + item.detailDescription() + "!");
             this.installedItem = item;
+            return true;
         }
+        return false;
     }
 
     public void install(Item i) {
@@ -47,6 +54,4 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
     public Item installedItem() {
         return this.installedItem;
     }
-
-    protected Item installedItem;
 }
