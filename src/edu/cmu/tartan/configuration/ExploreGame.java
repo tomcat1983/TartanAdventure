@@ -40,7 +40,7 @@ public class ExploreGame extends GameConfiguration {
         game.setPlayer(player);
         game.addGoal(new GameExploreGoal(goalItems,  game.getPlayer()));
 
-        game.setDescription("The objective of this game is to explore different rooms.");
+        game.setDescription("Explore different connected rooms.");
 
         if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
 

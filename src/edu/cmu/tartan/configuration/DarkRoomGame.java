@@ -48,7 +48,7 @@ public class DarkRoomGame extends GameConfiguration {
         game.setPlayer(player);
         game.addGoal(new GameExploreGoal(goalItems,player));
 
-        game.setDescription("The objective of this game is to earn explore a dark room");
+        game.setDescription("Explore a dark room");
 
         if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
 

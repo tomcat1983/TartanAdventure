@@ -7,6 +7,11 @@ import java.util.LinkedList;
 // represents a dark room
 public class RoomDark extends Room {
 
+	protected String darkDescription;
+	protected String darkShortDescription;
+	protected boolean isDark;
+	protected String deathMessage;
+
 	public RoomDark(String description, String shortDescription, String darkDescription, String darkShortDescription) {
 
 		this(description, shortDescription, darkDescription, darkShortDescription, true);
@@ -17,7 +22,6 @@ public class RoomDark extends Room {
 		this.isDark = isDark;
 		this.darkDescription = darkDescription;
 		this.darkShortDescription = darkShortDescription;
-		this.safeDirections = new LinkedList<Action>();
 		this.deathMessage = null;
 	}
 	public boolean isDark() {
@@ -25,12 +29,6 @@ public class RoomDark extends Room {
 	}
 	public void setDark(boolean isDark) {
 		this.isDark = isDark;
-	}
-	public void setSafeDirection(Action direction) {
-		this.safeDirections.add(direction);
-	}
-	public boolean willDieInDirection(Action dir) {
-		return !this.safeDirections.contains(dir);
 	}
 	public String deathMessage() {
 		return this.deathMessage;
@@ -54,27 +52,20 @@ public class RoomDark extends Room {
 		}
 	}
 	public String description() {
-		if(this.isDark) {
-			if(this.player.hasLuminousItem()) {
+		if (this.isDark) {
+			if (this.player.hasLuminousItem()) {
 				String s = this.roomWasVisited ? this.shortDescription : this.description + "\n" + visibleItems();
 				this.roomWasVisited = true;
 				return s;
-			}
-			else {
+			} else {
 				String s = this.roomWasVisited ? this.darkShortDescription : this.darkDescription;
 				this.roomWasVisited = true;
 				return s;
 			}
-		}
-		else {
+		} else {
 			String s = this.roomWasVisited ? this.shortDescription : this.description + "\n" + visibleItems();
 			this.roomWasVisited = true;
 			return s;
 		}
 	}
-	protected LinkedList<Action> safeDirections;
-	protected String darkDescription;
-	protected String darkShortDescription;
-	protected boolean isDark;
-	protected String deathMessage;
 }

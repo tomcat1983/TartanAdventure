@@ -66,6 +66,7 @@ public class Game {
         menu.add(new DarkRoomGame());
         menu.add(new LockRoomGame());
         menu.add(new RideElevatorGame());
+        menu.add(new ObscuredRoomGame());
 
         printMenu(menu);
 

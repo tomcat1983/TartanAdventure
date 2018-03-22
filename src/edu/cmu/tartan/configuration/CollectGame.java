@@ -47,7 +47,7 @@ public class CollectGame extends GameConfiguration {
         game.setPlayer(player);
         game.addGoal(new GameCollectGoal(goalItems, player));
 
-        StringBuilder sb = new StringBuilder("The objective of this game is to collect the following items:\n");
+        StringBuilder sb = new StringBuilder("Collect the following items:\n");
         sb.append(" * a brick\n");
         sb.append(" * a key\n");
         sb.append(" * a peice of gold\n");

@@ -135,11 +135,6 @@ public class Player {
         this.currentRoom = nextRoom;
         saveRoom(currentRoom);
         System.out.println(this.currentRoom.description());
-
-        if(nextRoom instanceof RoomSky) {
-            RoomSky sky = (RoomSky)nextRoom;
-            sky.freefall();
-        }
     }
 
     private void saveRoom(Room room) {
@@ -162,7 +157,7 @@ public class Player {
         }
         else if(this.currentRoom instanceof RoomDark) {
             RoomDark room = (RoomDark)this.currentRoom;
-            if(room.isDark() && room.willDieInDirection(a) && !this.hasLuminousItem()) {
+            if(room.isDark() && !this.hasLuminousItem()) {
                 System.out.println(room.deathMessage());
                 this.die();
             }
