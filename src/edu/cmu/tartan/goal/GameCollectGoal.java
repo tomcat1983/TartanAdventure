@@ -8,6 +8,7 @@ import java.util.Vector;
 public class GameCollectGoal implements GameGoal {
     private Player player = null;
     private Vector<String> itemsList = null;
+    private int count=0;
 
     public GameCollectGoal(Vector<String> items, Player p) {
         player = p;
@@ -16,15 +17,20 @@ public class GameCollectGoal implements GameGoal {
 
     @Override
     public Boolean isAchieved() {
-        int count=0;
+        int newCount=0;
         for (String name : itemsList) {
             for (Item collected : player.getCollectedItems()) {
                 if (name.equals(collected.description())) {
-                    count++;
+                    newCount++;
                 }
             }
         }
+        count = newCount;
         return count == itemsList.size();
+    }
+
+    public String getStatus() {
+        return "You collected " + count + " out of " + player.getCollectedItems().size() + " items.";
     }
 
     @Override

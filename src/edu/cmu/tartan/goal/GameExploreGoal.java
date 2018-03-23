@@ -33,14 +33,15 @@ public class GameExploreGoal implements GameGoal {
 
     @Override
     public Boolean isAchieved() {
-
+        int newCount = 0;
         for (String place : itinerary) {
             for (Room room : player.getRoomsVisited()) {
                 if (place.equalsIgnoreCase(room.shortDescription())) {
-                    this.count++;
+                    newCount++;
                 }
             }
         }
+        count = newCount;
         return count == itinerary.size();
     }
 }

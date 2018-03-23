@@ -524,7 +524,9 @@ public class Game {
                 input = this.scanner.nextLine();
 
                 if (input.compareTo("quit") == 0) {
-                    player.terminate();
+                    for (GameGoal g: goals) {
+                        System.out.println(g.getStatus());
+                    }
                     break;
                 }
                 else if (input.compareTo("look") == 0) {

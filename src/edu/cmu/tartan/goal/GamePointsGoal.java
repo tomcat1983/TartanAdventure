@@ -19,6 +19,10 @@ public class GamePointsGoal implements GameGoal {
         return sb.toString();
     }
 
+    public String getStatus() {
+        return "You scored " + player.getScore() + " out of " + winningScore + " points.";
+    }
+
     @Override
     public Boolean isAchieved() {
         if (player.getScore() >= winningScore) {
