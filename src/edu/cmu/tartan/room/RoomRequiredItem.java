@@ -25,7 +25,7 @@ public class RoomRequiredItem extends Room {
 	public void playerDidDropRequiredItem() {
 		if(this.diesOnItemDiscard) {
 			System.out.println(this.deathMessage);
-			this.player.die();
+			this.player.terminate();
 		}
 		else {
 			this.player.lookAround();

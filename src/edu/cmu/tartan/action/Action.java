@@ -3,19 +3,21 @@ package edu.cmu.tartan.action;
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.item.Item;
 
+/**
+ * This enumeration of actions available
+ */
 public enum Action {
 
     // No object
     ActionLook(new String[]{"lookAround", "l"}, Type.TYPE_HASNOOBJECT),
     ActionDig(new String[]{"dig"}, Type.TYPE_HASNOOBJECT),
-
     ActionJump(new String[]{"jump"}, Type.TYPE_HASNOOBJECT),
     ActionClimb(new String[]{"climb"}, Type.TYPE_HASNOOBJECT),
     ActionViewItems(new String[]{"inventory", "items", "i"}, Type.TYPE_HASNOOBJECT),
-    ActionDie(new String[]{"die"}, Type.TYPE_HASNOOBJECT),
+    ActionDie(new String[]{"terminate"}, Type.TYPE_HASNOOBJECT),
     ActionHelp(new String[]{"help", "h"}, Type.TYPE_HASNOOBJECT),
 
-    // Directional
+    // Directional actions
     ActionGoEast(new String[]{"east", "e"}, Type.TYPE_DIRECTIONAL),
     ActionGoWest(new String[]{"west", "w"}, Type.TYPE_DIRECTIONAL),
     ActionGoSouth(new String[]{"south", "s"}, Type.TYPE_DIRECTIONAL),
@@ -38,7 +40,7 @@ public enum Action {
     ActionShake(new String[]{"shake", "chickendance"}, Type.TYPE_HASDIRECTOBJECT),
     ActionEnable(new String[]{"enable", "hit", "start", "use", "deploy"}, Type.TYPE_HASDIRECTOBJECT),
     ActionPush(new String[]{"push", "call"}, Type.TYPE_HASDIRECTOBJECT), // used with elevator
-    ActionEat(new String[]{"eat", "chew", "consume", "bite", "swallow", "drink"}, Type.TYPE_HASDIRECTOBJECT), // used with elevator
+    ActionEat(new String[]{"eat", "chew", "consume", "bite", "swallow", "drink"}, Type.TYPE_HASDIRECTOBJECT),
     ActionOpen(new String[]{"open", "unlock"}, Type.TYPE_HASDIRECTOBJECT),
     ActionExplode(new String[]{"detonate", "explode"}, Type.TYPE_HASDIRECTOBJECT),
 
@@ -105,6 +107,9 @@ public enum Action {
         }
     }
 
+    /**
+     * Fields to describe actions
+     */
     private Action opposite;
     private String[] aliases;
     private Type type;

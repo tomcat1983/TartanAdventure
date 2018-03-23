@@ -2,7 +2,7 @@ package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.Type;
-import edu.cmu.tartan.configuration.*;
+import edu.cmu.tartan.games.*;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemMagicBox;
@@ -14,30 +14,49 @@ import edu.cmu.tartan.room.RoomRequiredItem;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Vector;
 
+/**
+ * The main class for the game.
+ */
 public class Game {
 
-    protected Scanner scanner;
-    protected PlayerInterpreter interpreter;
-    protected Player player;
-    private File savedGameFile = null;
-    private String gameName = "";
-    private Vector<GameGoal> goals = new Vector<>();
-    private String gameDescription = "";
+    /**
+     * Reads input from the command line.
+     */
+    private Scanner scanner;
 
+    /**
+     * Attempt to interpret input more flexibly.
+     */
+    private PlayerInterpreter interpreter;
+    /**
+     * The player for the game
+     */
+    private Player player;
+
+    /**
+     * The name and description of the active game
+     */
+    private String gameName = "";
+    private String gameDescription = "";
+    /**
+     * The set of goals for a game
+     */
+    private Vector<GameGoal> goals = new Vector<>();
+
+
+    /**
+     * Create and configure a new game.
+     */
     public Game() {
 
         // Parse room from file
-        if (savedGameFile == null)
-            this.scanner = new Scanner(System.in);
-        else {
-            // TODO: load saved game state from a file
-        }
+        this.scanner = new Scanner(System.in);
 
+        // Configure the game, add the goals and exe
         configureGame();
 
         this.interpreter = new PlayerInterpreter();
@@ -47,16 +66,25 @@ public class Game {
         }
     }
 
+    /**
+     *  Display the game menu
+     * @param menu The game menu
+     */
     private void printMenu(Vector<GameConfiguration> menu) {
 
-        StringBuilder sb = new StringBuilder("Choose a game from the options to below: \n");
+        StringBuilder sb = new StringBuilder("Choose a game from the options to below or type 'help' for help. \n");
         for (int i = 0; i < menu.size(); i++) {
             sb.append( (i+1) + ":  " + menu.elementAt(i).name + "\n");
         }
         System.out.println(sb.toString());
     }
 
+    /**
+     * Configure the game.
+     */
     private void configureGame() {
+
+        displayAsciiArt("Tartan Adventure");
 
         Vector<GameConfiguration> menu = new Vector<GameConfiguration>();
 
@@ -68,13 +96,16 @@ public class Game {
         menu.add(new RideElevatorGame());
         menu.add(new ObscuredRoomGame());
 
-        printMenu(menu);
-
         int choice = 0;
         while(true) {
+            printMenu(menu);
             System.out.print("> ");
             String input = this.scanner.nextLine();
             try {
+                if (input.equalsIgnoreCase("help")) {
+                    help();
+                    continue;
+                }
                 choice = Integer.parseInt(input) - 1;
             }
             catch(Exception e) {
@@ -91,21 +122,32 @@ public class Game {
                 System.out.println("Game improperly configured, please try again.");
             }
         }
-
+        // Once the game has been configured, it is time to play!
         this.showIntro();
     }
 
+    /**
+     * Execute an action in the game. This method is where gameplay really occurs.
+     * @param a The action to execute
+     */
     private void executeAction(Action a) {
 
         switch(a.type()) {
 
+            // Handle navigation
             case TYPE_DIRECTIONAL:
-                move(a);
+                player.move(a);
                 break;
+
+            // A direct item is an item that is required for an action. These
+            // items can be picked up, eaten, pushed
+            // destroyed, etc.
+
             case TYPE_HASDIRECTOBJECT:
                 Item val = a.directObject();
 
                 switch(a) {
+
                     case ActionPickUp: {
                         Item o = a.directObject();
                         Item container = null;
@@ -226,7 +268,7 @@ public class Game {
                             if(item instanceof Shakeable) {
                                 ((Shakeable)item).shake();
                                 if(((Shakeable)item).deadly()) {
-                                    this.player.die();
+                                    this.player.terminate();
                                 }
                             }
                             else {
@@ -295,7 +337,7 @@ public class Game {
                             else {
                                 if(item instanceof Holdable) {
                                     System.out.println("As you  shove the " + a.directObject() + " down your throat, you begin to choke.");
-                                    this.player.die();
+                                    this.player.terminate();
                                 }
                                 else {
                                     System.out.println("That cannot be consumed.");
@@ -348,6 +390,7 @@ public class Game {
                     }
 
                 }
+            // Indirect objects are secondary objects that may be used by direct objects, such as a key for a lock
             case TYPE_HASINDIRECTOBJECT:
                 switch(a) {
                     case ActionPut: {
@@ -400,6 +443,7 @@ public class Game {
                         break;
                     }
                 }
+            // Some actions do not require an object
             case TYPE_HASNOOBJECT: {
                 switch(a) {
                     case ActionLook:
@@ -415,10 +459,10 @@ public class Game {
                         }
                         break;
                     case ActionClimb:
-                        move(Action.ActionGoUp);
+                        player.move(Action.ActionGoUp);
                         break;
                     case ActionJump:
-                        move(Action.ActionGoDown);
+                        player.move(Action.ActionGoDown);
                         break;
                     case ActionViewItems:
                         Vector<Item> items = this.player.getCollectedItems();
@@ -432,10 +476,10 @@ public class Game {
                         }
                         break;
                     case ActionDie:
-                        this.player.die();
+                        this.player.terminate();
                         break;
                     case ActionHelp:
-                        help(this.player);
+                        help();
                         break;
                 }
                 break;
@@ -464,11 +508,12 @@ public class Game {
     }
 
     /**
-     *
+     * start the Game.
      * @throws NullPointerException
      */
     public void start() throws NullPointerException {
 
+        // Orient the player
         this.player.lookAround();
 
         try {
@@ -479,14 +524,14 @@ public class Game {
                 input = this.scanner.nextLine();
 
                 if (input.compareTo("quit") == 0) {
-                    System.out.println("Quitting game");
+                    player.terminate();
                     break;
                 }
                 else if (input.compareTo("look") == 0) {
                     this.player.lookAround();
                 }
                 else if (input.compareTo("help") == 0) {
-                    help(this.player);
+                    help();
                 }
                 else if (input.compareTo("status") == 0) {
                     System.out.println("The current game is '" + gameName + "'");
@@ -533,6 +578,9 @@ public class Game {
         displayAsciiArt("Game Over");
     }
 
+    /**
+     * Display the win game message
+     */
     private void winGame() {
 
         displayAsciiArt("CONGRATS");
@@ -551,6 +599,10 @@ public class Game {
         System.out.println("---\n");
     }
 
+    /**
+     * Determine if all the game goals have been completed
+     * @return
+     */
     private Boolean evaluateGame() {
         Vector<GameGoal> goals = player.getGoals();
         for (Iterator<GameGoal> iterator = goals.iterator(); iterator.hasNext(); ) {
@@ -562,13 +614,20 @@ public class Game {
         return goals.isEmpty();
     }
 
-    private void move(Action a) {
-        this.player.move(a);
-    }
-
+    /**
+     *  Getter for a player.
+     *
+     * @return the current player.
+     */
     public Player getPlayer() {
         return player;
     }
+
+    /**
+     * Determine if item in room
+     * @param item the item to check
+     * @return not null if the time is hosted in the room
+     */
     private Item containerForItem(Item item) {
         for(Item i : this.player.currentRoom().items) {
             if (i instanceof Hostable) {
@@ -579,11 +638,19 @@ public class Game {
         }
         return null;
     }
-    private void help(Player player) {
 
-        System.out.println(" -- TartanAdventure RPG Help Menu -- ");
+    /**
+     * Display help menu
+     */
+    private void help() {
+
+        // Credit to emacs Dunnet by Ron Schnell
+        System.out.println(" Welcome to TartanAdventure RPG Help." +
+                "Here is some useful information (read carefully because there are one\n" +
+                "or more clues in here):\n");
+
         System.out.println("To view your current items: type \"inventory\"");
-        System.out.println("Actions available:");
+        System.out.println("You have a number of actions available:");
 
         StringBuilder directions = new StringBuilder("Direction: go [");
         StringBuilder dirobj = new StringBuilder("Manipulate object directly: [");
@@ -612,42 +679,70 @@ public class Game {
         System.out.println(misc.toString());
         System.out.println("You can inspect an inspectable item by typing \"Inspect <item>\"");
         System.out.println("You can quit by typing \"quit\"");
+        System.out.println("\nGood luck! \"quit\"");
 
     }
 
+    /**
+     * Add a goal to the game.
+     * @param g the goal to add.
+     */
     public void addGoal(GameGoal g) {
-       goals.add(g);
+        goals.add(g);
     }
 
+    /**
+     * Set the player for the game.
+     * @param player the player to add to the game.
+     */
     public void setPlayer(Player player) {
         this.player = player;
     }
 
+    /**
+     * Fancy ASCII-art display.
+     * @param msg the string to display.
+     */
     private void displayAsciiArt(String msg) {
-        BufferedImage image = new BufferedImage(144, 32, BufferedImage.TYPE_INT_RGB);
+        int width = 1000;
+        int height = 30;
+
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
-        g.setFont(new Font("Dialog", Font.PLAIN, 18));
+        g.setFont(new Font("SansSerif", Font.BOLD, 24));
+
         Graphics2D graphics = (Graphics2D) g;
         graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        graphics.drawString(msg.toUpperCase(), 10, 20);
 
-        graphics.drawString(msg, 6, 24);
-
-        for (int y = 0; y < 32; y++) {
+        for (int y = 0; y < height; y++) {
             StringBuilder sb = new StringBuilder();
-            for (int x = 0; x < 144; x++)
-                sb.append(image.getRGB(x, y) == -16777216 ? " " : image.getRGB(x, y) == -1 ? "#" : "*");
-            if (sb.toString().trim().isEmpty()) continue;
+            for (int x = 0; x < width; x++) {
+                sb.append(image.getRGB(x, y) == -16777216 ? " " : "$");
+            }
+
+            if (sb.toString().trim().isEmpty()) {
+                continue;
+            }
 
             System.out.println(sb);
         }
     }
 
+    /**
+     * Show the game introduction
+     */
     public void showIntro() {
         displayAsciiArt(gameName);
-        System.out.println("---\n" + gameDescription + " ... let's begin\n ---\n");
+        System.out.println("To get help type 'help'");
+        System.out.println("Objective: " + gameDescription + " ... let's begin\n ---\n");
     }
 
+    /**
+     * Setter for game description
+     * @param description the description
+     */
     public void setDescription(String description) {
         this.gameDescription = description;
     }

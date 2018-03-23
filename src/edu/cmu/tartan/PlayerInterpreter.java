@@ -5,8 +5,16 @@ import edu.cmu.tartan.item.Item;
 
 import java.util.Arrays;
 
+/**
+ * This class attempts to interpret player input in a flexible way. It is experimental at best!
+ */
 public class PlayerInterpreter {
 
+    /**
+     * Interpret the input.
+     * @param string input string.
+     * @return an Action corresponding to the input.
+     */
     public Action interpretString(String string) {
 
         if(string.equals("")) {
@@ -14,12 +22,13 @@ public class PlayerInterpreter {
         }
         return action(string.toLowerCase().split(" "));
     }
+
     private Action action(String[] string) throws ArrayIndexOutOfBoundsException {
 
         if(string == null || string.length == 0) {
             return Action.ActionPass;
         }
-        if(string[0].compareTo("go") == 0 || string[0].compareTo("travel") == 0 || string[0].compareTo("proceed") == 0){
+        if(string[0].compareTo("go") == 0 || string[0].compareTo("travel") == 0 || string[0].compareTo("move") == 0){
             String[] command = Arrays.copyOfRange(string, 1, string.length);
             return action(command);
         }

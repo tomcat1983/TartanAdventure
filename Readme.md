@@ -11,3 +11,10 @@
  2.  Ensure that there always is a winner
  
 ### Make at least one game for demonstration 
+
+## DI for Testing:
+https://google.github.io/dagger/testing.html
+
+https://en.wikipedia.org/wiki/Dunnet_(video_game)
+
+https://sinewalker.wordpress.com/2006/03/08/emacs-dunnet-solved/

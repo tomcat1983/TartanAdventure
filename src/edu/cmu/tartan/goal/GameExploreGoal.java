@@ -9,6 +9,7 @@ import java.util.Vector;
 
 public class GameExploreGoal implements GameGoal {
     private Vector<String> itinerary = new Vector<>();
+    private int count = 0;
     private Player player;
 
     public GameExploreGoal(Vector<String> places, Player p) {
@@ -26,13 +27,17 @@ public class GameExploreGoal implements GameGoal {
         return sb.toString();
     }
 
+    public String getStatus() {
+        return "You have explored " + count + " out of " + itinerary.size() + " rooms.";
+    }
+
     @Override
     public Boolean isAchieved() {
-        int count=0;
+
         for (String place : itinerary) {
             for (Room room : player.getRoomsVisited()) {
                 if (place.equalsIgnoreCase(room.shortDescription())) {
-                    count++;
+                    this.count++;
                 }
             }
         }

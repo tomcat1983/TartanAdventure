@@ -1,6 +1,7 @@
-package edu.cmu.tartan.configuration;
+package edu.cmu.tartan.games;
 
 import edu.cmu.tartan.Game;
+import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GameExploreGoal;

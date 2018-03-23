@@ -1,6 +1,7 @@
-package edu.cmu.tartan.configuration;
+package edu.cmu.tartan.games;
 
 import edu.cmu.tartan.Game;
+import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GameExploreGoal;
@@ -11,6 +12,9 @@ import edu.cmu.tartan.room.RoomDark;
 import java.util.LinkedList;
 import java.util.Vector;
 
+/**
+ * A dark room game shows how to traverse a dark room
+ */
 public class DarkRoomGame extends GameConfiguration {
 
     public DarkRoomGame() {
@@ -28,6 +32,8 @@ public class DarkRoomGame extends GameConfiguration {
         String classroomShortDescription = "Classroom";
         String classroomDarkDescription = "It is dark. Perhaps you can find a way to see...";
         String classroomDarkShortDescription = "Darkness";
+
+        // A falshlight (or any luminous object) is needed or the player will die!
         items.add(Item.getInstance("flashlight"));
 
         RoomDark classroom =
@@ -36,7 +42,7 @@ public class DarkRoomGame extends GameConfiguration {
                         classroomDarkDescription,
                         classroomDarkShortDescription, true);
         room1.putItems(items);
-        classroom.setDeathMessage("As you take your first step within the dark room, you trip on a mysterious object. You fall toward the floor, and hit your head against a large rock.");
+        classroom.setDeathMessage("As walk in the dark room, you trip on a mysterious object. You fall toward the floor, and hit your head against a large rock.");
 
         room1.setAdjacentRoom(Action.ActionGoNorth, classroom);
 

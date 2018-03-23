@@ -7,18 +7,30 @@ import edu.cmu.tartan.room.Room;
 
 import java.util.LinkedList;
 
+/**
+ * This is the main class for game items. Items are things that can be used in the game
+ */
 public class Item implements Comparable, Inspectable, Visible, Valuable {
 
     // every item is visible by default
-    protected boolean visible = true;
-    protected Integer value = null;
-    protected String description;
-    protected String detailDescription;
-    protected String[] aliases;
-    protected static LinkedList<Item> sharedInstances;
-    protected Room relatedRoom; // items can open rooms, call elevators, etc (e.g., an ItemButton instance)
-    protected Item relatedItem; // items can also affect other items, like setting other items breakable (like a junction box);
-    protected String inspectMessage;
+    private boolean visible = true;
+    private Integer value = null;
+
+    /**
+     * Items are referenced by descriptions
+     */
+    private String description=null;
+    String detailDescription= null;
+
+    /**
+     * Items can have a list of unique aliases
+     */
+    private String[] aliases;
+    private static LinkedList<Item> sharedInstances;
+
+    Room relatedRoom; // items can open rooms, call elevators, etc (e.g., an ItemButton instance)
+    Item relatedItem; // items can also affect other items, like setting other items breakable (like a junction box);
+    private String inspectMessage;
 
     public Item(String description, String detailDescription, String[] a) {
         this.description = description;
@@ -76,6 +88,11 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         checkUniqueAliases();
     }
 
+    /**
+     * Factory to create a designed item
+     * @param s the name of the item (or perhaps it's alias)
+     * @return
+     */
     public static Item getInstance(String s) {
         if (sharedInstances == null) {
             initSharedInstances();
@@ -90,6 +107,9 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         return null;
     }
 
+    /**
+     * Ensure that aliases are unique
+     */
     private static void checkUniqueAliases() {
         for (Item item : sharedInstances) {
             for (Item i : sharedInstances) {
@@ -98,7 +118,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
                 }
                 for (String string : item.getAliases()) {
                     for (String s : i.getAliases()) {
-                        if (string.equals(s)) {
+                        if (string == s) {
                             System.err.println("Warning: alias conflict between " + item + " and " + i);
                         }
                     }
