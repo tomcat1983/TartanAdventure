@@ -559,9 +559,6 @@ public class Game {
                         }
                     }
                 }
-                else if (input.compareTo("save") == 0) {
-                    // TODO: Save the state of the game
-                }
                 else {
                     executeAction(this.interpreter.interpretString(input));
                     // every time an action is executed the game state must be evaluated
