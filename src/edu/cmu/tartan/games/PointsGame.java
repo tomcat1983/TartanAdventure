@@ -7,12 +7,25 @@ import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.*;
 import edu.cmu.tartan.room.Room;
 
-public class PointsGame extends GameConfiguration {
+/**
+ * Demonstrating a points-based game.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+ public class PointsGame extends GameConfiguration {
 
     public PointsGame() {
         super.name = "Points";
     }
 
+    /**
+     * Configure the game.
+     * @param game the Game object that will manage execution
+     * @throws InvalidGameException
+     */
     @Override
     public void configure(Game game) throws InvalidGameException{
 

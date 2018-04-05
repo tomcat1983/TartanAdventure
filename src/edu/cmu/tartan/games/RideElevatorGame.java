@@ -11,12 +11,25 @@ import edu.cmu.tartan.room.RoomElevator;
 
 import java.util.ArrayList;
 
+/**
+ * Demonstrate how to use an elevator.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
 public class RideElevatorGame extends GameConfiguration {
 
     public RideElevatorGame() {
         super.name = "Elevator";
     }
 
+    /**
+     * Configure the game
+     * @param game the Game object that will manage execution
+     * @throws InvalidGameException
+     */
     @Override
     public void configure(Game game) throws InvalidGameException{
 
@@ -27,6 +40,8 @@ public class RideElevatorGame extends GameConfiguration {
         elevator.putItem(Item.getInstance("2"));
         elevator.putItem(Item.getInstance("3"));
         elevator.putItem(Item.getInstance("4"));
+
+        // configure the floors and buttons needed to reach them
 
         Room floor1 = new Room("floor1", "floor1");
         Item b1 = Item.getInstance("button");
@@ -43,7 +58,7 @@ public class RideElevatorGame extends GameConfiguration {
         b3.setRelatedRoom(elevator);
         floor3.putItem(b3);
 
-        // restricted floor
+        // restricted floors cannot be reached
         Room floor4 = new Room("floor4", "floor4");
         Item b4 = Item.getInstance("button");
         b4.setRelatedRoom(elevator);
@@ -60,6 +75,7 @@ public class RideElevatorGame extends GameConfiguration {
         descriptions.add("Elevator -- floor 2");
         descriptions.add("Elevator -- floor 3");
         descriptions.add("Elevator -- floor 4");
+
 
         elevator.setFloors(descriptions, list, Action.ActionGoEast, 1);
         ArrayList<Integer> restrictedFloors = new ArrayList<Integer>();

@@ -5,11 +5,24 @@ import edu.cmu.tartan.item.Item;
 
 import java.util.Vector;
 
+/**
+ * A game goal based on collecting items. If a player collects a designated set of items he/she will achieve this goal.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
 public class GameCollectGoal implements GameGoal {
     private Player player = null;
     private Vector<String> itemsList = null;
     private int count=0;
 
+    /**
+     * Create a new goal
+     * @param items the required items
+     * @param p the player
+     */
     public GameCollectGoal(Vector<String> items, Player p) {
         player = p;
         itemsList = items;

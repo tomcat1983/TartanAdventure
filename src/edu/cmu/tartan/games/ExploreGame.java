@@ -11,12 +11,25 @@ import edu.cmu.tartan.room.Room;
 
 import java.util.Vector;
 
+/**
+ * Example game to explore a series of rooms.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
 public class ExploreGame extends GameConfiguration {
 
     public ExploreGame() {
         super.name = "Explorer";
     }
 
+    /**
+     * Configure the game
+     * @param game the Game object that will manage exectuion
+     * @throws InvalidGameException
+     */
     @Override
     public void configure(Game game) throws InvalidGameException {
 
@@ -32,6 +45,7 @@ public class ExploreGame extends GameConfiguration {
         ItemCoffee coffee = (ItemCoffee) Item.getInstance("coffee");
         room2.putItem(coffee);
 
+        // These are the rooms the must be explored
         Vector<String> goalItems = new Vector<>();
         goalItems.add("room1");
         goalItems.add("room2");

@@ -14,13 +14,26 @@ import java.util.Vector;
 
 /**
  * A collection game is one where a player must collect certain items to win.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
  */
 public class CollectGame extends GameConfiguration {
 
+    /**
+     * Create a new collect game
+     */
     public CollectGame() {
         super.name = "Collector";
     }
 
+    /**
+     * Configure the new game
+     * @param game the Game object that will manage execution
+     * @throws InvalidGameException
+     */
     @Override
     public void configure(Game game) throws InvalidGameException {
 

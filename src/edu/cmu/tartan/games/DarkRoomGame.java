@@ -14,13 +14,26 @@ import java.util.Vector;
 
 /**
  * A dark room game shows how to traverse a dark room
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
  */
 public class DarkRoomGame extends GameConfiguration {
 
+    /**
+     * Create a new dark room game.
+     */
     public DarkRoomGame() {
         super.name = "Darkess";
     }
 
+    /**
+     * Confugure the game
+     * @param game the Game object that will manage execution
+     * @throws InvalidGameException
+     */
     @Override
     public void configure(Game game) throws InvalidGameException{
 
@@ -33,7 +46,7 @@ public class DarkRoomGame extends GameConfiguration {
         String classroomDarkDescription = "It is dark. Perhaps you can find a way to see...";
         String classroomDarkShortDescription = "Darkness";
 
-        // A falshlight (or any luminous object) is needed or the player will die!
+        // A flashlight (or any luminous object) is needed or the player will lose!
         items.add(Item.getInstance("flashlight"));
 
         RoomDark classroom =

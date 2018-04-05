@@ -18,8 +18,15 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Vector;
 
+
 /**
- * The main class for the game.
+ * The main class for game logic. Many if not all decisions about game play are made
+ * from this class.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
  */
 public class Game {
 

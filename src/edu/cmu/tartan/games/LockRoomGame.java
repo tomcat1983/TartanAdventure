@@ -13,12 +13,25 @@ import edu.cmu.tartan.room.RoomLockable;
 import java.util.LinkedList;
 import java.util.Vector;
 
+/**
+ * Demonstrate a locked room game.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
 public class LockRoomGame extends GameConfiguration {
 
     public LockRoomGame() {
         super.name = "Lock Demo";
     }
 
+    /**
+     * Configure the game
+     * @param game the Game object that will manage execution
+     * @throws InvalidGameException
+     */
     @Override
     public void configure(Game game) throws InvalidGameException {
 
@@ -33,6 +46,8 @@ public class LockRoomGame extends GameConfiguration {
         LinkedList<Item> startItems = new LinkedList<Item>();
         Item lock = Item.getInstance("lock");
 
+        // Install the lock and key to unlock the locked room. You must 'open' or 'unlock' the lock
+        // to go through the door into the locked room
         ((ItemLock) lock).install(key);
         lock.setRelatedRoom(end);
         mid2.putItem(lock);

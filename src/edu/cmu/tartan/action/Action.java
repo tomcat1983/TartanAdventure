@@ -1,14 +1,18 @@
 package edu.cmu.tartan.action;
 
-import edu.cmu.tartan.Game;
 import edu.cmu.tartan.item.Item;
 
 /**
- * This enumeration of actions available
+ * This enumeration of actions available to a game.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
  */
 public enum Action {
 
-    // No object
+    // Actions that do not rely on an object
     ActionLook(new String[]{"lookAround", "l"}, Type.TYPE_HASNOOBJECT),
     ActionDig(new String[]{"dig"}, Type.TYPE_HASNOOBJECT),
     ActionJump(new String[]{"jump"}, Type.TYPE_HASNOOBJECT),
@@ -17,7 +21,7 @@ public enum Action {
     ActionDie(new String[]{"terminate"}, Type.TYPE_HASNOOBJECT),
     ActionHelp(new String[]{"help", "h"}, Type.TYPE_HASNOOBJECT),
 
-    // Directional actions
+    // Directional actions; for movement
     ActionGoEast(new String[]{"east", "e"}, Type.TYPE_DIRECTIONAL),
     ActionGoWest(new String[]{"west", "w"}, Type.TYPE_DIRECTIONAL),
     ActionGoSouth(new String[]{"south", "s"}, Type.TYPE_DIRECTIONAL),
@@ -53,12 +57,17 @@ public enum Action {
     ActionError(new String[]{}, Type.TYPE_UNKNOWN),
     ActionPass(new String[]{"pass", "\n"}, Type.TYPE_UNKNOWN);
 
-    // Constructors
+    /**
+     * Create an new action
+     * @param aliases THe set of alias fo rthe action
+     * @param type the type of action
+     */
     Action(String[] aliases, Type type) {
         this.aliases = aliases;
         this.type = type;
     }
 
+    // Shortcuts to reverse movement
     static {
         ActionGoEast.opposite = ActionGoWest;
         ActionGoWest.opposite = ActionGoEast;

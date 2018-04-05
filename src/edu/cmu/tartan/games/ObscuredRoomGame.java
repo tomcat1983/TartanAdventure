@@ -11,11 +11,25 @@ import edu.cmu.tartan.room.RoomObscured;
 
 import java.util.Vector;
 
+/**
+ * A game demonstrating a hidden (obscured) room.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
 public class ObscuredRoomGame extends GameConfiguration {
+
     public ObscuredRoomGame() {
         super.name = "Obscured";
     }
 
+    /**
+     * Configure the game
+     * @param game the Game object that will manage execution
+     * @throws InvalidGameException
+     */
     @Override
     public void configure(Game game) throws InvalidGameException{
 
@@ -25,6 +39,7 @@ public class ObscuredRoomGame extends GameConfiguration {
         Room room1 = new Room("You are in the first room. There is a fridge in here.",
                 "Room1");
 
+        // You must push the fridge to expose the hidden passage
         Item fridge = Item.getInstance("fridge");
 		RoomObscured passage = new RoomObscured(passageDescription ,passageShortDescription, fridge);
 		passage.setObscured(true);
@@ -47,7 +62,6 @@ public class ObscuredRoomGame extends GameConfiguration {
         game.setDescription("The objective of this game is to earn explore an obscured room");
 
         if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
-
 
     }
 }
