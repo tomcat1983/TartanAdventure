@@ -6,10 +6,24 @@ import edu.cmu.tartan.properties.Valuable;
 import java.util.Scanner;
 import java.util.Stack;
 
+/**
+ * This class for a watch, which can be held .
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
 public class ItemWatch extends Item implements Holdable, Valuable {
 
     protected Stack<ItemWatchMenu> stack;
 
+    /**
+     * Constructor
+     * @param d description
+     * @param sd long description
+     * @param a aliases
+     */
     public ItemWatch(String d, String sd, String[] a) {
         super(d, sd, a);
         this.stack = new Stack<ItemWatchMenu>();

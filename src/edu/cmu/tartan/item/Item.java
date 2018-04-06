@@ -9,6 +9,11 @@ import java.util.LinkedList;
 
 /**
  * This is the main class for game items. Items are things that can be used in the game
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
  */
 public class Item implements Comparable, Inspectable, Visible, Valuable {
 
@@ -32,6 +37,12 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     Item relatedItem; // items can also affect other items, like setting other items breakable (like a junction box);
     private String inspectMessage;
 
+    /**
+     * Create a new item
+     * @param description short description
+     * @param detailDescription long description
+     * @param a alias list
+     */
     public Item(String description, String detailDescription, String[] a) {
         this.description = description;
         this.detailDescription = detailDescription;
@@ -42,6 +53,9 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         this.value = null;
     }
 
+    /**
+     * Initialize items
+     */
     private static void initSharedInstances() {
 
         sharedInstances = new LinkedList<Item>();
@@ -127,13 +141,23 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         }
     }
 
+    /**
+     * Fetch related item
+     * @return the related item
+     */
     public Item relatedItem() {
         return this.relatedItem;
     }
 
+    /**
+     * Set a related item
+     * @param i the related item
+     */
     public void setRelatedItem(Item i) {
         this.relatedItem = i;
     }
+
+    // Getter/setter for related room
 
     public Room relatedRoom() {
         return this.relatedRoom;
@@ -176,7 +200,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         }
     }
 
-    // Visible
+    // Control Visibility
     public boolean isVisible() {
         return visible;
     }

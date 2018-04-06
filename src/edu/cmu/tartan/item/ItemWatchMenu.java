@@ -2,8 +2,20 @@ package edu.cmu.tartan.item;
 
 import java.util.LinkedList;
 
+/**
+ * This class for a watch menu,
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
 public class ItemWatchMenu {
 
+    /**
+     * Constructor
+     * @param title the title for the menu
+     */
     public ItemWatchMenu(String title) {
 
         this.title = title;

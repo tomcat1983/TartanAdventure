@@ -14,7 +14,7 @@ public enum Action {
 
     // Actions that do not rely on an object
     ActionLook(new String[]{"lookAround", "l"}, Type.TYPE_HASNOOBJECT),
-    ActionDig(new String[]{"dig"}, Type.TYPE_HASNOOBJECT),
+
     ActionJump(new String[]{"jump"}, Type.TYPE_HASNOOBJECT),
     ActionClimb(new String[]{"climb"}, Type.TYPE_HASNOOBJECT),
     ActionViewItems(new String[]{"inventory", "items", "i"}, Type.TYPE_HASNOOBJECT),
@@ -36,6 +36,7 @@ public enum Action {
     // Direct Object. Has one direct object e.g. Break shovel, throw lamp
     ActionAcquire(new String[]{"acquire"}, Type.TYPE_HASNOOBJECT),
     ActionBurn(new String[]{"burn"}, Type.TYPE_HASNOOBJECT),
+    ActionDig(new String[]{"dig"}, Type.TYPE_HASDIRECTOBJECT),
     ActionPickUp(new String[]{"pickup", "get", "take", "acquire", "grab"}, Type.TYPE_HASDIRECTOBJECT),
     ActionDestroy(new String[]{"break", "smash", "destroy", "obliterate"}, Type.TYPE_HASDIRECTOBJECT),
     ActionInspect(new String[]{"inspect", "examine", "read", "view"}, Type.TYPE_HASDIRECTOBJECT),

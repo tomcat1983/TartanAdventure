@@ -37,7 +37,7 @@ public class GameExploreGoal implements GameGoal {
     @Override
     public String describe() {
         StringBuilder sb = new StringBuilder();
-        sb.append("The objective of this type of game is to visit the following rooms:");
+        sb.append("Game Explore Goal: You must visit the following rooms:");
         for (String i : itinerary) {
             sb.append(" * " + i + "\n");
         }

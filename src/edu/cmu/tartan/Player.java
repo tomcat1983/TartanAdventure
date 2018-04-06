@@ -80,6 +80,7 @@ public class Player {
      */
     public Item drop(Item item) {
         if(this.items.remove(item)) {
+            this.score -= item.value();
             return item;
         }
         else {

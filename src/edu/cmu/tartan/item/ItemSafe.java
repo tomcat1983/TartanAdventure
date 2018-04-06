@@ -5,10 +5,18 @@ import edu.cmu.tartan.properties.Openable;
 
 import java.util.Scanner;
 
+/**
+ * This class for a safe, which can hold something and be opened.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
 public class ItemSafe extends Item implements Hostable, Openable {
 
-    protected Item installedItem = null;
-    protected Integer pin = null;
+    private Item installedItem = null;
+    private Integer pin = null;
 
     public ItemSafe(String d, String sd, String[] a) {
         super(d, sd, a);

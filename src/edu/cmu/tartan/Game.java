@@ -95,6 +95,7 @@ public class Game {
 
         Vector<GameConfiguration> menu = new Vector<GameConfiguration>();
 
+        // These are the currently supported games.
         menu.add(new CollectGame());
         menu.add(new PointsGame());
         menu.add(new ExploreGame());
@@ -236,6 +237,8 @@ public class Game {
                             if(item instanceof Holdable) {
                                 System.out.println("Dropped.");
                                 this.player.drop(item);
+                                System.out.println("You Dropped '" +item.description() + "' costing you "
+                                        + item.value() + " points.");
                                 this.player.currentRoom().putItem(item);
                             }
                             else {
@@ -330,6 +333,16 @@ public class Game {
                         }
                         break;
                     }
+                    case ActionDig: {
+                        Item item = a.directObject();
+                        if (this.player.currentRoom() instanceof RoomExcavatable && item.description() == "Shovel") {
+                            RoomExcavatable curr = (RoomExcavatable) this.player.currentRoom();
+                            curr.dig();
+                        } else {
+                            System.out.println("You are not allowed to dig here");
+                        }
+                        break;
+                    }
                     case ActionEat: {
                         Item item = a.directObject();
                         if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
@@ -375,7 +388,7 @@ public class Game {
                     }
                     case ActionExplode: {
                         Item dynamite = a.directObject();
-                        if(this.player.hasItem(dynamite) || this.player.currentRoom().hasItem(dynamite)) {
+                        if(this.player.currentRoom().hasItem(dynamite)) {
                             if(dynamite instanceof Explodable) {
                                 if(this.player.currentRoom().isAdjacentToRoom(dynamite.relatedRoom())) {
                                     Explodable explode = (Explodable)dynamite;
@@ -456,15 +469,6 @@ public class Game {
                     case ActionLook:
                         this.player.lookAround();
                         break;
-                    case ActionDig:
-                        if(this.player.currentRoom() instanceof RoomExcavatable) {
-                            RoomExcavatable curr = (RoomExcavatable)this.player.currentRoom();
-                            curr.dig();
-                        }
-                        else {
-                            System.out.println("You are not allowed to dig here");
-                        }
-                        break;
                     case ActionClimb:
                         player.move(Action.ActionGoUp);
                         break;
@@ -515,7 +519,7 @@ public class Game {
     }
 
     /**
-     * start the Game.
+     * Start the Game.
      * @throws NullPointerException
      */
     public void start() throws NullPointerException {
@@ -543,10 +547,17 @@ public class Game {
                     help();
                 }
                 else if (input.compareTo("status") == 0) {
-                    System.out.println("The current game is '" + gameName + "'");
-                    System.out.println("The game objective is '" + gameDescription + "'");
+                    System.out.println("The current game is '" + gameName + "': " + gameDescription);
+                    System.out.println("---\nThere are " + goals.size() + " goals to achieve:");
+
+                    for (int i=0; i < goals.size(); i++) {
+                        System.out.println((i+1)+ ": "+ goals.elementAt(i).describe());
+                        System.out.println(" " + goals.elementAt(i).getStatus());
+                        System.out.println("--");
+                    }
                     System.out.println("---\nCurrent room:  " + player.currentRoom());
                     System.out.println("---\nCurrent score: " + player.getScore());
+
 
                     System.out.println("---\nCurrent inventory: ");
                     if (player.getCollectedItems().size() == 0) {
