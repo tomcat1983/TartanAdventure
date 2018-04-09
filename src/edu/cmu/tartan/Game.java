@@ -277,7 +277,7 @@ public class Game {
                         if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if(item instanceof Shakeable) {
                                 ((Shakeable)item).shake();
-                                if(((Shakeable)item).deadly()) {
+                                if(((Shakeable)item).accident()) {
                                     this.player.terminate();
                                 }
                             }

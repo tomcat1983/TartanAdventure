@@ -10,7 +10,7 @@ package edu.cmu.tartan.properties;
  */
 public interface Chuckable  {
     /**
-     * The effect of throwing the item
+     * The effect of throwing the item.
      */
 	void chuck();
 }

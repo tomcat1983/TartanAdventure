@@ -74,7 +74,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         sharedInstances.add(new ItemFridge("fridge", "white refrigerator", new String[]{"fridge", "refrigerator"}));
         sharedInstances.add(new ItemFlashlight("flashlight", "battery operated flashlight", new String[]{"flashlight"}));
         sharedInstances.add(new ItemTorch("torch", "metal torch", new String[]{"torch", "candle"}));
-        sharedInstances.add(new ItemWatch("watch", "smart watch", new String[]{"watch"}));
+//        sharedInstances.add(new ItemWatch("watch", "smart watch", new String[]{"watch"}));
         sharedInstances.add(new ItemMagicBox("pit", "bottomless pit", new String[]{"pit", "hole"}));
         sharedInstances.add(new ItemVendingMachine("machine", "vending machine with assorted candies and treats", new String[]{"machine", "vendor"}));
         sharedInstances.add(new ItemSafe("safe", "bullet-proof safe", new String[]{"safe"}));
@@ -141,28 +141,17 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         }
     }
 
-    /**
-     * Fetch related item
-     * @return the related item
-     */
+    // Getter & setters
     public Item relatedItem() {
         return this.relatedItem;
     }
-
-    /**
-     * Set a related item
-     * @param i the related item
-     */
     public void setRelatedItem(Item i) {
         this.relatedItem = i;
     }
 
-    // Getter/setter for related room
-
     public Room relatedRoom() {
         return this.relatedRoom;
     }
-
     public void setRelatedRoom(Room r) {
         this.relatedRoom = r;
     }
@@ -178,7 +167,6 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     public String detailDescription() {
         return this.detailDescription;
     }
-
     public String description() {
         return this.description;
     }
@@ -186,12 +174,15 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     public void setDescription(String s) {
         this.description = s;
     }
-
     public void setDetailDescription(String s) {
         this.detailDescription = s;
     }
 
-    // Comparable
+    /**
+     * The comparison is based on description
+     * @param i
+     * @return
+     */
     public int compareTo(Object i) {
         if (((Item) i).detailDescription.equals(this.detailDescription())) {
             return 0;
@@ -200,7 +191,9 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         }
     }
 
-    // Control Visibility
+    /**
+     * Control visibility
+     */
     public boolean isVisible() {
         return visible;
     }

@@ -24,7 +24,7 @@ public class ItemVendingMachine extends Item implements Shakeable {
         setValue(15);
     }
 
-    public boolean deadly() {
+    public boolean accident() {
         return this.count > 2;
     }
 
@@ -37,7 +37,7 @@ public class ItemVendingMachine extends Item implements Shakeable {
                 System.out.println("The treat begins to bend toward the will of gravity.");
                 break;
             case 2:
-                System.out.println("Just as the candy falls, the machine also falls over and crushes your body.");
+                System.out.println("Just as the candy falls, the machine also falls over and crushes you.");
                 break;
             default:
                 break;

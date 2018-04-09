@@ -171,7 +171,6 @@ public class Player {
      */
     public void move(Room nextRoom) {
 
-        nextRoom.setPlayer(this);
         if(this.currentRoom != null && nextRoom.compareTo(this.currentRoom) != 0) {
             Action directionOfTravel = this.currentRoom.getDirectionForRoom(nextRoom);
             HashMap<Action, String> messages = this.currentRoom.transitionMessages();
@@ -195,7 +194,7 @@ public class Player {
         if(nextRoom instanceof RoomRequiredItem) {
             RoomRequiredItem r = (RoomRequiredItem)nextRoom;
             if(r.diesOnEntry()) {
-                System.out.println(r.deathMessage());
+                System.out.println(r.loseMessage());
                 this.terminate();
             }
         }
@@ -231,8 +230,8 @@ public class Player {
         if(this.currentRoom instanceof RoomRequiredItem) {
             RoomRequiredItem room = (RoomRequiredItem)this.currentRoom;
 
-            if(room.shouldDieForAction(action)) {
-                System.out.println(room.deathMessage());
+            if(room.shouldLoseForAction(action)) {
+                System.out.println(room.loseMessage());
                 this.terminate();
             }
         }

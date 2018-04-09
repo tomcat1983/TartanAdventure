@@ -10,8 +10,8 @@ package edu.cmu.tartan.properties;
  */
 public interface Explodable extends Valuable {
     /**
-     * Boom
-     * @return
+     * Boom!
+     * @return true on success, false otherwise
      */
 	Boolean explode();
 }

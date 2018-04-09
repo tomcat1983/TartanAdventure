@@ -5,19 +5,45 @@ import edu.cmu.tartan.item.Item;
 
 import java.util.LinkedList;
 
+/**
+ * The class for a room that requires a certain item to enter.
+ * from this class.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
 public class RoomRequiredItem extends Room {
+
+	private Item requiredItem;
+    private boolean diesOnItemDiscard;
+    private boolean diesOnEntry;
+    private String deathMessage;
+    private LinkedList<Action> safeDirections;
+	String warningDescription;
+	String warningShortDescription;
+
 
 	public RoomRequiredItem(String d, String dd, Item requiredItem) {
 		this(d, dd, null, null, requiredItem);
 	}
 
+    /**
+     * Create a new room
+     * @param d
+     * @param dd
+     * @param w
+     * @param ws
+     * @param requiredItem
+     */
 	public RoomRequiredItem(String d, String dd, String w, String ws, Item requiredItem) {
 		super(d, dd);
+
 		this.warningDescription = w;
 		this.warningShortDescription = ws;
 		this.requiredItem = requiredItem;
 		this.safeDirections = new LinkedList<Action>();
-		this.roomWasVisitedInDanger = false;
 		this.diesOnItemDiscard = false;
 		this.diesOnEntry = false;
 		this.deathMessage = null;
@@ -43,15 +69,15 @@ public class RoomRequiredItem extends Room {
 		return this.diesOnEntry;
 	}
 
-	public boolean shouldDieForAction(Action a) {
+	public boolean shouldLoseForAction(Action a) {
 		return !this.safeDirections.contains(a) && !this.player.hasItem(this.requiredItem);
 	}
 
-	public void setDeathMessage(String s) {
+	public void setLoseMessage(String s) {
 		this.deathMessage = s;
 	}
 
-	public String deathMessage() {
+	public String loseMessage() {
 		return this.deathMessage;
 	}
 
@@ -78,18 +104,6 @@ public class RoomRequiredItem extends Room {
 			this.roomWasVisited = true;
 			return s;
 		}
-		else {
-			String s = this.roomWasVisitedInDanger ? this.warningShortDescription : this.warningDescription + visibleItems();
-			this.roomWasVisitedInDanger = true;
-			return s;
-		}
+		return "You cannot visit this room";
 	}
-	protected Item requiredItem;
-	protected boolean diesOnItemDiscard;
-	protected boolean diesOnEntry;
-	protected String deathMessage;
-	protected LinkedList<Action> safeDirections;
-	String warningDescription;
-	String warningShortDescription;
-	protected boolean roomWasVisitedInDanger;
 }

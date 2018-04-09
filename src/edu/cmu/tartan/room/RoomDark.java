@@ -4,18 +4,48 @@ import edu.cmu.tartan.action.Action;
 
 import java.util.LinkedList;
 
-// represents a dark room
+/**
+ * The class for a dark room. Players must have a Luminous item to enter this room safely
+ * from this class.
+ * <p/>
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
 public class RoomDark extends Room {
 
-	protected String darkDescription;
-	protected String darkShortDescription;
-	protected boolean isDark;
-	protected String deathMessage;
+	// Descriptions
+	private String darkDescription;
+	private String darkShortDescription;
 
+	// indicates whether the room is dark
+	private boolean isDark;
+
+	// Message to indicate accident in room
+	private String deathMessage;
+
+    /**
+     *
+     * Create a new dark room
+     * @param description the description
+     * @param shortDescription the short description
+     * @param darkDescription the dark description
+     * @param darkShortDescription the long description
+     */
 	public RoomDark(String description, String shortDescription, String darkDescription, String darkShortDescription) {
 
 		this(description, shortDescription, darkDescription, darkShortDescription, true);
 	}
+
+    /**
+     * Create a new dark room
+     * @param description the description
+     * @param shortDescription the short description
+     * @param darkDescription the dark description
+     * @param darkShortDescription the long description
+     * @param isDark determines if the room is dark to start
+     */
 	public RoomDark(String description, String shortDescription, String darkDescription, String darkShortDescription, boolean isDark){
 		super(description, shortDescription);
 
@@ -24,6 +54,7 @@ public class RoomDark extends Room {
 		this.darkShortDescription = darkShortDescription;
 		this.deathMessage = null;
 	}
+	// getters & setters
 	public boolean isDark() {
 		return this.isDark;
 	}
