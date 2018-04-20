@@ -28,10 +28,11 @@ public class ItemKeycardReader extends Item implements Hostable {
     }
 
     /**
-     * Install an item
+     * Install a keycard
      * @param item the keycard to install in the reader
      */
     public void install(Item item) {
+        if (!(item instanceof ItemKeycard)) return;
         this.installedItem = item;
 
         for (int i = 0; i < 3; i++) {
@@ -48,8 +49,15 @@ public class ItemKeycardReader extends Item implements Hostable {
         this.relatedItem.setVisible(true);
     }
 
-
+    /**
+     * Unstall the keycard
+     * @param i the keycard to uninstall
+     * @return true if uninstalled; false otherwise
+     */
+    @Override
     public boolean uninstall(Item i) {
+        if (!(i instanceof ItemKeycard)) return false;
+
         if (this.installedItem == null) {
             return false;
         } else if (this.installedItem == i) {
@@ -60,10 +68,18 @@ public class ItemKeycardReader extends Item implements Hostable {
         }
     }
 
+    /**
+     * Fetch the installed keycard
+     * @return
+     */
     public Item installedItem() {
         return this.installedItem;
     }
 
+    /**
+     * Set the install message
+     * @param s the message
+     */
     public void setInstallMessage(String s) {
         this.installMessage = s;
     }

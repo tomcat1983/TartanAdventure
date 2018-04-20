@@ -24,6 +24,10 @@ public class ItemVendingMachine extends Item implements Shakeable {
         setValue(15);
     }
 
+    /**
+     * Shaking this machine too much can cause an accident
+     * @return true if an accident can occur; false otherwise
+     */
     public boolean accident() {
         return this.count > 2;
     }

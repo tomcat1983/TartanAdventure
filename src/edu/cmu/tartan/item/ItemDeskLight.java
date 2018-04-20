@@ -14,7 +14,7 @@ import edu.cmu.tartan.properties.Luminous;
 public class ItemDeskLight extends Item implements Holdable, Luminous {
 
     /**
-     * Constructor
+     * Constructor for a desklight
      * @param s description
      * @param sd long description
      * @param a aliases

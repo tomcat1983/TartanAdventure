@@ -2,6 +2,7 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Edible;
 import edu.cmu.tartan.properties.Holdable;
+import edu.cmu.tartan.properties.Meltable;
 import edu.cmu.tartan.properties.Valuable;
 
 /**
@@ -12,10 +13,12 @@ import edu.cmu.tartan.properties.Valuable;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class ItemFood extends Item implements Edible, Holdable {
+public class ItemFood extends Item implements Edible, Holdable, Meltable {
+
+    private Item hiddenItem = null;
 
     /**
-     * Constructor
+     * Constructor for food item
      * @param s description
      * @param sd long description
      * @param a aliases
@@ -26,8 +29,30 @@ public class ItemFood extends Item implements Edible, Holdable {
         setValue(3);
     }
 
+    /**
+     * Eat the food
+     */
     @Override
     public void eat() {
         System.out.println("Yummy");
+    }
+
+    /**
+     * Set the item to reveal when the food is melted
+     * @param item the item to melt
+     */
+    @Override
+    public void setMeltItem(Item item) {
+        hiddenItem = item;
+
+    }
+
+    /**
+     * Reveal the hidden item
+     * @return the hidden item
+     */
+    @Override
+    public Item meltItem() {
+        return hiddenItem;
     }
 }

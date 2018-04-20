@@ -15,7 +15,7 @@ import edu.cmu.tartan.properties.Valuable;
 public class ItemDocument extends Item implements Holdable, Installable {
 
     /**
-     * Constructor
+     * Constructor for a document
      * @param s description
      * @param sd long description
      * @param a aliases

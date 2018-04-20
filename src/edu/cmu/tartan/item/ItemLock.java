@@ -28,10 +28,21 @@ public class ItemLock extends Item implements Hostable, Openable {
         setValue(100);
     }
 
+    /**
+     * Install an item
+     * @param i the item to install
+     */
+    @Override
     public void install(Item i) {
         this.installedItem = i;
     }
 
+    /**
+     * Uninstall an installed item
+     * @param i the item to uninstall
+     * @return
+     */
+    @Override
     public boolean uninstall(Item i) {
         if (this.installedItem == null) {
             return false;
@@ -43,10 +54,19 @@ public class ItemLock extends Item implements Hostable, Openable {
         }
     }
 
+    /**
+     * Fetch the installed items
+     * @return
+     */
+    @Override
     public Item installedItem() {
         return this.installedItem;
     }
 
+    /**
+     * Open the lock to the locked room. Note the key must be installed in the lock to open
+     * @return true if opened; false otherwise
+     */
     @Override
     public Boolean open() {
         if (this.relatedRoom != null && this.relatedRoom instanceof RoomLockable) {

@@ -13,10 +13,11 @@ import edu.cmu.tartan.room.RoomObscured;
  */
 public class ItemFridge extends Item implements Pushable {
 
-    protected boolean wasPushed;
+    // indicates whether fridge has been pushed
+    private boolean wasPushed;
 
     /**
-     * Constructor
+     * Constructor for the fridge
      * @param s description
      * @param sd long description
      * @param a aliases
@@ -27,6 +28,9 @@ public class ItemFridge extends Item implements Pushable {
         setValue(1);
     }
 
+    /**
+     * Push the fridge out of the way to reveal an obscured room.
+     */
     @Override
     public void push() {
         if (!this.wasPushed) {

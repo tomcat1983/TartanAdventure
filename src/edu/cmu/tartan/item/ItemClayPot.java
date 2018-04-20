@@ -32,31 +32,55 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
         setValue(3);
     }
 
+    /**
+     * Message to display when breaking the pot
+     * @param s the message
+     */
     @Override
     public void setDestroyMessage(String s) {
         this.destroyMessage = s;
     }
 
+    /**
+     * Break the pot
+     */
     @Override
     public void destroy() {
         System.out.println(destroyMessage);
     }
 
+    /**
+     * Sets whether pot should disappear
+     * @param b set to true if the item should disappear
+     */
     @Override
     public void setDisappears(boolean b) {
         this.disappears = b;
     }
 
+    /**
+     * Make the pot vanish
+     * @return
+     */
     @Override
     public boolean disappears() {
         return this.disappears;
     }
 
+    /**
+     * Install an item in the pot
+     * @param i the item to install
+     */
     @Override
     public void install(Item i) {
         this.installedItem = i;
     }
 
+    /**
+     * Uninstall an item
+     * @param i the item
+     * @return true if uninstalled; false otherwise
+     */
     @Override
     public boolean uninstall(Item i) {
         if (this.installedItem == null) {
@@ -69,6 +93,10 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
         }
     }
 
+    /**
+     * Fetch the item in the pot
+     * @return the item installed in the pot
+     */
     @Override
     public Item installedItem() {
         return this.installedItem;

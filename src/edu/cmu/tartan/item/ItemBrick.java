@@ -14,7 +14,7 @@ import edu.cmu.tartan.properties.Valuable;
 public class ItemBrick extends Item implements Holdable {
 
     /**
-     *
+     * Create a brick
      * @param s description
      * @param sd long description
      * @param a aliases

@@ -28,6 +28,10 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
         setValue(5);
     }
 
+    /**
+     * Start the microwave. If the installed item is meltable, then melt it
+     * @return true if started
+     */
     @Override
     public Boolean start() {
 
@@ -51,6 +55,10 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
         return false;
     }
 
+    /**
+     * Install an item in the microwave
+     * @param i the item to install
+     */
     public void install(Item i) {
         this.installedItem = i;
     }

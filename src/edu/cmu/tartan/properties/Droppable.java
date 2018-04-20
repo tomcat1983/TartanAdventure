@@ -10,7 +10,7 @@ package edu.cmu.tartan.properties;
  */
 public interface Droppable {
     /**
-     * Drop the item
+     * Drop an item
      */
 	void drop();
 }

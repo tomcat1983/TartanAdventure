@@ -750,7 +750,7 @@ public class Game {
      * @return true if valid, false otherwise
      */
     public boolean validate() {
-        // TODO: Implement this routine to be more thorough
+        // TODO: This method is way too simple. A more thorough validation must be done!
         return (gameName!= null && gameDescription != null);
     }
 }

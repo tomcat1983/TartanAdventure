@@ -20,10 +20,18 @@ public class ItemButton extends Item implements Pushable {
         setValue(2);
     }
 
+    /**
+     * Push the button
+     */
+    @Override
     public void push() {
         System.out.println(this.pushMessage);
     }
 
+    /**
+     * Set the message to display when the button is pushed
+     * @param s the message
+     */
     public void setPushMessage(String s) {
         this.pushMessage = s;
     }

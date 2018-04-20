@@ -11,7 +11,7 @@ package edu.cmu.tartan.item;
 public class ItemComputer extends Item {
 
     /**
-     * Constructor
+     * Constructor for a computer
      * @param s description
      * @param sd long description
      * @param a aliases

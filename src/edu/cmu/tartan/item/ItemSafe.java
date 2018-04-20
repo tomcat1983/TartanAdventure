@@ -15,7 +15,10 @@ import java.util.Scanner;
  */
 public class ItemSafe extends Item implements Hostable, Openable {
 
+    // Items installed in this safe
     private Item installedItem = null;
+
+    // The safe's pin, which controls entry
     private Integer pin = null;
 
     public ItemSafe(String d, String sd, String[] a) {
@@ -25,14 +28,29 @@ public class ItemSafe extends Item implements Hostable, Openable {
         setValue(750);
     }
 
+    /**
+     * Set the safe PIN
+     * @param pin the pin
+     */
     public void setPIN(Integer pin) {
         this.pin = pin;
     }
 
+    /**
+     * Install an item in the safe.
+     * @param i the item to install
+     */
+    @Override
     public void install(Item i) {
         this.installedItem = i;
     }
 
+    /**
+     * Unstall the installed item
+     * @param i the specific item to uninstall
+     * @return true if successful; false otherwise
+     */
+    @Override
     public boolean uninstall(Item i) {
         if (this.installedItem == null) {
             return false;
@@ -44,11 +62,19 @@ public class ItemSafe extends Item implements Hostable, Openable {
         }
     }
 
+    /**
+     * Fetch the installed item
+     * @return the installed item
+     */
     public Item installedItem() {
         return this.installedItem;
     }
 
-    // Openable
+    /**
+     * Open the safe using the pin
+     * @return true if the safe is successfully opened; false otherwise
+     */
+    @Override
     public Boolean open() {
         Scanner s = new Scanner(System.in);
         String input = "";

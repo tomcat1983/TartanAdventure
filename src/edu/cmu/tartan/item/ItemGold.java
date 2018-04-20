@@ -15,7 +15,7 @@ import edu.cmu.tartan.properties.Valuable;
 public class ItemGold extends Item implements Installable, Holdable {
 
     /**
-     * Constructor
+     * Constructor for a piece of gold
      * @param s description
      * @param sd long description
      * @param a aliases

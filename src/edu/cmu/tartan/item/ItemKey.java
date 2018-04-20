@@ -15,7 +15,7 @@ import edu.cmu.tartan.properties.Valuable;
 public class ItemKey extends Item implements Holdable, Installable {
 
     /**
-     * Constructor
+     * Constructor for a key
      * @param s description
      * @param sd long description
      * @param a aliases

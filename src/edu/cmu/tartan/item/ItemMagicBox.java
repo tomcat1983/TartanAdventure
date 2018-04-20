@@ -24,16 +24,27 @@ public class ItemMagicBox extends Item implements Hostable {
         setValue(7);
     }
 
+    /**
+     * Install an item
+     * @param i the item to install
+     */
     @Override
     public void install(Item i) {
         // items fall into black hole
     }
 
+    /**
+     * Uninstall an item
+     * @param i the item to uninstall
+     */
     @Override
     public boolean uninstall(Item i) {
         return false;
     }
 
+    /**
+     * Fetch the installed item
+     */
     @Override
     public Item installedItem() {
         return null;

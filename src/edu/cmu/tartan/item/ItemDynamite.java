@@ -14,7 +14,8 @@ import edu.cmu.tartan.room.RoomObscured;
  * 1.0 March 2018 - initial version
  */
 public class ItemDynamite extends Item implements Explodable, Holdable {
-    protected boolean exploded;
+    // Indicates whether dynamite has been detonated
+    private boolean exploded;
 
     /**
      * Constructor
@@ -33,6 +34,7 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
      *
      * @return true when the explosion occurs
      */
+    @Override
     public Boolean explode() {
         if (!this.exploded) {
             if (this.relatedRoom != null && this.relatedRoom instanceof RoomObscured) {
@@ -53,6 +55,10 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
         }
     }
 
+    /**
+     * Has the dynamite been detonated?
+     * @return true if the detonation occurred
+     */
     public Boolean getExploded() {
         return exploded;
     }

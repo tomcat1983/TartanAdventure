@@ -26,12 +26,21 @@ public class ItemFolder extends Item implements Openable {
         setValue(3);
     }
 
+    /**
+     * Open the folder
+     * @return true when the folder is opened
+     */
+    @Override
     public Boolean open() {
 
         System.out.println(this.openMessage);
         return true;
     }
 
+    /**
+     * The message to display when the folder is opened.
+     * @param o
+     */
     public void setOpenMessage(String o) {
         this.openMessage = o;
     }

@@ -15,7 +15,7 @@ import edu.cmu.tartan.properties.Valuable;
 public class ItemDiamond extends Item implements Holdable, Installable {
 
     /**
-     * Constructor
+     * Constructor for a diamond
      * @param s description
      * @param sd long description
      * @param a aliases

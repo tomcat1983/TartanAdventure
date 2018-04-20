@@ -13,7 +13,7 @@ import edu.cmu.tartan.item.Item;
 public interface Meltable  {
 
 	/**
-	 * Set the item to melt.
+	 * Set the item revealed when melted.
 	 * @param item the item to melt
 	 */
 	void setMeltItem(Item item);

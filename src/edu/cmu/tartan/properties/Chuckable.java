@@ -9,8 +9,9 @@ package edu.cmu.tartan.properties;
  * 1.0 March 2018 - initial version
  */
 public interface Chuckable  {
+
     /**
-     * The effect of throwing the item.
+     * Throw the item.
      */
 	void chuck();
 }

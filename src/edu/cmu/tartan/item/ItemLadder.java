@@ -14,7 +14,7 @@ import edu.cmu.tartan.properties.Valuable;
 public class ItemLadder extends Item implements Holdable {
 
     /**
-     * Constructor
+     * Constructor for a ladder
      * @param s description
      * @param sd long description
      * @param a aliases
