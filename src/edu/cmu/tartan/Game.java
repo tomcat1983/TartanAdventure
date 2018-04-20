@@ -15,6 +15,7 @@ import edu.cmu.tartan.room.RoomRequiredItem;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -91,8 +92,6 @@ public class Game {
      */
     private void configureGame() {
 
-        displayAsciiArt("Tartan Adventure");
-
         Vector<GameConfiguration> menu = new Vector<GameConfiguration>();
 
         // These are the currently supported games.
@@ -103,6 +102,7 @@ public class Game {
         menu.add(new LockRoomGame());
         menu.add(new RideElevatorGame());
         menu.add(new ObscuredRoomGame());
+        menu.add(new DemoGame());
 
         int choice = 0;
         while(true) {
@@ -547,35 +547,7 @@ public class Game {
                     help();
                 }
                 else if (input.compareTo("status") == 0) {
-                    System.out.println("The current game is '" + gameName + "': " + gameDescription);
-                    System.out.println("---\nThere are " + goals.size() + " goals to achieve:");
-
-                    for (int i=0; i < goals.size(); i++) {
-                        System.out.println((i+1)+ ": "+ goals.elementAt(i).describe());
-                        System.out.println(" " + goals.elementAt(i).getStatus());
-                        System.out.println("--");
-                    }
-                    System.out.println("---\nCurrent room:  " + player.currentRoom());
-                    System.out.println("---\nCurrent score: " + player.getScore());
-
-
-                    System.out.println("---\nCurrent inventory: ");
-                    if (player.getCollectedItems().size() == 0) {
-                        System.out.println("You don't have any items.");
-                    } else {
-                        for (Item i : player.getCollectedItems()) {
-                            System.out.println(i.toString() + " ");
-                        }
-                    }
-                    System.out.println("---\nRooms visited: ");
-                    Vector<Room> rooms = player.getRoomsVisited();
-                    if (rooms.size() == 0) {
-                        System.out.println("You have not been to any rooms.");
-                    } else {
-                        for (Room r : rooms) {
-                            System.out.println(r.description() + " ");
-                        }
-                    }
+                    status();
                 }
                 else {
                     executeAction(this.interpreter.interpretString(input));
@@ -592,7 +564,7 @@ public class Game {
             start();
         }
 
-        displayAsciiArt("Game Over");
+        System.out.println("Game Over");
     }
 
     /**
@@ -600,11 +572,11 @@ public class Game {
      */
     private void winGame() {
 
-        displayAsciiArt("CONGRATS");
+        System.out.println("Congrats!");
 
-        System.out.println("---\nYou've won the '" + gameName + "' game!" );
-        System.out.println("---\nFinal score: " + player.getScore());
-        System.out.println("---\nFinal inventory: ");
+        System.out.println("You've won the '" + gameName + "' game!\n" );
+        System.out.println("- Final score: " + player.getScore());
+        System.out.println("- Final inventory: ");
         if (player.getCollectedItems().size() == 0) {
             System.out.println("You don't have any items.");
         }
@@ -613,7 +585,7 @@ public class Game {
                 System.out.println(i.toString() + " ");
             }
         }
-        System.out.println("---\n");
+        System.out.println("\n");
     }
 
     /**
@@ -622,6 +594,7 @@ public class Game {
      */
     private Boolean evaluateGame() {
         Vector<GameGoal> goals = player.getGoals();
+
         for (Iterator<GameGoal> iterator = goals.iterator(); iterator.hasNext(); ) {
             GameGoal g = iterator.next();
             if (g.isAchieved()) {
@@ -629,6 +602,44 @@ public class Game {
             }
         }
         return goals.isEmpty();
+    }
+
+    private void status() {
+        System.out.println("The current game is '" + gameName + "': " + gameDescription + "\n");
+        System.out.println("- There are " + goals.size() + " goals to achieve:");
+
+        for (int i=0; i < goals.size(); i++) {
+            System.out.println("  * " + (i+1)+ ": "+ goals.elementAt(i).describe() + ", status: " + goals.elementAt(i).getStatus());
+        }
+        System.out.println("\n");
+        System.out.println("- Current room:  " + player.currentRoom() + "\n");
+        System.out.println("- Items in current room: ");
+        for (Item i : player.currentRoom().items) {
+            System.out.println("   * " + i.toString() + " ");
+        }
+        System.out.println("\n");
+
+        System.out.println("- Current score: " + player.getScore());
+
+        System.out.println("- Current inventory: ");
+        if (player.getCollectedItems().size() == 0) {
+            System.out.println("   You don't have any items.");
+        } else {
+            for (Item i : player.getCollectedItems()) {
+                System.out.println("   * " + i.toString() + " ");
+            }
+        }
+        System.out.println("\n");
+
+        System.out.println("- Rooms visited: ");
+        Vector<Room> rooms = player.getRoomsVisited();
+        if (rooms.size() == 0) {
+            System.out.println("You have not been to any rooms.");
+        } else {
+            for (Room r : rooms) {
+                System.out.println("  * " +r.description() + " ");
+            }
+        }
     }
 
     /**
@@ -662,12 +673,12 @@ public class Game {
     private void help() {
 
         // Credit to emacs Dunnet by Ron Schnell
-        System.out.println(" Welcome to TartanAdventure RPG Help." +
+        System.out.println("Welcome to TartanAdventure RPG Help." +
                 "Here is some useful information (read carefully because there are one\n" +
                 "or more clues in here):\n");
 
-        System.out.println("To view your current items: type \"inventory\"");
-        System.out.println("You have a number of actions available:");
+        System.out.println("- To view your current items: type \"inventory\"\n");
+        System.out.println("- You have a number of actions available:\n");
 
         StringBuilder directions = new StringBuilder("Direction: go [");
         StringBuilder dirobj = new StringBuilder("Manipulate object directly: [");
@@ -690,13 +701,13 @@ public class Game {
         indirobj.append("]");
         misc.append("]");
 
-        System.out.println(directions.toString());
-        System.out.println(dirobj.toString());
-        System.out.println(indirobj.toString());
-        System.out.println(misc.toString());
-        System.out.println("You can inspect an inspectable item by typing \"Inspect <item>\"");
-        System.out.println("You can quit by typing \"quit\"");
-        System.out.println("\nGood luck! \"quit\"");
+        System.out.println("- "+ directions.toString() + "\n");
+        System.out.println("- " + dirobj.toString() + "\n");
+        System.out.println("- " + indirobj.toString() + "\n");
+        System.out.println("- " +misc.toString() + "\n");
+        System.out.println("- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
+        System.out.println("- You can quit by typing \"quit\"\n");
+        System.out.println("- Good luck!\n");
 
     }
 
@@ -717,43 +728,13 @@ public class Game {
     }
 
     /**
-     * Fancy ASCII-art display.
-     * @param msg the string to display.
-     */
-    private void displayAsciiArt(String msg) {
-        int width = 1000;
-        int height = 30;
-
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics g = image.getGraphics();
-        g.setFont(new Font("SansSerif", Font.BOLD, 24));
-
-        Graphics2D graphics = (Graphics2D) g;
-        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        graphics.drawString(msg.toUpperCase(), 10, 20);
-
-        for (int y = 0; y < height; y++) {
-            StringBuilder sb = new StringBuilder();
-            for (int x = 0; x < width; x++) {
-                sb.append(image.getRGB(x, y) == -16777216 ? " " : "$");
-            }
-
-            if (sb.toString().trim().isEmpty()) {
-                continue;
-            }
-
-            System.out.println(sb);
-        }
-    }
-
-    /**
      * Show the game introduction
      */
     public void showIntro() {
-        displayAsciiArt(gameName);
-        System.out.println("To get help type 'help'");
-        System.out.println("Objective: " + gameDescription + " ... let's begin\n ---\n");
+
+        System.out.println("Welcome to Tartan Adventure (1.0), by Tartan Inc..");
+        System.out.println("Game: " + gameDescription);
+        System.out.println("To get help type 'help' ... let's begin\n");
     }
 
     /**
@@ -769,6 +750,7 @@ public class Game {
      * @return true if valid, false otherwise
      */
     public boolean validate() {
-        return (gameName!= null &&gameDescription != null && !goals.isEmpty() && player != null);
+        // TODO: Implement this routine to be more thorough
+        return (gameName!= null && gameDescription != null);
     }
 }

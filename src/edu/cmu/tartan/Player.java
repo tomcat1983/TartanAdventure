@@ -171,6 +171,7 @@ public class Player {
      */
     public void move(Room nextRoom) {
 
+        nextRoom.setPlayer(this);
         if(this.currentRoom != null && nextRoom.compareTo(this.currentRoom) != 0) {
             Action directionOfTravel = this.currentRoom.getDirectionForRoom(nextRoom);
             HashMap<Action, String> messages = this.currentRoom.transitionMessages();

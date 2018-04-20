@@ -54,7 +54,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     }
 
     /**
-     * Initialize items
+     * Initialize default items. These are the items initially available
      */
     private static void initSharedInstances() {
 
@@ -90,22 +90,16 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         sharedInstances.add(new ItemButton("Floor 2 Button", "Elevator Floor 2 Button", new String[]{"2"}));
         sharedInstances.add(new ItemButton("Floor 3 Button", "Elevator Floor 3 Button", new String[]{"3"}));
         sharedInstances.add(new ItemButton("Floor 4 Button", "Elevator Floor 4 Button", new String[]{"4"}));
-
-        sharedInstances.add(new ItemButton("NJIT", "NJIT Button", new String[]{"njit"}));
-        sharedInstances.add(new ItemButton("Dunnet", "Dunnet Button", new String[]{"dunnet"}));
-        sharedInstances.add(new ItemButton("Rooftop", "Rooftop Button", new String[]{"rooftop"}));
-        sharedInstances.add(new ItemButton("Obama", "Barack Obama Test Tube Button", new String[]{"obama"}));
-        sharedInstances.add(new ItemButton("Command Center", "Command Center Button", new String[]{"center"}));
-
         sharedInstances.add(new ItemUnknown("unknown", "unknown", new String[]{"unknown"}));
 
+        // there can be no overlap in aliases
         checkUniqueAliases();
     }
 
     /**
-     * Factory to create a designed item
+     * Factory to create a designed item. All items must be instantiated using this method. Items are created by name
      * @param s the name of the item (or perhaps it's alias)
-     * @return
+     * @return the newly instantiated item
      */
     public static Item getInstance(String s) {
         if (sharedInstances == null) {

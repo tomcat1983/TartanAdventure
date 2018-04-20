@@ -30,7 +30,7 @@ public class RoomRequiredItem extends Room {
 	}
 
     /**
-     * Create a new room
+     * Create a new room the requires an item
      * @param d
      * @param dd
      * @param w

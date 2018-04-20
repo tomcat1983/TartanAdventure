@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class PlayerInterpreter {
 
     /**
-     * Interpret the input.
+     * Interpret the input in terms of its action.
      * @param string input string.
      * @return an Action corresponding to the input.
      */
@@ -23,6 +23,12 @@ public class PlayerInterpreter {
         return action(string.toLowerCase().split(" "));
     }
 
+    /**
+     * Attempt to select the appropriate action for the given input string
+     * @param string the description of what is to be done
+     * @return
+     * @throws ArrayIndexOutOfBoundsException
+     */
     private Action action(String[] string) throws ArrayIndexOutOfBoundsException {
 
         if(string == null || string.length == 0) {
@@ -69,10 +75,9 @@ public class PlayerInterpreter {
                 case TYPE_HASINDIRECTOBJECT:
 
                     // test if it has indirect object
-                    // "put CPU IN VAX"
                     // "Take Diamond from Microwave"
 
-                    if(string.length > 1) {
+                    if(string.length > 0) {
 
                         String d = string[1];
                         Item item = Item.getInstance(d);
