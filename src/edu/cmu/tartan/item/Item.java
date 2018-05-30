@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 /**
  * This is the main class for game items. Items are things that can be used in the game
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

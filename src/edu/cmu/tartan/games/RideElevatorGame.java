@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 /**
  * Demonstrate how to use an elevator.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

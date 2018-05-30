@@ -4,7 +4,7 @@ import edu.cmu.tartan.properties.Hostable;
 
 /**
  * This class for a keycard reader, which can hold a keycard.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

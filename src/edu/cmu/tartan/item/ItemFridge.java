@@ -5,7 +5,7 @@ import edu.cmu.tartan.room.RoomObscured;
 
 /**
  * This class for a fridge, which can be pushed.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

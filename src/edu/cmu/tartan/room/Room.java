@@ -13,7 +13,7 @@ import java.util.LinkedList;
 /**
  * The main class for a room. All room types must extend this class.
  * from this class.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

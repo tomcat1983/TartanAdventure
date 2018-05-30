@@ -6,7 +6,7 @@ import java.util.Vector;
 
 /**
  * A game goal based on exploration of different areas. Traveling to each place is necessary to achieve this goal.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

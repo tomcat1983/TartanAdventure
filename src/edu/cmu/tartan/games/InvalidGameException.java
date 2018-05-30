@@ -2,7 +2,7 @@ package edu.cmu.tartan.games;
 
 /**
  * An error to indicate that a game is improperly configured.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

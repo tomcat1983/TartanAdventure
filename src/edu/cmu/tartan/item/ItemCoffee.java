@@ -5,7 +5,7 @@ import edu.cmu.tartan.properties.Valuable;
 
 /**
  * This class for coffee cup, which can be eaten.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

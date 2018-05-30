@@ -7,7 +7,7 @@ import java.util.Vector;
 
 /**
  * A game goal based on collecting items. If a player collects a designated set of items he/she will achieve this goal.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

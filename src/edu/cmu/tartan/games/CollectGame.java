@@ -14,7 +14,7 @@ import java.util.Vector;
 
 /**
  * A collection game is one where a player must collect certain items to win.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

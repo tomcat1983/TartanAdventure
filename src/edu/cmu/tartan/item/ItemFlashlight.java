@@ -7,7 +7,7 @@ import edu.cmu.tartan.properties.Valuable;
 
 /**
  * This class for a flashlight, which can be held, installed and provide light.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

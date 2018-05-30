@@ -14,7 +14,7 @@ import java.util.Vector;
 
 /**
  * The player for a game.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

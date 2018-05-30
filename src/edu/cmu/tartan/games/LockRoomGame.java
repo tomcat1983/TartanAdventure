@@ -15,7 +15,7 @@ import java.util.Vector;
 
 /**
  * Demonstrate a locked room game.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

@@ -6,7 +6,7 @@ import edu.cmu.tartan.room.RoomLockable;
 
 /**
  * This class for a brick, which can hold a key and be opened.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

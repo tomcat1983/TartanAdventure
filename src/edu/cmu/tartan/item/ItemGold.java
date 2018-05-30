@@ -6,7 +6,7 @@ import edu.cmu.tartan.properties.Valuable;
 
 /**
  * This class for a gold bar, which can be held and installed.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

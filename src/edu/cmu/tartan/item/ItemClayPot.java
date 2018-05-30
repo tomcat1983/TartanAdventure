@@ -7,7 +7,7 @@ import edu.cmu.tartan.properties.Valuable;
 
 /**
  * A clay pot can be destroyed, held, and host other objects
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

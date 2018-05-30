@@ -5,7 +5,7 @@ import edu.cmu.tartan.properties.Valuable;
 
 /**
  * This class for a brick, which can be held.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

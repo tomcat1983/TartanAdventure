@@ -2,7 +2,7 @@ package edu.cmu.tartan.action;
 
 /**
  * Enumeration of action types.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

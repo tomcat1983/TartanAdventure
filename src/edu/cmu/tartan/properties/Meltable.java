@@ -4,7 +4,7 @@ import edu.cmu.tartan.item.Item;
 
 /**
  * Enables an item to be melted.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

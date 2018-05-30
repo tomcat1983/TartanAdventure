@@ -2,7 +2,7 @@ package edu.cmu.tartan.goal;
 
 /**
  * Interface that all goals must implement
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

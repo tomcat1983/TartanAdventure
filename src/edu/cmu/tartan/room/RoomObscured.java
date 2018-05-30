@@ -5,7 +5,7 @@ import edu.cmu.tartan.item.Item;
 /**
  * The class for an obscured room. An item is hiding this room
  * from this class.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

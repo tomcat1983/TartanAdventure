@@ -7,7 +7,7 @@ import edu.cmu.tartan.room.RoomObscured;
 
 /**
  * This class for dynamite, which can be held and explode.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

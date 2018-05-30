@@ -4,7 +4,7 @@ import edu.cmu.tartan.item.Item;
 
 /**
  * This enumeration of actions available to a game.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

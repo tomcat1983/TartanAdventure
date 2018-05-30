@@ -23,7 +23,7 @@ import java.util.Vector;
 /**
  * The main class for game logic. Many if not all decisions about game play are made
  * from this class.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

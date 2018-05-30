@@ -6,7 +6,7 @@ import edu.cmu.tartan.properties.Startable;
 
 /**
  * This class for a microwave, which can hold something and be started.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

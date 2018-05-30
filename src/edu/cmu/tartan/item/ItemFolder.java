@@ -4,7 +4,7 @@ import edu.cmu.tartan.properties.Openable;
 
 /**
  * This class for a folder, which can be opened.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

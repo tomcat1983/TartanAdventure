@@ -4,7 +4,7 @@ import edu.cmu.tartan.properties.Shakeable;
 
 /**
  * This class for a keycard, which can be shaken.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

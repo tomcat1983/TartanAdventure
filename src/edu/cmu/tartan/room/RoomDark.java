@@ -7,7 +7,7 @@ import java.util.LinkedList;
 /**
  * The class for a dark room. Players must have a Luminous item to enter this room safely
  * from this class.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

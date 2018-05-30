@@ -4,7 +4,7 @@ import edu.cmu.tartan.properties.Pushable;
 
 /**
  * A button can be pushed
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

@@ -15,7 +15,7 @@ import java.util.Vector;
 
 /**
  * Example game to explore a series of rooms. This is the configuraion discussed in the project description.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

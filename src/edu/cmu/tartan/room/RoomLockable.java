@@ -5,7 +5,7 @@ import edu.cmu.tartan.item.Item;
 /**
  * The class for a locked room. A key is required to open this type of room
  * from this class.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

@@ -6,7 +6,7 @@ import edu.cmu.tartan.properties.Valuable;
 
 /**
  * This class for a keycard, which can be held and provide light.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * The class for an elevator
  * from this class.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:
@@ -40,7 +40,7 @@ public class RoomElevator extends Room {
 	}
 
     /**
-     * Set the elevator floows
+     * Set the elevator floors
      * @param descriptions the floor descriptions
      * @param floors the
      * @param directionOfFloors
@@ -84,7 +84,7 @@ public class RoomElevator extends Room {
 	}
 
     /**
-     * set the current floor & adjacent room after elevaor ride
+     * set the current floor and adjacent room after elevaor ride
      * @param index te current floor
      */
 	protected void setFloor(int index) {

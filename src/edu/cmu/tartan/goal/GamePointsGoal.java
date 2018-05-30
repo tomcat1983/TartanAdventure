@@ -4,7 +4,7 @@ import edu.cmu.tartan.Player;
 
 /**
  * A game goal based on scoring points.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:

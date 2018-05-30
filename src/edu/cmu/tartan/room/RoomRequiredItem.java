@@ -8,7 +8,7 @@ import java.util.LinkedList;
 /**
  * The class for a room that requires a certain item to enter.
  * from this class.
- * <p/>
+ * <p>
  * Project: LG Exec Ed SDET Program
  * 2018 Jeffrey S. Gennari
  * Versions:
