@@ -56,17 +56,17 @@ One of your first tasks is to refactor the source code to make it easier to eval
 There are various goals for this refactoring, but the primary aim is to better enable 
 testing for functional correctness. In particular, senior engineers have noted the relative lack of any unit or integration level tests for the platform. Former AdHoc Inc. engineers claim the software “just works”; however, your team rightly believes the lack of testing is a significant risk. Therefore, you should reorganize the existing source code and create a set of unit and integration tests. Be sure to update existing design documentation justifying changes. The resulting test suites must achieve Tartan Inc.’s organizational standards for code coverage: 80% statement coverage, 75% branch coverage , and 90% mutation coverage . We also expect all functional and architectural requirements will be evaluated to ensure they are appropriately implemented. 
 
-###Extend the game
+### Extend the game
 The current game is functional, but not terribly interesting. Tartan Inc. 
 has decided that you will extend the game to include new, compelling features. 
 These features are described in some detail below and are the responsibility of 
 your team to complete in a timely manner. As with the existing platform, all new 
 features must be adequately tested in accordance with company standards.
 
-####1: Load/Save a Game 
+#### 1: Load/Save a Game 
 For this extension you should allow a player to periodically save the state of their game. The player should be able to completely save their game state and quit the game. Then, at a later time, the player should be able to reload their saved game and continue play as before. Note that the state of the saved game must be perfectly preserved to satisfy this requirement. A user should be able to save and re-load a game at any point during exploration. There should only be one saved game per player and the player should be given the opportunity to save their game when they quit. 
 
-####2: Networked Game Play mode
+#### 2: Networked Game Play mode
 Management feels the isolated command line interface is too antiquated for 
 today’s networked world, so they would like you to convert the game to operate 
 over the internet. All game elements and rules should remain the same. The end 
@@ -78,7 +78,7 @@ are especially concerned with a bad actor interfering with an ongoing game. That
 the integrity of a game and the personal information of a player must be protected at
  all costs.
 
-####3: Simplify Game Configuration
+#### 3: Simplify Game Configuration
 Currently, configuring a new game requires that designers manually edit the 
 game source code. This is a complex, error prone process that requires developers 
 to intimately know the details of the game platform. You are to make it so that 
