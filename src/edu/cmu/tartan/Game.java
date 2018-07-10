@@ -176,7 +176,6 @@ public class Game {
                             System.out.println("Taken.");
                             ((Hostable)container).uninstall(o);
                             this.player.pickup(o);
-                            Holdable h = (Holdable) o;
                             this.player.score( ((Holdable)o).value());
                         }
                         else if(this.player.hasItem(o)) {
