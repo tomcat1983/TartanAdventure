@@ -1,0 +1,12 @@
+language: java
+
+addons:
+  sonarcloud:
+    organization: "tomcat1983-github"
+    token:
+      secure: "37403d59db769a6090e871231c6251d462d2f85c"
+
+script:
+  # other script steps might be done before running the actual analysis
+  - mvn test -B
+  - sonar-scanner -Dsonar.projectKey=tartan -Dsonar.sources=./src -Dsonar.java.binaries=.
