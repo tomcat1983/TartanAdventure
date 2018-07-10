@@ -61,7 +61,6 @@ import edu.cmu.tartan.room.Room;
 
         game.setDescription("The objective of this game is to earn points by doing certain things. You must earn" + points + " to win");
 
-        if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
-        return;
+        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
     }
 }

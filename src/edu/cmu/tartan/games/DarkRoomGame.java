@@ -10,7 +10,7 @@ import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomDark;
 
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * A dark room game shows how to traverse a dark room
@@ -60,7 +60,7 @@ public class DarkRoomGame extends GameConfiguration {
         room1.setAdjacentRoom(Action.ActionGoNorth, classroom);
 
         Player player = new Player(room1);
-        Vector<String> goalItems = new Vector<>();
+        ArrayList<String> goalItems = new ArrayList<>();
         goalItems.add("room1");
         goalItems.add("Classroom");
 
@@ -69,9 +69,6 @@ public class DarkRoomGame extends GameConfiguration {
 
         game.setDescription("Explore a dark room");
 
-        if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
-
-        return;
-
+        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
     }
 }
