@@ -21,6 +21,7 @@ import java.util.ArrayList;
  */
 public class RideElevatorGame extends GameConfiguration {
 
+	// This code will move to other place such as a item class.
 	public static final String BUTTON = "button";
 	
     public RideElevatorGame() {
