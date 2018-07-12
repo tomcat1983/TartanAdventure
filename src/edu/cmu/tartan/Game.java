@@ -82,7 +82,7 @@ public class Game {
 
         StringBuilder sb = new StringBuilder("Choose a game from the options to below or type 'help' for help. \n");
         for (int i = 0; i < menu.size(); i++) {
-            sb.append( (i+1) + ":  " + menu.elementAt(i).name + "\n");
+            sb.append( (i+1) + ":  " + menu.elementAt(i).getName() + "\n");
         }
         System.out.println(sb.toString());
     }
@@ -122,7 +122,7 @@ public class Game {
             }
             try {
                 GameConfiguration gameConfig = menu.elementAt(choice);
-                gameName = gameConfig.name;
+                gameName = gameConfig.getName();
                 gameConfig.configure(this);
                 break;
             }

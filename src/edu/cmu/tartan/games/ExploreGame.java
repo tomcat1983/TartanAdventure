@@ -9,7 +9,7 @@ import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemCoffee;
 import edu.cmu.tartan.room.Room;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Example game to explore a series of rooms.
@@ -22,7 +22,7 @@ import java.util.Vector;
 public class ExploreGame extends GameConfiguration {
 
     public ExploreGame() {
-        super.name = "Explorer";
+        super("Explorer");
     }
 
     /**
@@ -46,7 +46,7 @@ public class ExploreGame extends GameConfiguration {
         room2.putItem(coffee);
 
         // These are the rooms the must be explored
-        Vector<String> goalItems = new Vector<>();
+        ArrayList<String> goalItems = new ArrayList<>();
         goalItems.add("room1");
         goalItems.add("room2");
         goalItems.add("room3");
@@ -57,9 +57,7 @@ public class ExploreGame extends GameConfiguration {
 
         game.setDescription("Explore different connected rooms.");
 
-        if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
-
-        return;
+        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
     }
 }
 

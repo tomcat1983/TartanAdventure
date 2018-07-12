@@ -9,7 +9,7 @@ import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomObscured;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * A game demonstrating a hidden (obscured) room.
@@ -22,7 +22,7 @@ import java.util.Vector;
 public class ObscuredRoomGame extends GameConfiguration {
 
     public ObscuredRoomGame() {
-        super.name = "Obscured";
+        super("Obscured");
     }
 
     /**
@@ -52,7 +52,7 @@ public class ObscuredRoomGame extends GameConfiguration {
 		fridge.setRelatedRoom(passage);
 
         Player player = new Player(room1);
-        Vector<String> goalItems = new Vector<>();
+        ArrayList<String> goalItems = new ArrayList<>();
         goalItems.add("passage");
         goalItems.add("room1");
 
@@ -61,7 +61,7 @@ public class ObscuredRoomGame extends GameConfiguration {
 
         game.setDescription("The objective of this game is to earn explore an obscured room");
 
-        if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
+        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
 
     }
 }
