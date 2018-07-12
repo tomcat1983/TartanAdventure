@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class LockRoomGame extends GameConfiguration {
 
     public LockRoomGame() {
-        super.name = "Lock Demo";
+        super("Lock Demo");
     }
 
     /**

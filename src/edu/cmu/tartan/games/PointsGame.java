@@ -18,7 +18,7 @@ import edu.cmu.tartan.room.Room;
  public class PointsGame extends GameConfiguration {
 
     public PointsGame() {
-        super.name = "Points";
+        super("Points");
     }
 
     /**

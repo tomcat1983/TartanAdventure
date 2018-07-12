@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class ExploreGame extends GameConfiguration {
 
     public ExploreGame() {
-        super.name = "Explorer";
+        super("Explorer");
     }
 
     /**

@@ -26,7 +26,7 @@ public class CollectGame extends GameConfiguration {
      * Create a new collect game
      */
     public CollectGame() {
-        super.name = "Collector";
+        super("Collector");
     }
 
     /**

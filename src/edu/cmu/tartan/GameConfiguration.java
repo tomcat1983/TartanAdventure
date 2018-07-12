@@ -8,6 +8,27 @@ import edu.cmu.tartan.games.InvalidGameException;
 public abstract class GameConfiguration {
 
     /**
+     * The name of this game
+     */
+    private String name;
+    
+	/**
+	 * Constructor
+	 * @param game name
+	 */
+	public GameConfiguration(String name) {
+		this.name = name;
+	}
+	
+	/** 
+	 * Get the game name
+	 * @return game name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+    /**
      * Configure the game
      * @param game the Game object that will manage exectuion
      * @throws InvalidGameException indicates configuration error
@@ -15,10 +36,6 @@ public abstract class GameConfiguration {
      */
     public abstract void configure(Game game) throws InvalidGameException;
 
-    /**
-     * The name of this game
-     */
-    public String name;
 };
 
 

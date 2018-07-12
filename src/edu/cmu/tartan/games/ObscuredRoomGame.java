@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class ObscuredRoomGame extends GameConfiguration {
 
     public ObscuredRoomGame() {
-        super.name = "Obscured";
+        super("Obscured");
     }
 
     /**

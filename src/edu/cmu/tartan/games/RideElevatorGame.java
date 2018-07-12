@@ -25,7 +25,7 @@ public class RideElevatorGame extends GameConfiguration {
 	public static final String BUTTON = "button";
 	
     public RideElevatorGame() {
-        super.name = "Elevator";
+        super("Elevator");
     }
 
     /**

@@ -26,7 +26,7 @@ public class DarkRoomGame extends GameConfiguration {
      * Create a new dark room game.
      */
     public DarkRoomGame() {
-        super.name = "Darkess";
+        super("Darkess");
     }
 
     /**

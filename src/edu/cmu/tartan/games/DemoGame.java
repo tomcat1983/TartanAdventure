@@ -21,7 +21,7 @@ import edu.cmu.tartan.room.*;
 public class DemoGame extends GameConfiguration {
 
     public DemoGame() {
-        super.name = "Demo";
+        super("Demo");
     }
 
     /**
