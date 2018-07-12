@@ -88,7 +88,7 @@ public class Game {
     /**
      * Configure the game.
      */
-    private void configureGame() {
+    public boolean configureGame() {
 
         ArrayList<GameConfiguration> menu = new ArrayList<>();
 
@@ -130,10 +130,14 @@ public class Game {
             }
             catch (InvalidGameException ige) {
                 System.out.println("Game improperly configured, please try again.");
+                return false;
             }
         }
         // Once the game has been configured, it is time to play!
         this.showIntro();
+        // Configure the game, add the goals and exe
+        setPlayerGameGoal();
+        return true;
     }
 
     /**
@@ -524,11 +528,7 @@ public class Game {
      * Start the Game.
      * @throws NullPointerException
      */
-    public void start() throws NullPointerException {
-        // Configure the game, add the goals and exe
-        configureGame();
-        setPlayerGameGoal();
-    	
+    public void start() throws NullPointerException {    	
         // Orient the player
         this.player.lookAround();
 
