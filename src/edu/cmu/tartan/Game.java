@@ -12,13 +12,10 @@ import edu.cmu.tartan.room.RoomElevator;
 import edu.cmu.tartan.room.RoomExcavatable;
 import edu.cmu.tartan.room.RoomRequiredItem;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Vector;
-
 
 /**
  * The main class for game logic. Many if not all decisions about game play are made
@@ -63,36 +60,37 @@ public class Game {
 
         // Parse room from file
         this.scanner = new Scanner(System.in);
-
-        // Configure the game, add the goals and exe
-        configureGame();
-
         this.interpreter = new PlayerInterpreter();
-
-        for (GameGoal g : goals) {
-            this.player.addGoal(g);
-        }
     }
 
     /**
      *  Display the game menu
      * @param menu The game menu
      */
-    private void printMenu(Vector<GameConfiguration> menu) {
+    private void printMenu(ArrayList<GameConfiguration> menu) {
 
         StringBuilder sb = new StringBuilder("Choose a game from the options to below or type 'help' for help. \n");
         for (int i = 0; i < menu.size(); i++) {
-            sb.append( (i+1) + ":  " + menu.elementAt(i).getName() + "\n");
+            sb.append( (i+1) + ":  " + menu.get(i).getName() + "\n");
         }
         System.out.println(sb.toString());
     }
 
     /**
+     * TODO Set player game goal(will be removed)
+     */
+    private void setPlayerGameGoal() {
+        for (GameGoal g : goals) {
+            this.player.addGoal(g);
+        }
+    }
+    
+    /**
      * Configure the game.
      */
-    private void configureGame() {
+    public boolean configureGame() {
 
-        Vector<GameConfiguration> menu = new Vector<GameConfiguration>();
+        ArrayList<GameConfiguration> menu = new ArrayList<>();
 
         // These are the currently supported games.
         menu.add(new CollectGame());
@@ -103,7 +101,7 @@ public class Game {
         menu.add(new RideElevatorGame());
         menu.add(new ObscuredRoomGame());
         menu.add(new DemoGame());
-
+        
         int choice = 0;
         while(true) {
             printMenu(menu);
@@ -115,23 +113,31 @@ public class Game {
                     continue;
                 }
                 choice = Integer.parseInt(input) - 1;
+                if(choice < 0 || menu.size() <= choice) {
+                	System.out.println("Invaild selectioin");
+                	continue;
+                }
             }
             catch(Exception e) {
                 System.out.println("Invalid selection.");
                 continue;
             }
             try {
-                GameConfiguration gameConfig = menu.elementAt(choice);
+                GameConfiguration gameConfig = menu.get(choice);
                 gameName = gameConfig.getName();
                 gameConfig.configure(this);
                 break;
             }
             catch (InvalidGameException ige) {
                 System.out.println("Game improperly configured, please try again.");
+                return false;
             }
         }
         // Once the game has been configured, it is time to play!
         this.showIntro();
+        // Configure the game, add the goals and exe
+        setPlayerGameGoal();
+        return true;
     }
 
     /**
@@ -521,8 +527,7 @@ public class Game {
      * Start the Game.
      * @throws NullPointerException
      */
-    public void start() throws NullPointerException {
-
+    public void start() throws NullPointerException {    	
         // Orient the player
         this.player.lookAround();
 
