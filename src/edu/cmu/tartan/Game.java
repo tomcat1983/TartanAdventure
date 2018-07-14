@@ -234,7 +234,7 @@ public class Game {
                         Item item = a.directObject();
                         if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if(item instanceof Inspectable) {
-                                ((Inspectable)item).inspect();
+                                item.inspect();
                             }
                             else {
                                 System.out.println("You cannot inspect this item.");
