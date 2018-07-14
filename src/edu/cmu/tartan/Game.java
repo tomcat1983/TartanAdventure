@@ -84,14 +84,13 @@ public class Game {
             this.player.addGoal(g);
         }
     }
-    
-    /**
-     * Configure the game.
-     */
-    public boolean configureGame() {
 
-        ArrayList<GameConfiguration> menu = new ArrayList<>();
-
+    private ArrayList<GameConfiguration> loadGame() {
+    	// TODO need to load about real game from XML(new game feature)
+    	
+    	// TODO I will select between call with argument and some global variable.
+    	ArrayList<GameConfiguration> menu = new ArrayList<>();
+    	
         // These are the currently supported games.
         menu.add(new CollectGame());
         menu.add(new PointsGame());
@@ -101,36 +100,48 @@ public class Game {
         menu.add(new RideElevatorGame());
         menu.add(new ObscuredRoomGame());
         menu.add(new DemoGame());
-        
-        int choice = 0;
-        while(true) {
-            printMenu(menu);
-            System.out.print("> ");
-            String input = this.scanner.nextLine();
-            try {
-                if (input.equalsIgnoreCase("help")) {
-                    help();
+
+    	return menu;
+    }
+    
+    /**
+     * Configure the game.
+     */
+    public boolean configureGame() {
+
+    	ArrayList<GameConfiguration> menu = loadGame();
+    	
+        if(!menu.isEmpty()) {
+        	int choice = 0;
+            while(true) {
+                printMenu(menu);
+                System.out.print("> ");
+                String input = this.scanner.nextLine();
+                try {
+                    if (input.equalsIgnoreCase("help")) {
+                        help();
+                        continue;
+                    }
+                    choice = Integer.parseInt(input) - 1;
+                    if(choice < 0 || menu.size() <= choice) {
+                    	System.out.println("Invaild selectioin");
+                    	continue;
+                    }
+                }
+                catch(Exception e) {
+                    System.out.println("Invalid selection.");
                     continue;
                 }
-                choice = Integer.parseInt(input) - 1;
-                if(choice < 0 || menu.size() <= choice) {
-                	System.out.println("Invaild selectioin");
-                	continue;
+                try {
+                    GameConfiguration gameConfig = menu.get(choice);
+                    gameName = gameConfig.getName();
+                    gameConfig.configure(this);
+                    break;
                 }
-            }
-            catch(Exception e) {
-                System.out.println("Invalid selection.");
-                continue;
-            }
-            try {
-                GameConfiguration gameConfig = menu.get(choice);
-                gameName = gameConfig.getName();
-                gameConfig.configure(this);
-                break;
-            }
-            catch (InvalidGameException ige) {
-                System.out.println("Game improperly configured, please try again.");
-                return false;
+                catch (InvalidGameException ige) {
+                    System.out.println("Game improperly configured, please try again.");
+                    return false;
+                }	
             }
         }
         // Once the game has been configured, it is time to play!
@@ -162,7 +173,7 @@ public class Game {
 
                 switch(a) {
 
-                    case ActionPickUp: {
+                    case ACTION_PICKUP: {
                         Item o = a.directObject();
                         Item container = null;
                         if(this.player.currentRoom().hasItem(o)) {
@@ -193,7 +204,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionDestroy: {
+                    case ACTION_DESTROY: {
                         Item item = a.directObject();
                         if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if (item instanceof Destroyable) {
@@ -222,7 +233,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionInspect: {
+                    case ACTION_INSPECT: {
                         Item item = a.directObject();
                         if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if(item instanceof Inspectable) {
@@ -237,7 +248,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionDrop: {
+                    case ACTION_DROP: {
                         Item item = a.directObject();
                         if(this.player.hasItem(item)) {
                             if(item instanceof Holdable) {
@@ -260,7 +271,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionThrow: {
+                    case ACTION_THROW: {
                         Item item = a.directObject();
                         if(this.player.hasItem(item)) {
                             if(item instanceof Chuckable) {
@@ -278,7 +289,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionShake: {
+                    case ACTION_SHAKE: {
                         Item item = a.directObject();
                         if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if(item instanceof Shakeable) {
@@ -296,7 +307,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionEnable: {
+                    case ACTION_ENABLE: {
                         Item item = a.directObject();
                         if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if(item instanceof Startable) {
@@ -313,7 +324,7 @@ public class Game {
                         break;
 
                     }
-                    case ActionPush: {
+                    case ACTION_PUSH: {
                         Item item = a.directObject();
                         if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if(item instanceof Pushable) {
@@ -339,7 +350,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionDig: {
+                    case ACTION_DIG: {
                         Item item = a.directObject();
                         if (this.player.currentRoom() instanceof RoomExcavatable && item.description() == "Shovel") {
                             RoomExcavatable curr = (RoomExcavatable) this.player.currentRoom();
@@ -349,7 +360,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionEat: {
+                    case ACTION_EAT: {
                         Item item = a.directObject();
                         if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
                             if(item instanceof Edible) {
@@ -372,7 +383,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionOpen: {
+                    case ACTION_OPEN: {
                         Item item = a.directObject();
                         if(this.player.hasItem(item) || this.player.currentRoom().hasItem(item)) {
                             if(item instanceof Openable) {
@@ -392,7 +403,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionExplode: {
+                    case ACTION_EXPLODE: {
                         Item dynamite = a.directObject();
                         if(this.player.currentRoom().hasItem(dynamite)) {
                             if(dynamite instanceof Explodable) {
@@ -419,7 +430,7 @@ public class Game {
             // Indirect objects are secondary objects that may be used by direct objects, such as a key for a lock
             case TYPE_HASINDIRECTOBJECT:
                 switch(a) {
-                    case ActionPut: {
+                    case ACTION_PUT: {
                         Item itemToPut = a.directObject();
                         Item itemToBePutInto = a.indirectObject();
                         if(!this.player.hasItem(itemToPut)) {
@@ -447,7 +458,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionTake: {
+                    case ACTION_TAKE: {
                         Item contents = a.directObject();
                         Item container = a.indirectObject();
                         if(!this.player.currentRoom().hasItem(container)) {
@@ -472,16 +483,16 @@ public class Game {
             // Some actions do not require an object
             case TYPE_HASNOOBJECT: {
                 switch(a) {
-                    case ActionLook:
+                    case ACTION_LOOK:
                         this.player.lookAround();
                         break;
-                    case ActionClimb:
-                        player.move(Action.ActionGoUp);
+                    case ACTION_CLIMB:
+                        player.move(Action.ACTION_GO_UP);
                         break;
-                    case ActionJump:
-                        player.move(Action.ActionGoDown);
+                    case ACTION_JUMP:
+                        player.move(Action.ACTION_GO_DOWN);
                         break;
-                    case ActionViewItems:
+                    case ACTION_VIEW_ITEMS:
                         Vector<Item> items = this.player.getCollectedItems();
                         if (items.size() == 0) {
                             System.out.println("You don't have any items.");
@@ -492,10 +503,10 @@ public class Game {
                             }
                         }
                         break;
-                    case ActionDie:
+                    case ACTION_DIE:
                         this.player.terminate();
                         break;
-                    case ActionHelp:
+                    case ACTION_HELP:
                         help();
                         break;
                 }
@@ -503,15 +514,15 @@ public class Game {
             }
             case TYPE_UNKNOWN: {
                 switch(a) {
-                    case ActionPass: {
+                    case ACTION_PASS: {
                         // intentionally blank
                         break;
                     }
-                    case ActionError: {
+                    case ACTION_ERROR: {
                         System.out.println("I don't understand that.");
                         break;
                     }
-                    case ActionUnknown: {
+                    case ACTION_UNKNOWN: {
                         System.out.println("I don't understand that.");
                         break;
                     }

@@ -74,15 +74,15 @@ public class DemoGame extends GameConfiguration {
         // Connect the rooms.
         // From room 1 a player can go east to
         // room2, which is a dark room (i.e. they need a Luminous object).
-        room1.setAdjacentRoom(Action.ActionGoEast, room2);
+        room1.setAdjacentRoom(Action.ACTION_GO_EAST, room2);
         // From room2 a player can go south to room 3
-        room2.setAdjacentRoom(Action.ActionGoSouth, room3);
+        room2.setAdjacentRoom(Action.ACTION_GO_SOUTH, room3);
         // from room3 a player can go east to room6 if they have the required item
-        room3.setAdjacentRoom(Action.ActionGoEast, room6);
+        room3.setAdjacentRoom(Action.ACTION_GO_EAST, room6);
         // from room3 a player can go west to room4 if they can unlock the door
-        room3.setAdjacentRoom(Action.ActionGoWest, room4);
+        room3.setAdjacentRoom(Action.ACTION_GO_WEST, room4);
         // from room4 a player can go west to room5 if they move the obscuring item
-        room4.setAdjacentRoom(Action.ActionGoWest, room5);
+        room4.setAdjacentRoom(Action.ACTION_GO_WEST, room5);
 
         // Set the initial room
         Player player = new Player(room1);

@@ -47,7 +47,7 @@ public class ObscuredRoomGame extends GameConfiguration {
         passage.setObscureMessage("This room is hidden");
         passage.putItem(Item.getInstance("torch"));
 
-        room1.setAdjacentRoom(Action.ActionGoEast,passage);
+        room1.setAdjacentRoom(Action.ACTION_GO_EAST,passage);
 		room1.putItem(fridge);
 		fridge.setRelatedRoom(passage);
 

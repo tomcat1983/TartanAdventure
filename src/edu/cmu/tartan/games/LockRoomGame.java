@@ -41,7 +41,7 @@ public class LockRoomGame extends GameConfiguration {
         Room end = new RoomLockable("You are inside of a building", "interior",
                 true, key);
 
-        end.setAdjacentRoom(Action.ActionGoNortheast, mid1);
+        end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);
 
         LinkedList<Item> startItems = new LinkedList<>();
         Item lock = Item.getInstance("lock");
@@ -56,9 +56,9 @@ public class LockRoomGame extends GameConfiguration {
         startItems.add(lock);
 
         Room start = new Room("There is a tree, with a building to the West. There is a lock on the door.", "Tree" );
-        start.setAdjacentRoom(Action.ActionGoNorth, mid1);
-        start.setAdjacentRoom(Action.ActionGoEast, mid2);
-        start.setAdjacentRoom(Action.ActionGoWest, end);
+        start.setAdjacentRoom(Action.ACTION_GO_NORTH, mid1);
+        start.setAdjacentRoom(Action.ACTION_GO_EAST, mid2);
+        start.setAdjacentRoom(Action.ACTION_GO_WEST, end);
         start.putItems(startItems);
 
         ArrayList<String> goals = new ArrayList<>();
