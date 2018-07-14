@@ -386,7 +386,7 @@ public class Game {
                             if(item instanceof Openable) {
                                 Openable o = ((Openable)item);
                                 // if you can open the item , you score!
-                                if (o.open() == true) {
+                                if (o.open()) {
                                     player.score(item.value());
                                     this.player.currentRoom().remove(item);
                                 }
