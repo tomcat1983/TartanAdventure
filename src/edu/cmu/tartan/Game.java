@@ -191,7 +191,7 @@ public class Game {
                             ((Hostable)container).uninstall(o);
                             this.player.pickup(o);
                             Holdable h = (Holdable) o;
-                            this.player.score( ((Holdable)o).value());
+                            this.player.score(h.value());
                         }
                         else if(this.player.hasItem(o)) {
                             System.out.println("You already have that item in your inventory.");
