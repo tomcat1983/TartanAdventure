@@ -50,7 +50,7 @@ public class Game {
     /**
      * The set of goals for a game
      */
-    private Vector<GameGoal> goals = new Vector<>();
+    private ArrayList<GameGoal> goals = new ArrayList<>();
 
 
     /**
@@ -120,28 +120,25 @@ public class Game {
                 try {
                     if (input.equalsIgnoreCase("help")) {
                         help();
-                        continue;
+                    } else {
+                    	choice = Integer.parseInt(input) - 1;
+                    	if(choice > 0 || menu.size() >= choice) {
+                            GameConfiguration gameConfig = menu.get(choice);
+                            gameName = gameConfig.getName();
+                            gameConfig.configure(this);
+                            break;
+                    	} else {
+                    		System.out.println("Invaild selection");                    		
+                    	}
                     }
-                    choice = Integer.parseInt(input) - 1;
-                    if(choice < 0 || menu.size() <= choice) {
-                    	System.out.println("Invaild selectioin");
-                    	continue;
-                    }
-                }
-                catch(Exception e) {
-                    System.out.println("Invalid selection.");
-                    continue;
-                }
-                try {
-                    GameConfiguration gameConfig = menu.get(choice);
-                    gameName = gameConfig.getName();
-                    gameConfig.configure(this);
-                    break;
                 }
                 catch (InvalidGameException ige) {
                     System.out.println("Game improperly configured, please try again.");
                     return false;
-                }	
+                }
+                catch(Exception e) {
+                    System.out.println("Invalid selection.");
+                }
             }
         }
         // Once the game has been configured, it is time to play!
@@ -625,7 +622,7 @@ public class Game {
         System.out.println("- There are " + goals.size() + " goals to achieve:");
 
         for (int i=0; i < goals.size(); i++) {
-            System.out.println("  * " + (i+1)+ ": "+ goals.elementAt(i).describe() + ", status: " + goals.elementAt(i).getStatus());
+            System.out.println("  * " + (i+1)+ ": "+ goals.get(i).describe() + ", status: " + goals.get(i).getStatus());
         }
         System.out.println("\n");
         System.out.println("- Current room:  " + player.currentRoom() + "\n");
