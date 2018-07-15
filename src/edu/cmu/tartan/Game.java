@@ -522,7 +522,7 @@ public class Game {
                         break;
                     case ACTION_VIEW_ITEMS:
                         Vector<Item> items = this.player.getCollectedItems();
-                        if (items.size() == 0) {
+                        if (items.isEmpty()) {
                             System.out.println("You don't have any items.");
                         }
                         else {
@@ -620,7 +620,7 @@ public class Game {
         System.out.println("You've won the '" + gameName + "' game!\n" );
         System.out.println("- Final score: " + player.getScore());
         System.out.println("- Final inventory: ");
-        if (player.getCollectedItems().size() == 0) {
+        if (player.getCollectedItems().isEmpty()) {
             System.out.println("You don't have any items.");
         }
         else {
@@ -636,15 +636,15 @@ public class Game {
      * @return
      */
     private Boolean evaluateGame() {
-        Vector<GameGoal> goals = player.getGoals();
+        Vector<GameGoal> playerGoals = player.getGoals();
 
-        for (Iterator<GameGoal> iterator = goals.iterator(); iterator.hasNext(); ) {
+        for (Iterator<GameGoal> iterator = playerGoals.iterator(); iterator.hasNext(); ) {
             GameGoal g = iterator.next();
             if (g.isAchieved()) {
                 iterator.remove();
             }
         }
-        return goals.isEmpty();
+        return playerGoals.isEmpty();
     }
 
     private void status() {
@@ -665,7 +665,7 @@ public class Game {
         System.out.println("- Current score: " + player.getScore());
 
         System.out.println("- Current inventory: ");
-        if (player.getCollectedItems().size() == 0) {
+        if (player.getCollectedItems().isEmpty()) {
             System.out.println("   You don't have any items.");
         } else {
             for (Item i : player.getCollectedItems()) {
@@ -676,7 +676,7 @@ public class Game {
 
         System.out.println("- Rooms visited: ");
         Vector<Room> rooms = player.getRoomsVisited();
-        if (rooms.size() == 0) {
+        if (rooms.isEmpty()) {
             System.out.println("You have not been to any rooms.");
         } else {
             for (Room r : rooms) {
@@ -702,7 +702,7 @@ public class Game {
     private Item containerForItem(Item item) {
         for(Item i : this.player.currentRoom().items) {
             if (i instanceof Hostable) {
-                if(item == ((Hostable)i).installedItem() && item.isVisible()) {
+                if((item == ((Hostable)i).installedItem()) && item.isVisible()) {
                     return i;
                 }
             }
