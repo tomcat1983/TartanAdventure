@@ -51,10 +51,10 @@ public class RoomRequiredItem extends Room {
 	public void playerDidDropRequiredItem() {
 		if(this.diesOnItemDiscard) {
 			System.out.println(this.deathMessage);
-			this.player.terminate();
+			this.getPlayer().terminate();
 		}
 		else {
-			this.player.lookAround();
+			this.getPlayer().lookAround();
 		}
 	}
 	public void setPlayerDiesOnItemDiscard(boolean b) {
@@ -70,7 +70,7 @@ public class RoomRequiredItem extends Room {
 	}
 
 	public boolean shouldLoseForAction(Action a) {
-		return !this.safeDirections.contains(a) && !this.player.hasItem(this.requiredItem);
+		return !this.safeDirections.contains(a) && !this.getPlayer().hasItem(this.requiredItem);
 	}
 
 	public void setLoseMessage(String s) {
@@ -91,7 +91,7 @@ public class RoomRequiredItem extends Room {
 
 	public String toString() {
 
-		if(this.player.hasItem(this.requiredItem)) {
+		if(this.getPlayer().hasItem(this.requiredItem)) {
 			return super.toString();
 		}
 		else {
@@ -99,7 +99,7 @@ public class RoomRequiredItem extends Room {
 		}
 	}
 	public String description() {
-		if(this.player.hasItem(this.requiredItem)) {
+		if(this.getPlayer().hasItem(this.requiredItem)) {
 			String s = this.roomWasVisited ? this.shortDescription : this.description + visibleItems();
 			this.roomWasVisited = true;
 			return s;

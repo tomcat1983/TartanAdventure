@@ -434,6 +434,9 @@ public class Game {
             case ACTION_EXPLODE: 
             	actionExplode(item);
                 break;
+            default :
+            	System.out.println("I don't know about " + action);
+            	break;
         }
     	
     }
@@ -657,7 +660,7 @@ public class Game {
         System.out.println("\n");
         System.out.println("- Current room:  " + player.currentRoom() + "\n");
         System.out.println("- Items in current room: ");
-        for (Item i : player.currentRoom().items) {
+        for (Item i : player.currentRoom().getItems()) {
             System.out.println("   * " + i.toString() + " ");
         }
         System.out.println("\n");
@@ -700,7 +703,7 @@ public class Game {
      * @return not null if the time is hosted in the room
      */
     private Item containerForItem(Item item) {
-        for(Item i : this.player.currentRoom().items) {
+        for(Item i : this.player.currentRoom().getItems()) {
             if (i instanceof Hostable) {
                 if((item == ((Hostable)i).installedItem()) && item.isVisible()) {
                     return i;
