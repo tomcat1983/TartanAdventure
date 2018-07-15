@@ -3,7 +3,6 @@ package edu.cmu.tartan.item;
 import edu.cmu.tartan.properties.Edible;
 import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Meltable;
-import edu.cmu.tartan.properties.Valuable;
 
 /**
  * This class for food, which can be held and eaten.

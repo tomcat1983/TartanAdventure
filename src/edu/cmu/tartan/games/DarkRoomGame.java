@@ -57,7 +57,7 @@ public class DarkRoomGame extends GameConfiguration {
         room1.putItems(items);
         classroom.setDeathMessage("As walk in the dark room, you trip on a mysterious object. You fall toward the floor, and hit your head against a large rock.");
 
-        room1.setAdjacentRoom(Action.ActionGoNorth, classroom);
+        room1.setAdjacentRoom(Action.ACTION_GO_NORTH, classroom);
 
         Player player = new Player(room1);
         ArrayList<String> goalItems = new ArrayList<>();

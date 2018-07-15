@@ -18,7 +18,7 @@ public class PlayerInterpreter {
     public Action interpretString(String string) {
 
         if(string.equals("")) {
-            return Action.ActionPass;
+            return Action.ACTION_PASS;
         }
         return action(string.toLowerCase().split(" "));
     }
@@ -32,7 +32,7 @@ public class PlayerInterpreter {
     private Action action(String[] string) throws ArrayIndexOutOfBoundsException {
 
         if(string == null || string.length == 0) {
-            return Action.ActionPass;
+            return Action.ACTION_PASS;
         }
         if(string[0].compareTo("go") == 0 || string[0].compareTo("travel") == 0 || string[0].compareTo("move") == 0){
             String[] command = Arrays.copyOfRange(string, 1, string.length);
@@ -54,7 +54,7 @@ public class PlayerInterpreter {
                 }
             }
             if(action == null) {
-                return Action.ActionError;
+                return Action.ACTION_ERROR;
             }
             switch(action.type()) {
                 case TYPE_DIRECTIONAL:
@@ -70,7 +70,7 @@ public class PlayerInterpreter {
                     }
                     else {
                         System.out.println("You must supply a direct object.");
-                        return Action.ActionPass;
+                        return Action.ACTION_PASS;
                     }
                 case TYPE_HASINDIRECTOBJECT:
 
@@ -96,30 +96,30 @@ public class PlayerInterpreter {
                                 }
                                 else {
                                     System.out.println("You must supply an indirect object.");
-                                    return Action.ActionError;
+                                    return Action.ACTION_ERROR;
                                 }
                             }
                             else {
-                                return Action.ActionPass;
+                                return Action.ACTION_PASS;
                             }
                         }
 
                     }
                     else {
                         System.out.println("You must supply a direct object.");
-                        return Action.ActionError;
+                        return Action.ACTION_ERROR;
                     }
                     break;
                 case TYPE_HASNOOBJECT:
                     return action;
                 case TYPE_UNKNOWN:
-                    return Action.ActionError;
+                    return Action.ACTION_ERROR;
                 default:
                     System.out.println("Unknown type");
                     break;
             }
         }
 
-        return Action.ActionPass;
+        return Action.ACTION_PASS;
     }
 }

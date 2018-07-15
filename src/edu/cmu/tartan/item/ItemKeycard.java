@@ -2,7 +2,6 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Installable;
-import edu.cmu.tartan.properties.Valuable;
 
 /**
  * This class for a keycard, which can be held and installed.

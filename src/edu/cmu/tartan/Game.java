@@ -50,7 +50,7 @@ public class Game {
     /**
      * The set of goals for a game
      */
-    private Vector<GameGoal> goals = new Vector<>();
+    private ArrayList<GameGoal> goals = new ArrayList<>();
 
 
     /**
@@ -84,14 +84,13 @@ public class Game {
             this.player.addGoal(g);
         }
     }
-    
-    /**
-     * Configure the game.
-     */
-    public boolean configureGame() {
 
-        ArrayList<GameConfiguration> menu = new ArrayList<>();
-
+    private ArrayList<GameConfiguration> loadGame() {
+    	// TODO need to load about real game from XML(new game feature)
+    	
+    	// TODO I will select between call with argument and some global variable.
+    	ArrayList<GameConfiguration> menu = new ArrayList<>();
+    	
         // These are the currently supported games.
         menu.add(new CollectGame());
         menu.add(new PointsGame());
@@ -101,36 +100,45 @@ public class Game {
         menu.add(new RideElevatorGame());
         menu.add(new ObscuredRoomGame());
         menu.add(new DemoGame());
-        
-        int choice = 0;
-        while(true) {
-            printMenu(menu);
-            System.out.print("> ");
-            String input = this.scanner.nextLine();
-            try {
-                if (input.equalsIgnoreCase("help")) {
-                    help();
-                    continue;
+
+    	return menu;
+    }
+    
+    /**
+     * Configure the game.
+     */
+    public boolean configureGame() {
+
+    	ArrayList<GameConfiguration> menu = loadGame();
+    	
+        if(!menu.isEmpty()) {
+        	int choice = 0;
+            while(true) {
+                printMenu(menu);
+                System.out.print("> ");
+                String input = this.scanner.nextLine();
+                try {
+                    if (input.equalsIgnoreCase("help")) {
+                        help();
+                    } else {
+                    	choice = Integer.parseInt(input) - 1;
+                    	if(choice > 0 || menu.size() >= choice) {
+                            GameConfiguration gameConfig = menu.get(choice);
+                            gameName = gameConfig.getName();
+                            gameConfig.configure(this);
+                            break;
+                    	} else {
+                    		System.out.println("Invaild selection");                    		
+                    	}
+                    }
                 }
-                choice = Integer.parseInt(input) - 1;
-                if(choice < 0 || menu.size() <= choice) {
-                	System.out.println("Invaild selectioin");
-                	continue;
+                catch (InvalidGameException ige) {
+                    System.out.println("Game improperly configured, please try again.");
+                    return false;
                 }
-            }
-            catch(Exception e) {
-                System.out.println("Invalid selection.");
-                continue;
-            }
-            try {
-                GameConfiguration gameConfig = menu.get(choice);
-                gameName = gameConfig.getName();
-                gameConfig.configure(this);
-                break;
-            }
-            catch (InvalidGameException ige) {
-                System.out.println("Game improperly configured, please try again.");
-                return false;
+                catch(Exception e) {
+                    System.out.println("Invalid selection.");
+                }
             }
         }
         // Once the game has been configured, it is time to play!
@@ -139,286 +147,318 @@ public class Game {
         setPlayerGameGoal();
         return true;
     }
+    
+    private void actionPickup(Item item) {
+        Item container = null;
+        if(this.player.currentRoom().hasItem(item)) {
+            if(item instanceof Holdable) {
+                System.out.println("Taken.");
+
+                this.player.currentRoom().remove(item);
+                this.player.pickup(item);
+                this.player.score( ((Holdable)item).value());
+            }
+            else {
+                System.out.println("You cannot pick up this item.");
+            }
+        }
+        else if((container = containerForItem(item)) != null) {
+
+            System.out.println("Taken.");
+            ((Hostable)container).uninstall(item);
+            this.player.pickup(item);
+            Holdable h = (Holdable) item;
+            this.player.score(h.value());
+        }
+        else if(this.player.hasItem(item)) {
+            System.out.println("You already have that item in your inventory.");
+        }
+        else {
+            System.out.println("I don't see that here.");
+        }    	
+    }
+    
+    private void actionDestroy(Item item) {
+        if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+            if (item instanceof Destroyable) {
+                //System.out.println("Smashed.");
+                ((Destroyable) item).setDestroyMessage("Smashed.");
+                ((Destroyable)item).destroy();
+                ((Destroyable) item).setDisappears(true);
+                item.setDescription("broken " + item.toString());
+                item.setDetailDescription("broken " + item.detailDescription());
+                if (((Destroyable)item).disappears()) {
+                    this.player.drop(item);
+                    this.player.currentRoom().remove(item);
+                    // Get points!
+                    this.player.score(item.value());
+                }
+
+                if(item instanceof Hostable) {
+                    this.player.currentRoom().putItem(((Hostable)item).installedItem());
+                    ((Hostable)item).uninstall(((Hostable)item).installedItem());
+                }
+            }
+            else {
+                System.out.println("You cannot break this item.");
+            }
+        }
+        else {
+            System.out.println("I don't see that here.");
+        }
+    }
+    
+    private void actionInspect(Item item) {
+    	if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+            if(item instanceof Inspectable) {
+                item.inspect();
+            }
+            else {
+                System.out.println("You cannot inspect this item.");
+            }
+        }
+        else {
+            System.out.println("I don't see that here.");
+        }
+    }
+    
+    private void actionDrop(Item item) {
+    	if(this.player.hasItem(item)) {
+            if(item instanceof Holdable) {
+                System.out.println("Dropped.");
+                this.player.drop(item);
+                System.out.println("You Dropped '" +item.description() + "' costing you "
+                        + item.value() + " points.");
+                this.player.currentRoom().putItem(item);
+            }
+            else {
+                System.out.println("You cannot drop this item.");
+            }
+        }
+        else {
+            System.out.println("You don't have that item to drop.");
+        }
+        if(this.player.currentRoom() instanceof RoomRequiredItem) {
+            RoomRequiredItem r = (RoomRequiredItem)this.player.currentRoom();
+            r.playerDidDropRequiredItem();
+        }
+    }
+    
+    private void actionThrow(Item item) {
+        if(this.player.hasItem(item)) {
+            if(item instanceof Chuckable) {
+                System.out.println("Thrown.");
+                ((Chuckable)item).chuck();
+                this.player.drop(item);
+                this.player.currentRoom().putItem(item);
+            }
+            else {
+                System.out.println("You cannot throw this item.");
+            }
+        }
+        else {
+            System.out.println("You don't have that item to throw.");
+        }    	
+    }
+    
+    private void actionShake(Item item) {
+        if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+            if(item instanceof Shakeable) {
+                ((Shakeable)item).shake();
+                if(((Shakeable)item).accident()) {
+                    this.player.terminate();
+                }
+            }
+            else {
+                System.out.println("I don't know how to do that.");
+            }
+        }
+        else {
+            System.out.println("I don't see that here.");
+        }
+    }
+    
+    private void actionEnable(Item item) {
+        if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+            if(item instanceof Startable) {
+                System.out.println("Done.");
+                ((Startable)item).start();
+            }
+            else {
+                System.out.println("I don't know how to do that.");
+            }
+        }
+        else {
+            System.out.println("I don't see that here.");
+        }	
+    }
+    
+    private void actionPush(Item item) {
+        if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+            if(item instanceof Pushable) {
+
+                // Pushing the button is worth points
+                Pushable p = (Pushable) item;
+                p.push();
+                this.player.score(item.value());
+
+                if(item.relatedRoom() instanceof RoomElevator) { // player is next to an elevator
+                    ((RoomElevator)item.relatedRoom()).call(this.player.currentRoom());
+                }
+                else if(this.player.currentRoom() instanceof RoomElevator) { // player is in an elevator
+                    ((RoomElevator)this.player.currentRoom()).call(Integer.parseInt(item.getAliases()[0])-1);
+                }
+            }
+            else {
+                System.out.println("Nothing happens.");
+            }
+        }
+        else {
+            System.out.println("I don't see that here.");
+        }    	
+    }
+    
+    private void actionDig(Item item) {
+    	if (this.player.currentRoom() instanceof RoomExcavatable && item.description() == "Shovel") {
+            RoomExcavatable curr = (RoomExcavatable) this.player.currentRoom();
+            curr.dig();
+        } else {
+            System.out.println("You are not allowed to dig here");
+        }
+    }
+    
+    private void actionEat(Item item) {
+        if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+            if(item instanceof Edible) {
+                // eating something gives scores
+                Edible e = (Edible)item;
+                e.eat();
+                player.score(item.value());
+                // Once we eat it, then it's gone
+                this.player.currentRoom().remove(item);
+            }
+            else {
+                if(item instanceof Holdable) {
+                    System.out.println("As you  shove the " + item + " down your throat, you begin to choke.");
+                    this.player.terminate();
+                }
+                else {
+                    System.out.println("That cannot be consumed.");
+                }
+            }
+        }    	
+    }
+    
+    private void actionOpen(Item item) {
+        if(this.player.hasItem(item) || this.player.currentRoom().hasItem(item)) {
+            if(item instanceof Openable) {
+                Openable o = ((Openable)item);
+                // if you can open the item , you score!
+                if (o.open()) {
+                    player.score(item.value());
+                    this.player.currentRoom().remove(item);
+                }
+            }
+            else {
+                System.out.println("You cannot open this.");
+            }
+        }
+        else {
+            System.out.println("I don't see that here.");
+        }    	
+    }
+    
+    private void actionExplode(Item item) {
+        if(this.player.currentRoom().hasItem(item)) {
+            if(item instanceof Explodable) {
+                if(this.player.currentRoom().isAdjacentToRoom(item.relatedRoom())) {
+                    Explodable explode = (Explodable)item;
+                    explode.explode();
+                    this.player.score(explode.value());
+                }
+                else {
+                    System.out.println("There isn't anything to blow up here.");
+                }
+            }
+            else {
+                System.out.println("That item is not an explosive.");
+            }
+        }
+        else {
+            System.out.println("You do not have that item in your inventory.");
+        }    	
+    }
+    
+    private void hasDirectObject(Action action) {
+    	Item item = action.directObject();
+    	
+        switch(action) {
+            case ACTION_PICKUP: 
+                if(item!=null) {
+                	// Is it right code? If object is null, something process below funciton? 
+                	actionPickup(item);
+                } else {
+                    System.out.println("I don't see that here.");
+                }
+                break;
+            case ACTION_DESTROY: 
+                actionDestroy(item);
+                break;
+            case ACTION_INSPECT:
+                actionInspect(item);
+                break;
+            case ACTION_DROP:
+            	actionDrop(item);
+                break;
+            case ACTION_THROW:
+            	actionThrow(item);
+                break;
+            case ACTION_SHAKE:
+            	actionShake(item);
+                break;
+            case ACTION_ENABLE: 
+            	actionEnable(item);
+                break;
+            case ACTION_PUSH:
+            	actionPush(item);
+                break;
+            case ACTION_DIG:
+            	actionDig(item);
+                break;
+            case ACTION_EAT:
+            	actionEat(item);
+                break;
+            case ACTION_OPEN:
+            	actionOpen(item);
+                break;
+            case ACTION_EXPLODE: 
+            	actionExplode(item);
+                break;
+        }
+    	
+    }
 
     /**
-     * Execute an action in the game. This method is where gameplay really occurs.
+     * Execute an action in the game. This method is where game play really occurs.
      * @param a The action to execute
      */
     private void executeAction(Action a) {
 
         switch(a.type()) {
-
             // Handle navigation
             case TYPE_DIRECTIONAL:
                 player.move(a);
                 break;
-
             // A direct item is an item that is required for an action. These
             // items can be picked up, eaten, pushed
             // destroyed, etc.
-
             case TYPE_HASDIRECTOBJECT:
-                Item val = a.directObject();
-
-                switch(a) {
-
-                    case ActionPickUp: {
-                        Item o = a.directObject();
-                        Item container = null;
-                        if(this.player.currentRoom().hasItem(o)) {
-                            if(o instanceof Holdable) {
-                                System.out.println("Taken.");
-
-                                this.player.currentRoom().remove(o);
-                                this.player.pickup(o);
-                                this.player.score( ((Holdable)o).value());
-                            }
-                            else {
-                                System.out.println("You cannot pick up this item.");
-                            }
-                        }
-                        else if((container = containerForItem(o)) != null) {
-
-                            System.out.println("Taken.");
-                            ((Hostable)container).uninstall(o);
-                            this.player.pickup(o);
-                            this.player.score( ((Holdable)o).value());
-                        }
-                        else if(this.player.hasItem(o)) {
-                            System.out.println("You already have that item in your inventory.");
-                        }
-                        else {
-                            System.out.println("I don't see that here.");
-                        }
-                        break;
-                    }
-                    case ActionDestroy: {
-                        Item item = a.directObject();
-                        if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-                            if (item instanceof Destroyable) {
-                                System.out.println("Smashed.");
-                                ((Destroyable)item).destroy();
-                                item.setDescription("broken " + item.toString());
-                                item.setDetailDescription("broken " + item.detailDescription());
-                                if (((Destroyable)item).disappears()) {
-                                    this.player.drop(item);
-                                    this.player.currentRoom().remove(item);
-                                    // Get points!
-                                    this.player.score(item.value());
-                                }
-
-                                if(item instanceof Hostable) {
-                                    this.player.currentRoom().putItem(((Hostable)item).installedItem());
-                                    ((Hostable)item).uninstall(((Hostable)item).installedItem());
-                                }
-                            }
-                            else {
-                                System.out.println("You cannot break this item.");
-                            }
-                        }
-                        else {
-                            System.out.println("I don't see that here.");
-                        }
-                        break;
-                    }
-                    case ActionInspect: {
-                        Item item = a.directObject();
-                        if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-                            if(item instanceof Inspectable) {
-                                ((Inspectable)item).inspect();
-                            }
-                            else {
-                                System.out.println("You cannot inspect this item.");
-                            }
-                        }
-                        else {
-                            System.out.println("I don't see that here.");
-                        }
-                        break;
-                    }
-                    case ActionDrop: {
-                        Item item = a.directObject();
-                        if(this.player.hasItem(item)) {
-                            if(item instanceof Holdable) {
-                                System.out.println("Dropped.");
-                                this.player.drop(item);
-                                System.out.println("You Dropped '" +item.description() + "' costing you "
-                                        + item.value() + " points.");
-                                this.player.currentRoom().putItem(item);
-                            }
-                            else {
-                                System.out.println("You cannot drop this item.");
-                            }
-                        }
-                        else {
-                            System.out.println("You don't have that item to drop.");
-                        }
-                        if(this.player.currentRoom() instanceof RoomRequiredItem) {
-                            RoomRequiredItem r = (RoomRequiredItem)this.player.currentRoom();
-                            r.playerDidDropRequiredItem();
-                        }
-                        break;
-                    }
-                    case ActionThrow: {
-                        Item item = a.directObject();
-                        if(this.player.hasItem(item)) {
-                            if(item instanceof Chuckable) {
-                                System.out.println("Thrown.");
-                                ((Chuckable)item).chuck();
-                                this.player.drop(item);
-                                this.player.currentRoom().putItem(item);
-                            }
-                            else {
-                                System.out.println("You cannot throw this item.");
-                            }
-                        }
-                        else {
-                            System.out.println("You don't have that item to throw.");
-                        }
-                        break;
-                    }
-                    case ActionShake: {
-                        Item item = a.directObject();
-                        if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-                            if(item instanceof Shakeable) {
-                                ((Shakeable)item).shake();
-                                if(((Shakeable)item).accident()) {
-                                    this.player.terminate();
-                                }
-                            }
-                            else {
-                                System.out.println("I don't know how to do that.");
-                            }
-                        }
-                        else {
-                            System.out.println("I don't see that here.");
-                        }
-                        break;
-                    }
-                    case ActionEnable: {
-                        Item item = a.directObject();
-                        if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-                            if(item instanceof Startable) {
-                                System.out.println("Done.");
-                                ((Startable)item).start();
-                            }
-                            else {
-                                System.out.println("I don't know how to do that.");
-                            }
-                        }
-                        else {
-                            System.out.println("I don't see that here.");
-                        }
-                        break;
-
-                    }
-                    case ActionPush: {
-                        Item item = a.directObject();
-                        if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-                            if(item instanceof Pushable) {
-
-                                // Pushing the button is worth points
-                                Pushable p = (Pushable) item;
-                                p.push();
-                                this.player.score(item.value());
-
-                                if(item.relatedRoom() instanceof RoomElevator) { // player is next to an elevator
-                                    ((RoomElevator)item.relatedRoom()).call(this.player.currentRoom());
-                                }
-                                else if(this.player.currentRoom() instanceof RoomElevator) { // player is in an elevator
-                                    ((RoomElevator)this.player.currentRoom()).call(Integer.parseInt(item.getAliases()[0])-1);
-                                }
-                            }
-                            else {
-                                System.out.println("Nothing happens.");
-                            }
-                        }
-                        else {
-                            System.out.println("I don't see that here.");
-                        }
-                        break;
-                    }
-                    case ActionDig: {
-                        Item item = a.directObject();
-                        if (this.player.currentRoom() instanceof RoomExcavatable && item.description() == "Shovel") {
-                            RoomExcavatable curr = (RoomExcavatable) this.player.currentRoom();
-                            curr.dig();
-                        } else {
-                            System.out.println("You are not allowed to dig here");
-                        }
-                        break;
-                    }
-                    case ActionEat: {
-                        Item item = a.directObject();
-                        if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-                            if(item instanceof Edible) {
-                                // eating something gives scores
-                                Edible e = (Edible)item;
-                                e.eat();
-                                player.score(item.value());
-                                // Once we eat it, then it's gone
-                                this.player.currentRoom().remove(item);
-                            }
-                            else {
-                                if(item instanceof Holdable) {
-                                    System.out.println("As you  shove the " + a.directObject() + " down your throat, you begin to choke.");
-                                    this.player.terminate();
-                                }
-                                else {
-                                    System.out.println("That cannot be consumed.");
-                                }
-                            }
-                        }
-                        break;
-                    }
-                    case ActionOpen: {
-                        Item item = a.directObject();
-                        if(this.player.hasItem(item) || this.player.currentRoom().hasItem(item)) {
-                            if(item instanceof Openable) {
-                                Openable o = ((Openable)item);
-                                // if you can open the item , you score!
-                                if (o.open() == true) {
-                                    player.score(item.value());
-                                    this.player.currentRoom().remove(item);
-                                }
-                            }
-                            else {
-                                System.out.println("You cannot open this.");
-                            }
-                        }
-                        else {
-                            System.out.println("I don't see that here.");
-                        }
-                        break;
-                    }
-                    case ActionExplode: {
-                        Item dynamite = a.directObject();
-                        if(this.player.currentRoom().hasItem(dynamite)) {
-                            if(dynamite instanceof Explodable) {
-                                if(this.player.currentRoom().isAdjacentToRoom(dynamite.relatedRoom())) {
-                                    Explodable explode = (Explodable)dynamite;
-                                    explode.explode();
-                                    this.player.score(explode.value());
-                                }
-                                else {
-                                    System.out.println("There isn't anything to blow up here.");
-                                }
-                            }
-                            else {
-                                System.out.println("That item is not an explosive.");
-                            }
-                        }
-                        else {
-                            System.out.println("You do not have that item in your inventory.");
-                        }
-                        break;
-                    }
-
-                }
+            	  hasDirectObject(a);
+            	  break;
             // Indirect objects are secondary objects that may be used by direct objects, such as a key for a lock
             case TYPE_HASINDIRECTOBJECT:
                 switch(a) {
-                    case ActionPut: {
+                    case ACTION_PUT: {
                         Item itemToPut = a.directObject();
                         Item itemToBePutInto = a.indirectObject();
                         if(!this.player.hasItem(itemToPut)) {
@@ -446,7 +486,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionTake: {
+                    case ACTION_TAKE: {
                         Item contents = a.directObject();
                         Item container = a.indirectObject();
                         if(!this.player.currentRoom().hasItem(container)) {
@@ -471,18 +511,18 @@ public class Game {
             // Some actions do not require an object
             case TYPE_HASNOOBJECT: {
                 switch(a) {
-                    case ActionLook:
+                    case ACTION_LOOK:
                         this.player.lookAround();
                         break;
-                    case ActionClimb:
-                        player.move(Action.ActionGoUp);
+                    case ACTION_CLIMB:
+                        player.move(Action.ACTION_GO_UP);
                         break;
-                    case ActionJump:
-                        player.move(Action.ActionGoDown);
+                    case ACTION_JUMP:
+                        player.move(Action.ACTION_GO_DOWN);
                         break;
-                    case ActionViewItems:
+                    case ACTION_VIEW_ITEMS:
                         Vector<Item> items = this.player.getCollectedItems();
-                        if (items.size() == 0) {
+                        if (items.isEmpty()) {
                             System.out.println("You don't have any items.");
                         }
                         else {
@@ -491,10 +531,10 @@ public class Game {
                             }
                         }
                         break;
-                    case ActionDie:
+                    case ACTION_DIE:
                         this.player.terminate();
                         break;
-                    case ActionHelp:
+                    case ACTION_HELP:
                         help();
                         break;
                 }
@@ -502,15 +542,15 @@ public class Game {
             }
             case TYPE_UNKNOWN: {
                 switch(a) {
-                    case ActionPass: {
+                    case ACTION_PASS: {
                         // intentionally blank
                         break;
                     }
-                    case ActionError: {
+                    case ACTION_ERROR: {
                         System.out.println("I don't understand that.");
                         break;
                     }
-                    case ActionUnknown: {
+                    case ACTION_UNKNOWN: {
                         System.out.println("I don't understand that.");
                         break;
                     }
@@ -567,7 +607,6 @@ public class Game {
             e.printStackTrace();
             start();
         }
-
         System.out.println("Game Over");
     }
 
@@ -581,7 +620,7 @@ public class Game {
         System.out.println("You've won the '" + gameName + "' game!\n" );
         System.out.println("- Final score: " + player.getScore());
         System.out.println("- Final inventory: ");
-        if (player.getCollectedItems().size() == 0) {
+        if (player.getCollectedItems().isEmpty()) {
             System.out.println("You don't have any items.");
         }
         else {
@@ -597,15 +636,15 @@ public class Game {
      * @return
      */
     private Boolean evaluateGame() {
-        Vector<GameGoal> goals = player.getGoals();
+        Vector<GameGoal> playerGoals = player.getGoals();
 
-        for (Iterator<GameGoal> iterator = goals.iterator(); iterator.hasNext(); ) {
+        for (Iterator<GameGoal> iterator = playerGoals.iterator(); iterator.hasNext(); ) {
             GameGoal g = iterator.next();
             if (g.isAchieved()) {
                 iterator.remove();
             }
         }
-        return goals.isEmpty();
+        return playerGoals.isEmpty();
     }
 
     private void status() {
@@ -613,7 +652,7 @@ public class Game {
         System.out.println("- There are " + goals.size() + " goals to achieve:");
 
         for (int i=0; i < goals.size(); i++) {
-            System.out.println("  * " + (i+1)+ ": "+ goals.elementAt(i).describe() + ", status: " + goals.elementAt(i).getStatus());
+            System.out.println("  * " + (i+1)+ ": "+ goals.get(i).describe() + ", status: " + goals.get(i).getStatus());
         }
         System.out.println("\n");
         System.out.println("- Current room:  " + player.currentRoom() + "\n");
@@ -626,7 +665,7 @@ public class Game {
         System.out.println("- Current score: " + player.getScore());
 
         System.out.println("- Current inventory: ");
-        if (player.getCollectedItems().size() == 0) {
+        if (player.getCollectedItems().isEmpty()) {
             System.out.println("   You don't have any items.");
         } else {
             for (Item i : player.getCollectedItems()) {
@@ -637,7 +676,7 @@ public class Game {
 
         System.out.println("- Rooms visited: ");
         Vector<Room> rooms = player.getRoomsVisited();
-        if (rooms.size() == 0) {
+        if (rooms.isEmpty()) {
             System.out.println("You have not been to any rooms.");
         } else {
             for (Room r : rooms) {
@@ -663,7 +702,7 @@ public class Game {
     private Item containerForItem(Item item) {
         for(Item i : this.player.currentRoom().items) {
             if (i instanceof Hostable) {
-                if(item == ((Hostable)i).installedItem() && item.isVisible()) {
+                if((item == ((Hostable)i).installedItem()) && item.isVisible()) {
                     return i;
                 }
             }

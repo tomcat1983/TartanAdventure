@@ -69,7 +69,7 @@ public class ItemLock extends Item implements Hostable, Openable {
      */
     @Override
     public Boolean open() {
-        if (this.relatedRoom != null && this.relatedRoom instanceof RoomLockable) {
+        if (this.relatedRoom instanceof RoomLockable) {
             ((RoomLockable) this.relatedRoom).unlock(this.installedItem);
             return true;
         }
