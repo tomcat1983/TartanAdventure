@@ -43,7 +43,7 @@ public class RoomRequiredItem extends Room {
 		this.warningDescription = w;
 		this.warningShortDescription = ws;
 		this.requiredItem = requiredItem;
-		this.safeDirections = new LinkedList<Action>();
+		this.safeDirections = new LinkedList<>();
 		this.diesOnItemDiscard = false;
 		this.diesOnEntry = false;
 		this.deathMessage = null;
@@ -89,6 +89,7 @@ public class RoomRequiredItem extends Room {
 		this.safeDirections.add(direction);
 	}
 
+	@Override
 	public String toString() {
 
 		if(this.getPlayer().hasItem(this.requiredItem)) {
@@ -98,6 +99,8 @@ public class RoomRequiredItem extends Room {
 			return this.warningDescription;
 		}
 	}
+	
+	@Override
 	public String description() {
 		if(this.getPlayer().hasItem(this.requiredItem)) {
 			String s = this.roomWasVisited ? this.shortDescription : this.description + visibleItems();
