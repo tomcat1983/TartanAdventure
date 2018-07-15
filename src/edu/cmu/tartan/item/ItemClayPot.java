@@ -14,8 +14,7 @@ import edu.cmu.tartan.properties.Hostable;
  */
 public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable {
 
-
-    private String destroyMessage;
+	private String destroyMessage;
     private Item installedItem;
     private boolean disappears;
 
@@ -100,4 +99,34 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
     public Item installedItem() {
         return this.installedItem;
     }
+    
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((destroyMessage == null) ? 0 : destroyMessage.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		ItemClayPot other = (ItemClayPot) obj;
+		if (destroyMessage == null) {
+			if (other.destroyMessage != null) {
+				return false;
+			}
+		} else if (!destroyMessage.equals(other.destroyMessage)) {
+			return false;
+		}
+		return true;
+	}
 }

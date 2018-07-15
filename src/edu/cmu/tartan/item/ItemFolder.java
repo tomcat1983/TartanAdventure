@@ -12,7 +12,7 @@ import edu.cmu.tartan.properties.Openable;
  */
 public class ItemFolder extends Item implements Openable {
 
-    private String openMessage;
+	private String openMessage;
 
     /**
      * Constructor
@@ -44,5 +44,35 @@ public class ItemFolder extends Item implements Openable {
     public void setOpenMessage(String o) {
         this.openMessage = o;
     }
+
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((openMessage == null) ? 0 : openMessage.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		ItemFolder other = (ItemFolder) obj;
+		if (openMessage == null) {
+			if (other.openMessage != null) {
+				return false;
+			}
+		} else if (!openMessage.equals(other.openMessage)) {
+			return false;
+		}
+		return true;
+	}
 
 }

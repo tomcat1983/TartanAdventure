@@ -13,8 +13,7 @@ import edu.cmu.tartan.room.RoomLockable;
  * 1.0 March 2018 - initial version
  */
 public class ItemLock extends Item implements Hostable, Openable {
-
-    private Item installedItem;
+	private Item installedItem;
 
     /**
      * Constructor
@@ -75,4 +74,34 @@ public class ItemLock extends Item implements Hostable, Openable {
         }
         return false;
     }
+    
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((installedItem == null) ? 0 : installedItem.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		ItemLock other = (ItemLock) obj;
+		if (installedItem == null) {
+			if (other.installedItem != null) {
+				return false;
+			}
+		} else if (!installedItem.equals(other.installedItem)) {
+			return false;
+		}
+		return true;
+	}
 }
