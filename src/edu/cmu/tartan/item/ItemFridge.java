@@ -34,7 +34,7 @@ public class ItemFridge extends Item implements Pushable {
     @Override
     public void push() {
         if (!this.wasPushed) {
-            if (this.relatedRoom != null && this.relatedRoom instanceof RoomObscured) {
+            if (this.relatedRoom instanceof RoomObscured) {
                 ((RoomObscured) this.relatedRoom).setObscured(false);
                 System.out.println(((RoomObscured) this.relatedRoom).unobscureMessage());
             }

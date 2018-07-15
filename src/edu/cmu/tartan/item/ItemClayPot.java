@@ -3,7 +3,6 @@ package edu.cmu.tartan.item;
 import edu.cmu.tartan.properties.Destroyable;
 import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Hostable;
-import edu.cmu.tartan.properties.Valuable;
 
 /**
  * A clay pot can be destroyed, held, and host other objects

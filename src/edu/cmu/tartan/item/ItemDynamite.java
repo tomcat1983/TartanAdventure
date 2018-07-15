@@ -2,7 +2,6 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Explodable;
 import edu.cmu.tartan.properties.Holdable;
-import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.RoomObscured;
 
 /**
@@ -37,7 +36,7 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
     @Override
     public Boolean explode() {
         if (!this.exploded) {
-            if (this.relatedRoom != null && this.relatedRoom instanceof RoomObscured) {
+            if (this.relatedRoom instanceof RoomObscured) {
                 ((RoomObscured) this.relatedRoom).setObscured(false);
                 System.out.println(((RoomObscured) this.relatedRoom).unobscureMessage());
             }
@@ -50,7 +49,7 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
     }
 
     public void setExplodeMessage(String s) {
-        if (this.relatedRoom != null && this.relatedRoom instanceof RoomObscured) {
+        if (this.relatedRoom instanceof RoomObscured) {
             ((RoomObscured) this.relatedRoom).setUnobscureMessage(s);
         }
     }
