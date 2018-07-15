@@ -456,8 +456,8 @@ public class Game {
             // items can be picked up, eaten, pushed
             // destroyed, etc.
             case TYPE_HASDIRECTOBJECT:
-            	hasDirectObject(a);
-            	break;
+            	  hasDirectObject(a);
+            	  break;
             // Indirect objects are secondary objects that may be used by direct objects, such as a key for a lock
             case TYPE_HASINDIRECTOBJECT:
                 switch(a) {
