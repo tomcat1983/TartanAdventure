@@ -29,52 +29,7 @@ public class PlayerExecutionEngine {
 	
 	PlayerExecutionEngine(Player player) {
 		this.player = player;
-	}
-	
-    /**
-     * Display help menu
-     */
-    private void help() {
-
-        // Credit to emacs Dunnet by Ron Schnell
-        System.out.println("Welcome to TartanAdventure RPG Help." +
-                "Here is some useful information (read carefully because there are one\n" +
-                "or more clues in here):\n");
-
-        System.out.println("- To view your current items: type \"inventory\"\n");
-        System.out.println("- You have a number of actions available:\n");
-
-        StringBuilder directions = new StringBuilder("Direction: go [");
-        StringBuilder dirobj = new StringBuilder("Manipulate object directly: [");
-        StringBuilder indirobj = new StringBuilder("Manipulate objects indirectly, e.g. Put cpu in computer: [");
-        StringBuilder misc = new StringBuilder("Misc. actions [");
-
-        for( Action a : Action.values()) {
-            if (a.type() == Type.TYPE_DIRECTIONAL) {
-                for (String s : a.getAliases()) directions.append("'" + s + "' ");
-            } else if (a.type() == Type.TYPE_HASDIRECTOBJECT) {
-                for (String s : a.getAliases()) dirobj.append("'" + s + "' ");
-            } else if (a.type() == Type.TYPE_HASINDIRECTOBJECT) {
-                for (String s : a.getAliases()) indirobj.append("'" + s + "' ");
-            } else if (a.type() == Type.TYPE_UNKNOWN) {
-                for (String s : a.getAliases()) misc.append("'" + s + "' ");
-            }
-        }
-        directions.append("]");
-        dirobj.append("]");
-        indirobj.append("]");
-        misc.append("]");
-
-        System.out.println("- "+ directions.toString() + "\n");
-        System.out.println("- " + dirobj.toString() + "\n");
-        System.out.println("- " + indirobj.toString() + "\n");
-        System.out.println("- " +misc.toString() + "\n");
-        System.out.println("- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
-        System.out.println("- You can quit by typing \"quit\"\n");
-        System.out.println("- Good luck!\n");
-
-    }
-
+	}	
 	
 	/**
      * Determine if item in room
@@ -479,9 +434,6 @@ public class PlayerExecutionEngine {
                         break;
                     case ACTION_DIE:
                         this.player.terminate();
-                        break;
-                    case ACTION_HELP:
-                        help();
                         break;
                 }
                 break;
