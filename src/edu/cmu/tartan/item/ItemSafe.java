@@ -77,14 +77,12 @@ public class ItemSafe extends Item implements Hostable, Openable {
     @Override
     public Boolean open() {
         Scanner s = new Scanner(System.in);
-        String input = "";
         System.out.println("Enter the four-digit PIN number.");
         Integer p = Integer.parseInt(s.nextLine());
         if (p.intValue() == this.pin.intValue()) {
-
-            this.installedItem.setVisible(true);
-            System.out.println("The safe door swings open.");
-            if (this.installedItem != null) {
+        	if (this.installedItem != null) {
+        		this.installedItem.setVisible(true);
+        		System.out.println("The safe door swings open.");
                 System.out.println("You have revealed a '" + this.installedItem.detailDescription() + "'.");
             }
             return true;
