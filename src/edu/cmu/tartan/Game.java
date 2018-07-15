@@ -5,12 +5,7 @@ import edu.cmu.tartan.action.Type;
 import edu.cmu.tartan.games.*;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.item.ItemMagicBox;
-import edu.cmu.tartan.properties.*;
 import edu.cmu.tartan.room.Room;
-import edu.cmu.tartan.room.RoomElevator;
-import edu.cmu.tartan.room.RoomExcavatable;
-import edu.cmu.tartan.room.RoomRequiredItem;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -181,9 +176,8 @@ public class Game {
                     status();
                 }
                 else {
-                	playerExecutionEngine.executeAction(this.interpreter.interpretString(input));;
-                    // executeAction(this.interpreter.interpretString(input));
-                    // every time an action is executed the game state must be evaluated
+                	playerExecutionEngine.executeAction(this.interpreter.interpretString(input));
+                	// every time an action is executed the game state must be evaluated
                     if (evaluateGame()) {
                         winGame();
                         break;
