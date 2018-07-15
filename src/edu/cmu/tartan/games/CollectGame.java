@@ -48,6 +48,8 @@ public class CollectGame extends GameConfiguration {
         startItems.add(Item.getInstance("key"));
         startItems.add(Item.getInstance("lock"));
         startItems.add(Item.getInstance("gold"));
+        // destroy item
+        startItems.add(Item.getInstance("pot"));
 
         Room start = new Room("There is a tree, with a building to the West. There is a lock on the door.", "Tree" );
         start.setAdjacentRoom(Action.ACTION_GO_NORTH, mid1);
