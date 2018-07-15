@@ -3,4 +3,4 @@ language: java
 script:
   # other script steps might be done before running the actual analysis
   - mvn test -B
-  - mvn sonar:sonar -Dsonar.organization=tomcat1983-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=37403d59db769a6090e871231c6251d462d2f85c -Dsonar.projectKey=tartan -Dsonar.sources=./src -Dsonar.tests=./test -Dsonar.java.binaries=.
+  - mvn sonar:sonar -Dsonar.organization=tomcat1983-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_LOGIN -Dsonar.projectKey=$SONAR_KEY -Dsonar.sources=./src -Dsonar.tests=./test -Dsonar.java.binaries=. -Dsonar.branch.name=$TRAVIS_BRANCH
