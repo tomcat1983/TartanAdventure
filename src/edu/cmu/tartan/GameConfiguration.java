@@ -36,6 +36,6 @@ public abstract class GameConfiguration {
      */
     public abstract void configure(Game game) throws InvalidGameException;
 
-};
+}
 
 

@@ -147,9 +147,8 @@ public class Game {
 
     /**
      * Start the Game.
-     * @throws NullPointerException
      */
-    public void start() throws NullPointerException {    	
+    public void start() {    	
         // Orient the player
         this.player.lookAround();
 
