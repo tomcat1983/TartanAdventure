@@ -13,8 +13,7 @@ import edu.cmu.tartan.properties.Startable;
  * 1.0 March 2018 - initial version
  */
 public class ItemMicrowave extends Item implements Hostable, Startable {
-
-    private Item installedItem;
+	private Item installedItem;
 
     /**
      * Constructor
@@ -77,4 +76,36 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
     public Item installedItem() {
         return this.installedItem;
     }
+    
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((installedItem == null) ? 0 : installedItem.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (obj==null || getClass() != obj.getClass()) {
+			return false;
+		}
+		
+		ItemMicrowave other = (ItemMicrowave) obj;
+		if (installedItem == null) {
+			if (other.installedItem != null) {
+				return false;
+			}
+		} else if (!installedItem.equals(other.installedItem)) {
+			return false;
+		}
+		return true;
+	}
+
 }

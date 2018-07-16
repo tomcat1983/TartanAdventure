@@ -14,7 +14,7 @@ import edu.cmu.tartan.item.Item;
 public class RoomObscured extends Room {
     // The item hiding this room
 	private Item obscuringItem;
-    private boolean isObscured;
+	private boolean isObscured;
     private String obscureMessage;
     private String unobscureMessage;
 
@@ -33,7 +33,13 @@ public class RoomObscured extends Room {
 	}
 
     // Getters & setters
+    public Item getObscuringItem() {
+		return obscuringItem;
+	}
 
+	public void setObscuringItem(Item obscuringItem) {
+		this.obscuringItem = obscuringItem;
+	}
 	public boolean isObscured() {
 		return this.isObscured;
 	}
