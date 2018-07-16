@@ -1,9 +1,5 @@
 package edu.cmu.tartan.room;
 
-import edu.cmu.tartan.action.Action;
-
-import java.util.LinkedList;
-
 /**
  * The class for a dark room. Players must have a Luminous item to enter this room safely
  * from this class.
@@ -34,7 +30,6 @@ public class RoomDark extends Room {
      * @param darkShortDescription the long description
      */
 	public RoomDark(String description, String shortDescription, String darkDescription, String darkShortDescription) {
-
 		this(description, shortDescription, darkDescription, darkShortDescription, true);
 	}
 
@@ -68,10 +63,11 @@ public class RoomDark extends Room {
 		this.deathMessage = s;
 	}
 
+	@Override
 	public String toString() {
 
 		if(this.isDark) {
-			if(this.player.hasLuminousItem()) {
+			if(this.getPlayer().hasLuminousItem()) {
 				return super.toString();
 			}
 			else {
@@ -82,9 +78,11 @@ public class RoomDark extends Room {
 			return super.toString();
 		}
 	}
+	
+	@Override
 	public String description() {
 		if (this.isDark) {
-			if (this.player.hasLuminousItem()) {
+			if (this.getPlayer().hasLuminousItem()) {
 				String s = this.roomWasVisited ? this.shortDescription : this.description + "\n" + visibleItems();
 				this.roomWasVisited = true;
 				return s;

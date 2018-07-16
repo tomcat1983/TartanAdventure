@@ -36,7 +36,7 @@ public class RoomElevator extends Room {
      */
 	public RoomElevator(String description, String shortDescription) {
 		super(description, shortDescription);
-		this.restrictedFloors = new ArrayList<Integer>();
+		this.restrictedFloors = new ArrayList<>();
 	}
 
     /**

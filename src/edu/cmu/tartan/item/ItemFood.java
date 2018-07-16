@@ -13,8 +13,7 @@ import edu.cmu.tartan.properties.Meltable;
  * 1.0 March 2018 - initial version
  */
 public class ItemFood extends Item implements Edible, Holdable, Meltable {
-
-    private Item hiddenItem = null;
+	private Item hiddenItem = null;
 
     /**
      * Constructor for food item
@@ -54,4 +53,36 @@ public class ItemFood extends Item implements Edible, Holdable, Meltable {
     public Item meltItem() {
         return hiddenItem;
     }
+
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((hiddenItem == null) ? 0 : hiddenItem.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (obj==null || getClass() != obj.getClass()) {
+			return false;
+		}
+		ItemFood other = (ItemFood) obj;
+		if (hiddenItem == null) {
+			if (other.hiddenItem != null) {
+				return false;
+			}
+		} else if (!hiddenItem.equals(other.hiddenItem)) {
+			return false;	
+		}
+		return true;
+	}
+
+
 }

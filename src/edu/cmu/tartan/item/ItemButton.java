@@ -12,7 +12,7 @@ import edu.cmu.tartan.properties.Pushable;
  */
 public class ItemButton extends Item implements Pushable {
 
-    protected String pushMessage;
+	protected String pushMessage;
 
     public ItemButton(String s, String sd, String[] a) {
         super(s, sd, a);
@@ -36,5 +36,34 @@ public class ItemButton extends Item implements Pushable {
         this.pushMessage = s;
     }
 
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((pushMessage == null) ? 0 : pushMessage.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (obj==null || getClass() != obj.getClass()) {
+			return false;
+		}
+		ItemButton other = (ItemButton) obj;
+		if (pushMessage == null) {
+			if (other.pushMessage != null) {
+				return false;
+			}
+		} else if (!pushMessage.equals(other.pushMessage)) {
+			return false;
+		}
+		return true;
+	}
 
 }
