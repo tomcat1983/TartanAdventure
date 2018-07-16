@@ -302,8 +302,7 @@ public class Player {
      * @see Valuable
      */
     public void score(Valuable valuableObject) {
-        int score = valuableObject.value();
-        score(score);
+        score(valuableObject.value());
     }
 
     /**

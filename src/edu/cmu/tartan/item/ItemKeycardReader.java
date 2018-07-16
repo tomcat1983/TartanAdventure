@@ -32,7 +32,7 @@ public class ItemKeycardReader extends Item implements Hostable {
      */
     public void install(Item item) {
         if (!(item instanceof ItemKeycard)) return;
-        this.installedItem = item;
+        installedItem = item;
 
         for (int i = 0; i < 3; i++) {
             System.out.println("...");
@@ -42,10 +42,10 @@ public class ItemKeycardReader extends Item implements Hostable {
                 e1.printStackTrace();
             }
         }
-        if (this.installMessage != null) {
-            System.out.println(this.installMessage);
+        if (installMessage != null) {
+            System.out.println(installMessage);
         }
-        this.relatedItem.setVisible(true);
+        relatedItem.setVisible(true);
     }
 
     /**

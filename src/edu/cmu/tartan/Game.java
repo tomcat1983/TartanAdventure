@@ -275,6 +275,9 @@ public class Game {
         return player;
     }
 
+    private void appendString(Action action, StringBuilder builder) {
+        for (String string : action.getAliases()) builder.append("'" + string + "' ");    	
+    }
     /**
      * Display help menu
      */
@@ -295,13 +298,13 @@ public class Game {
 
         for( Action a : Action.values()) {
             if (a.type() == Type.TYPE_DIRECTIONAL) {
-                for (String s : a.getAliases()) directions.append("'" + s + "' ");
+            	appendString(a, directions);
             } else if (a.type() == Type.TYPE_HASDIRECTOBJECT) {
-                for (String s : a.getAliases()) dirobj.append("'" + s + "' ");
+            	appendString(a, dirobj);
             } else if (a.type() == Type.TYPE_HASINDIRECTOBJECT) {
-                for (String s : a.getAliases()) indirobj.append("'" + s + "' ");
+            	appendString(a, indirobj);
             } else if (a.type() == Type.TYPE_UNKNOWN) {
-                for (String s : a.getAliases()) misc.append("'" + s + "' ");
+            	appendString(a, misc);
             }
         }
         directions.append("]");
