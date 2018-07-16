@@ -99,7 +99,7 @@ public class ItemKeycardReader extends Item implements Hostable {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (obj==null || getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemKeycardReader other = (ItemKeycardReader) obj;

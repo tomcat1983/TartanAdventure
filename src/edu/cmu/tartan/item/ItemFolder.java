@@ -61,7 +61,7 @@ public class ItemFolder extends Item implements Openable {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (obj==null || getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemFolder other = (ItemFolder) obj;

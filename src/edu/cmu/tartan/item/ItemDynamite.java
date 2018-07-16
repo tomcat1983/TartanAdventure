@@ -79,7 +79,7 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (obj==null || getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemDynamite other = (ItemDynamite) obj;

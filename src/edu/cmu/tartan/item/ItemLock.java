@@ -91,7 +91,7 @@ public class ItemLock extends Item implements Hostable, Openable {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (obj==null || getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemLock other = (ItemLock) obj;

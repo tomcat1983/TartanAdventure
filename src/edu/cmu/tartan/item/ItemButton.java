@@ -52,7 +52,7 @@ public class ItemButton extends Item implements Pushable {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (obj==null || getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemButton other = (ItemButton) obj;
