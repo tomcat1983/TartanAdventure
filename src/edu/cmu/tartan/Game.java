@@ -440,7 +440,7 @@ public class Game {
                         }
                         break;
                     }
-                    case ActionTake: {
+                    case ActionTake: 
                         Item contents = a.directObject();
                         Item container = a.indirectObject();
                         if(!this.player.currentRoom().hasItem(container)) {
@@ -460,7 +460,7 @@ public class Game {
                             }
                         }
                         break;
-                    }
+                    
                 }
             // Some actions do not require an object
             case TYPE_HASNOOBJECT: {
