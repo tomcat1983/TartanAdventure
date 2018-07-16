@@ -12,29 +12,6 @@ import edu.cmu.tartan.properties.Shakeable;
  */
 public class ItemVendingMachine extends Item implements Shakeable {
 
-    @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + count;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		ItemVendingMachine other = (ItemVendingMachine) obj;
-		return count == other.count;
-	}
-
 	/**
      * Constructor
      * @param d description
@@ -73,4 +50,28 @@ public class ItemVendingMachine extends Item implements Shakeable {
     }
 
     protected int count;
+    
+
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + count;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (obj==null || getClass() != obj.getClass()) {
+			return false;
+		}
+		ItemVendingMachine other = (ItemVendingMachine) obj;
+		return count == other.count;
+	}
 }
