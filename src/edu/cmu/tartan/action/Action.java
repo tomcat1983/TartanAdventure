@@ -19,7 +19,6 @@ public enum Action {
     ACTION_CLIMB(new String[]{"climb"}, Type.TYPE_HASNOOBJECT),
     ACTION_VIEW_ITEMS(new String[]{"inventory", "items", "i"}, Type.TYPE_HASNOOBJECT),
     ACTION_DIE(new String[]{"terminate"}, Type.TYPE_HASNOOBJECT),
-    ACTION_HELP(new String[]{"help", "h"}, Type.TYPE_HASNOOBJECT),
 
     // Directional actions; for movement
     ACTION_GO_EAST(new String[]{"east", "e"}, Type.TYPE_DIRECTIONAL),
@@ -67,7 +66,7 @@ public enum Action {
         this.aliases = aliases;
         this.type = type;
     }
-
+        
     // Shortcuts to reverse movement
     static {
         ACTION_GO_EAST.opposite = ACTION_GO_WEST;
