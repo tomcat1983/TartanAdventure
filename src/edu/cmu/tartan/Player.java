@@ -70,7 +70,7 @@ public class Player {
         this.items = items;
         this.score = 0;
         this.currentRoom = currentRoom;
-        this.currentRoom.player = this;
+        this.currentRoom.setPlayer(this);
     }
 
     /**

@@ -3,7 +3,6 @@ package edu.cmu.tartan.room;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 
@@ -36,10 +35,10 @@ public class Room implements Comparable {
     protected boolean roomWasVisited;
 
     // items in the room
-    public LinkedList<Item> items;
-
-    // the player within the room
-    public Player player;
+    private LinkedList<Item> items;
+	
+	// the player within the room
+    private Player player;
 
     /**
      * Create a new room
@@ -86,7 +85,6 @@ public class Room implements Comparable {
     /**
      * Fetch the room for a given direction (action)
      * @param a action required to get to this room
-     * @return the room
      */
     public Room getRoomForDirection(Action a) {
         if (canMoveToRoomInDirection(a)) {
@@ -205,14 +203,30 @@ public class Room implements Comparable {
      * @return true if the room contains the item; false otherwise
      */
     public boolean hasItem(Item item) {
-        if (item == null) return false;
-        // if the item is invisible, then fool the player
-        else if (!item.isVisible()) return false;
-        return this.items.contains(item);
+    	// if the item is invisible, then fool the player
+    	if (item == null) {
+        	return false;
+        } else if (!item.isVisible()) {
+        	return false;
+        } else {
+        	return this.items.contains(item);
+        }
     }
 
-    public void setPlayer(Player p) {
-        this.player = p;
+    public LinkedList<Item> getItems() {
+		return items;
+	}
+
+	public void setItems(LinkedList<Item> items) {
+		this.items = items;
+	}
+    
+	public Player getPlayer() {
+		return player;
+	}
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public String toString() {
@@ -243,10 +257,27 @@ public class Room implements Comparable {
         return this.shortDescription;
     }
 
+    @Override
     public int compareTo(Object other) {
         if (shortDescription.compareTo(((Room) other).shortDescription()) == 0) {
             return 0;
         }
         return -1;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if(obj instanceof Room) {
+    		Room room = (Room)obj;
+    		if(room.description.equals(description) && room.shortDescription.equals(shortDescription)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return description.hashCode()+shortDescription.hashCode();
     }
 }

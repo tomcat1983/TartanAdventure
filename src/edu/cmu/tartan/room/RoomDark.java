@@ -71,7 +71,7 @@ public class RoomDark extends Room {
 	public String toString() {
 
 		if(this.isDark) {
-			if(this.player.hasLuminousItem()) {
+			if(this.getPlayer().hasLuminousItem()) {
 				return super.toString();
 			}
 			else {
@@ -84,7 +84,7 @@ public class RoomDark extends Room {
 	}
 	public String description() {
 		if (this.isDark) {
-			if (this.player.hasLuminousItem()) {
+			if (this.getPlayer().hasLuminousItem()) {
 				String s = this.roomWasVisited ? this.shortDescription : this.description + "\n" + visibleItems();
 				this.roomWasVisited = true;
 				return s;
