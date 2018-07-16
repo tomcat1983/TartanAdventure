@@ -9,5 +9,6 @@ public class Main {
 		if(game.configureGame()) {
 			game.start();			
 		}
+		System.out.println("Test");
 	}
 }
