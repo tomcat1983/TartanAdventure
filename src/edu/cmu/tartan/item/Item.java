@@ -181,19 +181,6 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     }
 
     /**
-     * The comparison is based on description
-     * @param i
-     * @return
-     */
-    public int compareTo(Object i) {
-        if (((Item) i).detailDescription.equals(this.detailDescription())) {
-            return 0;
-        } else {
-            return 1;
-        }
-    }
-
-    /**
      * Control visibility
      */
     public boolean isVisible() {
@@ -226,6 +213,36 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     @Override
     public void setValue(int value) {
         this.value = value;
+    }
+    
+    /**
+     * The comparison is based on description
+     * @param i
+     * @return
+     */
+    @Override
+    public int compareTo(Object i) {
+        if (((Item) i).detailDescription.equals(this.detailDescription())) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if(obj instanceof Item) {
+    		Item item = (Item) obj;
+    		if(item.description.equals(description) && item.detailDescription.equals(detailDescription)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    @Override
+    public int hashCode() {
+    	return description.hashCode() + detailDescription.hashCode();
     }
 }
 

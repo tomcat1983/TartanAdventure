@@ -2,7 +2,7 @@ package edu.cmu.tartan.goal;
 
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.room.Room;
-import java.util.ArrayList;;
+import java.util.ArrayList;
 
 /**
  * A game goal based on exploration of different areas. Traveling to each place is necessary to achieve this goal.

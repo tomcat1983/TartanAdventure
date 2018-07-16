@@ -70,7 +70,7 @@ public class Player {
         this.items = items;
         this.score = 0;
         this.currentRoom = currentRoom;
-        this.currentRoom.player = this;
+        this.currentRoom.setPlayer(this);
     }
 
     /**
@@ -302,8 +302,7 @@ public class Player {
      * @see Valuable
      */
     public void score(Valuable valuableObject) {
-        int score = valuableObject.value();
-        score(score);
+        score(valuableObject.value());
     }
 
     /**
