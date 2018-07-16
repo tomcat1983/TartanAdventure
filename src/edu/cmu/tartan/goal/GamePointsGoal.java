@@ -47,9 +47,6 @@ public class GamePointsGoal implements GameGoal {
      */
     @Override
     public Boolean isAchieved() {
-        if (player.getScore() >= winningScore) {
-            return true;
-        }
-        return false;
+        return player.getScore() >= winningScore;
     }
 }

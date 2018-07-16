@@ -14,7 +14,7 @@ public class RoomExcavatable extends Room {
 		super(description, shortDescription);
 		this.digMessage = digMessage;
 		this.wasDugUp = false;
-		this.revealableItems = new LinkedList<Item>();
+		this.revealableItems = new LinkedList<>();
 	}
 
     /**

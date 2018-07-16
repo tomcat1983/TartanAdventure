@@ -11,8 +11,7 @@ import edu.cmu.tartan.properties.Hostable;
  * 1.0 March 2018 - initial version
  */
 public class ItemKeycardReader extends Item implements Hostable {
-
-    private Item installedItem;
+	private Item installedItem;
     private String installMessage;
 
     /**
@@ -33,7 +32,7 @@ public class ItemKeycardReader extends Item implements Hostable {
      */
     public void install(Item item) {
         if (!(item instanceof ItemKeycard)) return;
-        this.installedItem = item;
+        installedItem = item;
 
         for (int i = 0; i < 3; i++) {
             System.out.println("...");
@@ -43,10 +42,10 @@ public class ItemKeycardReader extends Item implements Hostable {
                 e1.printStackTrace();
             }
         }
-        if (this.installMessage != null) {
-            System.out.println(this.installMessage);
+        if (installMessage != null) {
+            System.out.println(installMessage);
         }
-        this.relatedItem.setVisible(true);
+        relatedItem.setVisible(true);
     }
 
     /**
@@ -84,5 +83,33 @@ public class ItemKeycardReader extends Item implements Hostable {
         this.installMessage = s;
     }
 
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((installMessage == null) ? 0 : installMessage.hashCode());
+		return result;
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (obj==null || getClass() != obj.getClass()) {
+			return false;
+		}
+		ItemKeycardReader other = (ItemKeycardReader) obj;
+		if (installMessage == null) {
+			if (other.installMessage != null) {
+				return false;
+			}
+		} else if (!installMessage.equals(other.installMessage)) {
+			return false;
+		}
+		return true;
+	}
 }

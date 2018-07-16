@@ -77,14 +77,12 @@ public class ItemSafe extends Item implements Hostable, Openable {
     @Override
     public Boolean open() {
         Scanner s = new Scanner(System.in);
-        String input = "";
         System.out.println("Enter the four-digit PIN number.");
         Integer p = Integer.parseInt(s.nextLine());
         if (p.intValue() == this.pin.intValue()) {
-
-            this.installedItem.setVisible(true);
-            System.out.println("The safe door swings open.");
-            if (this.installedItem != null) {
+        	if (this.installedItem != null) {
+        		this.installedItem.setVisible(true);
+        		System.out.println("The safe door swings open.");
                 System.out.println("You have revealed a '" + this.installedItem.detailDescription() + "'.");
             }
             return true;
@@ -93,4 +91,41 @@ public class ItemSafe extends Item implements Hostable, Openable {
         }
         return false;
     }
+    
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((installedItem == null) ? 0 : installedItem.hashCode());
+		result = prime * result + ((pin == null) ? 0 : pin.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (obj==null || getClass() != obj.getClass()) {
+			return false;
+		}
+		ItemSafe other = (ItemSafe) obj;
+		if (installedItem == null) {
+			if (other.installedItem != null)
+				return false;
+		} else if (!installedItem.equals(other.installedItem)) {
+			return false;
+		}
+		if (pin == null) {
+			if (other.pin != null)
+				return false;
+		} else if (!pin.equals(other.pin)) {
+			return false;
+		}
+		
+		return true;
+	}
 }
