@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message type="GAME_END" sender="server" receiver="client">
+	<game_result result="win" /> <!-- win | loose for each client, score will be printed by EventMessage-->
+</message>
