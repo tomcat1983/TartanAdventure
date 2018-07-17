@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message type="ADD_USER" sender="server" receiver="client">
+	<user_info add_result="OK" ng_reason="-"  />
+</message>
