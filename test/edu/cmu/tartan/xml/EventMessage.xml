@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message type="EVENT_MESSAGE" sender="server" receiver="client">
+	<display text="Hello Client!" />
+	<display text="This is a message from server." />
+	<display text="Client should display these text line by line." />
+</message>
