@@ -28,7 +28,7 @@ public class PlayerInterpreter {
         	case TYPE_DIRECTIONAL:
         		return action;
         	case TYPE_HASDIRECTOBJECT:
-	        		if(string.length > 1) {
+	        	if(string.length > 1) {
 	                String d = string[1];
 	                Item item = Item.getInstance(d);
 	                // item is the direct object of the action
@@ -88,6 +88,17 @@ public class PlayerInterpreter {
         return Action.ACTION_PASS;
     }
 
+    
+    private Action stringCompareToActionAliases(String s) {
+    	for( Action action : Action.values()) {
+            for(String alias : action.getAliases()) {
+                if(s.compareTo(alias) == 0) {
+                    return action;
+                }
+            }
+        }
+    	return null;
+    }
     /**
      * Attempt to select the appropriate action for the given input string
      * @param string the description of what is to be done
@@ -107,17 +118,7 @@ public class PlayerInterpreter {
             // input could be northeast, put cpu in vax, throw shovel, examine bin
 
             String s = string[0];
-            Action action = null;
-            out:{
-                for( Action a : Action.values()) {
-                    for(String alias : a.getAliases()) {
-                        if(s.compareTo(alias) == 0) {
-                            action = a;
-                            break out;
-                        }
-                    }
-                }
-            }
+            Action action = stringCompareToActionAliases(s);
             if(action == null) {
                 return Action.ACTION_ERROR;
             }
