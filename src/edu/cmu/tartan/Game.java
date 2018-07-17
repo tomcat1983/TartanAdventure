@@ -22,6 +22,11 @@ import java.util.Vector;
  * 1.0 March 2018 - initial version
  */
 public class Game {
+	
+	/**
+	 * Game interface for game message and log
+	 */
+	private GameInterface gameInterface = GameInterface.getInterface();
 
     /**
      * Reads input from the command line.
@@ -70,7 +75,7 @@ public class Game {
         for (int i = 0; i < menu.size(); i++) {
             sb.append( (i+1) + ":  " + menu.get(i).getName() + "\n");
         }
-        System.out.println(sb.toString());
+        gameInterface.println(sb.toString());
     }
 
     /**
@@ -112,7 +117,7 @@ public class Game {
         	int choice = 0;
             while(true) {
                 printMenu(menu);
-                System.out.print("> ");
+                gameInterface.print("> ");
                 String input = this.scanner.nextLine();
                 try {
                     if (input.equalsIgnoreCase("help")) {
@@ -125,16 +130,16 @@ public class Game {
                             gameConfig.configure(this);
                             break;
                     	} else {
-                    		System.out.println("Invaild selection");                    		
+                    		gameInterface.println("Invaild selection");                    		
                     	}
                     }
                 }
                 catch (InvalidGameException ige) {
-                    System.out.println("Game improperly configured, please try again.");
+                	gameInterface.println("Game improperly configured, please try again.");
                     return false;
                 }
                 catch(Exception e) {
-                    System.out.println("Invalid selection.");
+                	gameInterface.println("Invalid selection.");
                 }
             }
         }
@@ -155,13 +160,13 @@ public class Game {
         try {
             String input = null;
             while(true) {
-                System.out.print("> ");
+            	gameInterface.print("> ");
 
                 input = this.scanner.nextLine();
 
                 if (input.compareTo("quit") == 0) {
                     for (GameGoal g: goals) {
-                        System.out.println(g.getStatus());
+                    	gameInterface.println(g.getStatus());
                     }
                     break;
                 }
@@ -184,11 +189,11 @@ public class Game {
                 }
             }
         } catch(Exception e) {
-            System.out.println("I don't understand that \n\nException: \n" + e);
+        	gameInterface.println("I don't understand that \n\nException: \n" + e);
             e.printStackTrace();
             start();
         }
-        System.out.println("Game Over");
+        gameInterface.println("Game Over");
     }
 
     /**
@@ -196,20 +201,20 @@ public class Game {
      */
     private void winGame() {
 
-        System.out.println("Congrats!");
+    	gameInterface.println("Congrats!");
 
-        System.out.println("You've won the '" + gameName + "' game!\n" );
-        System.out.println("- Final score: " + player.getScore());
-        System.out.println("- Final inventory: ");
+    	gameInterface.println("You've won the '" + gameName + "' game!\n" );
+    	gameInterface.println("- Final score: " + player.getScore());
+    	gameInterface.println("- Final inventory: ");
         if (player.getCollectedItems().isEmpty()) {
-            System.out.println("You don't have any items.");
+        	gameInterface.println("You don't have any items.");
         }
         else {
             for (Item i : player.getCollectedItems()) {
-                System.out.println(i.toString() + " ");
+                gameInterface.println(i.toString() + " ");
             }
         }
-        System.out.println("\n");
+        gameInterface.println("\n");
     }
 
     /**
@@ -229,39 +234,39 @@ public class Game {
     }
 
     private void status() {
-        System.out.println("The current game is '" + gameName + "': " + gameDescription + "\n");
-        System.out.println("- There are " + goals.size() + " goals to achieve:");
+        gameInterface.println("The current game is '" + gameName + "': " + gameDescription + "\n");
+        gameInterface.println("- There are " + goals.size() + " goals to achieve:");
 
         for (int i=0; i < goals.size(); i++) {
-            System.out.println("  * " + (i+1)+ ": "+ goals.get(i).describe() + ", status: " + goals.get(i).getStatus());
+            gameInterface.println("  * " + (i+1)+ ": "+ goals.get(i).describe() + ", status: " + goals.get(i).getStatus());
         }
-        System.out.println("\n");
-        System.out.println("- Current room:  " + player.currentRoom() + "\n");
-        System.out.println("- Items in current room: ");
+        gameInterface.println("\n");
+        gameInterface.println("- Current room:  " + player.currentRoom() + "\n");
+        gameInterface.println("- Items in current room: ");
         for (Item i : player.currentRoom().getItems()) {
-            System.out.println("   * " + i.toString() + " ");
+            gameInterface.println("   * " + i.toString() + " ");
         }
-        System.out.println("\n");
+        gameInterface.println("\n");
 
-        System.out.println("- Current score: " + player.getScore());
+        gameInterface.println("- Current score: " + player.getScore());
 
-        System.out.println("- Current inventory: ");
+        gameInterface.println("- Current inventory: ");
         if (player.getCollectedItems().isEmpty()) {
-            System.out.println("   You don't have any items.");
+            gameInterface.println("   You don't have any items.");
         } else {
             for (Item i : player.getCollectedItems()) {
-                System.out.println("   * " + i.toString() + " ");
+                gameInterface.println("   * " + i.toString() + " ");
             }
         }
-        System.out.println("\n");
+        gameInterface.println("\n");
 
-        System.out.println("- Rooms visited: ");
+        gameInterface.println("- Rooms visited: ");
         Vector<Room> rooms = player.getRoomsVisited();
         if (rooms.isEmpty()) {
-            System.out.println("You have not been to any rooms.");
+            gameInterface.println("You have not been to any rooms.");
         } else {
             for (Room r : rooms) {
-                System.out.println("  * " +r.description() + " ");
+                gameInterface.println("  * " +r.description() + " ");
             }
         }
     }
@@ -284,12 +289,12 @@ public class Game {
     private void help() {
 
         // Credit to emacs Dunnet by Ron Schnell
-        System.out.println("Welcome to TartanAdventure RPG Help." +
+        gameInterface.println("Welcome to TartanAdventure RPG Help." +
                 "Here is some useful information (read carefully because there are one\n" +
                 "or more clues in here):\n");
 
-        System.out.println("- To view your current items: type \"inventory\"\n");
-        System.out.println("- You have a number of actions available:\n");
+        gameInterface.println("- To view your current items: type \"inventory\"\n");
+        gameInterface.println("- You have a number of actions available:\n");
 
         StringBuilder directions = new StringBuilder("Direction: go [");
         StringBuilder dirobj = new StringBuilder("Manipulate object directly: [");
@@ -312,13 +317,13 @@ public class Game {
         indirobj.append("]");
         misc.append("]");
 
-        System.out.println("- "+ directions.toString() + "\n");
-        System.out.println("- " + dirobj.toString() + "\n");
-        System.out.println("- " + indirobj.toString() + "\n");
-        System.out.println("- " +misc.toString() + "\n");
-        System.out.println("- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
-        System.out.println("- You can quit by typing \"quit\"\n");
-        System.out.println("- Good luck!\n");
+        gameInterface.println("- "+ directions.toString() + "\n");
+        gameInterface.println("- " + dirobj.toString() + "\n");
+        gameInterface.println("- " + indirobj.toString() + "\n");
+        gameInterface.println("- " +misc.toString() + "\n");
+        gameInterface.println("- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
+        gameInterface.println("- You can quit by typing \"quit\"\n");
+        gameInterface.println("- Good luck!\n");
 
     }
 
@@ -344,9 +349,9 @@ public class Game {
      */
     public void showIntro() {
 
-        System.out.println("Welcome to Tartan Adventure (1.0), by Tartan Inc..");
-        System.out.println("Game: " + gameDescription);
-        System.out.println("To get help type 'help' ... let's begin\n");
+        gameInterface.println("Welcome to Tartan Adventure (1.0), by Tartan Inc..");
+        gameInterface.println("Game: " + gameDescription);
+        gameInterface.println("To get help type 'help' ... let's begin\n");
     }
 
     /**

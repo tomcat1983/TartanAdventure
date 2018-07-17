@@ -22,7 +22,12 @@ import java.util.Vector;
  */
 public class Player {
 
-    /**
+	/**
+	 * Game interface for game message and log
+	 */
+	private GameInterface gameInterface = GameInterface.getInterface();
+
+	/**
      * The player's score.
      */
     private int score=0;
@@ -106,7 +111,7 @@ public class Player {
 
         Item dropped = drop(item);
         if (dropped == null) {
-            System.out.println("You don't have this item to drop");
+        	gameInterface.println("You don't have this item to drop");
             return false;
         }
         this.currentRoom.putItem(dropped);
@@ -180,7 +185,7 @@ public class Player {
             if(message != null) {
                 if(delay != 0) {
                     for(int i=0; i < 3; i++) {
-                        System.out.println("...");
+                        gameInterface.println("...");
                         try{
                             Thread.sleep(delay);
                         }
@@ -189,20 +194,20 @@ public class Player {
                         }
                     }
                 }
-                System.out.println(message);
+                gameInterface.println(message);
             }
         }
         if(nextRoom instanceof RoomRequiredItem) {
             RoomRequiredItem r = (RoomRequiredItem)nextRoom;
             if(r.diesOnEntry()) {
-                System.out.println(r.loseMessage());
+                gameInterface.println(r.loseMessage());
                 this.terminate();
             }
         }
 
         this.currentRoom = nextRoom;
         saveRoom(currentRoom);
-        System.out.println(this.currentRoom.description());
+        gameInterface.println(this.currentRoom.description());
     }
 
     /**
@@ -232,14 +237,14 @@ public class Player {
             RoomRequiredItem room = (RoomRequiredItem)this.currentRoom;
 
             if(room.shouldLoseForAction(action)) {
-                System.out.println(room.loseMessage());
+                gameInterface.println(room.loseMessage());
                 this.terminate();
             }
         }
         else if(this.currentRoom instanceof RoomDark) {
             RoomDark room = (RoomDark)this.currentRoom;
             if(room.isDark() && !this.hasLuminousItem()) {
-                System.out.println(room.deathMessage());
+                gameInterface.println(room.deathMessage());
                 this.terminate();
             }
         }
@@ -251,17 +256,17 @@ public class Player {
                 RoomLockable lockedRoom = (RoomLockable)nextRoom;
                 if(lockedRoom.isLocked()) {
                     if(lockedRoom.causesDeath()) {
-                        System.out.println(lockedRoom.deathMessage());
+                        gameInterface.println(lockedRoom.deathMessage());
                         this.terminate();
                     }
-                    System.out.println("This door is locked.");
+                    gameInterface.println("This door is locked.");
                     return;
                 }
             }
             else if(nextRoom instanceof RoomObscured) {
                 RoomObscured obscuredRoom = (RoomObscured)nextRoom;
                 if(obscuredRoom.isObscured()) {
-                    System.out.println("You can't move that way.");
+                    gameInterface.println("You can't move that way.");
                     return;
                 }
             }
@@ -269,7 +274,7 @@ public class Player {
             move(nextRoom);
         }
         else {
-            System.out.println("You can't move that way.");
+            gameInterface.println("You can't move that way.");
         }
     }
 
@@ -293,7 +298,7 @@ public class Player {
      * Print information about the room
      */
     public void lookAround() {
-        System.out.println(this.currentRoom.toString());
+        gameInterface.println(this.currentRoom.toString());
     }
 
     /**
@@ -310,7 +315,7 @@ public class Player {
      * @param s the newly scored points.
      */
     public void score(int s) {
-        System.out.println("You scored " + s + " points.");
+        gameInterface.println("You scored " + s + " points.");
         score += s;
     }
 
@@ -318,7 +323,7 @@ public class Player {
      * Terminate this player.
      */
     public void terminate() {
-        System.out.println("You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
+        gameInterface.println("You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
         System.exit(0);
     }
 
