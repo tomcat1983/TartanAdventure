@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.properties.Inspectable;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
@@ -16,6 +17,8 @@ import java.util.LinkedList;
  * 1.0 March 2018 - initial version
  */
 public class Item implements Comparable, Inspectable, Visible, Valuable {
+	protected static GameInterface gameInterface = GameInterface.getInterface();
+	
 	private static final String UNKNOWN = "unknown"; 
 
     // every item is visible by default
@@ -135,7 +138,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
                 for (String string : item.getAliases()) {
                     for (String s : i.getAliases()) {
                         if (string == s) {
-                            System.err.println("Warning: alias conflict between " + item + " and " + i);
+                        	gameInterface.println("Warning: alias conflict between " + item + " and " + i);
                         }
                     }
                 }
@@ -194,9 +197,9 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     // Inspectable
     public Boolean inspect() {
         if (this.inspectMessage != null) {
-            System.out.println(this.inspectMessage);
+        	gameInterface.println(this.inspectMessage);
         } else {
-            System.out.println("It appears to be a " + this + ".");
+        	gameInterface.println("It appears to be a " + this + ".");
         }
         return true;
     }

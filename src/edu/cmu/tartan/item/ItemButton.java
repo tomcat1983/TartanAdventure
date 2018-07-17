@@ -25,7 +25,7 @@ public class ItemButton extends Item implements Pushable {
      */
     @Override
     public void push() {
-        System.out.println(this.pushMessage);
+    	gameInterface.println(this.pushMessage);
     }
 
     /**
@@ -52,7 +52,7 @@ public class ItemButton extends Item implements Pushable {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (obj==null || getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemButton other = (ItemButton) obj;

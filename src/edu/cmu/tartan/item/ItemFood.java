@@ -32,7 +32,7 @@ public class ItemFood extends Item implements Edible, Holdable, Meltable {
      */
     @Override
     public void eat() {
-        System.out.println("Yummy");
+    	gameInterface.println("Yummy");
     }
 
     /**
@@ -70,7 +70,7 @@ public class ItemFood extends Item implements Edible, Holdable, Meltable {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (obj==null || getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemFood other = (ItemFood) obj;

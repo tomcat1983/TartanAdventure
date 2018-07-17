@@ -39,12 +39,12 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
         if (!this.exploded) {
             if (this.relatedRoom instanceof RoomObscured) {
                 ((RoomObscured) this.relatedRoom).setObscured(false);
-                System.out.println(((RoomObscured) this.relatedRoom).unobscureMessage());
+                gameInterface.println(((RoomObscured) this.relatedRoom).unobscureMessage());
             }
             this.exploded = true;
             this.detailDescription = "pile of smithereens";
         } else {
-            System.out.println("The dynamite has already been detonated.");
+        	gameInterface.println("The dynamite has already been detonated.");
         }
         return exploded;
     }

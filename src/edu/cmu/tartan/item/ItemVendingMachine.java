@@ -35,13 +35,13 @@ public class ItemVendingMachine extends Item implements Shakeable {
     public void shake() {
         switch (this.count) {
             case 0:
-                System.out.println("You shake the vending machine, and your favorite treat inches its way off the tray.");
+                gameInterface.println("You shake the vending machine, and your favorite treat inches its way off the tray.");
                 break;
             case 1:
-                System.out.println("The treat begins to bend toward the will of gravity.");
+            	gameInterface.println("The treat begins to bend toward the will of gravity.");
                 break;
             case 2:
-                System.out.println("Just as the candy falls, the machine also falls over and crushes you.");
+            	gameInterface.println("Just as the candy falls, the machine also falls over and crushes you.");
                 break;
             default:
                 break;
@@ -62,13 +62,13 @@ public class ItemVendingMachine extends Item implements Shakeable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (obj!=null && this == obj) {
 			return true;
 		}
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (obj==null || getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemVendingMachine other = (ItemVendingMachine) obj;

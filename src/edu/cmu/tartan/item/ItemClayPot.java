@@ -44,7 +44,7 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
      */
     @Override
     public void destroy() {
-        System.out.println(destroyMessage);
+        gameInterface.println(destroyMessage);
     }
 
     /**
@@ -116,7 +116,7 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (obj==null || getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemClayPot other = (ItemClayPot) obj;

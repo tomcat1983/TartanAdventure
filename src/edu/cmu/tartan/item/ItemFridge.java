@@ -35,7 +35,7 @@ public class ItemFridge extends Item implements Pushable {
         if (!this.wasPushed) {
             if (this.relatedRoom instanceof RoomObscured) {
                 ((RoomObscured) this.relatedRoom).setObscured(false);
-                System.out.println(((RoomObscured) this.relatedRoom).unobscureMessage());
+                gameInterface.println(((RoomObscured) this.relatedRoom).unobscureMessage());
             }
             this.wasPushed = true;
         }
@@ -56,7 +56,7 @@ public class ItemFridge extends Item implements Pushable {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (obj==null || getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemFridge other = (ItemFridge) obj;
