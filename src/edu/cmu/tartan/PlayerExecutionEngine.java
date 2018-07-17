@@ -55,7 +55,7 @@ public class PlayerExecutionEngine {
         Item container = null;
         if(player.currentRoom().hasItem(item)) {
             if(item instanceof Holdable) {
-                gameInterface.println("Taken.");
+				gameInterface.println(GamePlayMessage.TAKEN);
 
                 player.currentRoom().remove(item);
                 player.pickup(item);
@@ -67,7 +67,7 @@ public class PlayerExecutionEngine {
         }
         else if((container = containerForItem(item)) != null) {
 
-            gameInterface.println("Taken.");
+        	gameInterface.println(GamePlayMessage.TAKEN);
             ((Hostable)container).uninstall(item);
             player.pickup(item);
             Holdable h = (Holdable) item;
@@ -77,7 +77,8 @@ public class PlayerExecutionEngine {
             gameInterface.println("You already have that item in your inventory.");
         }
         else {
-            gameInterface.println("I don't see that here.");
+
+			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
         }    	
     }
     
@@ -107,7 +108,7 @@ public class PlayerExecutionEngine {
             }
         }
         else {
-            gameInterface.println("I don't see that here.");
+			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
         }
     }
     
@@ -121,7 +122,7 @@ public class PlayerExecutionEngine {
             }
         }
         else {
-            gameInterface.println("I don't see that here.");
+			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
         }
     }
     
@@ -177,7 +178,7 @@ public class PlayerExecutionEngine {
             }
         }
         else {
-            gameInterface.println("I don't see that here.");
+			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
         }
     }
     
@@ -192,7 +193,7 @@ public class PlayerExecutionEngine {
             }
         }
         else {
-            gameInterface.println("I don't see that here.");
+			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
         }	
     }
     
@@ -217,7 +218,7 @@ public class PlayerExecutionEngine {
             }
         }
         else {
-            gameInterface.println("I don't see that here.");
+			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
         }    	
     }
     
@@ -267,7 +268,7 @@ public class PlayerExecutionEngine {
             }
         }
         else {
-            gameInterface.println("I don't see that here.");
+			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
         }    	
     }
     
@@ -301,7 +302,7 @@ public class PlayerExecutionEngine {
                 	// Is it right code? If object is null, something process below funciton? 
                 	actionPickup(item);
                 } else {
-                    gameInterface.println("I don't see that here.");
+					gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
                 }
                 break;
             case ACTION_DESTROY: 
@@ -369,7 +370,7 @@ public class PlayerExecutionEngine {
     
     private void actionTake(Item contents, Item container) {
     	if(!player.currentRoom().hasItem(container)) {
-            gameInterface.println("I don't see that here.");
+			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
         }
         else if(!(container instanceof Hostable)) {
             gameInterface.println("You can't have an item inside that.");
@@ -378,7 +379,7 @@ public class PlayerExecutionEngine {
             if(((Hostable)container).installedItem() == contents) {
                 ((Hostable)container).uninstall(contents);
                 player.pickup(contents);
-                gameInterface.println("Taken.");
+				gameInterface.println(GamePlayMessage.TAKEN);
             }
             else {
                 gameInterface.println("That item is not inside this " + container);
