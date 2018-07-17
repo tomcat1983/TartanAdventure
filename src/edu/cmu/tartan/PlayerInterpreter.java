@@ -22,6 +22,71 @@ public class PlayerInterpreter {
         }
         return action(string.toLowerCase().split(" "));
     }
+    
+    private Action findAction(Action action, String[] string) {
+        switch(action.type()) {
+        	case TYPE_DIRECTIONAL:
+        		return action;
+        	case TYPE_HASDIRECTOBJECT:
+	        		if(string.length > 1) {
+	                String d = string[1];
+	                Item item = Item.getInstance(d);
+	                // item is the direct object of the action
+	                action.setDirectObject(item);
+	                return action;
+	            }
+	            else {
+	                System.out.println("You must supply a direct object.");
+	                return Action.ACTION_PASS;
+	            }
+	        case TYPE_HASINDIRECTOBJECT:
+	
+	            // test if it has indirect object
+	            // "Take Diamond from Microwave"
+	
+	            if(string.length > 0) {
+	
+	                String d = string[1];
+	                Item item = Item.getInstance(d);
+	                // item is the direct object of the action
+	                action.setDirectObject(item);
+	
+	                if(string.length > 2) {
+	                    String in = string[2];
+	                    if(in.equals("in") || in.equals("from")) {
+	
+	                        if(string.length > 3) {
+	                            String io = string[3];
+	                            Item indob = Item.getInstance(io);
+	                            action.setIndirectObject(indob);
+	                            return action;
+	                        }
+	                        else {
+	                            System.out.println("You must supply an indirect object.");
+	                            return Action.ACTION_ERROR;
+	                        }
+	                    }
+	                    else {
+	                        return Action.ACTION_PASS;
+	                    }
+	                }
+	
+	            }
+	            else {
+	                System.out.println("You must supply a direct object.");
+	                return Action.ACTION_ERROR;
+	            }
+	            break;
+	        case TYPE_HASNOOBJECT:
+	            return action;
+	        case TYPE_UNKNOWN:
+	            return Action.ACTION_ERROR;
+	        default:
+	            System.out.println("Unknown type");
+	            break;
+        }
+        return Action.ACTION_PASS;
+    }
 
     /**
      * Attempt to select the appropriate action for the given input string
@@ -56,70 +121,7 @@ public class PlayerInterpreter {
             if(action == null) {
                 return Action.ACTION_ERROR;
             }
-            switch(action.type()) {
-                case TYPE_DIRECTIONAL:
-                    return action;
-                case TYPE_HASDIRECTOBJECT:
-                    if(string.length > 1) {
-
-                        String d = string[1];
-                        Item item = Item.getInstance(d);
-                        // item is the direct object of the action
-                        action.setDirectObject(item);
-                        return action;
-                    }
-                    else {
-                        System.out.println("You must supply a direct object.");
-                        return Action.ACTION_PASS;
-                    }
-                case TYPE_HASINDIRECTOBJECT:
-
-                    // test if it has indirect object
-                    // "Take Diamond from Microwave"
-
-                    if(string.length > 0) {
-
-                        String d = string[1];
-                        Item item = Item.getInstance(d);
-                        // item is the direct object of the action
-                        action.setDirectObject(item);
-
-                        if(string.length > 2) {
-                            String in = string[2];
-                            if(in.equals("in") || in.equals("from")) {
-
-                                if(string.length > 3) {
-                                    String io = string[3];
-                                    Item indob = Item.getInstance(io);
-                                    action.setIndirectObject(indob);
-                                    return action;
-                                }
-                                else {
-                                    System.out.println("You must supply an indirect object.");
-                                    return Action.ACTION_ERROR;
-                                }
-                            }
-                            else {
-                                return Action.ACTION_PASS;
-                            }
-                        }
-
-                    }
-                    else {
-                        System.out.println("You must supply a direct object.");
-                        return Action.ACTION_ERROR;
-                    }
-                    break;
-                case TYPE_HASNOOBJECT:
-                    return action;
-                case TYPE_UNKNOWN:
-                    return Action.ACTION_ERROR;
-                default:
-                    System.out.println("Unknown type");
-                    break;
-            }
+            return findAction(action, string);
         }
-
-        return Action.ACTION_PASS;
     }
 }
