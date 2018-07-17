@@ -4,23 +4,21 @@ import java.util.logging.*;
 import java.io.PrintStream;
 
 public class GameInterface {
-	class GameInterfaceFormatter extends Formatter {
 
-		@Override
-		public String format(LogRecord record) {
-			System.out.println(record.getLevel());
-			if (record.getLevel() != Level.FINEST)
-				return "";
-			System.out.println(record.getMessage());
-			return record.getMessage() + "\n";
-		}
-
-	}
-	
+	/**
+	 * Logger for log message
+	 */
 	private final static Logger logger = Logger.getGlobal();
-	private final static PrintStream printStream = new PrintStream(System.out);
-	private static GameInterface instance = null;
 	
+	/**
+	 * PrinterStream for Game message
+	 */
+	private final static PrintStream printStream = new PrintStream(System.err);
+	
+	/**
+	 * Static variable for singleton
+	 */
+	private static GameInterface instance = null;
 	
 	public GameInterface() {
 		super();
@@ -38,7 +36,7 @@ public class GameInterface {
 		return instance;
 	}
 	
-	// For log
+	// For log message
 	public void severe(String msg) {
 		logger.severe(msg);
 	}
