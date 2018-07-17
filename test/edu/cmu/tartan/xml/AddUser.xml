@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message type="ADD_USER" sender="client" receiver="server">
+	<user_info id="takhh" pw="awefaweg14ro4aw3"/>	<!-- password is encrypted -->
+</message>
