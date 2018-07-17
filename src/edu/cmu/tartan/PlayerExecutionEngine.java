@@ -24,6 +24,11 @@ import edu.cmu.tartan.room.RoomRequiredItem;
 
 public class PlayerExecutionEngine {
 	
+	/**
+	 * Game interface for game message and log
+	 */
+	private GameInterface gameInterface = GameInterface.getInterface();
+
 	private Player player;
 	
 	PlayerExecutionEngine(Player player) {
@@ -50,36 +55,36 @@ public class PlayerExecutionEngine {
         Item container = null;
         if(player.currentRoom().hasItem(item)) {
             if(item instanceof Holdable) {
-                System.out.println("Taken.");
+                gameInterface.println("Taken.");
 
                 player.currentRoom().remove(item);
                 player.pickup(item);
                 player.score( ((Holdable)item).value());
             }
             else {
-                System.out.println("You cannot pick up this item.");
+                gameInterface.println("You cannot pick up this item.");
             }
         }
         else if((container = containerForItem(item)) != null) {
 
-            System.out.println("Taken.");
+            gameInterface.println("Taken.");
             ((Hostable)container).uninstall(item);
             player.pickup(item);
             Holdable h = (Holdable) item;
             player.score(h.value());
         }
         else if(player.hasItem(item)) {
-            System.out.println("You already have that item in your inventory.");
+            gameInterface.println("You already have that item in your inventory.");
         }
         else {
-            System.out.println("I don't see that here.");
+            gameInterface.println("I don't see that here.");
         }    	
     }
     
     private void actionDestroy(Item item) {
         if (player.currentRoom().hasItem(item) || player.hasItem(item)) {
             if (item instanceof Destroyable) {
-                //System.out.println("Smashed.");
+                //gameInterface.println("Smashed.");
                 ((Destroyable) item).setDestroyMessage("Smashed.");
                 ((Destroyable)item).destroy();
                 ((Destroyable) item).setDisappears(true);
@@ -98,11 +103,11 @@ public class PlayerExecutionEngine {
                 }
             }
             else {
-                System.out.println("You cannot break this item.");
+                gameInterface.println("You cannot break this item.");
             }
         }
         else {
-            System.out.println("I don't see that here.");
+            gameInterface.println("I don't see that here.");
         }
     }
     
@@ -112,29 +117,29 @@ public class PlayerExecutionEngine {
                 item.inspect();
             }
             else {
-                System.out.println("You cannot inspect this item.");
+                gameInterface.println("You cannot inspect this item.");
             }
         }
         else {
-            System.out.println("I don't see that here.");
+            gameInterface.println("I don't see that here.");
         }
     }
     
     private void actionDrop(Item item) {
     	if(player.hasItem(item)) {
             if(item instanceof Holdable) {
-                System.out.println("Dropped.");
+                gameInterface.println("Dropped.");
                 player.drop(item);
-                System.out.println("You Dropped '" +item.description() + "' costing you "
+                gameInterface.println("You Dropped '" +item.description() + "' costing you "
                         + item.value() + " points.");
                 player.currentRoom().putItem(item);
             }
             else {
-                System.out.println("You cannot drop this item.");
+                gameInterface.println("You cannot drop this item.");
             }
         }
         else {
-            System.out.println("You don't have that item to drop.");
+            gameInterface.println("You don't have that item to drop.");
         }
         if(player.currentRoom() instanceof RoomRequiredItem) {
             RoomRequiredItem r = (RoomRequiredItem)player.currentRoom();
@@ -145,17 +150,17 @@ public class PlayerExecutionEngine {
     private void actionThrow(Item item) {
         if(player.hasItem(item)) {
             if(item instanceof Chuckable) {
-                System.out.println("Thrown.");
+                gameInterface.println("Thrown.");
                 ((Chuckable)item).chuck();
                 player.drop(item);
                 player.currentRoom().putItem(item);
             }
             else {
-                System.out.println("You cannot throw this item.");
+                gameInterface.println("You cannot throw this item.");
             }
         }
         else {
-            System.out.println("You don't have that item to throw.");
+            gameInterface.println("You don't have that item to throw.");
         }    	
     }
     
@@ -168,26 +173,26 @@ public class PlayerExecutionEngine {
                 }
             }
             else {
-                System.out.println("I don't know how to do that.");
+                gameInterface.println("I don't know how to do that.");
             }
         }
         else {
-            System.out.println("I don't see that here.");
+            gameInterface.println("I don't see that here.");
         }
     }
     
     private void actionEnable(Item item) {
         if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
             if(item instanceof Startable) {
-                System.out.println("Done.");
+                gameInterface.println("Done.");
                 ((Startable)item).start();
             }
             else {
-                System.out.println("I don't know how to do that.");
+                gameInterface.println("I don't know how to do that.");
             }
         }
         else {
-            System.out.println("I don't see that here.");
+            gameInterface.println("I don't see that here.");
         }	
     }
     
@@ -208,11 +213,11 @@ public class PlayerExecutionEngine {
                 }
             }
             else {
-                System.out.println("Nothing happens.");
+                gameInterface.println("Nothing happens.");
             }
         }
         else {
-            System.out.println("I don't see that here.");
+            gameInterface.println("I don't see that here.");
         }    	
     }
     
@@ -221,7 +226,7 @@ public class PlayerExecutionEngine {
             RoomExcavatable curr = (RoomExcavatable) player.currentRoom();
             curr.dig();
         } else {
-            System.out.println("You are not allowed to dig here");
+            gameInterface.println("You are not allowed to dig here");
         }
     }
     
@@ -237,11 +242,11 @@ public class PlayerExecutionEngine {
             }
             else {
                 if(item instanceof Holdable) {
-                    System.out.println("As you  shove the " + item + " down your throat, you begin to choke.");
+                    gameInterface.println("As you  shove the " + item + " down your throat, you begin to choke.");
                     player.terminate();
                 }
                 else {
-                    System.out.println("That cannot be consumed.");
+                    gameInterface.println("That cannot be consumed.");
                 }
             }
         }    	
@@ -258,11 +263,11 @@ public class PlayerExecutionEngine {
                 }
             }
             else {
-                System.out.println("You cannot open ");
+                gameInterface.println("You cannot open ");
             }
         }
         else {
-            System.out.println("I don't see that here.");
+            gameInterface.println("I don't see that here.");
         }    	
     }
     
@@ -275,15 +280,15 @@ public class PlayerExecutionEngine {
                     player.score(explode.value());
                 }
                 else {
-                    System.out.println("There isn't anything to blow up here.");
+                    gameInterface.println("There isn't anything to blow up here.");
                 }
             }
             else {
-                System.out.println("That item is not an explosive.");
+                gameInterface.println("That item is not an explosive.");
             }
         }
         else {
-            System.out.println("You do not have that item in your inventory.");
+            gameInterface.println("You do not have that item in your inventory.");
         }    	
     }
     
@@ -296,7 +301,7 @@ public class PlayerExecutionEngine {
                 	// Is it right code? If object is null, something process below funciton? 
                 	actionPickup(item);
                 } else {
-                    System.out.println("I don't see that here.");
+                    gameInterface.println("I don't see that here.");
                 }
                 break;
             case ACTION_DESTROY: 
@@ -333,7 +338,7 @@ public class PlayerExecutionEngine {
             	actionExplode(item);
                 break;
             default :
-            	System.out.println("I don't know about " + action);
+            	gameInterface.println("I don't know about " + action);
             	break;
         }
     }
@@ -341,22 +346,22 @@ public class PlayerExecutionEngine {
     private void actionPut(Item itemToPut, Item itemToBePutInto) {
     	
         if(!player.hasItem(itemToPut)) {
-            System.out.println("You don't have that object in your inventory.");
+            gameInterface.println("You don't have that object in your inventory.");
         }
         else if(itemToBePutInto == null) {
-            System.out.println("You must supply an indirect object.");
+            gameInterface.println("You must supply an indirect object.");
         }
         else if(!player.currentRoom().hasItem(itemToBePutInto)) {
-            System.out.println("That object doesn't exist in this room.");
+            gameInterface.println("That object doesn't exist in this room.");
         }
         else if(itemToBePutInto instanceof ItemMagicBox && !(itemToPut instanceof Valuable)) {
-            System.out.println("This item has no value--putting it in this " + itemToBePutInto + " will not score you any points.");
+            gameInterface.println("This item has no value--putting it in this " + itemToBePutInto + " will not score you any points.");
         }
         else if(!(itemToBePutInto instanceof Hostable) || !(itemToPut instanceof Installable)) {
-            System.out.println("You cannot put a " + itemToPut + " into this " + itemToBePutInto);
+            gameInterface.println("You cannot put a " + itemToPut + " into this " + itemToBePutInto);
         }
         else {
-            System.out.println("Done.");
+            gameInterface.println("Done.");
             player.drop(itemToPut);
             player.putItemInItem(itemToPut, itemToBePutInto);
         }
@@ -364,19 +369,19 @@ public class PlayerExecutionEngine {
     
     private void actionTake(Item contents, Item container) {
     	if(!player.currentRoom().hasItem(container)) {
-            System.out.println("I don't see that here.");
+            gameInterface.println("I don't see that here.");
         }
         else if(!(container instanceof Hostable)) {
-            System.out.println("You can't have an item inside that.");
+            gameInterface.println("You can't have an item inside that.");
         }
         else {
             if(((Hostable)container).installedItem() == contents) {
                 ((Hostable)container).uninstall(contents);
                 player.pickup(contents);
-                System.out.println("Taken.");
+                gameInterface.println("Taken.");
             }
             else {
-                System.out.println("That item is not inside this " + container);
+                gameInterface.println("That item is not inside this " + container);
             }
         }
     }
@@ -393,7 +398,7 @@ public class PlayerExecutionEngine {
         		actionTake(directItem, indirectItem);
         		break;
         	default :
-        		 System.out.println("There is not indirect object action");
+        		 gameInterface.println("There is not indirect object action");
         		 break;
         }    	
     }
@@ -412,11 +417,11 @@ public class PlayerExecutionEngine {
 	        case ACTION_VIEW_ITEMS:
 	            Vector<Item> items = player.getCollectedItems();
 	            if (items.isEmpty()) {
-	                System.out.println("You don't have any items.");
+	                gameInterface.println("You don't have any items.");
 	            }
 	            else {
 	                for(Item item : player.getCollectedItems()) {
-	                    System.out.println("You have a " + item.description() + ".");
+	                    gameInterface.println("You have a " + item.description() + ".");
 	                }
 	            }
 	            break;
@@ -424,7 +429,7 @@ public class PlayerExecutionEngine {
 	            player.terminate();
 	            break;
 	        default:
-	        	System.out.println("There is not no object action");
+	        	gameInterface.println("There is not no object action");
 	        	break;
     	}
     }
@@ -435,13 +440,13 @@ public class PlayerExecutionEngine {
 	            // intentionally blank
 	            break;	        
 	        case ACTION_ERROR: 
-	            System.out.println("I don't understand that.");
+	            gameInterface.println("I don't understand that.");
 	            break;
 	        case ACTION_UNKNOWN: 
-	            System.out.println("I don't understand that.");
+	            gameInterface.println("I don't understand that.");
 	            break;
 	        default:
-	        	System.out.println("It's unknown action");
+	        	gameInterface.println("It's unknown action");
 	        	break;
         }    	
     }
@@ -475,7 +480,7 @@ public class PlayerExecutionEngine {
             	unknownObject(action);
                 break;
             default:
-                System.out.println("I don't understand that");
+                gameInterface.println("I don't understand that");
                 break;
         }
     }
