@@ -10,6 +10,11 @@ import java.util.Arrays;
  */
 public class PlayerInterpreter {
 
+	/**
+	 * Game interface for game message and log
+	 */
+	private GameInterface gameInterface = GameInterface.getInterface();
+
     /**
      * Interpret the input in terms of its action.
      * @param string input string.
