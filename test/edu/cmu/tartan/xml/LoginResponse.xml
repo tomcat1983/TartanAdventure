@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message type="REQ_LOGIN" sender="server" receiver="client">
+	<login_info login_result="OK" ng_reason="-" role="player"/>
+</message>
