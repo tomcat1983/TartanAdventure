@@ -3,6 +3,7 @@ package edu.cmu.tartan.room;
 import edu.cmu.tartan.action.Action;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The class for an elevator
@@ -18,13 +19,13 @@ public class RoomElevator extends Room {
     // current floor
     private int currentFloor;
 
-    private ArrayList<String> descriptions;
+    private List<String> descriptions;
 
     // rooms for each floor
-    private ArrayList<Room> floors;
+    private List<Room> floors;
 
     // floors that the user cannot get to
-    private ArrayList<Integer> restrictedFloors;
+    private List<Integer> restrictedFloors;
 
     private Action directionOfFloors;
     // should be a single direction, that points to every floor.
@@ -46,14 +47,14 @@ public class RoomElevator extends Room {
      * @param directionOfFloors
      * @param initial
      */
-	public void setFloors(ArrayList<String> descriptions, ArrayList<Room> floors, Action directionOfFloors, int initial) {
+	public void setFloors(List<String> descriptions, List<Room> floors, Action directionOfFloors, int initial) {
 		this.descriptions = descriptions;
 		this.floors = floors;
 		this.directionOfFloors = directionOfFloors;
 
 		setFloor(initial);
 	}
-	public void setRestrictedFloors(ArrayList<Integer> restrictedFloors) {
+	public void setRestrictedFloors(List<Integer> restrictedFloors) {
 		this.restrictedFloors = restrictedFloors;
 	}
 
