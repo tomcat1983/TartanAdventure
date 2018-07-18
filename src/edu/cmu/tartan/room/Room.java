@@ -194,11 +194,9 @@ public class Room implements Comparable {
      * @return the removed item
      */
     public Item remove(Item item) {
-        if (this.items.contains(item)) {
-            if (item instanceof Valuable) {
-                this.items.remove(item);
-                return item;
-            }
+        if (this.items.contains(item) && item instanceof Valuable) {
+        	this.items.remove(item);
+            return item;
         }
         return null;
     }

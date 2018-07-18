@@ -43,7 +43,8 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     Room relatedRoom;
     
     /*
-     *  items can also affect other items, like setting other items breakable (like a junction box);
+     *  items can also affect other items, 
+     *  like setting other items breakable (like a junction box)
      */
     Item relatedItem; 
 

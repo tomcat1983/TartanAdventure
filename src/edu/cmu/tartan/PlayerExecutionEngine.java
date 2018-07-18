@@ -42,10 +42,8 @@ public class PlayerExecutionEngine {
      */
     private Item containerForItem(Item item) {
         for(Item i : player.currentRoom().getItems()) {
-            if (i instanceof Hostable) {
-                if((item == ((Hostable)i).installedItem()) && item.isVisible()) {
+            if (i instanceof Hostable && (item == ((Hostable)i).installedItem()) && item.isVisible()) {
                     return i;
-                }
             }
         }
         return null;
@@ -85,7 +83,6 @@ public class PlayerExecutionEngine {
     private void actionDestroy(Item item) {
         if (player.currentRoom().hasItem(item) || player.hasItem(item)) {
             if (item instanceof Destroyable) {
-                //gameInterface.println("Smashed.");
                 ((Destroyable) item).setDestroyMessage("Smashed.");
                 ((Destroyable)item).destroy();
                 ((Destroyable) item).setDisappears(true);
@@ -97,7 +94,6 @@ public class PlayerExecutionEngine {
                     // Get points!
                     player.score(item.value());
                 }
-
                 if(item instanceof Hostable) {
                     player.currentRoom().putItem(((Hostable)item).installedItem());
                     ((Hostable)item).uninstall(((Hostable)item).installedItem());

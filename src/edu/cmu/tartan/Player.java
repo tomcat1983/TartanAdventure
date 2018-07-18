@@ -238,8 +238,8 @@ public class Player {
         }
     }
     
-    private void roomRequiredLuminousItem(RoomDark room, Action action) {
-    	if(room.isDark() && !this.hasLuminousItem()) {
+    private void roomRequiredLuminousItem(RoomDark room) {
+    	if(room.isDark() && !hasLuminousItem()) {
             gameInterface.println(room.deathMessage());
             terminate();
         }
@@ -279,7 +279,7 @@ public class Player {
         }
         else if(this.currentRoom instanceof RoomDark) {
             RoomDark room = (RoomDark)this.currentRoom;
-            roomRequiredLuminousItem(room, action);
+            roomRequiredLuminousItem(room);
         }
 
         if(this.currentRoom.canMoveToRoomInDirection(action)) {
