@@ -3,7 +3,6 @@ package edu.cmu.tartan.xml;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.MalformedURLException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -11,7 +10,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+
+import edu.cmu.tartan.GameInterface;
 
 public class XmlParser {
 
@@ -20,11 +20,18 @@ public class XmlParser {
 	private Document doc;
 	
 	public NodeList nList;
+	
+	/**
+	 * Game interface for game message and log
+	 */
+	private GameInterface gameInterface = GameInterface.getInterface();
 
 	public XmlParser() throws ParserConfigurationException{
 
 		dbFactory = DocumentBuilderFactory.newInstance();
 		dBuilder = dbFactory.newDocumentBuilder();
+		doc = null; 
+		nList = null; 
 	}
 
 	public void parseXmlFromString(String xmlUri) {
@@ -32,12 +39,12 @@ public class XmlParser {
 		try {
 			parseXmlFromStringThrowException(xmlUri);
 		} catch (Exception e) {
-			e.printStackTrace();
+			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
 		}		
 
 	}
 	
-	public void parseXmlFromStringThrowException (String xmlUri)throws SAXException, IOException, SAXParseException {
+	public void parseXmlFromStringThrowException (String xmlUri)throws SAXException, IOException {
 
 	    InputSource is = new InputSource(new StringReader(xmlUri));
 		
@@ -47,7 +54,7 @@ public class XmlParser {
 		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 		doc.getDocumentElement().normalize();
 		
-		System.out.println("From String, Root element :" + doc.getDocumentElement().getNodeName());
+		gameInterface.info("From String, Root element :" + doc.getDocumentElement().getNodeName());
 		//NodeList 
 		nList = doc.getChildNodes();
 	}
@@ -57,7 +64,7 @@ public class XmlParser {
 		try {
 			parseXmlFromFileThrowException(fileName);
 		} catch (Exception e) {
-			e.printStackTrace();
+			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
 		}		
 	}
 	
@@ -71,14 +78,13 @@ public class XmlParser {
 		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 		doc.getDocumentElement().normalize();
 
-		System.out.println("From File, Root element :" + doc.getDocumentElement().getNodeName());
-
+		gameInterface.info("From File, Root element :" + doc.getDocumentElement().getNodeName());
 		//NodeList 
 		nList = doc.getChildNodes();
 	}
 	
 	//must check null return value 
-	public String getValueByTagAndAttribute(String tagName, String AttrName) {
+	public String getValueByTagAndAttribute(String tagName, String attrName) {
 		
 		String result = null;
 		
@@ -98,13 +104,13 @@ public class XmlParser {
 				for (int j=0; j<attributeLength; j++){
 
 					Node attNode = attributeMap.item(j);
-					if(attNode.getNodeName().equals(AttrName))
+					if(attNode.getNodeName().equals(attrName))
 						result = attNode.getNodeValue();
 				}
 			}
 		}
 
-		System.out.println(sb);
+		gameInterface.info(sb.toString());
 		return result;
 	}
 	
@@ -140,7 +146,7 @@ public class XmlParser {
 
 		}
 
-		System.out.println(sb);
+		gameInterface.info(sb.toString());
 
 		if (node.hasChildNodes()){
 
