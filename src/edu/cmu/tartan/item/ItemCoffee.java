@@ -27,7 +27,7 @@ public class ItemCoffee extends Item implements Edible, Valuable {
 
     @Override
     public void eat() {
-        System.out.println("You grimace at the taste of black coffee, and put down the mug.");
+        gameInterface.println("You grimace at the taste of black coffee, and put down the mug.");
     }
 
 }

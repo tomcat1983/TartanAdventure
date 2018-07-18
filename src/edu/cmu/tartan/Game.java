@@ -87,10 +87,9 @@ public class Game {
         }
     }
 
-    private ArrayList<GameConfiguration> loadGame() {
+    private ArrayList<GameConfiguration> loadGameMenu() {
     	// TODO need to load about real game from XML(new game feature)
     	
-    	// TODO I will select between call with argument and some global variable.
     	ArrayList<GameConfiguration> menu = new ArrayList<>();
     	
         // These are the currently supported games.
@@ -106,41 +105,49 @@ public class Game {
     	return menu;
     }
     
+    private boolean loadGame(String input, ArrayList<GameConfiguration> menu) {
+    	int select = 0;
+    	try {
+            if (input.equalsIgnoreCase("help")) {
+                help();
+            } else {
+            	select = Integer.parseInt(input) - 1;
+            	if(select > 0 || menu.size() >= select) {
+                    GameConfiguration gameConfig = menu.get(select);
+                    gameName = gameConfig.getName();
+                    gameConfig.configure(this);
+                    return true;
+            	} else {
+            		gameInterface.println("Invaild selection");
+            		return false;
+            	}
+            }
+        }
+        catch (InvalidGameException ige) {
+        	gameInterface.println("Game improperly configured, please try again.");
+            return false;
+        }
+        catch(Exception e) {
+        	gameInterface.println("Invalid selection.");
+        }
+    	
+    	return false;
+    }
+    
     /**
      * Configure the game.
      */
     public boolean configureGame() {
 
-    	ArrayList<GameConfiguration> menu = loadGame();
+    	ArrayList<GameConfiguration> menu = loadGameMenu();
     	
         if(!menu.isEmpty()) {
-        	int choice = 0;
-            while(true) {
+        	boolean result = false;
+            while(!result) {
                 printMenu(menu);
                 gameInterface.print("> ");
                 String input = this.scanner.nextLine();
-                try {
-                    if (input.equalsIgnoreCase("help")) {
-                        help();
-                    } else {
-                    	choice = Integer.parseInt(input) - 1;
-                    	if(choice > 0 || menu.size() >= choice) {
-                            GameConfiguration gameConfig = menu.get(choice);
-                            gameName = gameConfig.getName();
-                            gameConfig.configure(this);
-                            break;
-                    	} else {
-                    		gameInterface.println("Invaild selection");                    		
-                    	}
-                    }
-                }
-                catch (InvalidGameException ige) {
-                	gameInterface.println("Game improperly configured, please try again.");
-                    return false;
-                }
-                catch(Exception e) {
-                	gameInterface.println("Invalid selection.");
-                }
+                result = loadGame(input, menu); 
             }
         }
         // Once the game has been configured, it is time to play!
@@ -190,6 +197,7 @@ public class Game {
             }
         } catch(Exception e) {
         	gameInterface.println("I don't understand that \n\nException: \n" + e);
+        	
             e.printStackTrace();
             start();
         }

@@ -1,5 +1,6 @@
 package edu.cmu.tartan.room;
 
+import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
@@ -7,6 +8,7 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.LinkedList;
 
 /**
@@ -19,6 +21,10 @@ import java.util.LinkedList;
  * 1.0 March 2018 - initial version
  */
 public class Room implements Comparable {
+	/**
+	 * Game interface for game message and log
+	 */
+	protected GameInterface gameInterface = GameInterface.getInterface();
 
     // Room description
     protected String description;
@@ -35,7 +41,7 @@ public class Room implements Comparable {
     protected boolean roomWasVisited;
 
     // items in the room
-    private LinkedList<Item> items;
+    private List<Item> items;
 	
 	// the player within the room
     private Player player;
@@ -167,7 +173,7 @@ public class Room implements Comparable {
      * Put a list of items in a room
      * @param items the items
      */
-    public void putItems(LinkedList<Item> items) {
+    public void putItems(List<Item> items) {
         for (Item i : items) {
             this.items.add(i);
         }
@@ -177,7 +183,7 @@ public class Room implements Comparable {
         if (item == null) {
             return null;
         } else {
-            System.out.println("I don't see that here.");
+            gameInterface.println("I don't see that here.");
         }
         return Item.getInstance("unknown");
     }
@@ -213,11 +219,11 @@ public class Room implements Comparable {
         }
     }
 
-    public LinkedList<Item> getItems() {
+    public List<Item> getItems() {
 		return items;
 	}
 
-	public void setItems(LinkedList<Item> items) {
+	public void setItems(List<Item> items) {
 		this.items = items;
 	}
     
@@ -238,13 +244,14 @@ public class Room implements Comparable {
      * @return the list of items
      */
     public String visibleItems() {
-        String s = "";
+    	StringBuilder  s = new StringBuilder("");
         for (Item item : this.items) {
             if (item instanceof Visible && item.isVisible()) {
-                s += "\nThere is a '" + item.detailDescription() + "' (i.e. " + item.description() + " ) here.";
+            	
+                s.append("\nThere is a '").append(item.detailDescription()).append("' (i.e. " + item.description() + " ) here.");
             }
         }
-        return s;
+        return s.toString();
     }
 
     public String description() {

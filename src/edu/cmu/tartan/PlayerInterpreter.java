@@ -9,7 +9,7 @@ import java.util.Arrays;
  * This class attempts to interpret player input in a flexible way. It is experimental at best!
  */
 public class PlayerInterpreter {
-
+	
 	/**
 	 * Game interface for game message and log
 	 */
@@ -41,7 +41,7 @@ public class PlayerInterpreter {
 	                return action;
 	            }
 	            else {
-	                System.out.println("You must supply a direct object.");
+	            	gameInterface.println("You must supply a direct object.");
 	                return Action.ACTION_PASS;
 	            }
 	        case TYPE_HASINDIRECTOBJECT:
@@ -67,7 +67,7 @@ public class PlayerInterpreter {
 	                            return action;
 	                        }
 	                        else {
-	                            System.out.println("You must supply an indirect object.");
+	                        	gameInterface.println("You must supply an indirect object.");
 	                            return Action.ACTION_ERROR;
 	                        }
 	                    }
@@ -78,7 +78,7 @@ public class PlayerInterpreter {
 	
 	            }
 	            else {
-	                System.out.println("You must supply a direct object.");
+	            	gameInterface.println("You must supply a direct object.");
 	                return Action.ACTION_ERROR;
 	            }
 	            break;
@@ -87,7 +87,7 @@ public class PlayerInterpreter {
 	        case TYPE_UNKNOWN:
 	            return Action.ACTION_ERROR;
 	        default:
-	            System.out.println("Unknown type");
+	        	gameInterface.println("Unknown type");
 	            break;
         }
         return Action.ACTION_PASS;

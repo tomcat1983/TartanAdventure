@@ -33,7 +33,7 @@ public class ItemFolder extends Item implements Openable {
     @Override
     public Boolean open() {
 
-        System.out.println(this.openMessage);
+    	gameInterface.println(this.openMessage);
         return true;
     }
 

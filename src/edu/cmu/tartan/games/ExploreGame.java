@@ -10,6 +10,7 @@ import edu.cmu.tartan.item.ItemCoffee;
 import edu.cmu.tartan.room.Room;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Example game to explore a series of rooms.
@@ -46,7 +47,7 @@ public class ExploreGame extends GameConfiguration {
         room2.putItem(coffee);
 
         // These are the rooms the must be explored
-        ArrayList<String> goalItems = new ArrayList<>();
+        List<String> goalItems = new ArrayList<>();
         goalItems.add("room1");
         goalItems.add("room2");
         goalItems.add("room3");

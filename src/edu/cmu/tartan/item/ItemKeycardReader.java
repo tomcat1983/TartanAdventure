@@ -35,7 +35,7 @@ public class ItemKeycardReader extends Item implements Hostable {
         installedItem = item;
 
         for (int i = 0; i < 3; i++) {
-            System.out.println("...");
+            gameInterface.println("...");
             try {
                 Thread.sleep(1000);
             } catch (Exception e1) {
@@ -43,7 +43,7 @@ public class ItemKeycardReader extends Item implements Hostable {
             }
         }
         if (installMessage != null) {
-            System.out.println(installMessage);
+        	gameInterface.println(installMessage);
         }
         relatedItem.setVisible(true);
     }
@@ -99,7 +99,7 @@ public class ItemKeycardReader extends Item implements Hostable {
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (obj==null || getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemKeycardReader other = (ItemKeycardReader) obj;

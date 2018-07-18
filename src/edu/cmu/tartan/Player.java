@@ -227,6 +227,42 @@ public class Player {
         return roomsVisited;
     }
 
+    private void roomRequiredItemCheck(RoomRequiredItem room, Action action)  {
+    	if(room.shouldLoseForAction(action)) {
+            gameInterface.println(room.loseMessage());
+            terminate();
+        }
+    }
+    
+    private void roomRequiredLuminousItem(RoomDark room, Action action) {
+    	if(room.isDark() && !this.hasLuminousItem()) {
+            gameInterface.println(room.deathMessage());
+            terminate();
+        }
+    }
+    
+    private boolean isNextRoomRequiredCheck(Room nextRoom) {
+    	if(nextRoom instanceof RoomLockable) {
+            RoomLockable lockedRoom = (RoomLockable)nextRoom;
+            if(lockedRoom.isLocked()) {
+                if(lockedRoom.causesDeath()) {
+                    gameInterface.println(lockedRoom.deathMessage());
+                    this.terminate();
+                }
+                gameInterface.println("This door is locked.");
+                return true;
+            }
+        }
+        else if(nextRoom instanceof RoomObscured) {
+            RoomObscured obscuredRoom = (RoomObscured)nextRoom;
+            if(obscuredRoom.isObscured()) {
+                gameInterface.println("You can't move that way.");
+                return true;
+            }
+        }
+    	return false;
+    }
+    
     /**
      * Move version two based on an action
      * @param action the action associated with the move.
@@ -235,42 +271,18 @@ public class Player {
 
         if(this.currentRoom instanceof RoomRequiredItem) {
             RoomRequiredItem room = (RoomRequiredItem)this.currentRoom;
-
-            if(room.shouldLoseForAction(action)) {
-                gameInterface.println(room.loseMessage());
-                this.terminate();
-            }
+            roomRequiredItemCheck(room, action);
         }
         else if(this.currentRoom instanceof RoomDark) {
             RoomDark room = (RoomDark)this.currentRoom;
-            if(room.isDark() && !this.hasLuminousItem()) {
-                gameInterface.println(room.deathMessage());
-                this.terminate();
-            }
+            roomRequiredLuminousItem(room, action);
         }
 
         if(this.currentRoom.canMoveToRoomInDirection(action)) {
             Room nextRoom = this.currentRoom.getRoomForDirection(action);
-            // test if requires key
-            if(nextRoom instanceof RoomLockable) {
-                RoomLockable lockedRoom = (RoomLockable)nextRoom;
-                if(lockedRoom.isLocked()) {
-                    if(lockedRoom.causesDeath()) {
-                        gameInterface.println(lockedRoom.deathMessage());
-                        this.terminate();
-                    }
-                    gameInterface.println("This door is locked.");
-                    return;
-                }
+            if(isNextRoomRequiredCheck(nextRoom)) {
+            	return;
             }
-            else if(nextRoom instanceof RoomObscured) {
-                RoomObscured obscuredRoom = (RoomObscured)nextRoom;
-                if(obscuredRoom.isObscured()) {
-                    gameInterface.println("You can't move that way.");
-                    return;
-                }
-            }
-
             move(nextRoom);
         }
         else {

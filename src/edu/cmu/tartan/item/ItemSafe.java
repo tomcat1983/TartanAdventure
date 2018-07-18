@@ -77,17 +77,17 @@ public class ItemSafe extends Item implements Hostable, Openable {
     @Override
     public Boolean open() {
         Scanner s = new Scanner(System.in);
-        System.out.println("Enter the four-digit PIN number.");
+        gameInterface.println("Enter the four-digit PIN number.");
         Integer p = Integer.parseInt(s.nextLine());
         if (p.intValue() == this.pin.intValue()) {
         	if (this.installedItem != null) {
         		this.installedItem.setVisible(true);
-        		System.out.println("The safe door swings open.");
-                System.out.println("You have revealed a '" + this.installedItem.detailDescription() + "'.");
+        		gameInterface.println("The safe door swings open.");
+        		gameInterface.println("You have revealed a '" + this.installedItem.detailDescription() + "'.");
             }
             return true;
         } else {
-            System.out.println("Incorrect PIN.");
+        	gameInterface.println("Incorrect PIN.");
         }
         return false;
     }
@@ -103,13 +103,13 @@ public class ItemSafe extends Item implements Hostable, Openable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (obj!=null && this == obj) {
 			return true;
 		}
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (obj==null || getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemSafe other = (ItemSafe) obj;

@@ -85,13 +85,13 @@ public class ItemLock extends Item implements Hostable, Openable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (obj!=null && this == obj) {
 			return true;
 		}
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (obj==null || getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		ItemLock other = (ItemLock) obj;

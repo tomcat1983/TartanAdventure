@@ -35,19 +35,19 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
     public Boolean start() {
 
         for (int i = 0; i < 3; i++) {
-            System.out.println("...");
+            gameInterface.println("...");
             try {
                 Thread.sleep(1000);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
         }
-        System.out.println("Beep beep beep");
+        gameInterface.println("Beep beep beep");
 
         // Only meltable things can be microwaved
         if (this.installedItem instanceof Meltable) {
             Item item = ((Meltable) this.installedItem).meltItem();
-            System.out.println("You melted the " + this.installedItem.detailDescription() + ", and it revealed a " + item.detailDescription() + "!");
+            gameInterface.println("You melted the " + this.installedItem.detailDescription() + ", and it revealed a " + item.detailDescription() + "!");
             this.installedItem = item;
             return true;
         }
@@ -87,13 +87,13 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (obj!=null && this == obj) {
 			return true;
 		}
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (obj==null || getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		

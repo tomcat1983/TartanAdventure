@@ -15,7 +15,6 @@ import java.util.LinkedList;
  * 1.0 March 2018 - initial version
  */
 public class RoomRequiredItem extends Room {
-
 	private Item requiredItem;
     private boolean diesOnItemDiscard;
     private boolean diesOnEntry;
@@ -50,7 +49,7 @@ public class RoomRequiredItem extends Room {
 	}
 	public void playerDidDropRequiredItem() {
 		if(this.diesOnItemDiscard) {
-			System.out.println(this.deathMessage);
+			gameInterface.println(this.deathMessage);
 			this.getPlayer().terminate();
 		}
 		else {
