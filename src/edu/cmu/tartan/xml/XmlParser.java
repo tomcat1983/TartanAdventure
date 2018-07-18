@@ -2,11 +2,16 @@ package edu.cmu.tartan.xml;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class XmlParser {
 
@@ -22,26 +27,29 @@ public class XmlParser {
 		dBuilder = dbFactory.newDocumentBuilder();
 	}
 
-	public void parseXmlFromString (String xmlUri){
-
+	public void parseXmlFromString(String xmlUri) {
 
 		try {
+			parseXmlFromStringThrowException(xmlUri);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
 
-			Document document = dBuilder.parse(xmlUri);
-			NodeList nodeList = document.getChildNodes();
+	}
+	
+	public void parseXmlFromStringThrowException (String xmlUri)throws SAXException, IOException, SAXParseException {
 
-			int nodeLength = nodeList.getLength();
-
-			for(int i=0; i<nodeLength; i++){
-				printNodeInfo (nodeList.item(i));
-			}
-
-		} catch (SAXException e) {
-
-		} catch (IOException e) {
-
-		}
-
+	    InputSource is = new InputSource(new StringReader(xmlUri));
+		
+		doc = dBuilder.parse(is);
+		
+		//optional, but recommended
+		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		doc.getDocumentElement().normalize();
+		
+		System.out.println("From String, Root element :" + doc.getDocumentElement().getNodeName());
+		//NodeList 
+		nList = doc.getChildNodes();
 	}
 
 
@@ -63,14 +71,13 @@ public class XmlParser {
 		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 		doc.getDocumentElement().normalize();
 
-		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+		System.out.println("From File, Root element :" + doc.getDocumentElement().getNodeName());
 
 		//NodeList 
 		nList = doc.getChildNodes();
-		
-//		parseMessageType(nList);
 	}
 	
+	//must check null return value 
 	public String getValueByTagAndAttribute(String tagName, String AttrName) {
 		
 		String result = null;
