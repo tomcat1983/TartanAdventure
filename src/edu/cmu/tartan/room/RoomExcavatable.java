@@ -33,12 +33,12 @@ public class RoomExcavatable extends Room {
 	public void dig() {
 
 		if(this.getPlayer().hasItem(Item.getInstance("shovel"))) {
-			System.out.println(digMessage);
+			gameInterface.println(digMessage);
 			this.wasDugUp = true;
 			this.getItems().addAll(this.revealableItems);
 		}
 		else {
-			System.out.println("You do not have an item you can use to dig.");
+			gameInterface.println("You do not have an item you can use to dig.");
 		}
 	}
 }

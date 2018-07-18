@@ -1,5 +1,6 @@
 package edu.cmu.tartan.room;
 
+import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
@@ -19,6 +20,10 @@ import java.util.LinkedList;
  * 1.0 March 2018 - initial version
  */
 public class Room implements Comparable {
+	/**
+	 * Game interface for game message and log
+	 */
+	protected GameInterface gameInterface = GameInterface.getInterface();
 
     // Room description
     protected String description;
