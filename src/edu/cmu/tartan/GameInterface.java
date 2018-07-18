@@ -1,34 +1,45 @@
 package edu.cmu.tartan;
 
 import java.util.logging.*;
-import java.io.PrintStream;
 
 public class GameInterface {
-	class GameInterfaceFormatter extends Formatter {
 
+	class GameInterfaceFormatter extends Formatter {
+		 
 		@Override
 		public String format(LogRecord record) {
-			System.out.println(record.getLevel());
 			if (record.getLevel() != Level.FINEST)
 				return "";
-			System.out.println(record.getMessage());
-			return record.getMessage() + "\n";
+
+			return record.getMessage();
 		}
 
 	}
 	
-	private final static Logger logger = Logger.getGlobal();
-	private final static PrintStream printStream = new PrintStream(System.out);
-	private static GameInterface instance = null;
+	/**
+	 * Logger for log message
+	 */
+	private static final Logger logger = Logger.getGlobal();
 	
+	/**
+	 * Static variable for singleton
+	 */
+	private static GameInterface instance = null;
 	
 	public GameInterface() {
 		super();
         logger.setUseParentHandlers(false);
+        logger.setLevel(Level.ALL);
 
-        ConsoleHandler logHhandler = new ConsoleHandler();
-        logger.addHandler(logHhandler);
-    }
+        ConsoleHandler logHandler = new ConsoleHandler();
+        logHandler.setLevel(Level.INFO);
+        logger.addHandler(logHandler);
+
+        ConsoleHandler messageHandler = new ConsoleHandler();
+        messageHandler.setFormatter(new GameInterfaceFormatter());
+        messageHandler.setLevel(Level.ALL);
+        logger.addHandler(messageHandler);
+	}
 	
 	public static GameInterface getInterface() {
 		if (instance == null) {
@@ -38,7 +49,7 @@ public class GameInterface {
 		return instance;
 	}
 	
-	// For log
+	// For log message
 	public void severe(String msg) {
 		logger.severe(msg);
 	}
@@ -53,10 +64,10 @@ public class GameInterface {
 
 	// For game message
 	public void print(String msg) {
-		printStream.print(msg);
+		logger.finest(msg);
 	}
 	
 	public void println(String msg) {
-		printStream.println(msg);
+		logger.finest(msg + "\n");
 	}
 }

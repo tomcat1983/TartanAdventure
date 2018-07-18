@@ -110,15 +110,12 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (obj==null || getClass() != obj.getClass() || !super.equals(obj)) {
+			return false;
+		} else if (this == obj) {
 			return true;
 		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
+		
 		ItemClayPot other = (ItemClayPot) obj;
 		if (destroyMessage == null) {
 			if (other.destroyMessage != null) {

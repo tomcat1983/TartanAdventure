@@ -55,15 +55,12 @@ public class ItemFolder extends Item implements Openable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (obj==null || getClass() != obj.getClass() || !super.equals(obj)) {
+			return false;
+		} else if (this == obj) {
 			return true;
 		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (obj==null || getClass() != obj.getClass()) {
-			return false;
-		}
+
 		ItemFolder other = (ItemFolder) obj;
 		if (openMessage == null) {
 			if (other.openMessage != null) {
@@ -74,5 +71,4 @@ public class ItemFolder extends Item implements Openable {
 		}
 		return true;
 	}
-
 }

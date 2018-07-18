@@ -9,6 +9,7 @@ import edu.cmu.tartan.properties.Visible;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.LinkedList;
 
 /**
@@ -64,8 +65,8 @@ public class Room implements Comparable {
         this.description = description;
         this.shortDescription = shortDescription;
         this.items = new LinkedList<>();
-        this.adjacentRooms = new HashMap<Action, Room>();
-        this.transitionMessages = new HashMap<Action, String>();
+        this.adjacentRooms = new HashMap<>();
+        this.transitionMessages = new HashMap<>();
         this.transitionDelay = 0;
     }
 
@@ -105,9 +106,10 @@ public class Room implements Comparable {
      * @return the action
      */
     public Action getDirectionForRoom(Room room) {
-        for (Action a : this.adjacentRooms.keySet()) {
-            if (this.adjacentRooms.get(a).compareTo(room) == 0) {
-                return a;
+        for (Entry<Action, Room> entry: adjacentRooms.entrySet()) {
+        	Action action = entry.getKey();
+            if (this.adjacentRooms.get(action).compareTo(room) == 0) {
+                return action;
             }
         }
         return Action.ACTION_UNKNOWN;
@@ -194,11 +196,9 @@ public class Room implements Comparable {
      * @return the removed item
      */
     public Item remove(Item item) {
-        if (this.items.contains(item)) {
-            if (item instanceof Valuable) {
-                this.items.remove(item);
-                return item;
-            }
+        if (this.items.contains(item) && item instanceof Valuable) {
+        	this.items.remove(item);
+            return item;
         }
         return null;
     }

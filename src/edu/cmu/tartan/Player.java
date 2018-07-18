@@ -10,7 +10,8 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.*;
 
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The player for a game.
@@ -35,7 +36,7 @@ public class Player {
     /**
      * The list of rooms that this player has visited.
      */
-    private Vector<Room> roomsVisited = new Vector<>();
+    private List<Room> roomsVisited = new ArrayList<>();
 
     /**
      * The points that this player can possibly score.
@@ -45,12 +46,12 @@ public class Player {
     /**
      * The inventory of items this player has.
      */
-    private Vector<Item> items = new Vector<>();
+    private List<Item> items = new ArrayList<>();
 
     /**
      * This player's goals
      */
-    private Vector<GameGoal> goals = new Vector<>();
+    private List<GameGoal> goals = new ArrayList<>();
 
     /**
      * The current room this player is in.
@@ -63,7 +64,7 @@ public class Player {
      * @param currentRoom the current room
      */
     public Player(Room currentRoom) {
-        this(currentRoom, new Vector<Item>());
+        this(currentRoom, new ArrayList<>());
     }
 
     /**
@@ -71,7 +72,7 @@ public class Player {
      * @param currentRoom the current room
      * @param items the player's items
      */
-    public Player(Room currentRoom, Vector<Item> items) {
+    public Player(Room currentRoom, ArrayList<Item>items) {
         this.items = items;
         this.score = 0;
         this.currentRoom = currentRoom;
@@ -159,7 +160,7 @@ public class Player {
      * Get the current set of items.
      * @return the items.
      */
-    public Vector<Item> getCollectedItems() {
+    public List<Item> getCollectedItems() {
         return this.items;
     }
 
@@ -170,6 +171,22 @@ public class Player {
         }
     }
 
+    private void requestDelay(String message, int delay) {
+    	if(message != null) {
+            if(delay != 0) {
+                for(int i=0; i < 3; i++) {
+                    gameInterface.println("...");
+                    try{
+                        Thread.sleep(delay);
+                    }
+                    catch(Exception e1) {
+                        // pass
+                    }
+                }
+            }
+            gameInterface.println(message);
+        }
+    }
     /**
      * Move the player to a new room.
      * @param nextRoom the new room.
@@ -182,20 +199,7 @@ public class Player {
             HashMap<Action, String> messages = this.currentRoom.transitionMessages();
             String message = messages.get(directionOfTravel);
             int delay = this.currentRoom.transitionDelay();
-            if(message != null) {
-                if(delay != 0) {
-                    for(int i=0; i < 3; i++) {
-                        gameInterface.println("...");
-                        try{
-                            Thread.sleep(delay);
-                        }
-                        catch(Exception e1) {
-                            // pass
-                        }
-                    }
-                }
-                gameInterface.println(message);
-            }
+            requestDelay(message, delay);
         }
         if(nextRoom instanceof RoomRequiredItem) {
             RoomRequiredItem r = (RoomRequiredItem)nextRoom;
@@ -223,7 +227,7 @@ public class Player {
      * Get the list of rooms visited.
      * @return The list of visited rooms.
      */
-    public Vector<Room> getRoomsVisited() {
+    public List<Room> getRoomsVisited() {
         return roomsVisited;
     }
 
@@ -234,8 +238,8 @@ public class Player {
         }
     }
     
-    private void roomRequiredLuminousItem(RoomDark room, Action action) {
-    	if(room.isDark() && !this.hasLuminousItem()) {
+    private void roomRequiredLuminousItem(RoomDark room) {
+    	if(room.isDark() && !hasLuminousItem()) {
             gameInterface.println(room.deathMessage());
             terminate();
         }
@@ -275,7 +279,7 @@ public class Player {
         }
         else if(this.currentRoom instanceof RoomDark) {
             RoomDark room = (RoomDark)this.currentRoom;
-            roomRequiredLuminousItem(room, action);
+            roomRequiredLuminousItem(room);
         }
 
         if(this.currentRoom.canMoveToRoomInDirection(action)) {
@@ -359,7 +363,7 @@ public class Player {
      * Fetch the goals for this Player.
      * @return the list of this Player's goals.
      */
-    public Vector<GameGoal> getGoals() {
+    public List<GameGoal> getGoals() {
         return goals;
     }
 }
