@@ -182,7 +182,7 @@ public class Room implements Comparable {
         if (item == null) {
             return null;
         } else {
-            System.out.println("I don't see that here.");
+            gameInterface.println("I don't see that here.");
         }
         return Item.getInstance("unknown");
     }
@@ -243,13 +243,14 @@ public class Room implements Comparable {
      * @return the list of items
      */
     public String visibleItems() {
-        String s = "";
+    	StringBuilder  s = new StringBuilder("");
         for (Item item : this.items) {
             if (item instanceof Visible && item.isVisible()) {
-                s += "\nThere is a '" + item.detailDescription() + "' (i.e. " + item.description() + " ) here.";
+            	
+                s.append("\nThere is a '").append(item.detailDescription()).append("' (i.e. " + item.description() + " ) here.");
             }
         }
-        return s;
+        return s.toString();
     }
 
     public String description() {

@@ -1,6 +1,5 @@
 package edu.cmu.tartan.room;
 
-import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 
