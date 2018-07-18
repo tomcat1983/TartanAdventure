@@ -28,8 +28,6 @@ public class XmlParser {
 		try {
 
 			Document document = dBuilder.parse(xmlUri);
-			
-			
 			NodeList nodeList = document.getChildNodes();
 
 			int nodeLength = nodeList.getLength();
@@ -52,11 +50,11 @@ public class XmlParser {
 			parseXmlFromFileThrowException(fileName);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}		
 	}
 	
 	
-	public void parseXmlFromFileThrowException(String fileName) throws SAXException, IOException, ParserConfigurationException{
+	public void parseXmlFromFileThrowException(String fileName) throws SAXException, IOException{
 
 		File fXmlFile = new File(fileName);
 		doc = dBuilder.parse(fXmlFile);
@@ -69,24 +67,43 @@ public class XmlParser {
 
 		//NodeList 
 		nList = doc.getChildNodes();
-		System.out.println("----------------------------" + nList.getLength());
 		
-		parseMessageType(nList);
-		
+//		parseMessageType(nList);
 	}
 	
-	public void parseMessageType(NodeList nList) {
-		nList = doc.getElementsByTagName("goal_info");
-		int nodeLength = nList.getLength();
+	public String getValueByTagAndAttribute(String tagName, String AttrName) {
 		
-		System.out.println("----------------------------" + nList.getLength());
+		String result = null;
+		
+		nList = doc.getElementsByTagName(tagName);
+		int nodeLength = nList.getLength();		//number of tag
+		StringBuilder sb = new StringBuilder(200);
 
-		nList.item(0).getAttributes();
-		
 		for(int i=0; i<nodeLength; i++){
-			printNodeInfo (nList.item(i));
+			
+			Node node = nList.item(i); 
+			
+			if (node.hasAttributes()){
+
+				NamedNodeMap attributeMap = node.getAttributes();
+				int attributeLength = attributeMap.getLength();
+				
+				for (int j=0; j<attributeLength; j++){
+
+					Node attNode = attributeMap.item(j);
+					if(attNode.getNodeName().equals(AttrName))
+						result = attNode.getNodeValue();
+					
+				}
+
+			}
+			
+			
+			
 		}
 
+		System.out.println(sb);
+		return result;
 	}
 	
 

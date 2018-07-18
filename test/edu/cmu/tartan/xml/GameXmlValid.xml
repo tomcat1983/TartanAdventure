@@ -8,6 +8,9 @@
 	</room_info>
 	<goal_info goal_cnt="2" >
 		<goal index="0" type="getItem" object="food|key" />
-		<goal index="1" type="roomClear" object="1|5|6" /> 
+		<goal index="1" type="roomClear" object="1|5|6" />
+		<goal index="2" type="roomClear" object="1|5|6" />
+		<goal index="3" type="roomClear" object="1|5|6" />
+		<goal index="4" type="roomClear" object="1|5|6" /> 
 	</goal_info>
 </message>
