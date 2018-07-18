@@ -87,15 +87,11 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj!=null && this == obj) {
+		if (obj==null || getClass() != obj.getClass() || !super.equals(obj)) {
+			return false;
+		} else if (this == obj) {
 			return true;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
+		}		
 		
 		ItemMicrowave other = (ItemMicrowave) obj;
 		if (installedItem == null) {

@@ -156,6 +156,33 @@ public class Game {
         setPlayerGameGoal();
         return true;
     }
+    
+    private boolean processGameCommand(String input) {
+    	if (input.compareTo("quit") == 0) {
+            for (GameGoal g: goals) {
+            	gameInterface.println(g.getStatus());
+            }
+            return true;
+        }
+        else if (input.compareTo("look") == 0) {
+            this.player.lookAround();
+        }
+        else if (input.compareTo("help") == 0) {
+            help();
+        }
+        else if (input.compareTo("status") == 0) {
+            status();
+        }
+        else {
+        	playerExecutionEngine.executeAction(this.interpreter.interpretString(input));
+        	// every time an action is executed the game state must be evaluated
+            if (evaluateGame()) {
+                winGame();
+                return true;
+            }
+        }
+    	return false; 
+    }
 
     /**
      * Start the Game.
@@ -170,29 +197,8 @@ public class Game {
             	gameInterface.print("> ");
 
                 input = this.scanner.nextLine();
-
-                if (input.compareTo("quit") == 0) {
-                    for (GameGoal g: goals) {
-                    	gameInterface.println(g.getStatus());
-                    }
-                    break;
-                }
-                else if (input.compareTo("look") == 0) {
-                    this.player.lookAround();
-                }
-                else if (input.compareTo("help") == 0) {
-                    help();
-                }
-                else if (input.compareTo("status") == 0) {
-                    status();
-                }
-                else {
-                	playerExecutionEngine.executeAction(this.interpreter.interpretString(input));
-                	// every time an action is executed the game state must be evaluated
-                    if (evaluateGame()) {
-                        winGame();
-                        break;
-                    }
+                if(processGameCommand(input)) {
+                	break;
                 }
             }
         } catch(Exception e) {

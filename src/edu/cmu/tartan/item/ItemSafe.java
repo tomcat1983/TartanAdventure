@@ -103,29 +103,19 @@ public class ItemSafe extends Item implements Hostable, Openable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj!=null && this == obj) {
+		if (obj==null || getClass() != obj.getClass() || !super.equals(obj)) {
+			return false;
+		} else if (this == obj) {
 			return true;
 		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
+		
 		ItemSafe other = (ItemSafe) obj;
-		if (installedItem == null) {
-			if (other.installedItem != null)
-				return false;
-		} else if (!installedItem.equals(other.installedItem)) {
-			return false;
-		}
 		if (pin == null) {
 			if (other.pin != null)
 				return false;
 		} else if (!pin.equals(other.pin)) {
 			return false;
-		}
-		
+		}		
 		return true;
 	}
 }

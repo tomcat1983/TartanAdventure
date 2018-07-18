@@ -110,9 +110,8 @@ public class PlayerInterpreter {
      * Attempt to select the appropriate action for the given input string
      * @param string the description of what is to be done
      * @return
-     * @throws ArrayIndexOutOfBoundsException
      */
-    private Action action(String[] string) throws ArrayIndexOutOfBoundsException {
+    private Action action(String[] string) {
 
         if(string == null || string.length == 0) {
             return Action.ACTION_PASS;
