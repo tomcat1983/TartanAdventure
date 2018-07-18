@@ -170,6 +170,22 @@ public class Player {
         }
     }
 
+    private void requestDelay(String message, int delay) {
+    	if(message != null) {
+            if(delay != 0) {
+                for(int i=0; i < 3; i++) {
+                    gameInterface.println("...");
+                    try{
+                        Thread.sleep(delay);
+                    }
+                    catch(Exception e1) {
+                        // pass
+                    }
+                }
+            }
+            gameInterface.println(message);
+        }
+    }
     /**
      * Move the player to a new room.
      * @param nextRoom the new room.
@@ -182,20 +198,7 @@ public class Player {
             HashMap<Action, String> messages = this.currentRoom.transitionMessages();
             String message = messages.get(directionOfTravel);
             int delay = this.currentRoom.transitionDelay();
-            if(message != null) {
-                if(delay != 0) {
-                    for(int i=0; i < 3; i++) {
-                        gameInterface.println("...");
-                        try{
-                            Thread.sleep(delay);
-                        }
-                        catch(Exception e1) {
-                            // pass
-                        }
-                    }
-                }
-                gameInterface.println(message);
-            }
+            requestDelay(message, delay);
         }
         if(nextRoom instanceof RoomRequiredItem) {
             RoomRequiredItem r = (RoomRequiredItem)nextRoom;

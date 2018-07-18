@@ -28,60 +28,63 @@ public class PlayerInterpreter {
         return action(string.toLowerCase().split(" "));
     }
     
+    private Action getDirectObject(Action action, String[] string) {
+    	if(string.length > 1) {
+            String d = string[1];
+            Item item = Item.getInstance(d);
+            // item is the direct object of the action
+            action.setDirectObject(item);
+            return action;
+        }
+        else {
+        	gameInterface.println("You must supply a direct object.");
+            return Action.ACTION_PASS;
+        }
+    }
+    
+    private Action getIndirectObject(Action action, String[] string) {
+        if(string.length > 0) {
+            String d = string[1];
+            Item item = Item.getInstance(d);
+            // item is the direct object of the action
+            action.setDirectObject(item);
+            if(string.length > 2) {
+                String in = string[2];
+                if(in.equals("in") || in.equals("from")) {
+                    if(string.length > 3) {
+                        String io = string[3];
+                        Item indob = Item.getInstance(io);
+                        action.setIndirectObject(indob);
+                        return action;
+                    }
+                    else {
+                    	gameInterface.println("You must supply an indirect object.");
+                        return Action.ACTION_ERROR;
+                    }
+                }
+                else {
+                    return Action.ACTION_PASS;
+                }
+            }
+            return Action.ACTION_ERROR;
+        }
+        else {
+        	gameInterface.println("You must supply a direct object.");
+            return Action.ACTION_ERROR;
+        }    	
+    }
+    
     private Action findAction(Action action, String[] string) {
         switch(action.type()) {
         	case TYPE_DIRECTIONAL:
         		return action;
         	case TYPE_HASDIRECTOBJECT:
-	        	if(string.length > 1) {
-	                String d = string[1];
-	                Item item = Item.getInstance(d);
-	                // item is the direct object of the action
-	                action.setDirectObject(item);
-	                return action;
-	            }
-	            else {
-	            	gameInterface.println("You must supply a direct object.");
-	                return Action.ACTION_PASS;
-	            }
+	        	return getDirectObject(action, string);
 	        case TYPE_HASINDIRECTOBJECT:
 	
 	            // test if it has indirect object
 	            // "Take Diamond from Microwave"
-	
-	            if(string.length > 0) {
-	
-	                String d = string[1];
-	                Item item = Item.getInstance(d);
-	                // item is the direct object of the action
-	                action.setDirectObject(item);
-	
-	                if(string.length > 2) {
-	                    String in = string[2];
-	                    if(in.equals("in") || in.equals("from")) {
-	
-	                        if(string.length > 3) {
-	                            String io = string[3];
-	                            Item indob = Item.getInstance(io);
-	                            action.setIndirectObject(indob);
-	                            return action;
-	                        }
-	                        else {
-	                        	gameInterface.println("You must supply an indirect object.");
-	                            return Action.ACTION_ERROR;
-	                        }
-	                    }
-	                    else {
-	                        return Action.ACTION_PASS;
-	                    }
-	                }
-	
-	            }
-	            else {
-	            	gameInterface.println("You must supply a direct object.");
-	                return Action.ACTION_ERROR;
-	            }
-	            break;
+	        	return getIndirectObject(action, string);	            
 	        case TYPE_HASNOOBJECT:
 	            return action;
 	        case TYPE_UNKNOWN:
@@ -92,7 +95,6 @@ public class PlayerInterpreter {
         }
         return Action.ACTION_PASS;
     }
-
     
     private Action stringCompareToActionAliases(String s) {
     	for( Action action : Action.values()) {
