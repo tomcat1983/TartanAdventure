@@ -55,11 +55,19 @@ public class TestXmlParser {
 	}
 	
 	@Test
-	public void testGetValueByTagAndAttributeUsingGameDesignXMLFile() throws ParserConfigurationException {
+	public void testGetValueByTagAndAttributeResultFound() throws ParserConfigurationException {
 		
 		XmlParser parseXml = new XmlParser();
 		parseXml.parseXmlFromFile(validXmlFileName);
 		assertTrue(parseXml.getValueByTagAndAttribute("message", "type").equals("UPLOAD_MAP_DESIGN"));
+	}
+	
+	@Test
+	public void testGetValueByTagAndAttributeResultNotFound() throws ParserConfigurationException {
+
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromFile(validXmlFileName);
+		assertTrue(parseXml.getValueByTagAndAttribute("message", "user_id") == null);
 	}
 }
 

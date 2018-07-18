@@ -93,13 +93,8 @@ public class XmlParser {
 					Node attNode = attributeMap.item(j);
 					if(attNode.getNodeName().equals(AttrName))
 						result = attNode.getNodeValue();
-					
 				}
-
 			}
-			
-			
-			
 		}
 
 		System.out.println(sb);
