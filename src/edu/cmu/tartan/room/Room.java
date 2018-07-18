@@ -8,6 +8,7 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.LinkedList;
 
 /**
@@ -40,7 +41,7 @@ public class Room implements Comparable {
     protected boolean roomWasVisited;
 
     // items in the room
-    private LinkedList<Item> items;
+    private List<Item> items;
 	
 	// the player within the room
     private Player player;
@@ -172,7 +173,7 @@ public class Room implements Comparable {
      * Put a list of items in a room
      * @param items the items
      */
-    public void putItems(LinkedList<Item> items) {
+    public void putItems(List<Item> items) {
         for (Item i : items) {
             this.items.add(i);
         }
@@ -218,11 +219,11 @@ public class Room implements Comparable {
         }
     }
 
-    public LinkedList<Item> getItems() {
+    public List<Item> getItems() {
 		return items;
 	}
 
-	public void setItems(LinkedList<Item> items) {
+	public void setItems(List<Item> items) {
 		this.items = items;
 	}
     

@@ -2,7 +2,7 @@ package edu.cmu.tartan.goal;
 
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.room.Room;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A game goal based on exploration of different areas. Traveling to each place is necessary to achieve this goal.
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class GameExploreGoal implements GameGoal {
     // the list of places required to visit
-    private ArrayList<String> itinerary;
+    private List<String> itinerary;
     // progress towards the goal
     private int count = 0;
 
@@ -25,7 +25,7 @@ public class GameExploreGoal implements GameGoal {
      * @param places the list of places to explore
      * @param p the player
      */
-    public GameExploreGoal(ArrayList<String> places, Player p) {
+    public GameExploreGoal(List<String> places, Player p) {
         itinerary = places;
         player = p;
     }
