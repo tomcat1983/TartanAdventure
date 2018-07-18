@@ -126,6 +126,16 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         return null;
     }
 
+    private static void isUniquePrintItem(Item item, Item i) {
+        for (String string : item.getAliases()) {
+            for (String s : i.getAliases()) {
+                if (string == s) {
+                	gameInterface.println("Warning: alias conflict between " + item + " and " + i);
+                }
+            }
+        }
+    }
+    
     /**
      * Ensure that aliases are unique
      */
@@ -135,13 +145,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
                 if (item == i) {
                     continue;
                 }
-                for (String string : item.getAliases()) {
-                    for (String s : i.getAliases()) {
-                        if (string == s) {
-                        	gameInterface.println("Warning: alias conflict between " + item + " and " + i);
-                        }
-                    }
-                }
+                isUniquePrintItem(item, i);
             }
         }
     }
