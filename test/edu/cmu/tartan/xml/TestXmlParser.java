@@ -1,18 +1,12 @@
 package edu.cmu.tartan.xml;
 
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 public class TestXmlParser {
 
@@ -28,24 +22,24 @@ public class TestXmlParser {
 	}
 	
 	@Test(expected = SAXException.class) 
-	public void testParseDomFromFileInvalidXmlSAXException() throws ParserConfigurationException, SAXException, IOException {
+	public void testParseXmlFromFileInvalidXmlSAXException() throws ParserConfigurationException, SAXException, IOException {
 		
-		XmlParser parseDom = new XmlParser();
-		parseDom.parseDomFromFileThrowException(invalidXmlFileName);
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromFileThrowException(invalidXmlFileName);
 	}
 	
 	@Test(expected = IOException.class) 
-	public void testParseDomFromFileInvalidXmlIOException() throws ParserConfigurationException, SAXException, IOException {
+	public void testParseXmlFromFileInvalidXmlIOException() throws ParserConfigurationException, SAXException, IOException {
 		
-		XmlParser parseDom = new XmlParser();
-		parseDom.parseDomFromFileThrowException(notExistFileName);
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromFileThrowException(notExistFileName);
 	}
 	
 	@Test
-	public void testParseDomFromFile() throws ParserConfigurationException {
+	public void testParseXmlFromFile() throws ParserConfigurationException {
 		
-		XmlParser parseDom = new XmlParser();
-		parseDom.parseDomFromFile(validXmlFileName);
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromFile(validXmlFileName);
 		
 	}
 }
