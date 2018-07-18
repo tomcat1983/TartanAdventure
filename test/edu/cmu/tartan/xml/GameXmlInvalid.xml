@@ -5,7 +5,7 @@
 		<room index="0" type="dark" north="1" up="2" item_list="key:2|food:3" />
 		<room index="1" type="lock" west="3" item_list="light:1" />
 		<!-- each room informations..  -->
-	</room_info>
+	<room_info>
 	<goal_info goal_cnt="2" >
 		<goal index="0" type="getItem" object="food|key" />
 		<goal index="1" type="roomClear" object="1|5|6" /> 
