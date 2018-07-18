@@ -10,21 +10,26 @@ import org.xml.sax.SAXException;
 
 public class XmlParser {
 
-	private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	private final DocumentBuilder builder;
-
+	private final DocumentBuilderFactory dbFactory;
+	private final DocumentBuilder dBuilder;
+	private Document doc;
+	
+	public NodeList nList;
 
 	public XmlParser() throws ParserConfigurationException{
 
-		builder = factory.newDocumentBuilder();
+		dbFactory = DocumentBuilderFactory.newInstance();
+		dBuilder = dbFactory.newDocumentBuilder();
 	}
 
-	public void parseDOM (String xmlUri){
+	public void parseXmlFromString (String xmlUri){
 
 
 		try {
 
-			Document document = builder.parse(xmlUri);
+			Document document = dBuilder.parse(xmlUri);
+			
+			
 			NodeList nodeList = document.getChildNodes();
 
 			int nodeLength = nodeList.getLength();
@@ -42,38 +47,46 @@ public class XmlParser {
 	}
 
 
-	public void parseDomFromFile(String fileName){
+	public void parseXmlFromFile(String fileName){
 		try {
-			parseDomFromFileThrowException(fileName);
+			parseXmlFromFileThrowException(fileName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	
-	public void parseDomFromFileThrowException(String fileName) throws SAXException, IOException, ParserConfigurationException{
+	public void parseXmlFromFileThrowException(String fileName) throws SAXException, IOException, ParserConfigurationException{
 
 		File fXmlFile = new File(fileName);
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = dBuilder.parse(fXmlFile);
-
+		doc = dBuilder.parse(fXmlFile);
+		
 		//optional, but recommended
 		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 		doc.getDocumentElement().normalize();
 
 		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 
-		//NodeList nList = doc.getElementsByTagName("staff");
-		NodeList nList = doc.getChildNodes();
-
-		System.out.println("----------------------------");
-
+		//NodeList 
+		nList = doc.getChildNodes();
+		System.out.println("----------------------------" + nList.getLength());
+		
+		parseMessageType(nList);
+		
+	}
+	
+	public void parseMessageType(NodeList nList) {
+		nList = doc.getElementsByTagName("goal_info");
 		int nodeLength = nList.getLength();
+		
+		System.out.println("----------------------------" + nList.getLength());
 
+		nList.item(0).getAttributes();
+		
 		for(int i=0; i<nodeLength; i++){
 			printNodeInfo (nList.item(i));
 		}
+
 	}
 	
 
