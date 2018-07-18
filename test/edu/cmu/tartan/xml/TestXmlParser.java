@@ -155,8 +155,6 @@ class XmlParserSpy extends XmlParser{
 	}
 	
 	
-	
-	
 	public static String readAllBytes(String filePath){
 	    String content = "";
 	    try
@@ -174,4 +172,3 @@ class XmlParserSpy extends XmlParser{
 
 	
 }
-
