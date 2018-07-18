@@ -54,6 +54,7 @@ public class RoomElevator extends Room {
 
 		setFloor(initial);
 	}
+	
 	public void setRestrictedFloors(List<Integer> restrictedFloors) {
 		this.restrictedFloors = restrictedFloors;
 	}
@@ -76,7 +77,7 @@ public class RoomElevator extends Room {
 			try {
 				Thread.sleep(1000);
 			} catch(Exception e1) {
-				e1.printStackTrace();
+				gameInterface.severe("Exception: " + e1.getMessage());
 			}
 		}
 		gameInterface.println("Ding");
