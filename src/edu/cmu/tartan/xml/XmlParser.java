@@ -42,33 +42,37 @@ public class XmlParser {
 	}
 
 
-	public void parseDomFromFile(String fileName) {
+	public void parseDomFromFile(String fileName){
 		try {
-
-			File fXmlFile = new File(fileName);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
-
-			//optional, but recommended
-			//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-			doc.getDocumentElement().normalize();
-
-			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
-			//NodeList nList = doc.getElementsByTagName("staff");
-			NodeList nList = doc.getChildNodes();
-
-			System.out.println("----------------------------");
-
-			int nodeLength = nList.getLength();
-
-			for(int i=0; i<nodeLength; i++){
-				printNodeInfo (nList.item(i));
-			}
-			
+			parseDomFromFileThrowException(fileName);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	
+	public void parseDomFromFileThrowException(String fileName) throws SAXException, IOException, ParserConfigurationException{
+
+		File fXmlFile = new File(fileName);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
+
+		//optional, but recommended
+		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		doc.getDocumentElement().normalize();
+
+		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+		//NodeList nList = doc.getElementsByTagName("staff");
+		NodeList nList = doc.getChildNodes();
+
+		System.out.println("----------------------------");
+
+		int nodeLength = nList.getLength();
+
+		for(int i=0; i<nodeLength; i++){
+			printNodeInfo (nList.item(i));
 		}
 	}
 	
