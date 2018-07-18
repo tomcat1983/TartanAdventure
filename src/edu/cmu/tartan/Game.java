@@ -10,7 +10,7 @@ import edu.cmu.tartan.room.Room;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * The main class for game logic. Many if not all decisions about game play are made
@@ -156,6 +156,33 @@ public class Game {
         setPlayerGameGoal();
         return true;
     }
+    
+    private boolean processGameCommand(String input) {
+    	if (input.compareTo("quit") == 0) {
+            for (GameGoal g: goals) {
+            	gameInterface.println(g.getStatus());
+            }
+            return true;
+        }
+        else if (input.compareTo("look") == 0) {
+            this.player.lookAround();
+        }
+        else if (input.compareTo("help") == 0) {
+            help();
+        }
+        else if (input.compareTo("status") == 0) {
+            status();
+        }
+        else {
+        	playerExecutionEngine.executeAction(this.interpreter.interpretString(input));
+        	// every time an action is executed the game state must be evaluated
+            if (evaluateGame()) {
+                winGame();
+                return true;
+            }
+        }
+    	return false; 
+    }
 
     /**
      * Start the Game.
@@ -170,29 +197,8 @@ public class Game {
             	gameInterface.print("> ");
 
                 input = this.scanner.nextLine();
-
-                if (input.compareTo("quit") == 0) {
-                    for (GameGoal g: goals) {
-                    	gameInterface.println(g.getStatus());
-                    }
-                    break;
-                }
-                else if (input.compareTo("look") == 0) {
-                    this.player.lookAround();
-                }
-                else if (input.compareTo("help") == 0) {
-                    help();
-                }
-                else if (input.compareTo("status") == 0) {
-                    status();
-                }
-                else {
-                	playerExecutionEngine.executeAction(this.interpreter.interpretString(input));
-                	// every time an action is executed the game state must be evaluated
-                    if (evaluateGame()) {
-                        winGame();
-                        break;
-                    }
+                if(processGameCommand(input)) {
+                	break;
                 }
             }
         } catch(Exception e) {
@@ -230,7 +236,7 @@ public class Game {
      * @return
      */
     private Boolean evaluateGame() {
-        Vector<GameGoal> playerGoals = player.getGoals();
+        List<GameGoal> playerGoals = player.getGoals();
 
         for (Iterator<GameGoal> iterator = playerGoals.iterator(); iterator.hasNext(); ) {
             GameGoal g = iterator.next();
@@ -269,7 +275,7 @@ public class Game {
         gameInterface.println("\n");
 
         gameInterface.println("- Rooms visited: ");
-        Vector<Room> rooms = player.getRoomsVisited();
+        List<Room> rooms = player.getRoomsVisited();
         if (rooms.isEmpty()) {
             gameInterface.println("You have not been to any rooms.");
         } else {
