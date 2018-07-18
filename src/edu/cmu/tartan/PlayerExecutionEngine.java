@@ -1,6 +1,6 @@
 package edu.cmu.tartan;
 
-import java.util.Vector;
+import java.util.List;
 
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
@@ -416,7 +416,7 @@ public class PlayerExecutionEngine {
 	            player.move(Action.ACTION_GO_DOWN);
 	            break;
 	        case ACTION_VIEW_ITEMS:
-	            Vector<Item> items = player.getCollectedItems();
+	            List<Item> items = player.getCollectedItems();
 	            if (items.isEmpty()) {
 	                gameInterface.println("You don't have any items.");
 	            }

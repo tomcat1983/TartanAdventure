@@ -64,8 +64,8 @@ public class Room implements Comparable {
         this.description = description;
         this.shortDescription = shortDescription;
         this.items = new LinkedList<>();
-        this.adjacentRooms = new HashMap<Action, Room>();
-        this.transitionMessages = new HashMap<Action, String>();
+        this.adjacentRooms = new HashMap<>();
+        this.transitionMessages = new HashMap<>();
         this.transitionDelay = 0;
     }
 

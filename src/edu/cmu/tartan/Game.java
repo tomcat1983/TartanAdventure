@@ -10,7 +10,7 @@ import edu.cmu.tartan.room.Room;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * The main class for game logic. Many if not all decisions about game play are made
@@ -230,7 +230,7 @@ public class Game {
      * @return
      */
     private Boolean evaluateGame() {
-        Vector<GameGoal> playerGoals = player.getGoals();
+        List<GameGoal> playerGoals = player.getGoals();
 
         for (Iterator<GameGoal> iterator = playerGoals.iterator(); iterator.hasNext(); ) {
             GameGoal g = iterator.next();
@@ -269,7 +269,7 @@ public class Game {
         gameInterface.println("\n");
 
         gameInterface.println("- Rooms visited: ");
-        Vector<Room> rooms = player.getRoomsVisited();
+        List<Room> rooms = player.getRoomsVisited();
         if (rooms.isEmpty()) {
             gameInterface.println("You have not been to any rooms.");
         } else {
