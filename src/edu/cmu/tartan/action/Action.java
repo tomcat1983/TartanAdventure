@@ -107,7 +107,4 @@ public enum Action {
     private Action opposite;
     private String[] aliases;
     private Type type;
-//    private Item directObject;
-//    private Item indirectObject;
 }
-
