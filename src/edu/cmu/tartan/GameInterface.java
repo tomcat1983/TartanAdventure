@@ -68,6 +68,7 @@ public class GameInterface {
 	}
 	
 	public void println(String msg) {
-		logger.finest(msg + "\n");
+		logger.finest(msg);
+		logger.finest("\n");
 	}
 }

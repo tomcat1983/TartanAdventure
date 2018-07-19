@@ -7,7 +7,8 @@ import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.LinkedList;
@@ -32,10 +33,10 @@ public class Room implements Comparable {
     protected String shortDescription;
 
     // adjacent rooms
-    protected HashMap<Action, Room> adjacentRooms;
+    protected EnumMap<Action, Room> adjacentRooms;
 
     // transition information for what happens when a room is left/entered
-    protected HashMap<Action, String> transitionMessages;
+    protected EnumMap<Action, String> transitionMessages;
     protected int transitionDelay;
 
     // indicates that a room was visited
@@ -65,8 +66,8 @@ public class Room implements Comparable {
         this.description = description;
         this.shortDescription = shortDescription;
         this.items = new LinkedList<>();
-        this.adjacentRooms = new HashMap<>();
-        this.transitionMessages = new HashMap<>();
+        this.adjacentRooms = new EnumMap<>(Action.class);
+        this.transitionMessages = new EnumMap<>(Action.class);
         this.transitionDelay = 0;
     }
 
@@ -151,7 +152,7 @@ public class Room implements Comparable {
      * Fetch the appropriate transition message
      * @return the message/action pair
      */
-    public HashMap<Action, String> transitionMessages() {
+    public Map<Action, String> transitionMessages() {
         return this.transitionMessages;
     }
 
