@@ -90,21 +90,6 @@ public enum Action {
         return this.type;
     }
 
-    public void setDirectObject(Item directObject) {
-        this.directObject = directObject;
-    }
-
-    public Item directObject() {
-        return this.directObject;
-    }
-
-    public void setIndirectObject(Item indirectObject) {
-        this.indirectObject = indirectObject;
-    }
-
-    public Item indirectObject() {
-        return this.indirectObject;
-    }
 
     // opposite directions are used for the directional enumeration constants.
     public Action getOppositeDirection() {
@@ -122,7 +107,7 @@ public enum Action {
     private Action opposite;
     private String[] aliases;
     private Type type;
-    private Item directObject;
-    private Item indirectObject;
+//    private Item directObject;
+//    private Item indirectObject;
 }
 

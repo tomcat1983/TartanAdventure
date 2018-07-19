@@ -3,6 +3,7 @@ package edu.cmu.tartan;
 import java.util.List;
 
 import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemMagicBox;
 import edu.cmu.tartan.properties.Chuckable;
@@ -289,8 +290,8 @@ public class PlayerExecutionEngine {
         }    	
     }
     
-    private void hasDirectObject(Action action) {
-    	Item item = action.directObject();
+    private void hasDirectObject(Action action, ActionExecutionUnit actionExecutionUnit) {
+    	Item item = actionExecutionUnit.directObject();
     	
         switch(action) {
             case ACTION_PICKUP: 
@@ -383,9 +384,9 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private void hasIndirectObject(Action action) {
-    	Item directItem = action.directObject();
-        Item indirectItem = action.indirectObject();
+    private void hasIndirectObject(Action action, ActionExecutionUnit actionExecutionUnit) {
+    	Item directItem = actionExecutionUnit.directObject();
+        Item indirectItem = actionExecutionUnit.indirectObject();
         
         switch(action) {
         	case ACTION_PUT:
@@ -452,7 +453,7 @@ public class PlayerExecutionEngine {
      * Execute an action in the game. This method is where game play really occurs.
      * @param action The action to execute
      */
-    public void executeAction(Action action) {
+    public void executeAction(Action action, ActionExecutionUnit actionExecutionUnit) {
 
         switch(action.type()) {
             // Handle navigation
@@ -463,11 +464,11 @@ public class PlayerExecutionEngine {
             // items can be picked up, eaten, pushed
             // destroyed, etc.
             case TYPE_HASDIRECTOBJECT:
-            	hasDirectObject(action);
+            	hasDirectObject(action, actionExecutionUnit);
             	break;
             // Indirect objects are secondary objects that may be used by direct objects, such as a key for a lock
             case TYPE_HASINDIRECTOBJECT:
-            	hasIndirectObject(action);
+            	hasIndirectObject(action, actionExecutionUnit);
             	break;            	
             // Some actions do not require an object
             case TYPE_HASNOOBJECT:

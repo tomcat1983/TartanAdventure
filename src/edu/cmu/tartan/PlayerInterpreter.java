@@ -1,6 +1,7 @@
 package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.item.Item;
 
 import java.util.Arrays;
@@ -20,20 +21,18 @@ public class PlayerInterpreter {
      * @param string input string.
      * @return an Action corresponding to the input.
      */
-    public Action interpretString(String string) {
-
+    public Action interpretString(String string, ActionExecutionUnit actionExecutionUnit) {
         if(string.equals("")) {
             return Action.ACTION_PASS;
         }
-        return action(string.toLowerCase().split(" "));
+        return action(string.toLowerCase().split(" "), actionExecutionUnit);
     }
     
-    private Action getDirectObject(Action action, String[] string) {
+    private Action getDirectObject(Action action, String[] string, ActionExecutionUnit actionExecutionUnit) {
     	if(string.length > 1) {
             String d = string[1];
-            Item item = Item.getInstance(d);
             // item is the direct object of the action
-            action.setDirectObject(item);
+            actionExecutionUnit.setDirectObject(Item.getInstance(d));
             return action;
         }
         else {
@@ -42,19 +41,19 @@ public class PlayerInterpreter {
         }
     }
     
-    private Action getIndirectObject(Action action, String[] string) {
+    private Action getIndirectObject(Action action, String[] string, ActionExecutionUnit actionExecutionUnit) {
         if(string.length > 0) {
             String d = string[1];
             Item item = Item.getInstance(d);
             // item is the direct object of the action
-            action.setDirectObject(item);
+            actionExecutionUnit.setDirectObject(item);
             if(string.length > 2) {
                 String in = string[2];
                 if(in.equals("in") || in.equals("from")) {
                     if(string.length > 3) {
                         String io = string[3];
                         Item indob = Item.getInstance(io);
-                        action.setIndirectObject(indob);
+                        actionExecutionUnit.setIndirectObject(indob);
                         return action;
                     }
                     else {
@@ -74,17 +73,16 @@ public class PlayerInterpreter {
         }    	
     }
     
-    private Action findAction(Action action, String[] string) {
+    private Action findAction(Action action, String[] string,  ActionExecutionUnit actionExecutionUnit) {
         switch(action.type()) {
         	case TYPE_DIRECTIONAL:
         		return action;
         	case TYPE_HASDIRECTOBJECT:
-	        	return getDirectObject(action, string);
+	        	return getDirectObject(action, string, actionExecutionUnit);
 	        case TYPE_HASINDIRECTOBJECT:
-	
 	            // test if it has indirect object
 	            // "Take Diamond from Microwave"
-	        	return getIndirectObject(action, string);	            
+	        	return getIndirectObject(action, string, actionExecutionUnit);          
 	        case TYPE_HASNOOBJECT:
 	            return action;
 	        case TYPE_UNKNOWN:
@@ -111,14 +109,14 @@ public class PlayerInterpreter {
      * @param string the description of what is to be done
      * @return
      */
-    private Action action(String[] string) {
+    private Action action(String[] string, ActionExecutionUnit actionExecutionUnit) {
 
         if(string == null || string.length == 0) {
             return Action.ACTION_PASS;
         }
         if(string[0].compareTo("go") == 0 || string[0].compareTo("travel") == 0 || string[0].compareTo("move") == 0){
             String[] command = Arrays.copyOfRange(string, 1, string.length);
-            return action(command);
+            return action(command, actionExecutionUnit);
         }
         else {
             // input could be northeast, put cpu in vax, throw shovel, examine bin
@@ -128,7 +126,7 @@ public class PlayerInterpreter {
             if(action == null) {
                 return Action.ACTION_ERROR;
             }
-            return findAction(action, string);
+            return findAction(action, string, actionExecutionUnit);
         }
     }
 }

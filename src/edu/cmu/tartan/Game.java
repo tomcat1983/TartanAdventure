@@ -1,6 +1,7 @@
 package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.action.Type;
 import edu.cmu.tartan.games.*;
 import edu.cmu.tartan.goal.GameGoal;
@@ -174,7 +175,9 @@ public class Game {
             status();
         }
         else {
-        	playerExecutionEngine.executeAction(this.interpreter.interpretString(input));
+        	ActionExecutionUnit actionExecutionUnit = new ActionExecutionUnit(null, null);
+        	Action action = interpreter.interpretString(input, actionExecutionUnit);
+        	playerExecutionEngine.executeAction(action, actionExecutionUnit);
         	// every time an action is executed the game state must be evaluated
             if (evaluateGame()) {
                 winGame();
