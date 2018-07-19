@@ -40,6 +40,15 @@ public class TestXmlParser {
 	}
 	
 	@Test
+	public void testParseXmlFromStringInvalidXmlSAXExceptionCatch() throws ParserConfigurationException {
+		
+		XmlParserSpy parseXmlSpy = new XmlParserSpy();
+		XmlParserSpy.readAllBytes(invalidXmlFileName);
+		parseXmlSpy.parseXmlFromString(XmlParserSpy.xmlUri);
+		assertTrue(parseXmlSpy.isExceptionCatched);
+	}
+	
+	@Test
 	public void testParseXmlFromStringLoaded() throws ParserConfigurationException {
 		
 		XmlParserSpy parseXmlSpy = new XmlParserSpy();
@@ -67,6 +76,14 @@ public class TestXmlParser {
 				()->{
 					parseXml.parseXmlFromFileThrowException(invalidXmlFileName);
 				});
+	}
+	
+	@Test
+	public void testParseXmlFromFileInvalidXmlSAXExceptionCatch() throws ParserConfigurationException {
+		
+		XmlParserSpy parseXmlSpy = new XmlParserSpy();
+		parseXmlSpy.parseXmlFromFile(invalidXmlFileName);
+		assertTrue(parseXmlSpy.isExceptionCatched);
 	}
 	
 	@Test
@@ -134,6 +151,8 @@ public class TestXmlParser {
 class XmlParserSpy extends XmlParser{
 
 	public boolean isXmlLoaded = false; 
+	public boolean isExceptionCatched = false; 
+
 	public static String xmlUri; 
 	
 	public XmlParserSpy() throws ParserConfigurationException {
@@ -148,7 +167,8 @@ class XmlParserSpy extends XmlParser{
 			isXmlLoaded = true; 
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			gameInterface.severe("parseXmlFromFile throw exception :" + e.getClass().getSimpleName());
+			isExceptionCatched = true; 
 		}
 	}
 
@@ -160,7 +180,8 @@ class XmlParserSpy extends XmlParser{
 			isXmlLoaded = true; 
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
+			isExceptionCatched = true; 
 		}		
 
 	}
@@ -168,8 +189,7 @@ class XmlParserSpy extends XmlParser{
 	
 	public static String readAllBytes(String filePath){
 	    String content = "";
-	    try
-	    {
+	    try{
 	        content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
 	    }
 	    catch (IOException e)

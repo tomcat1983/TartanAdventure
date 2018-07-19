@@ -24,7 +24,7 @@ public class XmlParser {
 	/**
 	 * Game interface for game message and log
 	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
+	protected GameInterface gameInterface = GameInterface.getInterface();
 
 	public XmlParser() throws ParserConfigurationException{
 
@@ -115,6 +115,8 @@ public class XmlParser {
 	}
 	
 
+	//for debugging, might be unused 
+	@SuppressWarnings("unused")
 	private void printNodeInfo(Node node) {
 
 		String value = "child node";
