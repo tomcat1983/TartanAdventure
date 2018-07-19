@@ -1,7 +1,5 @@
 package edu.cmu.tartan.action;
 
-import edu.cmu.tartan.item.Item;
-
 /**
  * This enumeration of actions available to a game.
  * <p>
