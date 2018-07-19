@@ -1,17 +1,16 @@
 package edu.cmu.tartan.xml;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -21,19 +20,23 @@ public class TestXmlParser {
 	String invalidXmlFileName;
 	String notExistFileName; 
 	
-	@Before
+	@BeforeEach
 	public void testXmlSetup() {
 		validXmlFileName = "test/edu/cmu/tartan/xml/GameXmlValid.xml";
 		invalidXmlFileName = "test/edu/cmu/tartan/xml/GameXmlInvalid.xml";
 		notExistFileName = "na.xml";
 	}
 	
-	@Test(expected = SAXParseException.class) 
-	public void testParseXmlFromStringInvalidXmlSAXException() throws SAXException, IOException, SAXParseException, ParserConfigurationException {
+	@Test
+	public void testParseXmlFromStringInvalidXmlSAXException() throws ParserConfigurationException {
 		
 		XmlParserSpy parseXmlSpy = new XmlParserSpy();
 		XmlParserSpy.readAllBytes(invalidXmlFileName);
-		parseXmlSpy.parseXmlFromStringThrowException(XmlParserSpy.xmlUri);
+		
+		assertThrows(SAXParseException.class,
+				()->{
+					parseXmlSpy.parseXmlFromStringThrowException(XmlParserSpy.xmlUri);
+				});
 	}
 	
 	@Test
@@ -55,18 +58,26 @@ public class TestXmlParser {
 	}
 		
 	
-	@Test(expected = SAXException.class) 
-	public void testParseXmlFromFileInvalidXmlSAXException() throws ParserConfigurationException, SAXException, IOException {
+	@Test
+	public void testParseXmlFromFileInvalidXmlSAXException() throws ParserConfigurationException {
 		
 		XmlParser parseXml = new XmlParser();
-		parseXml.parseXmlFromFileThrowException(invalidXmlFileName);
+		
+		assertThrows(SAXException.class,
+				()->{
+					parseXml.parseXmlFromFileThrowException(invalidXmlFileName);
+				});
 	}
 	
-	@Test(expected = IOException.class) 
+	@Test
 	public void testParseXmlFromFileInvalidXmlIOException() throws ParserConfigurationException, SAXException, IOException {
 		
 		XmlParser parseXml = new XmlParser();
-		parseXml.parseXmlFromFileThrowException(notExistFileName);
+		
+		assertThrows(IOException.class,
+				()->{
+					parseXml.parseXmlFromFileThrowException(notExistFileName);
+				});
 	}
 	
 	@Test
