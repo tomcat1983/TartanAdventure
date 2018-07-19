@@ -23,8 +23,8 @@ public class ItemSafe extends Item implements Hostable, Openable {
 
     public ItemSafe(String d, String sd, String[] a) {
         super(d, sd, a);
-        this.installedItem = null;
-        this.pin = null;
+        installedItem = null;
+        pin = null;
         setValue(750);
     }
 
@@ -34,15 +34,6 @@ public class ItemSafe extends Item implements Hostable, Openable {
      */
     public void setPIN(Integer pin) {
         this.pin = pin;
-    }
-
-    /**
-     * Install an item in the safe.
-     * @param i the item to install
-     */
-    @Override
-    public void install(Item i) {
-        this.installedItem = i;
     }
 
     /**
@@ -63,11 +54,20 @@ public class ItemSafe extends Item implements Hostable, Openable {
     }
 
     /**
+     * Install an item in the safe.
+     * @param i the item to install
+     */
+    @Override
+    public void install(Item item) {
+        installedItem = item;
+    }
+
+    /**
      * Fetch the installed item
      * @return the installed item
      */
     public Item installedItem() {
-        return this.installedItem;
+        return installedItem;
     }
 
     /**
