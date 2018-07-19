@@ -39,7 +39,7 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
             try {
                 Thread.sleep(1000);
             } catch (Exception e1) {
-                e1.printStackTrace();
+            	gameInterface.severe(e1.getMessage());
             }
         }
         gameInterface.println("Beep beep beep");

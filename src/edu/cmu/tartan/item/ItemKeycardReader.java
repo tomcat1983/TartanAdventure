@@ -39,7 +39,7 @@ public class ItemKeycardReader extends Item implements Hostable {
             try {
                 Thread.sleep(1000);
             } catch (Exception e1) {
-                e1.printStackTrace();
+            	gameInterface.severe(e1.getMessage());
             }
         }
         if (installMessage != null) {

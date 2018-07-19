@@ -72,7 +72,7 @@ public class Player {
      * @param currentRoom the current room
      * @param items the player's items
      */
-    public Player(Room currentRoom, ArrayList<Item>items) {
+    public Player(Room currentRoom, List<Item>items) {
         this.items = items;
         this.score = 0;
         this.currentRoom = currentRoom;
