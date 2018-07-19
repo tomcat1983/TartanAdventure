@@ -131,6 +131,15 @@ public class TestXmlParser {
 	}
 	
 	@Test
+	public void testPrintNodeFromFile() throws ParserConfigurationException {
+		
+		XmlParserSpy parseXmlSpy = new XmlParserSpy();
+		parseXmlSpy.parseXmlFromFile(validXmlFileName);
+		parseXmlSpy.printNodeInfo(parseXmlSpy.nList.item(0));
+		assertTrue(parseXmlSpy.isPrintNodeCalled);
+	}
+	
+	@Test
 	public void testGetValueByTagAndAttributeResultFoundFromString() throws ParserConfigurationException {
 		
 		XmlParserSpy parseXmlSpy = new XmlParserSpy();
