@@ -9,7 +9,7 @@ import edu.cmu.tartan.properties.Luminous;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.*;
 
-import java.util.EnumMap;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -196,7 +196,7 @@ public class Player {
         nextRoom.setPlayer(this);
         if(this.currentRoom != null && nextRoom.compareTo(this.currentRoom) != 0) {
             Action directionOfTravel = this.currentRoom.getDirectionForRoom(nextRoom);
-            EnumMap<Action, String> messages = this.currentRoom.transitionMessages();
+            Map<Action, String> messages = this.currentRoom.transitionMessages();
             String message = messages.get(directionOfTravel);
             int delay = this.currentRoom.transitionDelay();
             requestDelay(message, delay);

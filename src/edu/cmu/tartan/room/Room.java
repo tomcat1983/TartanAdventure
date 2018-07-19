@@ -7,6 +7,7 @@ import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 
+import java.util.Map;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -151,7 +152,7 @@ public class Room implements Comparable {
      * Fetch the appropriate transition message
      * @return the message/action pair
      */
-    public EnumMap<Action, String> transitionMessages() {
+    public Map<Action, String> transitionMessages() {
         return this.transitionMessages;
     }
 
