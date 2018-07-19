@@ -80,7 +80,7 @@ public class Game {
     }
 
     /**
-     * TODO Set player game goal(will be removed)
+     * Set player game goal(Is it right?)
      */
     private void setPlayerGameGoal() {
         for (GameGoal g : goals) {
@@ -89,7 +89,7 @@ public class Game {
     }
 
     private ArrayList<GameConfiguration> loadGameMenu() {
-    	// TODO need to load about real game from XML(new game feature)
+    	// Need to load about real game from XML(new game feature)
     	
     	ArrayList<GameConfiguration> menu = new ArrayList<>();
     	
