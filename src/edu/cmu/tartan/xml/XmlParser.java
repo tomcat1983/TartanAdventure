@@ -13,6 +13,10 @@ import org.xml.sax.SAXException;
 
 import edu.cmu.tartan.GameInterface;
 
+enum XmlParseResult {
+	SUCCESS, INVALID_XML, INVALID_DATA
+}
+
 public class XmlParser {
 
 	private final DocumentBuilderFactory dbFactory;
@@ -34,14 +38,18 @@ public class XmlParser {
 		nList = null; 
 	}
 
-	public void parseXmlFromString(String xmlUri) {
+	public XmlParseResult parseXmlFromString(String xmlUri) {
 
+		XmlParseResult result = XmlParseResult.SUCCESS;
+		
 		try {
 			parseXmlFromStringThrowException(xmlUri);
 		} catch (Exception e) {
 			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
-		}		
-
+			result = XmlParseResult.INVALID_XML;
+		}
+		
+		return result;	
 	}
 	
 	public void parseXmlFromStringThrowException (String xmlUri)throws SAXException, IOException {
@@ -60,12 +68,18 @@ public class XmlParser {
 	}
 
 
-	public void parseXmlFromFile(String fileName){
+	public XmlParseResult parseXmlFromFile(String fileName){
+		
+		XmlParseResult result = XmlParseResult.SUCCESS;
+
 		try {
 			parseXmlFromFileThrowException(fileName);
 		} catch (Exception e) {
 			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
-		}		
+			result = XmlParseResult.INVALID_XML;
+		}
+
+		return result;		
 	}
 	
 	
@@ -117,7 +131,7 @@ public class XmlParser {
 
 	//for debugging, might be unused 
 	@SuppressWarnings("unused")
-	private void printNodeInfo(Node node) {
+	protected void printNodeInfo(Node node) {
 
 		String value = "child node";
 		short childType = getChildType(node);

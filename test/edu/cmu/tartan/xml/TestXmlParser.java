@@ -3,6 +3,7 @@ package edu.cmu.tartan.xml;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Node;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.IOException;
@@ -152,7 +153,8 @@ class XmlParserSpy extends XmlParser{
 
 	public boolean isXmlLoaded = false; 
 	public boolean isExceptionCatched = false; 
-
+	public boolean isPrintNodeCalled = false; 
+	XmlParseResult xmlParseResult = XmlParseResult.SUCCESS;
 	public static String xmlUri; 
 	
 	public XmlParserSpy() throws ParserConfigurationException {
@@ -161,31 +163,33 @@ class XmlParserSpy extends XmlParser{
 	}
 	
 	@Override
-	public void parseXmlFromFile(String fileName){
-		try {
-			parseXmlFromFileThrowException(fileName);
+	public XmlParseResult parseXmlFromFile(String fileName){
+		
+		xmlParseResult = super.parseXmlFromFile(fileName);
+		if(xmlParseResult.equals(XmlParseResult.SUCCESS))
 			isXmlLoaded = true; 
-
-		} catch (Exception e) {
-			gameInterface.severe("parseXmlFromFile throw exception :" + e.getClass().getSimpleName());
+		else if(xmlParseResult.equals(XmlParseResult.INVALID_XML))
 			isExceptionCatched = true; 
-		}
+		
+		return xmlParseResult; 
 	}
 
 	@Override
-	public void parseXmlFromString(String xmlUri) {
-
-		try {
-			parseXmlFromStringThrowException(xmlUri);
+	public XmlParseResult parseXmlFromString(String xmlUri) {
+		
+		xmlParseResult = super.parseXmlFromString(xmlUri);
+		if(xmlParseResult.equals(XmlParseResult.SUCCESS))
 			isXmlLoaded = true; 
-			
-		} catch (Exception e) {
-			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
+		else if(xmlParseResult.equals(XmlParseResult.INVALID_XML))
 			isExceptionCatched = true; 
-		}		
-
+		
+		return xmlParseResult; 
 	}
 	
+	protected void printNodeInfo(Node node) {
+		super.printNodeInfo(node);
+		isPrintNodeCalled = true; 
+	}
 	
 	public static String readAllBytes(String filePath){
 	    String content = "";
