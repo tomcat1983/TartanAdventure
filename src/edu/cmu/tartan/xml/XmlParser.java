@@ -130,7 +130,6 @@ public class XmlParser {
 	
 
 	//for debugging, might be unused 
-	@SuppressWarnings("unused")
 	protected void printNodeInfo(Node node) {
 
 		String value = "child node";
