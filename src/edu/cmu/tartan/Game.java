@@ -202,9 +202,8 @@ public class Game {
                 }
             }
         } catch(Exception e) {
-        	gameInterface.println("I don't understand that \n\nException: \n" + e);
-        	
-            e.printStackTrace();
+        	gameInterface.severe("I don't understand that \n\nException: \n" + e);
+        	gameInterface.severe(e.getMessage());
             start();
         }
         gameInterface.println("Game Over");
