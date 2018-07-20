@@ -145,16 +145,16 @@ public class XmlParser {
 		nList = doc.getElementsByTagName(tagName);
 		int nodeLength = nList.getLength();		//number of tag
 
-		for(int i=0; i<nodeLength; i++){
+		for(int i=0; i<nodeLength; i++) {
 			
 			Node node = nList.item(i); 
 			
-			if (node.hasAttributes()){
+			if (node.hasAttributes()) {
 
 				NamedNodeMap attributeMap = node.getAttributes();
 				int attributeLength = attributeMap.getLength();
 				
-				for (int j=0; j<attributeLength; j++){
+				for (int j=0; j<attributeLength; j++) {
 
 					Node attNode = attributeMap.item(j);
 					if(attNode.getNodeName().equals(attrName))
@@ -173,7 +173,7 @@ public class XmlParser {
 		String value = "child node";
 		short childType = getChildType(node);
 
-		if (childType==Node.TEXT_NODE){
+		if (childType==Node.TEXT_NODE) {
 			value = node.getTextContent();
 		}
 
@@ -183,12 +183,12 @@ public class XmlParser {
 		.append(", node value:").append(value);
 
 
-		if (node.hasAttributes()){
+		if (node.hasAttributes()) {
 
 			NamedNodeMap attributeMap = node.getAttributes();
 			int attributeLength = attributeMap.getLength();
 
-			for (int i=0; i<attributeLength; i++){
+			for (int i=0; i<attributeLength; i++) {
 
 				Node attNode = attributeMap.item(i);
 				sb.append('\n')
@@ -199,12 +199,12 @@ public class XmlParser {
 
 		}
 
-		if (node.hasChildNodes()){
+		if (node.hasChildNodes()) {
 
 			NodeList nodeList = node.getChildNodes(); 
 			int nodeLength = nodeList.getLength();
 
-			for(int i=0; i<nodeLength; i++){
+			for(int i=0; i<nodeLength; i++) {
 
 				Node childNode = nodeList.item(i);
 				if (childNode.getNodeType()==Node.TEXT_NODE){
@@ -221,11 +221,10 @@ public class XmlParser {
 		NodeList nodeList = node.getChildNodes();
 		int length = nodeList.getLength();
 
-		for (int i=0; i<length; i++){
+		for (int i=0; i<length; i++) {
 
 			Node childNode = nodeList.item(i);
 			if (childNode.getNodeType()!=Node.TEXT_NODE)
-
 				return childNode.getNodeType();
 		}
 

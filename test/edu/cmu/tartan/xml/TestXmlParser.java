@@ -23,17 +23,21 @@ public class TestXmlParser {
 	String loginXmlFileName; 
 	String addUserXmlFileName;
 	String unknownMessageXmlFileName; 
-
+	String gameXmlInvalidGoalCntMatchFileName;
+	String gameXmlInvalidRoomCntMatchFileName;
+	
     @BeforeEach
     public void testXmlSetup() {
 
     	validXmlFileName = "test/edu/cmu/tartan/xml/GameXmlValid.xml";
-    	invalidXmlFileName = "test/edu/cmu/tartan/xml/GameXmlInvalid.xml";
+    	invalidXmlFileName = "test/edu/cmu/tartan/xml/GameXmlInvalidFormat.xml";
     	loginXmlFileName = "test/edu/cmu/tartan/xml/Login.xml";
     	addUserXmlFileName = "test/edu/cmu/tartan/xml/AddUser.xml";
     	unknownMessageXmlFileName = "test/edu/cmu/tartan/xml/UnknownMessage.xml";
     	notExistFileName = "na.xml";
-    	
+    	gameXmlInvalidGoalCntMatchFileName = "test/edu/cmu/tartan/xml/GameXmlInvalidGoalCntMatch.xml";
+    	gameXmlInvalidRoomCntMatchFileName = "test/edu/cmu/tartan/xml/GameXmlInvalidRoomCntMatch.xml";
+
     }
 	
 	@Test
@@ -193,13 +197,34 @@ public class TestXmlParser {
 		assertTrue(result.equals(XmlParseResult.UNKNOWN_MESSAGE));
 	}
 	
+	@Test
+	public void testGetInvalidDataErrorWhenUloadMapRoomCntNotMatch() throws ParserConfigurationException {
+		
+		XmlParseResult result; 
+		XmlParser parseXml = new XmlParser();
+		result = parseXml.parseXmlFromString(readAllBytes(gameXmlInvalidRoomCntMatchFileName));
+		assertTrue(result.equals(XmlParseResult.INVALID_DATA));
+	}
+	
+	@Test
+	public void testGetInvalidDataErrorWhenUloadMapGoalCntNotMatch() throws ParserConfigurationException {
+		
+		XmlParseResult result; 
+		XmlParser parseXml = new XmlParser();
+		result = parseXml.parseXmlFromString(readAllBytes(gameXmlInvalidRoomCntMatchFileName));
+		assertTrue(result.equals(XmlParseResult.INVALID_DATA));
+	}
+	
+	
+	/*
+	 * methods for test only 
+	 */
 	public String readAllBytes(String filePath) {
 	    String content = "";
 	    try{
-	        content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
+	        content = new String (Files.readAllBytes( Paths.get(filePath)));
 	    }
-	    catch (IOException e)
-	    {
+	    catch (IOException e) {
 	        e.printStackTrace();
 	    }
 	    
