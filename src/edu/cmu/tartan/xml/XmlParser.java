@@ -13,20 +13,21 @@ import org.xml.sax.SAXException;
 
 import edu.cmu.tartan.GameInterface;
 
+
+
 public class XmlParser {
 
 	private final DocumentBuilderFactory dbFactory;
 	private final DocumentBuilder dBuilder;
 	private Document doc;
-	
-	public NodeList nList;
+	private NodeList nList;
 	
 	/**
 	 * Game interface for game message and log
 	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
+	protected GameInterface gameInterface = GameInterface.getInterface();
 
-	public XmlParser() throws ParserConfigurationException{
+	public XmlParser() throws ParserConfigurationException {
 
 		dbFactory = DocumentBuilderFactory.newInstance();
 		dBuilder = dbFactory.newDocumentBuilder();
@@ -34,53 +35,106 @@ public class XmlParser {
 		nList = null; 
 	}
 
-	public void parseXmlFromString(String xmlUri) {
-
-		try {
-			parseXmlFromStringThrowException(xmlUri);
-		} catch (Exception e) {
-			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
-		}		
-
+	public NodeList getNodeList() {
+		return nList;
 	}
 	
-	public void parseXmlFromStringThrowException (String xmlUri)throws SAXException, IOException {
+	public XmlParseResult parseXmlFromString(String xmlUri) {
+
+		XmlParseResult result = XmlParseResult.SUCCESS;
+		
+		try {
+			result = parseXmlFromStringThrowException(xmlUri);
+		} catch (Exception e) {
+			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
+			result = XmlParseResult.INVALID_XML;
+		}
+		
+		return result;	
+	}
+	
+
+	public XmlParseResult parseXmlFromFile(String fileName) {
+		
+		XmlParseResult result = XmlParseResult.SUCCESS;
+
+		try {
+			result = parseXmlFromFileThrowException(fileName);
+		} catch (Exception e) {
+			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
+			result = XmlParseResult.INVALID_XML;
+		}
+
+		return result;		
+	}
+	
+	public XmlParseResult parseXmlFromStringThrowException (String xmlUri)throws SAXException, IOException {
 
 	    InputSource is = new InputSource(new StringReader(xmlUri));
-		
 		doc = dBuilder.parse(is);
 		
-		//optional, but recommended
-		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-		doc.getDocumentElement().normalize();
-		
-		gameInterface.info("From String, Root element :" + doc.getDocumentElement().getNodeName());
-		//NodeList 
-		nList = doc.getChildNodes();
-	}
-
-
-	public void parseXmlFromFile(String fileName){
-		try {
-			parseXmlFromFileThrowException(fileName);
-		} catch (Exception e) {
-			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
-		}		
+		return parsingXML();
 	}
 	
-	
-	public void parseXmlFromFileThrowException(String fileName) throws SAXException, IOException{
+	public XmlParseResult parseXmlFromFileThrowException(String fileName) throws SAXException, IOException {
 
 		File fXmlFile = new File(fileName);
 		doc = dBuilder.parse(fXmlFile);
 		
+		return parsingXML();
+	}
+	
+	private XmlParseResult parsingXML() {
+		
+		XmlParseResult parseResult;
+
 		//optional, but recommended
 		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 		doc.getDocumentElement().normalize();
-
-		gameInterface.info("From File, Root element :" + doc.getDocumentElement().getNodeName());
+		
 		//NodeList 
 		nList = doc.getChildNodes();
+		String messageType = getMessageType();
+		if(messageType == null)	//incase there is no <message type=" xxx" > 
+			return XmlParseResult.UNKNOWN_MESSAGE; 
+		
+		parseResult = processMessage(messageType);
+		
+		return parseResult; 
+			
+	}
+	
+	public String getMessageType() {
+		
+		return getValueByTagAndAttribute("message", "type");
+
+	}
+	
+	public XmlParseResult processMessage(String messageType) {
+		
+		XmlResponse xmlResponse; 
+		XmlParseResult result; 
+		
+		if(messageType.equals(XmlMessageType.UPLOAD_MAP_DESIGN.name())) {
+			xmlResponse = new XmlResponseUploadMap(); 
+			xmlResponse.setMsgType(XmlMessageType.UPLOAD_MAP_DESIGN);
+		}
+		else if(messageType.equals(XmlMessageType.REQ_LOGIN.name())) {
+			xmlResponse = new XmlResponseLogin(); 
+			xmlResponse.setMsgType(XmlMessageType.REQ_LOGIN);
+		}
+		else if(messageType.equals(XmlMessageType.ADD_USER.name())) {
+			xmlResponse = new XmlResponseAddUser();
+			xmlResponse.setMsgType(XmlMessageType.REQ_LOGIN);
+		}
+		else {
+			return XmlParseResult.UNKNOWN_MESSAGE;
+		}
+		
+		result = xmlResponse.doYourJob(doc);
+				
+		return result;
+			
 	}
 	
 	//must check null return value 
@@ -90,7 +144,6 @@ public class XmlParser {
 		
 		nList = doc.getElementsByTagName(tagName);
 		int nodeLength = nList.getLength();		//number of tag
-		StringBuilder sb = new StringBuilder(200);
 
 		for(int i=0; i<nodeLength; i++){
 			
@@ -110,12 +163,12 @@ public class XmlParser {
 			}
 		}
 
-		gameInterface.info(sb.toString());
 		return result;
 	}
 	
 
-	private void printNodeInfo(Node node) {
+	//for debugging, might be unused 
+	protected void printNodeInfo(Node node) {
 
 		String value = "child node";
 		short childType = getChildType(node);
@@ -145,8 +198,6 @@ public class XmlParser {
 			}
 
 		}
-
-		gameInterface.info(sb.toString());
 
 		if (node.hasChildNodes()){
 
