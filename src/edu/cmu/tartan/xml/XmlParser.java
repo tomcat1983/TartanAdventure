@@ -86,7 +86,7 @@ public class XmlParser {
 	
 	private XmlParseResult parsingXML() {
 		
-		XmlParseResult parseResult =  XmlParseResult.SUCCESS;
+		XmlParseResult parseResult;
 
 		//optional, but recommended
 		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work

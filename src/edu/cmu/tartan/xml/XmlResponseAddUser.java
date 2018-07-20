@@ -1,7 +1,6 @@
 package edu.cmu.tartan.xml;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 public class XmlResponseAddUser extends XmlResponse{
 
