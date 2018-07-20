@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message type="UPLOAD_MAP_DESIGN" sender="server" receiver="client">
+	<game_info result="OK" ng_reason="-" />
+</message>
