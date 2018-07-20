@@ -44,7 +44,7 @@ public class CollectGame extends GameConfiguration {
 
         end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);
 
-        LinkedList<Item> startItems = new LinkedList<>();
+        List<Item> startItems = new LinkedList<>();
         startItems.add(Item.getInstance("brick"));
         startItems.add(Item.getInstance("key"));
         startItems.add(Item.getInstance("lock"));

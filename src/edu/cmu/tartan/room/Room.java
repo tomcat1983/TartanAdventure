@@ -9,8 +9,12 @@ import edu.cmu.tartan.properties.Visible;
 
 import java.util.Map;
 import java.util.EnumMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+
+import org.eclipse.jdt.annotation.NonNull;
+
 import java.util.LinkedList;
 
 /**
@@ -60,8 +64,7 @@ public class Room implements Comparable {
      * @param description the room description
      * @param shortDescription the short room description
      */
-    public Room(String description, String shortDescription) {
-
+    public Room(@NonNull String description,@NonNull String shortDescription) {
         this.roomWasVisited = false;
         this.description = description;
         this.shortDescription = shortDescription;
@@ -76,7 +79,7 @@ public class Room implements Comparable {
      * @param a action required to get to this room
      * @param r the adjacent room
      */
-    public void setAdjacentRoom(Action a, Room r) {
+    public void setAdjacentRoom(@NonNull Action a,@NonNull Room r) {
         setOneWayAdjacentRoom(a, r);
         r.setOneWayAdjacentRoom(a.getOppositeDirection(), this);
     }
@@ -86,17 +89,17 @@ public class Room implements Comparable {
      * @param a action required to get to this room
      * @param r the adjacent room
      */
-    public void setOneWayAdjacentRoom(Action a, Room r) {
-        this.adjacentRooms.put(a, r);
+    public void setOneWayAdjacentRoom(@NonNull Action a, @NonNull Room r) {
+        adjacentRooms.put(a, r);
     }
 
     /**
      * Fetch the room for a given direction (action)
      * @param a action required to get to this room
      */
-    public Room getRoomForDirection(Action a) {
+    public Room getRoomForDirection(@NonNull Action a) {
         if (canMoveToRoomInDirection(a)) {
-            return this.adjacentRooms.get(a);
+            return adjacentRooms.get(a);
         }
         return null;
     }
@@ -106,10 +109,10 @@ public class Room implements Comparable {
      * @param room room for the specified direction to get to this room
      * @return the action
      */
-    public Action getDirectionForRoom(Room room) {
+    public Action getDirectionForRoom(@NonNull Room room) {
         for (Entry<Action, Room> entry: adjacentRooms.entrySet()) {
         	Action action = entry.getKey();
-            if (this.adjacentRooms.get(action).compareTo(room) == 0) {
+            if (adjacentRooms.get(action).compareTo(room) == 0) {
                 return action;
             }
         }
@@ -121,17 +124,17 @@ public class Room implements Comparable {
      * @param a the direction
      * @return true if the room is accessible; false otherwise
      */
-    public boolean canMoveToRoomInDirection(Action a) {
-        return this.adjacentRooms.containsKey(a);
+    public boolean canMoveToRoomInDirection(@NonNull Action a) {
+        return adjacentRooms.containsKey(a);
     }
 
-    public void setAdjacentRoomTransitionMessage(String message, Action direction) {
-        this.transitionMessages.put(direction, message);
+    public void setAdjacentRoomTransitionMessage(@NonNull String message, @NonNull Action direction) {
+        transitionMessages.put(direction, message);
     }
 
-    public void setAdjacentRoomTransitionMessageWithDelay(String message, Action direction, int delay) {
-        this.setAdjacentRoomTransitionMessage(message, direction);
-        this.transitionDelay = delay;
+    public void setAdjacentRoomTransitionMessageWithDelay(@NonNull String message, @NonNull Action direction, int delay) {
+        setAdjacentRoomTransitionMessage(message, direction);
+        transitionDelay = delay;
     }
 
     /**
@@ -139,8 +142,8 @@ public class Room implements Comparable {
      * @param other the other room
      * @return true if the rooms are connected; false otherwise
      */
-    public boolean isAdjacentToRoom(Room other) {
-        for (Room room : this.adjacentRooms.values()) {
+    public boolean isAdjacentToRoom(@NonNull Room other) {
+        for (Room room : adjacentRooms.values()) {
             if (other.compareTo(room) == 0) {
                 return true;
             }
@@ -153,7 +156,7 @@ public class Room implements Comparable {
      * @return the message/action pair
      */
     public Map<Action, String> transitionMessages() {
-        return this.transitionMessages;
+        return transitionMessages;
     }
 
     /**
@@ -161,34 +164,27 @@ public class Room implements Comparable {
      * @return the delay
      */
     public int transitionDelay() {
-        return this.transitionDelay;
+        return transitionDelay;
     }
 
     /**
      * Place an item in the room
      * @param item the item to add
      */
-    public void putItem(Item item) {
-        this.items.add(item);
+    public void putItem(@NonNull Item item) {
+        items.add(item);
     }
 
     /**
      * Put a list of items in a room
      * @param items the items
      */
-    public void putItems(List<Item> items) {
-        for (Item i : items) {
-            this.items.add(i);
-        }
-    }
-
-    public Item takeItem(Item item) {
-        if (item == null) {
-            return null;
-        } else {
-            gameInterface.println("I don't see that here.");
-        }
-        return Item.getInstance("unknown");
+    public void putItems(@NonNull List<Item> items) {
+    	Iterator<Item> iter = items.iterator();
+    	while (iter.hasNext()) {
+    		Item item = iter.next();
+    	    this.items.add(item);
+    	}    	
     }
 
     /**
@@ -196,9 +192,9 @@ public class Room implements Comparable {
      * @param item the item to remove
      * @return the removed item
      */
-    public Item remove(Item item) {
-        if (this.items.contains(item) && item instanceof Valuable) {
-        	this.items.remove(item);
+    public Item remove(@NonNull Item item) {
+        if (items.contains(item) && item instanceof Valuable) {
+        	items.remove(item);
             return item;
         }
         return null;
@@ -209,35 +205,29 @@ public class Room implements Comparable {
      * @param item the item to check for
      * @return true if the room contains the item; false otherwise
      */
-    public boolean hasItem(Item item) {
+    public boolean hasItem(@NonNull Item item) {
     	// if the item is invisible, then fool the player
-    	if (item == null) {
-        	return false;
-        } else if (!item.isVisible()) {
+    	if (!item.isVisible()) {
         	return false;
         } else {
-        	return this.items.contains(item);
+        	return items.contains(item);
         }
     }
 
     public List<Item> getItems() {
 		return items;
 	}
-
-	public void setItems(List<Item> items) {
-		this.items = items;
-	}
     
 	public Player getPlayer() {
 		return player;
 	}
 
-    public void setPlayer(Player player) {
+    public void setPlayer(@NonNull Player player) {
         this.player = player;
     }
 
     public String toString() {
-        return this.description + visibleItems();
+        return description + visibleItems();
     }
 
     /**
@@ -246,9 +236,8 @@ public class Room implements Comparable {
      */
     public String visibleItems() {
     	StringBuilder  s = new StringBuilder("");
-        for (Item item : this.items) {
+        for (Item item : items) {
             if (item instanceof Visible && item.isVisible()) {
-            	
                 s.append("\nThere is a '").append(item.detailDescription()).append("' (i.e. " + item.description() + " ) here.");
             }
         }
@@ -256,13 +245,13 @@ public class Room implements Comparable {
     }
 
     public String description() {
-        String d = this.roomWasVisited ? this.shortDescription : this.description + visibleItems();
-        this.roomWasVisited = true;
+        String d = roomWasVisited ? shortDescription : description + visibleItems();
+        roomWasVisited = true;
         return d;
     }
 
     public String shortDescription() {
-        return this.shortDescription;
+        return shortDescription;
     }
 
     @Override
