@@ -20,23 +20,30 @@ public class TestXmlParser {
 	String validXmlFileName;
 	String invalidXmlFileName;
 	String notExistFileName; 
-	
-	@BeforeEach
-	public void testXmlSetup() {
-		validXmlFileName = "test/edu/cmu/tartan/xml/GameXmlValid.xml";
-		invalidXmlFileName = "test/edu/cmu/tartan/xml/GameXmlInvalid.xml";
-		notExistFileName = "na.xml";
-	}
+	String loginXmlFileName; 
+	String addUserXmlFileName;
+	String unknownMessageXmlFileName; 
+
+    @BeforeEach
+    public void testXmlSetup() {
+
+    	validXmlFileName = "test/edu/cmu/tartan/xml/GameXmlValid.xml";
+    	invalidXmlFileName = "test/edu/cmu/tartan/xml/GameXmlInvalid.xml";
+    	loginXmlFileName = "test/edu/cmu/tartan/xml/Login.xml";
+    	addUserXmlFileName = "test/edu/cmu/tartan/xml/AddUser.xml";
+    	unknownMessageXmlFileName = "test/edu/cmu/tartan/xml/UnknownMessage.xml";
+    	notExistFileName = "na.xml";
+    	
+    }
 	
 	@Test
 	public void testParseXmlFromStringInvalidXmlSAXException() throws ParserConfigurationException {
 		
 		XmlParserSpy parseXmlSpy = new XmlParserSpy();
-		XmlParserSpy.readAllBytes(invalidXmlFileName);
 		
 		assertThrows(SAXParseException.class,
 				()->{
-					parseXmlSpy.parseXmlFromStringThrowException(XmlParserSpy.xmlUri);
+					parseXmlSpy.parseXmlFromStringThrowException(readAllBytes(invalidXmlFileName));
 				});
 	}
 	
@@ -44,8 +51,7 @@ public class TestXmlParser {
 	public void testParseXmlFromStringInvalidXmlSAXExceptionCatch() throws ParserConfigurationException {
 		
 		XmlParserSpy parseXmlSpy = new XmlParserSpy();
-		XmlParserSpy.readAllBytes(invalidXmlFileName);
-		parseXmlSpy.parseXmlFromString(XmlParserSpy.xmlUri);
+		parseXmlSpy.parseXmlFromString(readAllBytes(invalidXmlFileName));
 		assertTrue(parseXmlSpy.isExceptionCatched);
 	}
 	
@@ -53,17 +59,15 @@ public class TestXmlParser {
 	public void testParseXmlFromStringLoaded() throws ParserConfigurationException {
 		
 		XmlParserSpy parseXmlSpy = new XmlParserSpy();
-		XmlParserSpy.readAllBytes(validXmlFileName);
-		parseXmlSpy.parseXmlFromString(XmlParserSpy.xmlUri);
-		assertTrue(parseXmlSpy.isXmlLoaded);	
+		parseXmlSpy.parseXmlFromString(readAllBytes(validXmlFileName));
+		assertTrue(parseXmlSpy.isXmlLoaded);
 	}
 	
 	@Test
 	public void testParseXmlFromStringNotLoaded() throws ParserConfigurationException {
 		
 		XmlParserSpy parseXmlSpy = new XmlParserSpy();
-		XmlParserSpy.readAllBytes(invalidXmlFileName);
-		parseXmlSpy.parseXmlFromString(XmlParserSpy.xmlUri);
+		parseXmlSpy.parseXmlFromString(readAllBytes(invalidXmlFileName));
 		assertFalse(parseXmlSpy.isXmlLoaded);
 	}
 		
@@ -135,26 +139,71 @@ public class TestXmlParser {
 		
 		XmlParserSpy parseXmlSpy = new XmlParserSpy();
 		parseXmlSpy.parseXmlFromFile(validXmlFileName);
-		parseXmlSpy.printNodeInfo(parseXmlSpy.nList.item(0));
+		parseXmlSpy.printNodeInfo(parseXmlSpy.getNodeList().item(0));
 		assertTrue(parseXmlSpy.isPrintNodeCalled);
 	}
 	
 	@Test
 	public void testGetValueByTagAndAttributeResultFoundFromString() throws ParserConfigurationException {
 		
-		XmlParserSpy parseXmlSpy = new XmlParserSpy();
-		XmlParserSpy.readAllBytes(validXmlFileName);
-		parseXmlSpy.parseXmlFromString(XmlParserSpy.xmlUri);
-		assertTrue(parseXmlSpy.getValueByTagAndAttribute("message", "type").equals("UPLOAD_MAP_DESIGN"));
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(validXmlFileName));
+		assertTrue(parseXml.getValueByTagAndAttribute("message", "type").equals("UPLOAD_MAP_DESIGN"));
 	}
 	
 	@Test
 	public void testGetValueByTagAndAttributeResultNotFoundFromString() throws ParserConfigurationException {
 
-		XmlParserSpy parseXmlSpy = new XmlParserSpy();
-		XmlParserSpy.readAllBytes(validXmlFileName);
-		parseXmlSpy.parseXmlFromString(XmlParserSpy.xmlUri);		
-		assertTrue(parseXmlSpy.getValueByTagAndAttribute("message", "user_id") == null);
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(validXmlFileName));		
+		assertTrue(parseXml.getValueByTagAndAttribute("message", "user_id") == null);
+	}
+	
+	@Test
+	public void testGetMessageTypeOfUploadMapDesign() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(validXmlFileName));
+		assertTrue(parseXml.getMessageType().equals("UPLOAD_MAP_DESIGN"));
+	}
+	
+	@Test
+	public void testGetMessageTypeOfLogin() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
+		assertTrue(parseXml.getMessageType().equals("REQ_LOGIN"));
+	}
+	
+	@Test
+	public void testGetMessageTypeOfAddUser() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(addUserXmlFileName));
+		assertTrue(parseXml.getMessageType().equals("ADD_USER"));
+
+	}
+	
+	@Test
+	public void testGetMessageTypeOfUnknown() throws ParserConfigurationException {
+		
+		XmlParseResult result; 
+		XmlParser parseXml = new XmlParser();
+		result = parseXml.parseXmlFromString(readAllBytes(unknownMessageXmlFileName));
+		assertTrue(result.equals(XmlParseResult.UNKNOWN_MESSAGE));
+	}
+	
+	public String readAllBytes(String filePath){
+	    String content = "";
+	    try{
+	        content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
+	    }
+	    catch (IOException e)
+	    {
+	        e.printStackTrace();
+	    }
+	    
+	    return content;
 	}
 }
 
@@ -199,20 +248,5 @@ class XmlParserSpy extends XmlParser{
 		super.printNodeInfo(node);
 		isPrintNodeCalled = true; 
 	}
-	
-	public static String readAllBytes(String filePath){
-	    String content = "";
-	    try{
-	        content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
-	    }
-	    catch (IOException e)
-	    {
-	        e.printStackTrace();
-	    }
-	    xmlUri = content;
-	    System.out.println(xmlUri);
-	    return content;
-	}
-
 	
 }

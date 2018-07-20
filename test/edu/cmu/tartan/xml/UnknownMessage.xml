@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<message type="UPLOAD_MAP_DESIGN" sender="designer" receiver="server">
+<message type="DOWNLOAD_MAP_DESIGN" sender="designer" receiver="server">
 	<common_info user_id="takhh" />
 	<room_info room_cnt="5" >
 		<room index="0" type="dark" north="1" south="null" west="null" east="null" item_list="key:2|food:3" />
