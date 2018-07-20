@@ -193,7 +193,7 @@ public class TestXmlParser {
 		assertTrue(result.equals(XmlParseResult.UNKNOWN_MESSAGE));
 	}
 	
-	public String readAllBytes(String filePath){
+	public String readAllBytes(String filePath) {
 	    String content = "";
 	    try{
 	        content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
@@ -207,7 +207,7 @@ public class TestXmlParser {
 	}
 }
 
-class XmlParserSpy extends XmlParser{
+class XmlParserSpy extends XmlParser {
 
 	public boolean isXmlLoaded = false; 
 	public boolean isExceptionCatched = false; 
@@ -221,7 +221,7 @@ class XmlParserSpy extends XmlParser{
 	}
 	
 	@Override
-	public XmlParseResult parseXmlFromFile(String fileName){
+	public XmlParseResult parseXmlFromFile(String fileName) {
 		
 		xmlParseResult = super.parseXmlFromFile(fileName);
 		if(xmlParseResult.equals(XmlParseResult.SUCCESS))

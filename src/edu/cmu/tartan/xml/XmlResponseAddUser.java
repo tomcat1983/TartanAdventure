@@ -2,7 +2,7 @@ package edu.cmu.tartan.xml;
 
 import org.w3c.dom.Document;
 
-public class XmlResponseAddUser extends XmlResponse{
+public class XmlResponseAddUser extends XmlResponse {
 
 	@Override
 	public void makeResponseXmlString() {

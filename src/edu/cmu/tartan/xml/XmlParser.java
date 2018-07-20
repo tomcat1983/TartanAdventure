@@ -27,7 +27,7 @@ public class XmlParser {
 	 */
 	protected GameInterface gameInterface = GameInterface.getInterface();
 
-	public XmlParser() throws ParserConfigurationException{
+	public XmlParser() throws ParserConfigurationException {
 
 		dbFactory = DocumentBuilderFactory.newInstance();
 		dBuilder = dbFactory.newDocumentBuilder();
@@ -54,7 +54,7 @@ public class XmlParser {
 	}
 	
 
-	public XmlParseResult parseXmlFromFile(String fileName){
+	public XmlParseResult parseXmlFromFile(String fileName) {
 		
 		XmlParseResult result = XmlParseResult.SUCCESS;
 
@@ -76,7 +76,7 @@ public class XmlParser {
 		return parsingXML();
 	}
 	
-	public XmlParseResult parseXmlFromFileThrowException(String fileName) throws SAXException, IOException{
+	public XmlParseResult parseXmlFromFileThrowException(String fileName) throws SAXException, IOException {
 
 		File fXmlFile = new File(fileName);
 		doc = dBuilder.parse(fXmlFile);
