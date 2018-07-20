@@ -2,9 +2,11 @@ package edu.cmu.tartan.xml;
 
 import java.io.StringWriter;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -89,12 +91,16 @@ public abstract class XmlResponse {
 		
 		String result = null;
 		
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer t;
 		try {
-			t = tf.newTransformer();
+			TransformerFactory factory = TransformerFactory.newInstance();
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+			Transformer transformer = factory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer = factory.newTransformer();
+			
 			StringWriter sw = new StringWriter();
-			t.transform(new DOMSource(doc), new StreamResult(sw));
+			transformer.transform(new DOMSource(doc), new StreamResult(sw));
 
 			result = sw.toString();
 		} catch (TransformerConfigurationException e) {

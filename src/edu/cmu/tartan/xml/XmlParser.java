@@ -95,7 +95,7 @@ public class XmlParser {
 		//NodeList 
 		nList = doc.getChildNodes();
 		String messageType = getMessageType();
-		if(messageType.equals(null))	//incase there is no <message type=" xxx" > 
+		if(messageType == null)	//incase there is no <message type=" xxx" > 
 			return XmlParseResult.UNKNOWN_MESSAGE; 
 		
 		parseResult = processMessage(messageType);
