@@ -39,17 +39,12 @@ public abstract class XmlResponse {
 	public abstract XmlParseResult doYourJob(Document doc);
 	
 	public void setMsgType(XmlMessageType msgType) {
-		
 		this.msgType = msgType; 
 	}
 	
 	public String getResponseXml() {
 		return responseXmlToClient;
 	}
-	
-	
-//	<message type="UPLOAD_MAP_DESIGN" sender="server" receiver="client">
-
 	
 	public Element startWritingXml() throws ParserConfigurationException {
 	
@@ -123,12 +118,12 @@ public abstract class XmlResponse {
 		String result = null;
 		Node node = nList.item(n); 
 
-		if (node.hasAttributes()){
+		if (node.hasAttributes()) {
 
 			NamedNodeMap attributeMap = node.getAttributes();
 			int attributeLength = attributeMap.getLength();
 
-			for (int j=0; j<attributeLength; j++){
+			for (int j=0; j<attributeLength; j++) {
 				Node attNode = attributeMap.item(j);
 				if(attNode.getNodeName().equals(attrName))
 					result = attNode.getNodeValue();

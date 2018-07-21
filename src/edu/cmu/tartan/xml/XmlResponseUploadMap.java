@@ -10,7 +10,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 
 	XmlParseResult xmlParseResult; 
 
-	XmlResponseUploadMap(){
+	XmlResponseUploadMap() {
 		xmlParseResult = XmlParseResult.SUCCESS; 
 	}
 	

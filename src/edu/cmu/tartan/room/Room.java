@@ -170,21 +170,27 @@ public class Room implements Comparable {
     /**
      * Place an item in the room
      * @param item the item to add
+     * @return true successful, false failure
      */
-    public void putItem(@NonNull Item item) {
-        items.add(item);
+    public boolean putItem(@NonNull Item item) {
+        return items.add(item);
     }
 
     /**
      * Put a list of items in a room
      * @param items the items
+     * @return true successful, false failure
      */
-    public void putItems(@NonNull List<Item> items) {
+    public boolean putItems(@NonNull List<Item> items) {
     	Iterator<Item> iter = items.iterator();
+    	int insertSize = 0;
     	while (iter.hasNext()) {
     		Item item = iter.next();
     	    this.items.add(item);
-    	}    	
+    	    insertSize++;
+    	}
+    	
+    	return (items.size()==insertSize);
     }
 
     /**
