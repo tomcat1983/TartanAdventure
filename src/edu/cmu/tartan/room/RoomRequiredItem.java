@@ -47,6 +47,17 @@ public class RoomRequiredItem extends Room {
 		this.diesOnEntry = false;
 		this.deathMessage = null;
 	}
+	
+	//maek room first, set requiredItem later 
+	public RoomRequiredItem(String d, String dd, String w, String ws) {
+		this(d, dd, w, ws, null);
+	}
+	
+	public void setRequiredItem(Item requiredItem) {
+		this.requiredItem = requiredItem;
+	}
+	
+	
 	public void playerDidDropRequiredItem() {
 		if(this.diesOnItemDiscard) {
 			gameInterface.println(this.deathMessage);

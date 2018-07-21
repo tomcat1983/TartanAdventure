@@ -32,6 +32,11 @@ public class RoomObscured extends Room {
 		this.unobscureMessage = null;
 	}
 
+	//make room first, set obscuringItem later 
+	public RoomObscured(String description, String shortDescription) {
+		this(description, shortDescription, null);
+	}
+	
     // Getters & setters
     public Item getObscuringItem() {
 		return obscuringItem;

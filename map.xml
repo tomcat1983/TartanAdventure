@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><message receiver="server" sender="designer" type="UPLOAD_MAP_DESIGN">
+	<common_info user_id="takhh"/>
+	<room_info room_cnt="14">
+		<room east="1" index="0" type="normal"/>	<!-- index 0 is start room -->
+		<room east="6" index="1" item_list="shovel:5|key:3" north="2" type="normal" west="0"/>
+		<room index="2" north="3" south="1" type="normal" west="4"/>
+		<room index="3" item_list="key:5" south="2" type="normal"/>
+		<room east="2" index="4" need_item="key:3" type="lockable" west="5"/>
+		<room east="4" index="5" item_list="torch:4" type="normal"/>
+		<room index="6" south="7" type="dark" west="1"/>
+		<room index="7" north="6" south="8" type="normal"/>
+		<room east="13" index="8" item_list="microwave:1" need_item="shovel:1" north="7" type="excavatable" west="9"/>
+		<room east="8" index="9" item_list="fridge:1" type="normal" west="10"/>
+		<room east="9" index="10" north="12" obstacle="fridge:9" type="obscured" west="11"/>
+		<room east="10" index="11" item_list="gold:2" type="normal"/>
+		<room hidden_item="food:diamond" index="12" item_list="food:2" south="10" type="normal"/>
+		<room index="13" need_item="gold:11" type="require" west="8"/>
+		<!-- each room informations..  -->
+	</room_info>
+	<goal_info goal_cnt="2">
+		<goal index="0" object="diamond" type="getItem"/>
+		<goal index="1" object="6|11|12|13" type="roomVisit"/>
+	</goal_info>
+</message>

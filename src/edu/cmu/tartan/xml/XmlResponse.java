@@ -1,38 +1,21 @@
 package edu.cmu.tartan.xml;
 
-import java.io.StringWriter;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.sun.istack.internal.Nullable;
 
 import edu.cmu.tartan.GameInterface;
 
 public abstract class XmlResponse {
 	
-	String responseXmlToClient; 
+	String responseXml; 
 	XmlMessageType msgType;
 	protected GameInterface gameInterface = GameInterface.getInterface();
 
-	DocumentBuilderFactory dbFactory;
-	DocumentBuilder dBuilder;
-	Document docReply;
-	         
 	
 	//every child have different response 
 	public abstract void makeResponseXmlString();
@@ -43,76 +26,16 @@ public abstract class XmlResponse {
 	}
 	
 	public String getResponseXml() {
-		return responseXmlToClient;
+		return responseXml;
 	}
 	
-	public Element startWritingXml() throws ParserConfigurationException {
-	
-		dbFactory =  DocumentBuilderFactory.newInstance();
-		dBuilder = dbFactory.newDocumentBuilder();
-		docReply = dBuilder.newDocument();
-		
-		Element messageElement = rootElement("message");
-		setAttributeToElement(messageElement, "type", msgType.name());
-		setAttributeToElement(messageElement, "sender", "server");
-		setAttributeToElement(messageElement, "type", "client");
-		
-		return messageElement; 
-	}
-
-	public Element rootElement(String elementName) {
-
-		Element element = docReply.createElement(elementName);
-		docReply.appendChild(element);
-        return element; 
-	}
-
-	
-	public Element addChildElement(Element parentElement, String elementName) {
-
-		Element childElement = docReply.createElement(elementName);
-		parentElement.appendChild(childElement);
-        return childElement; 
-	}
-	
-	public void setAttributeToElement(Element element, String attrName, String value) {
-
-		Attr attr = docReply.createAttribute(attrName);
-	    attr.setValue(value);
-	    element.setAttributeNode(attr);
-	}
-	
-	public String convertDocumentToString(Document doc) {
-		
-		String result = null;
-		
-		try {
-			TransformerFactory factory = TransformerFactory.newInstance();
-			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-
-			Transformer transformer = factory.newTransformer();
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer = factory.newTransformer();
-			
-			StringWriter sw = new StringWriter();
-			transformer.transform(new DOMSource(doc), new StreamResult(sw));
-
-			result = sw.toString();
-		} catch (TransformerConfigurationException e) {
-			gameInterface.severe("TransformerConfigurationException");
-		} catch (TransformerException e) {
-			gameInterface.severe("TransformerException");
-		}
-		
-		return result; 
-	}
 
 	public NodeList getNodeListOfGivenTag(String tagName, Document doc) {
 		
 		return doc.getElementsByTagName(tagName);
 	}
 	
-	//must check null return value 
+	@Nullable
 	public String getAttributeValueAtNthTag(String attrName, NodeList nList, int n) {
 
 		String result = null;
