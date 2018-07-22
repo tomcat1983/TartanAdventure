@@ -21,8 +21,9 @@ class TestRoomDark {
     }
     
 	@Test
-	void test() {
-		fail("Not yet implemented");
+	void testWhenConstructorRoomDark() {
+		makeRoomDark();
+		assertTrue(room1.equals(room2));
 	}
 
 }
