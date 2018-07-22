@@ -1,6 +1,5 @@
 package edu.cmu.tartan.xml;
 
-import java.beans.Customizer;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -8,11 +7,12 @@ import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.eclipse.jdt.annotation.Nullable;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.sun.istack.internal.Nullable;
 
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;

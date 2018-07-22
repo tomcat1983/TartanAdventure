@@ -1,12 +1,12 @@
 package edu.cmu.tartan.xml;
 
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.istack.internal.Nullable;
 
 import edu.cmu.tartan.GameInterface;
 
