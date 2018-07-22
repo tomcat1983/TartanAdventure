@@ -35,6 +35,16 @@ public class RoomLockable extends Room {
 		this.unlockMessage = "Room unlocked.";
 	}
 
+	//make room first, set key later
+	public RoomLockable(String description, String shortDescription, boolean locked) {
+		this(description, shortDescription, locked, null);
+	}
+	
+	public void setKey(Item key) {
+		
+		this.key = key;
+	}
+	
     /**
      * Create a locked room (unlocked by default)
      * @param description description
