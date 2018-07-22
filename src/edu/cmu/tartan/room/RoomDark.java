@@ -11,6 +11,7 @@ package edu.cmu.tartan.room;
  */
 public class RoomDark extends Room {
 
+	private static final String DEATH_MESSAGE = "You are dead.";
 	// Descriptions
 	private String darkDescription;
 	private String darkShortDescription;
@@ -47,7 +48,7 @@ public class RoomDark extends Room {
 		this.isDark = isDark;
 		this.darkDescription = darkDescription;
 		this.darkShortDescription = darkShortDescription;
-		this.deathMessage = null;
+		this.deathMessage = DEATH_MESSAGE;
 	}
 	// getters & setters
 	public boolean isDark() {

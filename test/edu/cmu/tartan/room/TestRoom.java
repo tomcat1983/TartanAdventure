@@ -59,7 +59,7 @@ public class TestRoom {
 	    String result = room1.visibleItems();		
 	    assertTrue("".equals(result));
 		
-	    room1.putItems(testItems);
+	    assertTrue(room1.putItems(testItems));
 		result = room1.visibleItems();
 
 		assertFalse("".equals(result));
@@ -75,11 +75,11 @@ public class TestRoom {
 		testItems.add(Item.getInstance("lock"));
 	    testItems.add(Item.getInstance("gold"));
 				
-		room1.putItems(testItems);
+	    assertTrue(room1.putItems(testItems));
 		List<Item> getItemsList = new LinkedList<>();
 		getItemsList = room1.getItems();
 		
-		assertTrue(testItems.equals(getItemsList));
+		assertEquals(testItems, getItemsList);
 	}
 	
 	@Test
@@ -89,7 +89,7 @@ public class TestRoom {
 		keyItem.setVisible(false);
 		ItemKey keytItem2 = null;
 				
-		room1.putItem(keyItem);
+		assertTrue(room1.putItem(keyItem));
 		if(room1.hasItem(keyItem)) {
 			keytItem2 = (ItemKey)room1.remove(keyItem);
 		}
@@ -112,12 +112,14 @@ public class TestRoom {
 		makeSameRoom();
 		ItemKey keyItem = (ItemKey) Item.getInstance("key");
 		ItemKey keytItem2 = null;
+		
+		keyItem.setVisible(true);
 				
-		room1.putItem(keyItem);
+		assertTrue(room1.putItem(keyItem));
 		if(room1.hasItem(keyItem)) {
 			keytItem2 = (ItemKey)room1.remove(keyItem);
 		}
-		assertTrue(keyItem.equals(keytItem2));
+		assertEquals(keyItem, keytItem2);
 	}
 	
 	@Test
