@@ -292,15 +292,14 @@ public class PlayerExecutionEngine {
     
     private void hasDirectObject(Action action, ActionExecutionUnit actionExecutionUnit) {
     	Item item = actionExecutionUnit.directObject();
+        if(item==null) {
+        	gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+        	return;
+        }
     	
         switch(action) {
-            case ACTION_PICKUP: 
-                if(item!=null) {
-                	// Is it right code? If object is null, something process below funciton? 
-                	actionPickup(item);
-                } else {
-					gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
-                }
+            case ACTION_PICKUP:
+            	actionPickup(item);
                 break;
             case ACTION_DESTROY: 
                 actionDestroy(item);

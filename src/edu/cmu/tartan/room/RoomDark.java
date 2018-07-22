@@ -60,8 +60,8 @@ public class RoomDark extends Room {
 	public String deathMessage() {
 		return this.deathMessage;
 	}	
-	public void setDeathMessage(String s) {
-		this.deathMessage = s;
+	public void setDeathMessage(String message) {
+		this.deathMessage = message;
 	}
 
 	@Override
