@@ -1,5 +1,6 @@
 package edu.cmu.tartan.xml;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -129,23 +130,30 @@ public class XmlWriter {
         File dest = new File(destFileName);
 
         //copy file conventional way using Stream
-        InputStream is = null;
-        OutputStream os = null;
-        
-        is = new FileInputStream(source);
-        os = new FileOutputStream(dest);
-        byte[] buffer = new byte[1024];
-        int length;
+        try (	InputStream is= new FileInputStream(source);
+        		OutputStream os= new FileOutputStream(dest);) {
+        	byte[] buffer = new byte[1024];
+        	int length;
 
-        while ((length = is.read(buffer)) > 0) {
-        	os.write(buffer, 0, length);
+        	while ((length = is.read(buffer)) > 0) {
+        		os.write(buffer, 0, length);
+        	}
+        	close(is);
+        	close(os);
         }
-
-        is.close();
-        os.close();
-    
+        catch (Exception e) {
+			gameInterface.severe("Exception occur when overWriteFile from " + sourceFileName + " to " + destFileName);
+        }
 	}
-	
-	
+
+	public static void close(Closeable c) {
+		if (c == null) return; 
+		try {
+			c.close();
+		} catch (IOException e) {
+			gameInterface.severe("IOException occur when closing io stream");
+		}
+	}
+
 	
 }
