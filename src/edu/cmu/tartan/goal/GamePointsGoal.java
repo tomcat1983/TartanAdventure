@@ -22,6 +22,10 @@ public class GamePointsGoal implements GameGoal {
         this.player = p;
     }
 
+    public GamePointsGoal(Integer g) {
+        this(g, null);
+    }
+    
     /**
      * Describe this goal
      * @return
@@ -49,4 +53,9 @@ public class GamePointsGoal implements GameGoal {
     public Boolean isAchieved() {
         return player.getScore() >= winningScore;
     }
+    
+	@Override
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 }

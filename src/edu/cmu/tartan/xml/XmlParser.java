@@ -7,10 +7,13 @@ import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.eclipse.jdt.annotation.Nullable;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.GameInterface;
 
 
@@ -46,7 +49,7 @@ public class XmlParser {
 		try {
 			result = parseXmlFromStringThrowException(xmlUri);
 		} catch (Exception e) {
-			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
+			gameInterface.severe(e.getClass().getSimpleName());
 			result = XmlParseResult.INVALID_XML;
 		}
 		
@@ -61,7 +64,7 @@ public class XmlParser {
 		try {
 			result = parseXmlFromFileThrowException(fileName);
 		} catch (Exception e) {
-			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
+			gameInterface.severe(e.getClass().getSimpleName());
 			result = XmlParseResult.INVALID_XML;
 		}
 
@@ -104,6 +107,7 @@ public class XmlParser {
 			
 	}
 	
+	@Nullable
 	public String getMessageType() {
 		
 		return getValueByTagAndAttribute("message", "type");
@@ -137,7 +141,24 @@ public class XmlParser {
 			
 	}
 	
-	//must check null return value 
+	@Nullable
+	public GameConfiguration processMessageReturnGameConfiguration(String messageType) {
+		
+		XmlResponseUploadMap xmlResponse; 
+		
+		// If Game variable is included, only support UPLOAD_MAP_DESIGN 
+		if(messageType.equals(XmlMessageType.UPLOAD_MAP_DESIGN.name())) {
+			xmlResponse = new XmlResponseUploadMap();
+			xmlResponse.setMsgType(XmlMessageType.UPLOAD_MAP_DESIGN);
+		}
+		else {
+			return null;
+		}
+		
+		return xmlResponse.doYourJobReturnGameConfiguration(doc);
+	}
+	
+	@Nullable
 	public String getValueByTagAndAttribute(String tagName, String attrName) {
 		
 		String result = null;
@@ -145,16 +166,16 @@ public class XmlParser {
 		nList = doc.getElementsByTagName(tagName);
 		int nodeLength = nList.getLength();		//number of tag
 
-		for(int i=0; i<nodeLength; i++){
+		for(int i=0; i<nodeLength; i++) {
 			
 			Node node = nList.item(i); 
 			
-			if (node.hasAttributes()){
+			if (node.hasAttributes()) {
 
 				NamedNodeMap attributeMap = node.getAttributes();
 				int attributeLength = attributeMap.getLength();
 				
-				for (int j=0; j<attributeLength; j++){
+				for (int j=0; j<attributeLength; j++) {
 
 					Node attNode = attributeMap.item(j);
 					if(attNode.getNodeName().equals(attrName))
@@ -173,7 +194,7 @@ public class XmlParser {
 		String value = "child node";
 		short childType = getChildType(node);
 
-		if (childType==Node.TEXT_NODE){
+		if (childType==Node.TEXT_NODE) {
 			value = node.getTextContent();
 		}
 
@@ -183,12 +204,12 @@ public class XmlParser {
 		.append(", node value:").append(value);
 
 
-		if (node.hasAttributes()){
+		if (node.hasAttributes()) {
 
 			NamedNodeMap attributeMap = node.getAttributes();
 			int attributeLength = attributeMap.getLength();
 
-			for (int i=0; i<attributeLength; i++){
+			for (int i=0; i<attributeLength; i++) {
 
 				Node attNode = attributeMap.item(i);
 				sb.append('\n')
@@ -199,12 +220,12 @@ public class XmlParser {
 
 		}
 
-		if (node.hasChildNodes()){
+		if (node.hasChildNodes()) {
 
 			NodeList nodeList = node.getChildNodes(); 
 			int nodeLength = nodeList.getLength();
 
-			for(int i=0; i<nodeLength; i++){
+			for(int i=0; i<nodeLength; i++) {
 
 				Node childNode = nodeList.item(i);
 				if (childNode.getNodeType()==Node.TEXT_NODE){
@@ -221,14 +242,45 @@ public class XmlParser {
 		NodeList nodeList = node.getChildNodes();
 		int length = nodeList.getLength();
 
-		for (int i=0; i<length; i++){
+		for (int i=0; i<length; i++) {
 
 			Node childNode = nodeList.item(i);
 			if (childNode.getNodeType()!=Node.TEXT_NODE)
-
 				return childNode.getNodeType();
 		}
 
 		return Node.TEXT_NODE;
+	}
+	
+	@Nullable
+	public GameConfiguration loadGameMapXml() {
+		
+		return parseXmlFromFileReturnGameConfiguration("gameMap.xml");
+	}
+	
+	@Nullable
+	public GameConfiguration parseXmlFromFileReturnGameConfiguration(String fileName) {
+		
+		try {
+			File fXmlFile = new File(fileName);
+			doc = dBuilder.parse(fXmlFile);
+			
+			//optional, but recommended
+			//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+			doc.getDocumentElement().normalize();
+			
+			//NodeList 
+			nList = doc.getChildNodes();
+			String messageType = getMessageType();
+			if(messageType == null)	//incase there is no <message type=" xxx" > 
+				return null; 
+			
+			return processMessageReturnGameConfiguration(messageType); 
+			
+		} catch (Exception e) {
+			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
+		}
+
+		return null;		
 	}
 }
