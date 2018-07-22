@@ -9,11 +9,26 @@ import org.junit.jupiter.api.BeforeEach;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.games.CustomizingGame;
+import edu.cmu.tartan.goal.GameCollectGoal;
+import edu.cmu.tartan.goal.GameExploreGoal;
+import edu.cmu.tartan.goal.GamePointsGoal;
+import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.room.RoomDark;
+import edu.cmu.tartan.room.RoomExcavatable;
+import edu.cmu.tartan.room.RoomLockable;
+import edu.cmu.tartan.room.RoomObscured;
+import edu.cmu.tartan.room.RoomRequiredItem;
 
 public class TestXmlParser {
 
@@ -213,6 +228,151 @@ public class TestXmlParser {
 		XmlParser parseXml = new XmlParser();
 		result = parseXml.parseXmlFromString(readAllBytes(gameXmlInvalidRoomCntMatchFileName));
 		assertTrue(result.equals(XmlParseResult.INVALID_DATA));
+	}
+	
+	@Test
+	public void testRoom5IsLockable() throws ParserConfigurationException {
+		
+		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		assertTrue(cGame.getRoomIndex(4) instanceof RoomLockable);
+	}
+	
+	@Test
+	public void testRoom5CanNotMoveToNorth() throws ParserConfigurationException {
+		
+		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		assertFalse(cGame.getRoomIndex(4).canMoveToRoomInDirection(Action.ACTION_GO_NORTH));
+	}
+	
+	@Test
+	public void testRoom5CanMoveToEast() throws ParserConfigurationException {
+		
+		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		assertTrue(cGame.getRoomIndex(4).canMoveToRoomInDirection(Action.ACTION_GO_EAST));
+	}
+	
+	@Test
+	public void testRoom5IsLocked() throws ParserConfigurationException {
+		
+		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		RoomLockable roomLock = (RoomLockable) cGame.getRoomIndex(4); 
+		assertTrue(roomLock.isLocked());
+	}
+	
+	@Test
+	public void testRoom5IsLockedWhenNotUsingProperKey() throws ParserConfigurationException {
+		
+		//<room index="1" type="normal" north="2" west="0" east="6" item_list="shovel:5-document:3" />
+		//<room index="3" type="normal" south="2" />
+		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		RoomLockable roomLock = (RoomLockable) cGame.getRoomIndex(4); 
+		Room roomDontHaveKey = cGame.getRoomIndex(1); 
+		List<Item> items = roomDontHaveKey.getItems();
+		for (Item item : items) {
+			roomLock.unlock(item);
+		}
+		assertTrue(roomLock.isLocked());
+	}
+	
+	@Test
+	public void testRoom5IsUnlockedWhenUsingProperKey() throws ParserConfigurationException {
+		
+		//<room index="1" type="normal" north="2" west="0" east="6" item_list="shovel:5-document:3" />
+		//<room index="3" type="normal" south="2" />
+		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		RoomLockable roomLock = (RoomLockable) cGame.getRoomIndex(4); 
+		Room roomHaveKey = cGame.getRoomIndex(3); 
+		List<Item> items = roomHaveKey.getItems();
+		for (Item item : items) {
+			roomLock.unlock(item);
+		}
+		assertFalse(roomLock.isLocked());
+	}
+	
+	@Test
+	public void testRoom7IsDark() throws ParserConfigurationException {
+		
+		//<room index="6" type="dark" south="7" west="1" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		assertTrue(cGame.getRoomIndex(6) instanceof RoomDark);
+	}
+	
+	@Test
+	public void testRoom9IsExcavatable() throws ParserConfigurationException {
+		
+		//<room index="8" type="excavatable" north="7" west="9" east="13" item_list="microwave:1" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		assertTrue(cGame.getRoomIndex(8) instanceof RoomExcavatable);
+	}
+	
+	@Test
+	public void testRoom11IsObscured() throws ParserConfigurationException {
+		
+		//<room index="10" type="obscured" north="12" west="11" east="9" obstacle="fridge:9" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		assertTrue(cGame.getRoomIndex(10) instanceof RoomObscured);
+	}
+	
+	@Test
+	public void testRoom14IsRequiredItem() throws ParserConfigurationException {
+		
+		//<room index="13" type="require" west="8" require_item="gold:11:2"/>
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		assertTrue(cGame.getRoomIndex(13) instanceof RoomRequiredItem);
+	}
+	
+
+	@Test
+	public void testRoom14RequireGold() throws ParserConfigurationException {
+		
+		//<room index="13" type="require" west="8" require_item="gold:11:2"/>
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		RoomRequiredItem roomRequire = (RoomRequiredItem) cGame.getRoomIndex(13);  
+		assertTrue(roomRequire.requiredItem().equals(Item.getInstance("gold")));
+	}
+	
+	@Test
+	public void testGoal1IsCollectType() throws ParserConfigurationException {
+		
+		//<goal index="0" type="collect" object="diamond-shovel" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		assertTrue(cGame.getGameGoalIndex(0) instanceof GameCollectGoal);
+	}
+	
+	@Test
+	public void testGoal2IsExploreType() throws ParserConfigurationException {
+		
+		//<goal index="1" type="explore" object="6-11-12-13" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		assertTrue(cGame.getGameGoalIndex(1) instanceof GameExploreGoal);
+	}
+	
+	@Test
+	public void testGoal3IsPointType() throws ParserConfigurationException {
+		
+		//<goal index="2" type="point" object="100" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		assertTrue(cGame.getGameGoalIndex(2) instanceof GamePointsGoal);
 	}
 	
 	
