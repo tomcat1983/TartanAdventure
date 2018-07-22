@@ -112,6 +112,8 @@ public class TestRoom {
 		makeSameRoom();
 		ItemKey keyItem = (ItemKey) Item.getInstance("key");
 		ItemKey keytItem2 = null;
+		
+		keyItem.setVisible(true);
 				
 		assertTrue(room1.putItem(keyItem));
 		if(room1.hasItem(keyItem)) {
