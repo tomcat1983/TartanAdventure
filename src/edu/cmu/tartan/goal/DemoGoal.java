@@ -1,7 +1,10 @@
 package edu.cmu.tartan.goal;
 
+import edu.cmu.tartan.Player;
+
 public class DemoGoal implements GameGoal {
     // the list of places required to visit
+    private Player player = null;
 
     @Override
     public String describe() {
@@ -25,4 +28,9 @@ public class DemoGoal implements GameGoal {
     public Boolean isAchieved() {
         return false;
     }
+    
+    @Override
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 }

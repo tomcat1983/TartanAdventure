@@ -29,6 +29,10 @@ public class GameExploreGoal implements GameGoal {
         itinerary = places;
         player = p;
     }
+    
+    public GameExploreGoal(List<String> places) {
+        this(places, null);
+    }
 
     /**
      * Describe the goal.
@@ -70,4 +74,9 @@ public class GameExploreGoal implements GameGoal {
         count = newCount;
         return count == itinerary.size();
     }
+
+	@Override
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 }

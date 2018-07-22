@@ -1,5 +1,7 @@
 package edu.cmu.tartan.goal;
 
+import edu.cmu.tartan.Player;
+
 /**
  * Interface that all goals must implement
  * <p>
@@ -26,5 +28,7 @@ public interface GameGoal {
      * @return the status
      */
     public String getStatus();
+
+	public void setPlayer(Player player);
 
 }

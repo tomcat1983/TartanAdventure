@@ -1,6 +1,7 @@
 package edu.cmu.tartan.xml;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -12,6 +13,10 @@ import org.w3c.dom.NodeList;
 import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.games.CustomizingGame;
+import edu.cmu.tartan.goal.GameCollectGoal;
+import edu.cmu.tartan.goal.GameExploreGoal;
+import edu.cmu.tartan.goal.GameGoal;
+import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemLock;
 import edu.cmu.tartan.properties.Meltable;
@@ -145,7 +150,6 @@ public class XmlResponseUploadMap extends XmlResponse {
 				return result; 
 			
 			result = setRelationship(nList, i);
-			
 		}
 
 		return result;
@@ -379,17 +383,57 @@ public class XmlResponseUploadMap extends XmlResponse {
 		
 		for(i=0; i<goalCnt; i++) {
 			
-			/*
-			 * TODO : data to object 
-			gameInterface.info(getAttributeValueAtNthTag("index", nList, i));
-			gameInterface.info(getAttributeValueAtNthTag("type", nList, i));
-			gameInterface.info(getAttributeValueAtNthTag("object", nList, i));
+			String goalIndex = getAttributeValueAtNthTag("index", nList, i);
+			String goalType = getAttributeValueAtNthTag("type", nList, i);
+			String goalObjects = getAttributeValueAtNthTag("object", nList, i);
+
+			//all goal information should not be null 
+			if(goalIndex == null || goalType == null || goalObjects == null) {
+				return XmlParseResult.INVALID_DATA;
+			}
 			
-			*/
+			GameGoal goal = makeGoal(goalType, goalIndex, goalObjects); 
+			if(goal == null) {
+				return XmlParseResult.INVALID_DATA;
+			}
+			
+			customizingGame.addGoal(goal);
 		}
 		
 		return XmlParseResult.SUCCESS;		
 	}
-	
 
+	@Nullable
+	public GameGoal makeGoal(String goalType, String goalIndex, String goalObjects) {
+		
+		GameGoal goal = null; 
+			
+		/*
+		 * 	<goal index="0" type="collect" object="diamond-shovel" />
+		 * 	<goal index="1" type="explore" object="6-11-12-13" />
+		 * 	<goal index="2" type="point" object="100" /> 
+		 */
+		if(goalType.equals("collect"))
+			goal = new GameCollectGoal(makeListStringSplitedByDash(goalObjects));
+		else if(goalType.equals("explore"))
+			goal = new GameExploreGoal(makeListStringSplitedByDash(goalObjects));
+		else if(goalType.equals("point"))
+			goal = new GamePointsGoal(Integer.valueOf(goalObjects)); 
+
+		return goal; 
+	}
+
+
+	private List<String> makeListStringSplitedByDash(String strTobeSplited) {
+				
+		List<String> itemList = new ArrayList<String>();
+		
+		//type="collect" object="diamond-shovel" 
+		String[] splitedToEachItem = strTobeSplited.split("-");		
+		for (String itemStr : splitedToEachItem) {
+			itemList.add(itemStr);
+		}
+		
+		return itemList; 
+	}
 }

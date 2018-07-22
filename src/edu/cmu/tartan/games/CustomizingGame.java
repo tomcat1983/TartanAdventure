@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.Player;
+import edu.cmu.tartan.goal.GameExploreGoal;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.room.*;
 
@@ -51,7 +52,8 @@ public class CustomizingGame extends GameConfiguration {
         game.setPlayer(player);
         
         for (GameGoal gameGoal : goals) {
-        	game.addGoal(gameGoal);
+        	gameGoal.setPlayer(player);
+            game.addGoal(gameGoal);
 		}
         
         game.setDescription("Customizing Room(TODO)");

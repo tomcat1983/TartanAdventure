@@ -28,6 +28,10 @@ public class GameCollectGoal implements GameGoal {
         itemsList = items;
     }
     
+    public GameCollectGoal(List<String> items) {
+        this(items, null);
+    }
+    
     @Override
     public Boolean isAchieved() {
         int newCount=0;
@@ -55,4 +59,9 @@ public class GameCollectGoal implements GameGoal {
         }
         return sb.toString();
     }
+    
+    @Override
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 }
