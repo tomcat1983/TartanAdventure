@@ -35,66 +35,57 @@ public class XmlWriter {
 	DocumentBuilderFactory dbFactory;
 	DocumentBuilder dBuilder;
 	Document docWriting;
+	Element lastElement; 
+	Element parentElement; 
 	         
-	public Element startWritingXml(XmlMessageType msgType, String sender, String receiver) throws ParserConfigurationException {
+	public void startWritingXml(XmlMessageType msgType, String sender, String receiver) throws ParserConfigurationException {
 	
 		dbFactory =  DocumentBuilderFactory.newInstance();
 		dBuilder = dbFactory.newDocumentBuilder();
 		docWriting = dBuilder.newDocument();
 		
-		Element messageElement = rootElement("message");
-		setAttributeToElement(messageElement, "type", msgType.name());
-		setAttributeToElement(messageElement, "sender", sender);
-		setAttributeToElement(messageElement, "receiver", receiver);
-		
-		return messageElement; 
+		rootElement("message");
+		setAttributeToElement("type", msgType.name());
+		setAttributeToElement("sender", sender);
+		setAttributeToElement("receiver", receiver);
 	}
 
-	public Element rootElement(String elementName) {
+	public void rootElement(String elementName) {
 
-		Element element = docWriting.createElement(elementName);
-		docWriting.appendChild(element);
-        return element; 
+		Element rootElement = docWriting.createElement(elementName);
+		docWriting.appendChild(rootElement);
+		lastElement = rootElement;
+		parentElement = rootElement; 
 	}
 
 	
-	public Element addChildElement(Element parentElement, String elementName) {
+	public void addChildElement(String elementName) {
 
 		Element childElement = docWriting.createElement(elementName);
-		parentElement.appendChild(childElement);
-        return childElement; 
+		lastElement.appendChild(childElement);
+		parentElement = lastElement; 
+		lastElement = childElement;
 	}
 	
-	public void setAttributeToElement(Element element, String attrName, String value) {
+	public void addBrotherElement(String elementName) {
+		
+		Element brotherElement = docWriting.createElement(elementName);
+		parentElement.appendChild(brotherElement);
+		lastElement = brotherElement;
+	}
+	
+	
+	public void setAttributeToElement(String attrName, String value) {
 
 		Attr attr = docWriting.createAttribute(attrName);
 	    attr.setValue(value);
-	    element.setAttributeNode(attr);
+	    lastElement.setAttributeNode(attr);
 	}
 	
+
 	public String convertDocumentToString() {
 		
-		String result = null;
-		
-		try {
-			TransformerFactory factory = TransformerFactory.newInstance();
-			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-
-			Transformer transformer = factory.newTransformer();
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer = factory.newTransformer();
-			
-			StringWriter sw = new StringWriter();
-			transformer.transform(new DOMSource(docWriting), new StreamResult(sw));
-
-			result = sw.toString();
-		} catch (TransformerConfigurationException e) {
-			gameInterface.severe("TransformerConfigurationException");
-		} catch (TransformerException e) {
-			gameInterface.severe("TransformerException");
-		}
-		
-		return result; 
+		return convertDocumentToString(docWriting); 
 	}
 	
 	public static String convertDocumentToString(Document doc) {

@@ -5,11 +5,10 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import com.sun.istack.internal.Nullable;
 
 import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.action.Action;
@@ -43,29 +42,28 @@ public class XmlResponseUploadMap extends XmlResponse {
 		try {
 			
 			xmlWriter = new XmlWriter(); 
-			
-			Element messageElement = xmlWriter.startWritingXml(msgType, "server", "client");
-			Element gameInfo = xmlWriter.addChildElement(messageElement, "game_info");
+			xmlWriter.startWritingXml(msgType, "server", "client");
+			xmlWriter.addChildElement("game_info");
 			
 			if(xmlParseResult.equals( XmlParseResult.SUCCESS )) {
-				xmlWriter.setAttributeToElement(gameInfo, "result", "OK");
-				xmlWriter.setAttributeToElement(gameInfo, "ng_reason", "-");
-				
-				try {
-					XmlWriter.overWriteFile("gameMap.xml", "userMap.xml");
-				} catch (IOException e) {
-					gameInterface.severe("IOException occur when copying userMap.xml to gameMap.xml");
-				}
+				xmlWriter.setAttributeToElement("result", "OK");
+				xmlWriter.setAttributeToElement("ng_reason", "-");
+			
+				XmlWriter.overWriteFile("gameMap.xml", "userMap.xml");
+			
 			}
 			else {
-				xmlWriter.setAttributeToElement(gameInfo, "result", "NG");
-				xmlWriter.setAttributeToElement(gameInfo, "ng_reason", xmlParseResult.name());
+				xmlWriter.setAttributeToElement("result", "NG");
+				xmlWriter.setAttributeToElement("ng_reason", xmlParseResult.name());
 			}
 
 			responseXml = xmlWriter.convertDocumentToString();
 			
 		} catch (ParserConfigurationException e) {
 			gameInterface.severe("ParserConfigurationException");
+		} 
+		catch (IOException e) {
+			gameInterface.severe("IOException occur when copying userMap.xml to gameMap.xml");
 		} 
 		
 		gameInterface.info(responseXml);
@@ -137,7 +135,8 @@ public class XmlResponseUploadMap extends XmlResponse {
 				return XmlParseResult.INVALID_DATA;
 			}
 			
-			putItemListIntoRoom(room, itemList);
+			if(itemList != null)
+				putItemListIntoRoom(room, itemList);
 			
 			customizingGame.addRoom(room);
 		}
@@ -147,8 +146,10 @@ public class XmlResponseUploadMap extends XmlResponse {
 		for(i=0; i<roomCnt; i++) {
 
 			result = setAdjacentPath(nList, i);
-			if(result.equals(XmlParseResult.INVALID_DATA))
+			if( !result.equals(XmlParseResult.SUCCESS))
 				return result; 
+			
+			result = setRelationship(nList, i);
 			
 		}
 
@@ -258,24 +259,28 @@ public class XmlResponseUploadMap extends XmlResponse {
 			result = setRelationshipForRoomObscured((RoomObscured)currentRoom, nList, roomIndex);
 		}
 		
-		if(result.equals(XmlParseResult.INVALID_DATA)) {
-			return result; //don't need to proceed, it is already messed up 
+		if( result.equals(XmlParseResult.SUCCESS)) {
+			String hiddenItemStr= getAttributeValueAtNthTag("hidden_item", nList, roomIndex);
+			//for hiddenItem.  item_list="food:2" hidden_item="diamond"
+			if( hiddenItemStr != null )
+				setHiddenItem(currentRoom, hiddenItemStr);
 		}
-		//for hiddenItem.  item_list="food:2" hidden_item="food:diamond"
-		String hiddenItemStr= getAttributeValueAtNthTag("hidden_item", nList, roomIndex);
+		
+		return result;
+	}
+	
+	public void setHiddenItem(Room currentRoom, String hiddenItemStr) {
+		
 		Item hiddenItem = Item.getInstance(hiddenItemStr);
 		
-		if(hiddenItemStr != null && hiddenItem != null) {
+		if(hiddenItem != null) {
 			List<Item> items = currentRoom.getItems();
 			for (Item item : items) {
 				if(item instanceof Meltable)
 					((Meltable) item).setMeltItem(hiddenItem);
 			}
 		}
-		
-		return XmlParseResult.SUCCESS;
 	}
-	
 	
 	public XmlParseResult setAdjacentPath(NodeList nList, int roomIndex) {
 		
@@ -320,9 +325,6 @@ public class XmlResponseUploadMap extends XmlResponse {
 	}
 	
 	public void putItemListIntoRoom (Room room, String itemList) {
-		
-		if(itemList == null)
-			return;
 		
 		//itemList="shovel:5-key:3"
 		String[] splitedToEachItem = itemList.split("-");
