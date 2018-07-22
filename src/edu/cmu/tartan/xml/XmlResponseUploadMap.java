@@ -71,14 +71,10 @@ public class XmlResponseUploadMap extends XmlResponse {
 	@Override
 	public XmlParseResult doYourJob(Document doc) {
 		
-		XmlParseResult result; 
-		
-		result = parsingRoomInfo(doc);
+		xmlParseResult = parsingRoomInfo(doc);
 
-		if(result.equals(XmlParseResult.SUCCESS))
-			result = parsingGoalInfo(doc);
-		
-		xmlParseResult = result; 
+		if(xmlParseResult.equals(XmlParseResult.SUCCESS))
+			xmlParseResult = parsingGoalInfo(doc);
 		
 		makeResponseXmlString(); 
 		
@@ -86,7 +82,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 		String mapXml = XmlWriter.convertDocumentToString(doc);
 		XmlWriter.saveXmlStringToFile("userMap.xml", mapXml);
 		
-		return result;
+		return xmlParseResult;
 	}
 	
 	

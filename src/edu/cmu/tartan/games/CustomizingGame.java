@@ -5,11 +5,7 @@ import java.util.ArrayList;
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.Player;
-import edu.cmu.tartan.action.Action;
-import edu.cmu.tartan.goal.DemoGoal;
 import edu.cmu.tartan.goal.GameGoal;
-import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.item.ItemLock;
 import edu.cmu.tartan.room.*;
 
 /**
@@ -31,13 +27,15 @@ public class CustomizingGame extends GameConfiguration {
 
     
     public void addRoom(Room room) {
-    	
     	rooms.add(room);
-    	
     }
     
     public Room getRoomIndex(int i) {
     	return rooms.get(i);
+    }
+    
+    public void addGoal(GameGoal goal) {
+    	goals.add(goal); 
     }
     
     /**
@@ -47,14 +45,16 @@ public class CustomizingGame extends GameConfiguration {
      */
     @Override
     public void configure(Game game) throws InvalidGameException {
-
         
         // Set the initial room
         Player player = new Player(rooms.get(0));
         game.setPlayer(player);
-        game.addGoal(new DemoGoal());
-
-        game.setDescription("Demo game rooms.");
+        
+        for (GameGoal gameGoal : goals) {
+        	game.addGoal(gameGoal);
+		}
+        
+        game.setDescription("Customizing Room(TODO)");
 
         if (!game.validate()) throw new InvalidGameException("Game improperly configured");
     }

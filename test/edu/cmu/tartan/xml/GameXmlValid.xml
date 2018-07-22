@@ -18,8 +18,9 @@
 		<room index="13" type="require" west="8" require_item="gold:11:2"/>
 		<!-- each room informations..  -->
 	</room_info>
-	<goal_info goal_cnt="2" >
-		<goal index="0" type="getItem" object="diamond" />
-		<goal index="1" type="roomVisit" object="6|11|12|13" />
+	<goal_info goal_cnt="3" >
+		<goal index="0" type="collect" object="diamond-shovel" />
+		<goal index="1" type="explore" object="6-11-12-13" />
+		<goal index="2" type="point" object="100" />
 	</goal_info>
 </message>

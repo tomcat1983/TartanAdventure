@@ -13,8 +13,6 @@ import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-
-import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.GameInterface;
 

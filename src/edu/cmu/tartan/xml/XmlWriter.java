@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
 import edu.cmu.tartan.GameInterface;
 
 public class XmlWriter {
-	
+
 	protected static GameInterface gameInterface = GameInterface.getInterface();
 
 	DocumentBuilderFactory dbFactory;
@@ -38,13 +38,13 @@ public class XmlWriter {
 	Document docWriting;
 	Element lastElement; 
 	Element parentElement; 
-	         
+
 	public void startWritingXml(XmlMessageType msgType, String sender, String receiver) throws ParserConfigurationException {
-	
+
 		dbFactory =  DocumentBuilderFactory.newInstance();
 		dBuilder = dbFactory.newDocumentBuilder();
 		docWriting = dBuilder.newDocument();
-		
+
 		rootElement("message");
 		setAttributeToElement("type", msgType.name());
 		setAttributeToElement("sender", sender);
@@ -59,7 +59,7 @@ public class XmlWriter {
 		parentElement = rootElement; 
 	}
 
-	
+
 	public void addChildElement(String elementName) {
 
 		Element childElement = docWriting.createElement(elementName);
@@ -67,32 +67,32 @@ public class XmlWriter {
 		parentElement = lastElement; 
 		lastElement = childElement;
 	}
-	
+
 	public void addBrotherElement(String elementName) {
-		
+
 		Element brotherElement = docWriting.createElement(elementName);
 		parentElement.appendChild(brotherElement);
 		lastElement = brotherElement;
 	}
-	
-	
+
+
 	public void setAttributeToElement(String attrName, String value) {
 
 		Attr attr = docWriting.createAttribute(attrName);
-	    attr.setValue(value);
-	    lastElement.setAttributeNode(attr);
+		attr.setValue(value);
+		lastElement.setAttributeNode(attr);
 	}
-	
+
 
 	public String convertDocumentToString() {
-		
+
 		return convertDocumentToString(docWriting); 
 	}
-	
+
 	public static String convertDocumentToString(Document doc) {
-		
+
 		String result = null;
-		
+
 		try {
 			TransformerFactory factory = TransformerFactory.newInstance();
 			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -100,7 +100,7 @@ public class XmlWriter {
 			Transformer transformer = factory.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			transformer = factory.newTransformer();
-			
+
 			StringWriter sw = new StringWriter();
 			transformer.transform(new DOMSource(doc), new StreamResult(sw));
 
@@ -110,40 +110,40 @@ public class XmlWriter {
 		} catch (TransformerException e) {
 			gameInterface.severe("TransformerException");
 		}
-		
+
 		return result; 
 	}
-	
+
 	public static void saveXmlStringToFile(String fileName, String xmlString) {
 
 		try (
-			PrintWriter out = new PrintWriter(fileName)) {
+				PrintWriter out = new PrintWriter(fileName)) {
 			out.print(xmlString);
 		} catch (FileNotFoundException e) {
 			gameInterface.severe("FileNotFoundException");
 		}
 	}
-	
+
 	public static void overWriteFile(String destFileName, String sourceFileName) throws IOException {
-       
+
 		File source = new File(sourceFileName);
-        File dest = new File(destFileName);
+		File dest = new File(destFileName);
 
-        //copy file conventional way using Stream
-        try (	InputStream is= new FileInputStream(source);
-        		OutputStream os= new FileOutputStream(dest);) {
-        	byte[] buffer = new byte[1024];
-        	int length;
+		//copy file conventional way using Stream
+		try (	InputStream is = new FileInputStream(source);
+				OutputStream os = new FileOutputStream(dest); ) {
+			byte[] buffer = new byte[1024];
+			int length;
 
-        	while ((length = is.read(buffer)) > 0) {
-        		os.write(buffer, 0, length);
-        	}
-        	close(is);
-        	close(os);
-        }
-        catch (Exception e) {
+			while ((length = is.read(buffer)) > 0) {
+				os.write(buffer, 0, length);
+			}
+			close(is);
+			close(os);
+		}
+		catch (Exception e) {
 			gameInterface.severe("Exception occur when overWriteFile from " + sourceFileName + " to " + destFileName);
-        }
+		}
 	}
 
 	public static void close(Closeable c) {
@@ -155,5 +155,5 @@ public class XmlWriter {
 		}
 	}
 
-	
+
 }
