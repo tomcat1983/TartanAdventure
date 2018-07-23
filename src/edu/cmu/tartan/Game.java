@@ -43,7 +43,9 @@ public class Game {
      */
     private Player player;
 
-    
+    /**
+     * The game execute
+     */
     private PlayerExecutionEngine playerExecutionEngine;
     /**
      * The name and description of the active game
@@ -60,7 +62,6 @@ public class Game {
      * Create and configure a new game.
      */
     public Game() {
-
         // Parse room from file
         this.scanner = new Scanner(System.in);
         this.interpreter = new PlayerInterpreter();

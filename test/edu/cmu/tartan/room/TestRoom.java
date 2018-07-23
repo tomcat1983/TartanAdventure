@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import edu.cmu.tartan.Player;
@@ -27,6 +28,14 @@ public class TestRoom {
 	private Room room1;
 	private Room room2;
 
+	@AfterEach
+	public void testItemallVisible() {
+		Item.getInstance("brick").isVisible();
+		Item.getInstance("key").isVisible();
+		Item.getInstance("lock").isVisible();
+	    Item.getInstance("gold").isVisible();
+	}
+	
 	public void makeSameRoom() {
 		room1 = new Room(FORK_ROOM_DESCRIPTION, FORK);
         room2 = new Room(FORK_ROOM_DESCRIPTION, FORK);
