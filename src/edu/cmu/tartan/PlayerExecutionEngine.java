@@ -290,11 +290,11 @@ public class PlayerExecutionEngine {
         }    	
     }
     
-    private void hasDirectObject(Action action, ActionExecutionUnit actionExecutionUnit) {
+    private boolean hasDirectObject(Action action, ActionExecutionUnit actionExecutionUnit) {
     	Item item = actionExecutionUnit.directObject();
         if(item==null) {
         	gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
-        	return;
+        	return false;
         }
     	
         switch(action) {
@@ -336,8 +336,9 @@ public class PlayerExecutionEngine {
                 break;
             default :
             	gameInterface.println("I don't know about " + action);
-            	break;
+            	return false;
         }
+        return true;
     }
     
     private void actionPut(Item itemToPut, Item itemToBePutInto) {
@@ -383,7 +384,7 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private void hasIndirectObject(Action action, ActionExecutionUnit actionExecutionUnit) {
+    private boolean hasIndirectObject(Action action, ActionExecutionUnit actionExecutionUnit) {
     	Item directItem = actionExecutionUnit.directObject();
         Item indirectItem = actionExecutionUnit.indirectObject();
         
@@ -396,11 +397,12 @@ public class PlayerExecutionEngine {
         		break;
         	default :
         		 gameInterface.println("There is not indirect object action");
-        		 break;
-        }    	
+        		 return false;
+        }
+        return true;
     }
     
-    private void hasNoObject(Action action) {
+    private boolean hasNoObject(Action action) {
     	switch(action) {
 	        case ACTION_LOOK:
 	            player.lookAround();
@@ -427,11 +429,12 @@ public class PlayerExecutionEngine {
 	            break;
 	        default:
 	        	gameInterface.println("There is not no object action");
-	        	break;
+	        	return false;
     	}
+    	return true;
     }
     
-    private void unknownObject(Action action) {
+    private boolean unknownObject(Action action) {
         switch(action) {
 	        case ACTION_PASS: 
 	            // intentionally blank
@@ -444,42 +447,38 @@ public class PlayerExecutionEngine {
 	            break;
 	        default:
 	        	gameInterface.println("It's unknown action");
-	        	break;
-        }    	
+	        	return false;
+        }
+        return true;
     }
 
     /**
      * Execute an action in the game. This method is where game play really occurs.
      * @param action The action to execute
+     * @return boolean if action handle to case return true, else return false. 
      */
-    public void executeAction(Action action, ActionExecutionUnit actionExecutionUnit) {
+    public boolean executeAction(Action action, ActionExecutionUnit actionExecutionUnit) {
 
         switch(action.type()) {
             // Handle navigation
             case TYPE_DIRECTIONAL:
-                player.move(action);
-                break;
+                return player.move(action);
             // A direct item is an item that is required for an action. These
             // items can be picked up, eaten, pushed
             // destroyed, etc.
             case TYPE_HASDIRECTOBJECT:
-            	hasDirectObject(action, actionExecutionUnit);
-            	break;
+            	return hasDirectObject(action, actionExecutionUnit);
             // Indirect objects are secondary objects that may be used by direct objects, such as a key for a lock
             case TYPE_HASINDIRECTOBJECT:
-            	hasIndirectObject(action, actionExecutionUnit);
-            	break;            	
+            	return hasIndirectObject(action, actionExecutionUnit);            	
             // Some actions do not require an object
             case TYPE_HASNOOBJECT:
-            	hasNoObject(action);
-                break;
+            	return hasNoObject(action);
             case TYPE_UNKNOWN: 
-            	unknownObject(action);
-                break;
+            	return unknownObject(action);
             default:
                 gameInterface.println("I don't understand that");
-                break;
+                return false;
         }
     }
-
 }
