@@ -71,6 +71,15 @@ class TestRoomDark {
 		}
 		assertFalse(room1.isDark());
 	}
+
+	@Test
+	void testWhenDeadMessage() {
+		makeSameRoomDark();
+		String death = "You're...die";
+		room1.setDeathMessage(death);
+		assertTrue(death.equals(room1.deathMessage()));
+	}
+
     
 	@Test
 	void testWhenConstructorSameRoomDark() {
