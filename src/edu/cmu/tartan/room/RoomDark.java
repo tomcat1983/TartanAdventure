@@ -52,13 +52,13 @@ public class RoomDark extends Room {
 	}
 	// getters & setters
 	public boolean isDark() {
-		return this.isDark;
+		return isDark;
 	}
 	public void setDark(boolean isDark) {
 		this.isDark = isDark;
 	}
 	public String deathMessage() {
-		return this.deathMessage;
+		return deathMessage;
 	}	
 	public void setDeathMessage(String message) {
 		this.deathMessage = message;
@@ -66,13 +66,12 @@ public class RoomDark extends Room {
 
 	@Override
 	public String toString() {
-
-		if(this.isDark) {
-			if(this.getPlayer().hasLuminousItem()) {
+		if(isDark) {
+			if(getPlayer().hasLuminousItem()) {
 				return super.toString();
 			}
 			else {
-				return this.darkDescription;
+				return darkDescription;
 			}
 		}
 		else {
@@ -82,19 +81,19 @@ public class RoomDark extends Room {
 	
 	@Override
 	public String description() {
-		if (this.isDark) {
-			if (this.getPlayer().hasLuminousItem()) {
-				String s = this.roomWasVisited ? this.shortDescription : this.description + "\n" + visibleItems();
-				this.roomWasVisited = true;
+		if (isDark) {
+			if (getPlayer().hasLuminousItem()) {
+				String s = roomWasVisited ? shortDescription : description + "\n" + visibleItems();
+				roomWasVisited = true;
 				return s;
 			} else {
-				String s = this.roomWasVisited ? this.darkShortDescription : this.darkDescription;
-				this.roomWasVisited = true;
+				String s = roomWasVisited ? darkShortDescription : darkDescription;
+				roomWasVisited = true;
 				return s;
 			}
 		} else {
-			String s = this.roomWasVisited ? this.shortDescription : this.description + "\n" + visibleItems();
-			this.roomWasVisited = true;
+			String s = roomWasVisited ? shortDescription : description + "\n" + visibleItems();
+			roomWasVisited = true;
 			return s;
 		}
 	}
