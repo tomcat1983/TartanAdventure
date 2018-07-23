@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Node;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 
@@ -18,7 +17,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.games.CustomizingGame;
 import edu.cmu.tartan.goal.GameCollectGoal;
@@ -404,7 +402,6 @@ class XmlParserSpy extends XmlParser {
 	
 	public XmlParserSpy() throws ParserConfigurationException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
