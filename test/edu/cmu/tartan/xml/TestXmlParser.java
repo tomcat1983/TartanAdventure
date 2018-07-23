@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Node;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -349,30 +350,27 @@ public class TestXmlParser {
 		assertTrue(roomRequire.requiredItem().equals(Item.getInstance("gold")));
 	}
 	
-	@Ignore
+	@Disabled("왜때문인지 모르겠는데 Eclipse 에서는 제대로 도는데 travis 에서는 안돈다. ")
 	@Test
 	public void testGoal1IsCollectType() throws ParserConfigurationException {
-		//왜때문인지 모르겠는데 Eclipse 에서는 제대로 도는데 travis 에서는 안돈다. 
 		//<goal index="0" type="collect" object="diamond-shovel" />
 		XmlParser parseXml = new XmlParser();
 		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
 		assertTrue(cGame.getGameGoalIndex(0) instanceof GameCollectGoal);
 	}
 	
-	@Ignore
+	@Disabled("왜때문인지 모르겠는데 Eclipse 에서는 제대로 도는데 travis 에서는 안돈다. ")
 	@Test
 	public void testGoal2IsExploreType() throws ParserConfigurationException {
-		//왜때문인지 모르겠는데 Eclipse 에서는 제대로 도는데 travis 에서는 안돈다. 
 		//<goal index="1" type="explore" object="6-11-12-13" />
 		XmlParser parseXml = new XmlParser();
 		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
 		assertTrue(cGame.getGameGoalIndex(1) instanceof GameExploreGoal);
 	}
 	
-	@Ignore
+	@Disabled("왜때문인지 모르겠는데 Eclipse 에서는 제대로 도는데 travis 에서는 안돈다. ")
 	@Test
 	public void testGoal3IsPointType() throws ParserConfigurationException {
-		//왜때문인지 모르겠는데 Eclipse 에서는 제대로 도는데 travis 에서는 안돈다. 
 		//<goal index="2" type="point" object="100" />
 		XmlParser parseXml = new XmlParser();
 		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
