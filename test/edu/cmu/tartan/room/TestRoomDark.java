@@ -15,15 +15,15 @@ class TestRoomDark {
 	private RoomDark room1;
     private RoomDark room2;
 
-    private void makeRoomDark() {
+    private void makeDifferntRoomDark() {
     	room1 = new RoomDark(DARK_ROOM_DESC1, DARK_ROOM_SHORT_DESC1, DARK_DESC, "blind!");
     	room2 = new RoomDark(DARK_ROOM_DESC2, DARK_ROOM_SHORT_DESC2, DARK_DESC, "blind!");
     }
     
 	@Test
 	void testWhenConstructorRoomDark() {
-		makeRoomDark();
-		assertTrue(room1.equals(room2));
+		makeDifferntRoomDark();
+		assertFalse(room1.equals(room2));
 	}
 
 }
