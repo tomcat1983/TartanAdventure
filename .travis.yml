@@ -2,10 +2,38 @@ language: java
 
 script:
   # other script steps might be done before running the actual analysis
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn org.pitest:pitest-maven:mutationCoverage; fi
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ -n $FTP_SITE ]; then find ./target/pit-reports -type f -exec curl -u $FTP_USER:$FTP_PW --ftp-create-dirs -T {} ftp://$FTP_SITE/sdet/{} \;; fi
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Dmaven.test.failure.ignore=false; fi
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn sonar:sonar -Dsonar.organization=$SONAR_ORG -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_LOGIN -Dsonar.projectKey=$SONAR_KEY -Dsonar.branch.name=$TRAVIS_BRANCH -Dsonar.sources=./src -Dsonar.exclusions=**/**.ucls,**/**.xml -Dsonar.tests=./test -Dsonar.language=java -Dsonar.java.binaries=. -Dsonar.java.libraries=./TartanAdventure_jar -Dsonar.java.test.binaries=./test -Dsonar.java.test.libraries=./TartanAdventure_jar  -Dsonar.test.exclusions=**/**.xml -Dsonar.verbose=true -Dsonar.dynamicAnalysis=reuseReports -Dsonar.junit.reportsPath=target/surefire-reports -Dsonar.java.coveragePlugin=jacoco -Dsonar.jacoco.reportPaths=target/jacoco.exec; fi
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn site; fi
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ -n $FTP_SITE ]; then find ./target/site -type f -exec curl -u $FTP_USER:$FTP_PW --ftp-create-dirs -T {} ftp://$FTP_SITE/sdet/{} \;; fi
+  - mvn org.pitest:pitest-maven:mutationCoverage;
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ -n $FTP_SITE ]; then
+      find ./target/pit-reports -type f -exec curl -u $FTP_USER:$FTP_PW --ftp-create-dirs -T {} ftp://$FTP_SITE/sdet/$TRAVIS_BRANCH/{} \;;
+    fi
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+      mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Dmaven.test.failure.ignore=false;
+    fi
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+      mvn sonar:sonar -Dsonar.organization=$SONAR_ORG
+                      -Dsonar.host.url=https://sonarcloud.io
+                      -Dsonar.login=$SONAR_LOGIN
+                      -Dsonar.projectKey=$SONAR_KEY
+                      -Dsonar.branch.name=$TRAVIS_BRANCH
+                      -Dsonar.sources=./src
+                      -Dsonar.exclusions=**/**.ucls,**/**.xml
+                      -Dsonar.tests=./test
+                      -Dsonar.language=java
+                      -Dsonar.java.binaries=.
+                      -Dsonar.java.libraries=./TartanAdventure_jar
+                      -Dsonar.java.test.binaries=./test
+                      -Dsonar.java.test.libraries=./TartanAdventure_jar
+                      -Dsonar.test.exclusions=**/**.xml
+                      -Dsonar.verbose=true
+                      -Dsonar.dynamicAnalysis=reuseReports
+                      -Dsonar.junit.reportsPath=target/surefire-reports
+                      -Dsonar.java.coveragePlugin=jacoco
+                      -Dsonar.jacoco.reportPaths=target/jacoco.exec;
+    fi
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+      mvn site;
+    fi
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ -n $FTP_SITE ]; then
+      find ./target/site -type f -exec curl -u $FTP_USER:$FTP_PW --ftp-create-dirs -T {} ftp://$FTP_SITE/sdet/$TRAVIS_BRANCH/{} \;;
+    fi
 #  - ls -al; ls -al ./target; ls -al ./target/site; ls -al ./target/pit-reports
