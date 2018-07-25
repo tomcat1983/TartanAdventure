@@ -45,11 +45,13 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
         gameInterface.println("Beep beep beep");
 
         // Only meltable things can be microwaved
-        if (this.installedItem instanceof Meltable) {
-            Item item = ((Meltable) this.installedItem).meltItem();
-            gameInterface.println("You melted the " + this.installedItem.detailDescription() + ", and it revealed a " + item.detailDescription() + "!");
-            this.installedItem = item;
-            return true;
+        if (installedItem instanceof Meltable) {
+            Item item = ((Meltable) installedItem).meltItem();
+            if(item!=null) {
+	            gameInterface.println("You melted the " + this.installedItem.detailDescription() + ", and it revealed a " + item.detailDescription() + "!");
+	            this.installedItem = item;
+	            return true;
+            }
         }
         return false;
     }

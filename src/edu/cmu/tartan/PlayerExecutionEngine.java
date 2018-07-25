@@ -115,17 +115,21 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private void actionInspect(Item item) {
+    private boolean actionInspect(Item item) {
     	if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
             if(item instanceof Inspectable) {
                 item.inspect();
+                return true;
             }
             else {
+            	// unreachabl, every item have a Inspectable.
                 gameInterface.println("You cannot inspect this item.");
+                return false;
             }
         }
         else {
 			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			return false;
         }
     }
     
@@ -157,56 +161,65 @@ public class PlayerExecutionEngine {
         return result;
     }
     
-    private void actionThrow(Item item) {
+    private boolean actionThrow(Item item) {
         if(player.hasItem(item)) {
             if(item instanceof Chuckable) {
                 gameInterface.println("Thrown.");
                 ((Chuckable)item).chuck();
                 player.drop(item);
                 player.currentRoom().putItem(item);
+                return true;
             }
             else {
                 gameInterface.println("You cannot throw this item.");
+                return false;
             }
         }
         else {
             gameInterface.println("You don't have that item to throw.");
+            return false;
         }    	
     }
     
-    private void actionShake(Item item) {
+    private boolean actionShake(Item item) {
         if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
             if(item instanceof Shakeable) {
                 ((Shakeable)item).shake();
                 if(((Shakeable)item).accident()) {
                     player.terminate();
                 }
+                return true;
             }
             else {
                 gameInterface.println("I don't know how to do that.");
+                return false;
             }
         }
         else {
 			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			return false;
         }
     }
     
-    private void actionEnable(Item item) {
+    private boolean actionEnable(Item item) {
         if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
             if(item instanceof Startable) {
                 gameInterface.println("Done.");
                 ((Startable)item).start();
+                return true;
             }
             else {
                 gameInterface.println("I don't know how to do that.");
+                return false;
             }
         }
         else {
 			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			return false;
         }	
     }
     
-    private void actionPush(Item item) {
+    private boolean actionPush(Item item) {
         if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
             if(item instanceof Pushable) {
 
@@ -221,13 +234,16 @@ public class PlayerExecutionEngine {
                 else if(player.currentRoom() instanceof RoomElevator) { // player is in an elevator
                     ((RoomElevator)player.currentRoom()).call(Integer.parseInt(item.getAliases()[0])-1);
                 }
+                return true;
             }
             else {
                 gameInterface.println("Nothing happens.");
+                return false;
             }
         }
         else {
 			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			return false;
         }    	
     }
     
@@ -315,22 +331,17 @@ public class PlayerExecutionEngine {
             case ACTION_DESTROY: 
                 return actionDestroy(item);
             case ACTION_INSPECT:
-                actionInspect(item);
-                break;
+                return actionInspect(item);
             case ACTION_DROP:
             	return actionDrop(item);
             case ACTION_THROW:
-            	actionThrow(item);
-                break;
+            	return actionThrow(item);
             case ACTION_SHAKE:
-            	actionShake(item);
-                break;
+            	return actionShake(item);
             case ACTION_ENABLE: 
-            	actionEnable(item);
-                break;
+            	return actionEnable(item);
             case ACTION_PUSH:
-            	actionPush(item);
-                break;
+            	return actionPush(item);
             case ACTION_DIG:
             	actionDig(item);
                 break;
