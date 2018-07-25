@@ -27,6 +27,8 @@ import java.util.LinkedList;
  * 1.0 March 2018 - initial version
  */
 public class Room implements Comparable {
+	public static final String DEFAULT_DESC = "You are in a room";
+	public static final String DEFAULT_SHORT_DESC = "Room";
 	/**
 	 * Game interface for game message and log
 	 */
@@ -56,7 +58,7 @@ public class Room implements Comparable {
      * Create a new room
      */
     public Room() {
-        this("You are in a room", "Room");
+        this(DEFAULT_DESC, DEFAULT_SHORT_DESC);
     }
 
     /**

@@ -271,7 +271,7 @@ public class Player {
      * Move version two based on an action
      * @param action the action associated with the move.
      */
-    public void move(Action action) {
+    public boolean move(Action action) {
 
         if(this.currentRoom instanceof RoomRequiredItem) {
             RoomRequiredItem room = (RoomRequiredItem)this.currentRoom;
@@ -285,12 +285,14 @@ public class Player {
         if(this.currentRoom.canMoveToRoomInDirection(action)) {
             Room nextRoom = this.currentRoom.getRoomForDirection(action);
             if(isNextRoomRequiredCheck(nextRoom)) {
-            	return;
+            	return false;
             }
             move(nextRoom);
+            return true;
         }
         else {
             gameInterface.println("You can't move that way.");
+            return false;
         }
     }
 
