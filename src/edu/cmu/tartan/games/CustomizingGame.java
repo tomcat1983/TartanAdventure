@@ -39,6 +39,10 @@ public class CustomizingGame extends GameConfiguration {
     	goals.add(goal); 
     }
     
+    public GameGoal getGameGoalIndex(int i) {
+    	return goals.get(i);
+    }
+    
     /**
      * Configure the game
      * @param game the Game object that will manage exectuion
