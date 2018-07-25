@@ -43,14 +43,14 @@ public class PlayerExecutionEngine {
      */
     private Item containerForItem(Item item) {
         for(Item i : player.currentRoom().getItems()) {
-            if (i instanceof Hostable && (item == ((Hostable)i).installedItem()) && item.isVisible()) {
+            if (i instanceof Hostable && (item.equals(((Hostable)i).installedItem())) && item.isVisible()) {
                     return i;
             }
         }
         return null;
     }
 	
-    private void actionPickup(Item item) {
+    private boolean actionPickup(Item item) {
         Item container = null;
         if(player.currentRoom().hasItem(item)) {
             if(item instanceof Holdable) {
@@ -59,29 +59,32 @@ public class PlayerExecutionEngine {
                 player.currentRoom().remove(item);
                 player.pickup(item);
                 player.score( ((Holdable)item).value());
+                return true;
             }
             else {
                 gameInterface.println("You cannot pick up this item.");
+                return false;
             }
         }
         else if((container = containerForItem(item)) != null) {
-
         	gameInterface.println(GamePlayMessage.TAKEN);
             ((Hostable)container).uninstall(item);
             player.pickup(item);
             Holdable h = (Holdable) item;
             player.score(h.value());
+            return true;
         }
         else if(player.hasItem(item)) {
             gameInterface.println("You already have that item in your inventory.");
+            return false;
         }
         else {
-
 			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			return false;
         }    	
     }
     
-    private void actionDestroy(Item item) {
+    private boolean actionDestroy(Item item) {
         if (player.currentRoom().hasItem(item) || player.hasItem(item)) {
             if (item instanceof Destroyable) {
                 ((Destroyable) item).setDestroyMessage("Smashed.");
@@ -99,13 +102,16 @@ public class PlayerExecutionEngine {
                     player.currentRoom().putItem(((Hostable)item).installedItem());
                     ((Hostable)item).uninstall(((Hostable)item).installedItem());
                 }
+                return true;
             }
             else {
                 gameInterface.println("You cannot break this item.");
+                return false;
             }
         }
         else {
 			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			return false;
         }
     }
     
@@ -123,7 +129,8 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private void actionDrop(Item item) {
+    private boolean actionDrop(Item item) {
+    	boolean result = true;
     	if(player.hasItem(item)) {
             if(item instanceof Holdable) {
                 gameInterface.println("Dropped.");
@@ -131,18 +138,23 @@ public class PlayerExecutionEngine {
                 gameInterface.println("You Dropped '" +item.description() + "' costing you "
                         + item.value() + " points.");
                 player.currentRoom().putItem(item);
+                result = true;
             }
             else {
                 gameInterface.println("You cannot drop this item.");
+                result = false;
             }
         }
         else {
             gameInterface.println("You don't have that item to drop.");
+            result = false;
         }
         if(player.currentRoom() instanceof RoomRequiredItem) {
             RoomRequiredItem r = (RoomRequiredItem)player.currentRoom();
             r.playerDidDropRequiredItem();
+            result = true;
         }
+        return result;
     }
     
     private void actionThrow(Item item) {
@@ -299,17 +311,14 @@ public class PlayerExecutionEngine {
     	
         switch(action) {
             case ACTION_PICKUP:
-            	actionPickup(item);
-                break;
+            	return actionPickup(item);
             case ACTION_DESTROY: 
-                actionDestroy(item);
-                break;
+                return actionDestroy(item);
             case ACTION_INSPECT:
                 actionInspect(item);
                 break;
             case ACTION_DROP:
-            	actionDrop(item);
-                break;
+            	return actionDrop(item);
             case ACTION_THROW:
             	actionThrow(item);
                 break;
