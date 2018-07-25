@@ -15,14 +15,18 @@ import edu.cmu.tartan.item.ItemBrick;
 import edu.cmu.tartan.item.ItemButton;
 import edu.cmu.tartan.item.ItemClayPot;
 import edu.cmu.tartan.item.ItemDocument;
+import edu.cmu.tartan.item.ItemDynamite;
+import edu.cmu.tartan.item.ItemFolder;
 import edu.cmu.tartan.item.ItemFood;
 import edu.cmu.tartan.item.ItemKey;
 import edu.cmu.tartan.item.ItemMagicBox;
 import edu.cmu.tartan.item.ItemMicrowave;
 import edu.cmu.tartan.item.ItemSafe;
+import edu.cmu.tartan.item.ItemShovel;
 import edu.cmu.tartan.item.ItemVendingMachine;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomElevator;
+import edu.cmu.tartan.room.RoomExcavatable;
 import edu.cmu.tartan.room.RoomRequiredItem;
 import edu.cmu.tartan.room.TestRoom;
 
@@ -33,7 +37,7 @@ class TestPlayerExecutionEngine {
 	private Player player;
 	private PlayerExecutionEngine playerExecutionEngine;
 	private ActionExecutionUnit actionExecutionUnit;
-
+	
 	@BeforeEach
 	void beforeEach() {
 		interpreter = new PlayerInterpreter();
@@ -290,6 +294,116 @@ class TestPlayerExecutionEngine {
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
     	
     	action = interpreter.interpretString("push 4", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	}
+	
+	@Test
+	void testWhenexecuteActionCallWithDirectObjectActionDig() {
+		ItemShovel shovel = (ItemShovel) Item.getInstance("shovel");
+		room1.putItem(shovel);
+		player.grabItem(shovel);
+		// Dig
+    	Action action = interpreter.interpretString("dig shovel", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	
+    	RoomExcavatable romm2 = new RoomExcavatable("Shovel","digdig","^~~~^");
+    	player = new Player(romm2);
+    	player.grabItem(shovel);
+    	playerExecutionEngine = new PlayerExecutionEngine(player);
+    	action = interpreter.interpretString("dig shovel", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));	
+	}
+	
+	@Test
+	void testWhenexecuteActionCallWithDirectObjectActionEat() {
+		ItemFood food = (ItemFood) Item.getInstance("food");
+    	Action action = interpreter.interpretString("eat food", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+		room1.putItem(food);
+    	action = interpreter.interpretString("eat food", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
+    	RoomExcavatable romm2 = new RoomExcavatable("Shovel","digdig","^~~~^");
+    	player = new Player(romm2);
+		player.grabItem(food);
+		player.grabItem(mbox);
+		playerExecutionEngine = new PlayerExecutionEngine(player);
+    	action = interpreter.interpretString("eat food", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	action = interpreter.interpretString("eat pit", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	
+//    	ItemShovel shovel = (ItemShovel) Item.getInstance("shovel");
+//    	player.grabItem(shovel);
+//    	action = interpreter.interpretString("eat shovel", actionExecutionUnit);
+//    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	}
+
+	@Test
+	void testWhenexecuteActionCallWithDirectObjectActionOpen() {
+        ItemSafe safe = (ItemSafe)Item.getInstance("safe");
+        safe.setInspectMessage("This safe appears to require a 4 digit PIN number.");
+        safe.setPIN(9292);
+
+        ItemDocument document = (ItemDocument) Item.getInstance("document");
+        document.setInspectMessage("The document is encrypted with a cipher. The cryptographers at the CIA will need to decrypt it.");
+        safe.install(document);
+        document.setVisible(false);
+
+        ItemFolder folder = (ItemFolder)Item.getInstance("folder");
+        folder.setOpenMessage("Good for you");
+    	room1.putItem(safe);
+    	room1.putItem(folder);
+    	
+    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
+    	player.grabItem(mbox);
+    	//room1.putItem(document);
+        
+    	// open
+//    	Action action = interpreter.interpretString("open safe", actionExecutionUnit);
+//    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	Action action = interpreter.interpretString("open folder", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	action = interpreter.interpretString("open pit", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	document.setVisible(true);
+    	action = interpreter.interpretString("open document", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	
+    	action = interpreter.interpretString("open key", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	}
+
+	@Test
+	void testWhenexecuteActionCallWithDirectObjectActionExplode() {
+        ItemDynamite dynamite = (ItemDynamite)Item.getInstance("dynamite");
+        ItemDocument document = (ItemDocument) Item.getInstance("document");
+        document.setInspectMessage("The document is encrypted with a cipher. The cryptographers at the CIA will need to decrypt it.");
+
+    	room1.putItem(dynamite);
+    	room1.putItem(document);
+    	
+    	Action action = interpreter.interpretString("detonate document", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	action = interpreter.interpretString("detonate key", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	action = interpreter.interpretString("detonate dynamite", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	
+    	action = interpreter.interpretString("east room2", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	
+    	Room room2 = new Room();
+    	dynamite.setRelatedRoom(room2);
+    	room1.setAdjacentRoom(action, room2);
+    	action = interpreter.interpretString("detonate dynamite", actionExecutionUnit);
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	}
 }
