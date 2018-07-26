@@ -45,14 +45,11 @@ class TestPlayerExecutionEngine {
 		player = new Player(room1);
 		playerExecutionEngine = new PlayerExecutionEngine(player);
 		actionExecutionUnit = new ActionExecutionUnit(null, null);
+		
+		Item.getInstance("pot").setVisible(true);
+		Item.getInstance("key").setVisible(true);
 	}
 	
-	@AfterEach
-	public void testItemallVisible() {
-		Item.getInstance("pot").isVisible();
-		Item.getInstance("key").isVisible();
-	}
-
 	@Test
 	void testWhenexecuteActionCallWithDestoryWithDirectObjectAnd() {
 		ItemKey keyItem = (ItemKey) Item.getInstance("key");
@@ -156,12 +153,13 @@ class TestPlayerExecutionEngine {
 	
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionInspect() {
-    	ItemKey key = (ItemKey) Item.getInstance("key");
-    	room1.putItem(key);
-
     	// Inspect
     	Action action = interpreter.interpretString("inspect pot", actionExecutionUnit);
     	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+		ItemKey key = (ItemKey) Item.getInstance("key");
+		key.setInspectMessage("It's a key.");
+    	room1.putItem(key);
 
     	action = interpreter.interpretString("inspect key", actionExecutionUnit);
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));

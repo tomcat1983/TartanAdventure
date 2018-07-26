@@ -8,6 +8,7 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 
 import java.util.Map;
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,13 +27,18 @@ import java.util.LinkedList;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Room implements Comparable {
+public class Room implements Comparable, Serializable {
+	/**
+	 * Version for serialization
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public static final String DEFAULT_DESC = "You are in a room";
 	public static final String DEFAULT_SHORT_DESC = "Room";
 	/**
 	 * Game interface for game message and log
 	 */
-	protected GameInterface gameInterface = GameInterface.getInterface();
+	protected static final transient GameInterface gameInterface = GameInterface.getInterface();
 
     // Room description
     protected String description;

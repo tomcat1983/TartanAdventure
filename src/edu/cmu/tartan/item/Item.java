@@ -6,6 +6,7 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 import edu.cmu.tartan.room.Room;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -16,8 +17,13 @@ import java.util.LinkedList;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Item implements Comparable, Inspectable, Visible, Valuable {
-	protected static GameInterface gameInterface = GameInterface.getInterface();
+public class Item implements Comparable, Inspectable, Visible, Valuable, Serializable {
+	/**
+	 * Version for serialization
+	 */
+	private static final long serialVersionUID = 1L;
+
+	protected static final transient GameInterface gameInterface = GameInterface.getInterface();
 	
 	private static final String UNKNOWN = "unknown"; 
 

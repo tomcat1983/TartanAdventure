@@ -29,10 +29,10 @@ public class TestRoom {
 
 	@AfterEach
 	public void testItemallVisible() {
-		Item.getInstance("brick").isVisible();
-		Item.getInstance("key").isVisible();
-		Item.getInstance("lock").isVisible();
-	    Item.getInstance("gold").isVisible();
+		Item.getInstance("brick").setVisible(true);
+		Item.getInstance("key").setVisible(true);
+		Item.getInstance("lock").setVisible(true);
+	    Item.getInstance("gold").setVisible(true);
 	}
 	
 	public void makeSameRoom() {

@@ -5,9 +5,9 @@ package edu.cmu.tartan;
  */
 public class Main {
 	public static void main(String[] args) {
-		Game game = new Game();
-		if(game.configureGame()) {
-			game.start();			
+		LocalGame localGame = new LocalGame();
+		if(localGame.configureGame()) {
+			localGame.start();			
 		}
 	}
 }

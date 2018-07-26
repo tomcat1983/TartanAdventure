@@ -10,6 +10,7 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.*;
 
 import java.util.Map;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +22,17 @@ import java.util.List;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Player {
+public class Player implements Serializable {
+
+	/**
+	 * Version for serialization
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Game interface for game message and log
 	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
+	private static final transient GameInterface gameInterface = GameInterface.getInterface();
 
 	/**
      * The player's score.

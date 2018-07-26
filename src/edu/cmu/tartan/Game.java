@@ -8,6 +8,7 @@ import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -22,22 +23,27 @@ import java.util.List;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Game {
+public abstract class Game implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Game interface for game message and log
 	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
-
+	protected static final transient GameInterface gameInterface = GameInterface.getInterface();
+ 
     /**
      * Reads input from the command line.
      */
-    private Scanner scanner;
+    private transient Scanner scanner;
 
     /**
      * Attempt to interpret input more flexibly.
      */
-    private PlayerInterpreter interpreter;
+    private transient PlayerInterpreter interpreter;
     /**
      * The player for the game
      */
@@ -46,7 +52,7 @@ public class Game {
     /**
      * The game execute
      */
-    private PlayerExecutionEngine playerExecutionEngine;
+    private transient PlayerExecutionEngine playerExecutionEngine;
     /**
      * The name and description of the active game
      */
