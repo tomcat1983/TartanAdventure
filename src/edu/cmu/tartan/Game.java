@@ -33,17 +33,17 @@ public abstract class Game implements Serializable {
 	/**
 	 * Game interface for game message and log
 	 */
-	protected static final GameInterface gameInterface = GameInterface.getInterface();
+	protected static final transient GameInterface gameInterface = GameInterface.getInterface();
  
     /**
      * Reads input from the command line.
      */
-    private Scanner scanner;
+    private transient Scanner scanner;
 
     /**
      * Attempt to interpret input more flexibly.
      */
-    private PlayerInterpreter interpreter;
+    private transient PlayerInterpreter interpreter;
     /**
      * The player for the game
      */
@@ -52,7 +52,7 @@ public abstract class Game implements Serializable {
     /**
      * The game execute
      */
-    private PlayerExecutionEngine playerExecutionEngine;
+    private transient PlayerExecutionEngine playerExecutionEngine;
     /**
      * The name and description of the active game
      */
