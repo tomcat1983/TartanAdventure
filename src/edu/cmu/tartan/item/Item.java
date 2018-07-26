@@ -46,7 +46,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
     /*
      *  items can open rooms, call elevators, etc (e.g., an ItemButton instance)
      */
-    Room relatedRoom;
+    transient Room relatedRoom;
     
     /*
      *  items can also affect other items, 

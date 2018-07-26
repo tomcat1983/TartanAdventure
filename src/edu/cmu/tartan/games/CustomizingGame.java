@@ -52,7 +52,7 @@ public class CustomizingGame extends GameConfiguration {
     public void configure(Game game) throws InvalidGameException {
         
         // Set the initial room
-        Player player = new Player(rooms.get(0));
+        Player player = new Player(rooms.get(0), Player.DEFAULT_USER_NAME);
         game.setPlayer(player);
         
         for (GameGoal gameGoal : goals) {

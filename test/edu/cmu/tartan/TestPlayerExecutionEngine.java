@@ -42,7 +42,7 @@ class TestPlayerExecutionEngine {
 	void beforeEach() {
 		interpreter = new PlayerInterpreter();
 		room1 = new Room(TestRoom.FORK_ROOM_DESCRIPTION, TestRoom.FORK);
-		player = new Player(room1);
+		player = new Player(room1, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);
 		actionExecutionUnit = new ActionExecutionUnit(null, null);
 		
@@ -145,7 +145,7 @@ class TestPlayerExecutionEngine {
     	
     	RoomRequiredItem room2 = new RoomRequiredItem("You are in the room that required food", "Required",
                 "pit", "Warning you need key", mbox);
-    	player = new Player(room2);
+    	player = new Player(room2, Player.DEFAULT_USER_NAME);
     	playerExecutionEngine = new PlayerExecutionEngine(player);
     	action = interpreter.interpretString("drop pit", actionExecutionUnit);
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
@@ -279,7 +279,7 @@ class TestPlayerExecutionEngine {
         ArrayList<Integer> restrictedFloors = new ArrayList<>();
         restrictedFloors.add(2);
         elevator.setRestrictedFloors(restrictedFloors);
-        player = new Player(elevator);
+        player = new Player(elevator, Player.DEFAULT_USER_NAME);
         playerExecutionEngine = new PlayerExecutionEngine(player);
     	
     	action = interpreter.interpretString("push 1", actionExecutionUnit);
@@ -305,7 +305,7 @@ class TestPlayerExecutionEngine {
     	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
     	
     	RoomExcavatable romm2 = new RoomExcavatable("Shovel","digdig","^~~~^");
-    	player = new Player(romm2);
+    	player = new Player(romm2, Player.DEFAULT_USER_NAME);
     	player.grabItem(shovel);
     	playerExecutionEngine = new PlayerExecutionEngine(player);
     	action = interpreter.interpretString("dig shovel", actionExecutionUnit);
@@ -324,7 +324,7 @@ class TestPlayerExecutionEngine {
 
     	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
     	RoomExcavatable romm2 = new RoomExcavatable("Shovel","digdig","^~~~^");
-    	player = new Player(romm2);
+    	player = new Player(romm2, Player.DEFAULT_USER_NAME);
 		player.grabItem(food);
 		player.grabItem(mbox);
 		playerExecutionEngine = new PlayerExecutionEngine(player);

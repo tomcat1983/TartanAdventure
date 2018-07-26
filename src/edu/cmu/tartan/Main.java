@@ -5,7 +5,7 @@ package edu.cmu.tartan;
  */
 public class Main {
 	public static void main(String[] args) {
-		LocalGame localGame = new LocalGame();
+		LocalGame localGame = new LocalGame(Player.DEFAULT_USER_NAME);
 		if(localGame.configureGame()) {
 			localGame.start();			
 		}

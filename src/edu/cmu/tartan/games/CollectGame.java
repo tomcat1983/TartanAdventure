@@ -66,7 +66,7 @@ public class CollectGame extends GameConfiguration {
         goalItems.add("gold");
 
         // Create the game's player and install the goals
-        Player player = new Player(start);
+        Player player = new Player(start, Player.DEFAULT_USER_NAME);
         game.setPlayer(player);
         game.addGoal(new GameCollectGoal(goalItems, player));
 
