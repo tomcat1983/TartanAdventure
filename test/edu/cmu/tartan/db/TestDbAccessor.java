@@ -14,6 +14,8 @@ public class TestDbAccessor {
 	String userId = "gildong";
 	String userPw = "1234";
 	String userType = "0";
+	String url = "/Users/zhyuny/Downloads/sqlite/db/TartanAdventure.db";
+	
 
 	@BeforeEach
 	public void beforeTest() {
@@ -25,7 +27,7 @@ public class TestDbAccessor {
 	public void testTrueWhenCreateNewDatabase() {
 
 		// Given
-		File file = new File("/Users/zhyuny/Downloads/sqlite/db/TartanAdventure.db");
+		File file = new File(url);
 		if (file.exists())
 			file.delete();
 
@@ -41,7 +43,7 @@ public class TestDbAccessor {
 	public void testFalseWhenCreateNewDatabase() {
 
 		// Given
-		File file = new File("/Users/zhyuny/Downloads/sqlite/db/TartanAdventure.db");
+		File file = new File(url);
 		if (!file.exists()) {
 			dbAccessor.createNewDatabase();
 		}
@@ -57,7 +59,7 @@ public class TestDbAccessor {
 	@Test
 	public void testTrueWhenCreateNewTable() {
 		// Given
-		File file = new File("/Users/zhyuny/Downloads/sqlite/db/TartanAdventure.db");
+		File file = new File(url);
 		if (file.exists()) {
 			file.delete();
 		}
@@ -74,7 +76,7 @@ public class TestDbAccessor {
 	public void testNotZeroWhenInsert() {
 
 		// Given
-		File file = new File("/Users/zhyuny/Downloads/sqlite/db/TartanAdventure.db");
+		File file = new File(url);
 		if (file.exists()) {
 			file.delete();
 		}
@@ -93,7 +95,7 @@ public class TestDbAccessor {
 	public void testTrueWhenGetPassword() {
 
 		// Given
-		File file = new File("/Users/zhyuny/Downloads/sqlite/db/TartanAdventure.db");
+		File file = new File(url);
 		if (file.exists()) {
 			file.delete();
 		}
@@ -112,7 +114,7 @@ public class TestDbAccessor {
 	public void testTrueWhenDelete() {
 
 		// Given
-		File file = new File("/Users/zhyuny/Downloads/sqlite/db/TartanAdventure.db");
+		File file = new File(url);
 		if (file.exists()) {
 			file.delete();
 		}
