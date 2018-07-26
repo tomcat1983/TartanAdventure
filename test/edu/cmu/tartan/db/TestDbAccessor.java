@@ -1,6 +1,6 @@
 package edu.cmu.tartan.db;
 
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
