@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import edu.cmu.tartan.Player;
+
 class TestRandom {
 	
 	void assertTrue(String message, boolean bool) {
@@ -335,7 +337,7 @@ class TestRandom {
         edu.cmu.tartan.item.Item[] itemArray28 = new edu.cmu.tartan.item.Item[] { itemFood18, itemMicrowave27 };
         java.util.ArrayList<edu.cmu.tartan.item.Item> itemList29 = new java.util.ArrayList<edu.cmu.tartan.item.Item>();
         boolean boolean30 = java.util.Collections.addAll((java.util.Collection<edu.cmu.tartan.item.Item>) itemList29, itemArray28);
-        edu.cmu.tartan.Player player31 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured2, (java.util.List<edu.cmu.tartan.item.Item>) itemList29);
+        edu.cmu.tartan.Player player31 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured2, (java.util.List<edu.cmu.tartan.item.Item>) itemList29,Player.DEFAULT_USER_NAME);
         edu.cmu.tartan.room.Room room32 = player31.currentRoom();
         assertTrue("'" + action7 + "' != '" + edu.cmu.tartan.action.Action.ACTION_EXPLODE + "'", action7.equals(edu.cmu.tartan.action.Action.ACTION_EXPLODE));
         assertTrue("'" + action16 + "' != '" + edu.cmu.tartan.action.Action.ACTION_EXPLODE + "'", action16.equals(edu.cmu.tartan.action.Action.ACTION_EXPLODE));
@@ -395,7 +397,7 @@ class TestRandom {
         edu.cmu.tartan.item.Item[] itemArray28 = new edu.cmu.tartan.item.Item[] { itemFood18, itemMicrowave27 };
         java.util.ArrayList<edu.cmu.tartan.item.Item> itemList29 = new java.util.ArrayList<edu.cmu.tartan.item.Item>();
         boolean boolean30 = java.util.Collections.addAll((java.util.Collection<edu.cmu.tartan.item.Item>) itemList29, itemArray28);
-        edu.cmu.tartan.Player player31 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured2, (java.util.List<edu.cmu.tartan.item.Item>) itemList29);
+        edu.cmu.tartan.Player player31 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured2, (java.util.List<edu.cmu.tartan.item.Item>) itemList29,Player.DEFAULT_USER_NAME);
         java.lang.String[] strArray38 = new java.lang.String[] { "", "hi!" };
         edu.cmu.tartan.item.ItemBrick itemBrick39 = new edu.cmu.tartan.item.ItemBrick("", "hi!", strArray38);
         java.lang.String[] strArray40 = itemBrick39.getAliases();
@@ -482,7 +484,7 @@ class TestRandom {
         edu.cmu.tartan.action.Action action9 = edu.cmu.tartan.action.Action.ACTION_EXPLODE;
         edu.cmu.tartan.room.RoomObscured roomObscured12 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
         roomObscured8.setOneWayAdjacentRoom(action9, (edu.cmu.tartan.room.Room) roomObscured12);
-        edu.cmu.tartan.Player player14 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12);
+        edu.cmu.tartan.Player player14 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12,Player.DEFAULT_USER_NAME);
         gameExploreGoal5.setPlayer(player14);
         edu.cmu.tartan.item.Item item16 = null;
         java.lang.String[] strArray23 = new java.lang.String[] { "", "hi!" };
@@ -520,7 +522,7 @@ class TestRandom {
         edu.cmu.tartan.action.Action action9 = edu.cmu.tartan.action.Action.ACTION_EXPLODE;
         edu.cmu.tartan.room.RoomObscured roomObscured12 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
         roomObscured8.setOneWayAdjacentRoom(action9, (edu.cmu.tartan.room.Room) roomObscured12);
-        edu.cmu.tartan.Player player14 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12);
+        edu.cmu.tartan.Player player14 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12,Player.DEFAULT_USER_NAME);
         gameExploreGoal5.setPlayer(player14);
         boolean boolean16 = player14.hasLuminousItem();
         assertNotNull(strArray2);
@@ -580,7 +582,7 @@ class TestRandom {
         edu.cmu.tartan.item.Item[] itemArray28 = new edu.cmu.tartan.item.Item[] { itemFood18, itemMicrowave27 };
         java.util.ArrayList<edu.cmu.tartan.item.Item> itemList29 = new java.util.ArrayList<edu.cmu.tartan.item.Item>();
         boolean boolean30 = java.util.Collections.addAll((java.util.Collection<edu.cmu.tartan.item.Item>) itemList29, itemArray28);
-        edu.cmu.tartan.Player player31 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured2, (java.util.List<edu.cmu.tartan.item.Item>) itemList29);
+        edu.cmu.tartan.Player player31 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured2, (java.util.List<edu.cmu.tartan.item.Item>) itemList29,Player.DEFAULT_USER_NAME);
         java.util.Map<edu.cmu.tartan.action.Action, java.lang.String> actionMap32 = roomObscured2.transitionMessages();
         java.lang.String str33 = roomObscured2.visibleItems();
         assertTrue("'" + action7 + "' != '" + edu.cmu.tartan.action.Action.ACTION_EXPLODE + "'", action7.equals(edu.cmu.tartan.action.Action.ACTION_EXPLODE));
@@ -764,7 +766,7 @@ class TestRandom {
         edu.cmu.tartan.action.Action action3 = edu.cmu.tartan.action.Action.ACTION_EXPLODE;
         edu.cmu.tartan.room.RoomObscured roomObscured6 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
         roomObscured2.setOneWayAdjacentRoom(action3, (edu.cmu.tartan.room.Room) roomObscured6);
-        edu.cmu.tartan.Player player8 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured6);
+        edu.cmu.tartan.Player player8 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured6,Player.DEFAULT_USER_NAME);
         edu.cmu.tartan.action.Action action10 = edu.cmu.tartan.action.Action.ACTION_GO_WEST;
         roomObscured6.setAdjacentRoomTransitionMessageWithDelay("", action10, (int) ' ');
         assertTrue("'" + action3 + "' != '" + edu.cmu.tartan.action.Action.ACTION_EXPLODE + "'", action3.equals(edu.cmu.tartan.action.Action.ACTION_EXPLODE));
@@ -909,7 +911,7 @@ class TestRandom {
         edu.cmu.tartan.action.Action action9 = edu.cmu.tartan.action.Action.ACTION_EXPLODE;
         edu.cmu.tartan.room.RoomObscured roomObscured12 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
         roomObscured8.setOneWayAdjacentRoom(action9, (edu.cmu.tartan.room.Room) roomObscured12);
-        edu.cmu.tartan.Player player14 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12);
+        edu.cmu.tartan.Player player14 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12,Player.DEFAULT_USER_NAME);
         gameExploreGoal5.setPlayer(player14);
         player14.addPossiblePoints((int) (byte) 100);
         assertNotNull(strArray2);
@@ -981,7 +983,7 @@ class TestRandom {
         edu.cmu.tartan.action.Action action9 = edu.cmu.tartan.action.Action.ACTION_EXPLODE;
         edu.cmu.tartan.room.RoomObscured roomObscured12 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
         roomObscured8.setOneWayAdjacentRoom(action9, (edu.cmu.tartan.room.Room) roomObscured12);
-        edu.cmu.tartan.Player player14 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12);
+        edu.cmu.tartan.Player player14 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12,Player.DEFAULT_USER_NAME);
         gameExploreGoal5.setPlayer(player14);
         edu.cmu.tartan.room.RoomObscured roomObscured18 = new edu.cmu.tartan.room.RoomObscured("hi!", "");
         edu.cmu.tartan.room.RoomObscured roomObscured22 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
@@ -1000,7 +1002,7 @@ class TestRandom {
         edu.cmu.tartan.item.Item[] itemArray44 = new edu.cmu.tartan.item.Item[] { itemFood34, itemMicrowave43 };
         java.util.ArrayList<edu.cmu.tartan.item.Item> itemList45 = new java.util.ArrayList<edu.cmu.tartan.item.Item>();
         boolean boolean46 = java.util.Collections.addAll((java.util.Collection<edu.cmu.tartan.item.Item>) itemList45, itemArray44);
-        edu.cmu.tartan.Player player47 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured18, (java.util.List<edu.cmu.tartan.item.Item>) itemList45);
+        edu.cmu.tartan.Player player47 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured18, (java.util.List<edu.cmu.tartan.item.Item>) itemList45,Player.DEFAULT_USER_NAME);
         java.lang.String[] strArray54 = new java.lang.String[] { "", "hi!" };
         edu.cmu.tartan.item.ItemBrick itemBrick55 = new edu.cmu.tartan.item.ItemBrick("", "hi!", strArray54);
         java.lang.String[] strArray56 = itemBrick55.getAliases();
@@ -1057,7 +1059,7 @@ class TestRandom {
         edu.cmu.tartan.action.Action action4 = edu.cmu.tartan.action.Action.ACTION_EXPLODE;
         edu.cmu.tartan.room.RoomObscured roomObscured7 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
         roomObscured3.setOneWayAdjacentRoom(action4, (edu.cmu.tartan.room.Room) roomObscured7);
-        edu.cmu.tartan.Player player9 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured7);
+        edu.cmu.tartan.Player player9 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured7,Player.DEFAULT_USER_NAME);
         java.lang.String str10 = roomObscured7.description();
         edu.cmu.tartan.action.Action action11 = room0.getDirectionForRoom((edu.cmu.tartan.room.Room) roomObscured7);
         assertTrue("'" + action4 + "' != '" + edu.cmu.tartan.action.Action.ACTION_EXPLODE + "'", action4.equals(edu.cmu.tartan.action.Action.ACTION_EXPLODE));
@@ -1165,7 +1167,7 @@ class TestRandom {
         edu.cmu.tartan.action.Action action10 = edu.cmu.tartan.action.Action.ACTION_EXPLODE;
         edu.cmu.tartan.room.RoomObscured roomObscured13 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
         roomObscured9.setOneWayAdjacentRoom(action10, (edu.cmu.tartan.room.Room) roomObscured13);
-        edu.cmu.tartan.Player player15 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured13);
+        edu.cmu.tartan.Player player15 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured13,Player.DEFAULT_USER_NAME);
         gameExploreGoal6.setPlayer(player15);
         edu.cmu.tartan.room.RoomObscured roomObscured19 = new edu.cmu.tartan.room.RoomObscured("hi!", "");
         edu.cmu.tartan.room.RoomObscured roomObscured23 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
@@ -1184,7 +1186,7 @@ class TestRandom {
         edu.cmu.tartan.item.Item[] itemArray45 = new edu.cmu.tartan.item.Item[] { itemFood35, itemMicrowave44 };
         java.util.ArrayList<edu.cmu.tartan.item.Item> itemList46 = new java.util.ArrayList<edu.cmu.tartan.item.Item>();
         boolean boolean47 = java.util.Collections.addAll((java.util.Collection<edu.cmu.tartan.item.Item>) itemList46, itemArray45);
-        edu.cmu.tartan.Player player48 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured19, (java.util.List<edu.cmu.tartan.item.Item>) itemList46);
+        edu.cmu.tartan.Player player48 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured19, (java.util.List<edu.cmu.tartan.item.Item>) itemList46, Player.DEFAULT_USER_NAME);
         java.lang.String[] strArray55 = new java.lang.String[] { "", "hi!" };
         edu.cmu.tartan.item.ItemBrick itemBrick56 = new edu.cmu.tartan.item.ItemBrick("", "hi!", strArray55);
         java.lang.String[] strArray57 = itemBrick56.getAliases();
@@ -1248,7 +1250,7 @@ class TestRandom {
         edu.cmu.tartan.action.Action action3 = edu.cmu.tartan.action.Action.ACTION_EXPLODE;
         edu.cmu.tartan.room.RoomObscured roomObscured6 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
         roomObscured2.setOneWayAdjacentRoom(action3, (edu.cmu.tartan.room.Room) roomObscured6);
-        edu.cmu.tartan.Player player8 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured6);
+        edu.cmu.tartan.Player player8 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured6,Player.DEFAULT_USER_NAME);
         edu.cmu.tartan.action.Action action9 = edu.cmu.tartan.action.Action.ACTION_DROP;
         edu.cmu.tartan.room.RoomObscured roomObscured12 = new edu.cmu.tartan.room.RoomObscured("hi!", "");
         edu.cmu.tartan.room.RoomObscured roomObscured16 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
@@ -1267,9 +1269,9 @@ class TestRandom {
         edu.cmu.tartan.item.Item[] itemArray38 = new edu.cmu.tartan.item.Item[] { itemFood28, itemMicrowave37 };
         java.util.ArrayList<edu.cmu.tartan.item.Item> itemList39 = new java.util.ArrayList<edu.cmu.tartan.item.Item>();
         boolean boolean40 = java.util.Collections.addAll((java.util.Collection<edu.cmu.tartan.item.Item>) itemList39, itemArray38);
-        edu.cmu.tartan.Player player41 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12, (java.util.List<edu.cmu.tartan.item.Item>) itemList39);
+        edu.cmu.tartan.Player player41 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12, (java.util.List<edu.cmu.tartan.item.Item>) itemList39,Player.DEFAULT_USER_NAME);
         java.util.List<edu.cmu.tartan.item.Item> itemList42 = null;
-        edu.cmu.tartan.Player player43 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12, itemList42);
+        edu.cmu.tartan.Player player43 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured12, itemList42, Player.DEFAULT_USER_NAME);
         roomObscured6.setOneWayAdjacentRoom(action9, (edu.cmu.tartan.room.Room) roomObscured12);
         assertTrue("'" + action3 + "' != '" + edu.cmu.tartan.action.Action.ACTION_EXPLODE + "'", action3.equals(edu.cmu.tartan.action.Action.ACTION_EXPLODE));
         assertTrue("'" + action9 + "' != '" + edu.cmu.tartan.action.Action.ACTION_DROP + "'", action9.equals(edu.cmu.tartan.action.Action.ACTION_DROP));
@@ -1345,7 +1347,7 @@ class TestRandom {
         roomObscured22.setAdjacentRoomTransitionMessageWithDelay("hi!", action27, (int) '4');
         itemClayPot8.setRelatedRoom((edu.cmu.tartan.room.Room) roomObscured22);
         java.lang.String str35 = roomObscured22.visibleItems();
-        edu.cmu.tartan.Player player36 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured22);
+        edu.cmu.tartan.Player player36 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured22,Player.DEFAULT_USER_NAME);
         assertNotNull(strArray6);
         assertTrue("'" + action15 + "' != '" + edu.cmu.tartan.action.Action.ACTION_EXPLODE + "'", action15.equals(edu.cmu.tartan.action.Action.ACTION_EXPLODE));
         assertNotNull(strArray16);
@@ -1381,7 +1383,7 @@ class TestRandom {
         edu.cmu.tartan.action.Action action48 = edu.cmu.tartan.action.Action.ACTION_EXPLODE;
         edu.cmu.tartan.room.RoomObscured roomObscured51 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
         roomObscured47.setOneWayAdjacentRoom(action48, (edu.cmu.tartan.room.Room) roomObscured51);
-        edu.cmu.tartan.Player player53 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured51);
+        edu.cmu.tartan.Player player53 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured51, Player.DEFAULT_USER_NAME);
         gameExploreGoal44.setPlayer(player53);
         boolean boolean55 = itemClayPot37.equals((java.lang.Object) gameExploreGoal44);
         itemSafe28.install((edu.cmu.tartan.item.Item) itemClayPot37);
@@ -1424,7 +1426,7 @@ class TestRandom {
         edu.cmu.tartan.action.Action action13 = edu.cmu.tartan.action.Action.ACTION_EXPLODE;
         edu.cmu.tartan.room.RoomObscured roomObscured16 = new edu.cmu.tartan.room.RoomObscured("hi!", "hi!");
         roomObscured12.setOneWayAdjacentRoom(action13, (edu.cmu.tartan.room.Room) roomObscured16);
-        edu.cmu.tartan.Player player18 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured16);
+        edu.cmu.tartan.Player player18 = new edu.cmu.tartan.Player((edu.cmu.tartan.room.Room) roomObscured16, Player.DEFAULT_USER_NAME);
         gameExploreGoal9.setPlayer(player18);
         edu.cmu.tartan.goal.GameCollectGoal gameCollectGoal20 = new edu.cmu.tartan.goal.GameCollectGoal((java.util.List<java.lang.String>) strList2, player18);
         java.lang.Boolean boolean21 = gameCollectGoal20.isAchieved();

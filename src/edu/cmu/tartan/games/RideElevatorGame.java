@@ -85,7 +85,7 @@ public class RideElevatorGame extends GameConfiguration {
         restrictedFloors.add(2);
         elevator.setRestrictedFloors(restrictedFloors);
 
-        Player player = new Player(elevator);
+        Player player = new Player(elevator, Player.DEFAULT_USER_NAME);
         game.setPlayer(player);
         game.addGoal(new GamePointsGoal(10, player));
 
