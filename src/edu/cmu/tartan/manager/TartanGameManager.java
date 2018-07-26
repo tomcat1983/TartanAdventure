@@ -17,6 +17,8 @@ public class TartanGameManager implements Runnable{
 	
 	private HashMap<String, IGameControlMessage> tartanGames;
 	
+	private boolean isLoop = true;
+	
 	
 	public TartanGameManager (ISocketHandler socketServer, IQueueHandler messageQueue) {
 		this.socketServer = socketServer;
@@ -34,7 +36,7 @@ public class TartanGameManager implements Runnable{
 	public void dequeue() {
 		String message = null;
 
-        while(true){
+        while(isLoop){
             message = messageQueue.consume();
             
             if (message != null && !message.isEmpty()) {
@@ -89,6 +91,7 @@ public class TartanGameManager implements Runnable{
 	
 	public boolean endGame() {
 		
+		isLoop = false;
 		return false;
 	}
 

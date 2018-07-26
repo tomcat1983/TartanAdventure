@@ -32,6 +32,7 @@ public class MessageQueue implements IQueueHandler{
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			gameInterface.println("InterruptException : " + e.getMessage());
+			Thread.currentThread().interrupt();
 		}
 		return false;
 	}
@@ -45,7 +46,8 @@ public class MessageQueue implements IQueueHandler{
 			if (message != null) return message;
             
         }catch(InterruptedException e) {
-            e.printStackTrace();
+        	gameInterface.println("InterruptException : " + e.getMessage());
+        	Thread.currentThread().interrupt();
         }
 		
 		return null;

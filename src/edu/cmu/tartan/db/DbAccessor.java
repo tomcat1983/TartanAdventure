@@ -19,7 +19,8 @@ public class DbAccessor {
 	private GameInterface gameInterface = GameInterface.getInterface();
 
 	private String url;
-	private String dbLocation = "/Users/zhyuny/Downloads/sqlite/db/";
+//	private String dbLocation = "/Users/zhyuny/Downloads/sqlite/db/";
+	private String dbLocation = "./";
 	private String dbName;
 
 	public DbAccessor(String dbName) {
@@ -124,13 +125,16 @@ public class DbAccessor {
 	 * select all rows in the warehouses table
 	 */
 	public String selectByUserId(String query, String userId) {
-		String sql = query + "'" + userId + "'";
+		String sql = query;
 
 		String userPw = null;
 
 		try (Connection conn = DriverManager.getConnection(url);
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			
+			pstmt.setString(1,  userId);
+			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				userPw = rs.getString("user_pw");
@@ -144,7 +148,7 @@ public class DbAccessor {
 
 	public String getPassword(String userId) {
 		
-		String query = "SELECT user_id, user_pw, user_type FROM T_USER_INFO where user_id = ";
+		String query = "SELECT user_id, user_pw, user_type FROM T_USER_INFO where user_id = ?";
 		String userPw = selectByUserId(query, userId);
 
 		if (userPw == null)
