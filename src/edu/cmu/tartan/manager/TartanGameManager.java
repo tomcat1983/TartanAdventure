@@ -2,9 +2,15 @@ package edu.cmu.tartan.manager;
 
 import java.util.HashMap;
 
+import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.socket.ISocketHandler;
 
 public class TartanGameManager implements Runnable{
+	
+	/**
+	 * Game interface for game message and log
+	 */
+	private GameInterface gameInterface = GameInterface.getInterface();
 	
 	private ISocketHandler socketServer;
 	private IQueueHandler messageQueue;
@@ -39,7 +45,7 @@ public class TartanGameManager implements Runnable{
 	}
 	
 	public void processMessage(String message) {
-		System.out.println("RCV : " + message);
+		gameInterface.println("RCV : " + message);
 	}
 	
 	private void login(String userId) {
