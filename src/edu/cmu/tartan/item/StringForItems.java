@@ -1,10 +1,9 @@
 package edu.cmu.tartan.item;
 
-public class StringForItems {
+public final class StringForItems {
+	public static final String BUTTON = "Button";
+
 	private StringForItems() {
 	    throw new IllegalStateException("Utility class");
-	}
-	
-	public static final String BUTTON = "Button";
-	
+	}	
 }

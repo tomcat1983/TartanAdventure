@@ -15,7 +15,7 @@ public class TestMain {
 		
 		commander.apply();
 	    
-		Game game = new Game();
+		LocalGame game = new LocalGame();
 		if(game.configureGame()) {
 			game.start();			
 		}
