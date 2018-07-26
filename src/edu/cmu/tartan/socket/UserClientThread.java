@@ -8,9 +8,15 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.manager.IQueueHandler;
 
 public class UserClientThread implements Runnable, ISocketMessage {
+	
+	/**
+	 * Game interface for game message and log
+	 */
+	private GameInterface gameInterface = GameInterface.getInterface();
 
 	private Socket clientSocket;
 	private IQueueHandler messageQueue;
@@ -37,8 +43,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 			writer.println(message);
 			return true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			 gameInterface.println("Server IOException: " + e.getMessage());
 		}
 		return false;
 	}
@@ -63,16 +68,13 @@ public class UserClientThread implements Runnable, ISocketMessage {
 				}
 
 				messageQueue.produce(message);
-				sendMessage(message);
-
 			}
 
-			System.out.println("Closing connection");
+			gameInterface.println("Closing connection");
 			clientSocket.close();
 
-		} catch (IOException ex) {
-			System.out.println("Server exception: " + ex.getMessage());
-			ex.printStackTrace();
+		} catch (IOException e) {
+			gameInterface.println("Server IOException: " + e.getMessage());
 		}
 	}
 	

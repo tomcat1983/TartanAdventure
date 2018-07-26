@@ -240,15 +240,6 @@ class TestRandom {
     }
 
     @Test
-    public void test23() throws Throwable {
-        if (debug)
-            System.out.format("%n%s%n", "RegressionTest0.test23");
-        edu.cmu.tartan.account.AccountManager accountManager0 = new edu.cmu.tartan.account.AccountManager();
-        int int3 = accountManager0.loginUser("hi!", "hi!");
-        assertTrue("'" + int3 + "' != '" + 0 + "'", int3 == 0);
-    }
-
-    @Test
     public void test24() throws Throwable {
         if (debug)
             System.out.format("%n%s%n", "RegressionTest0.test24");
@@ -420,15 +411,6 @@ class TestRandom {
         assertNotNull(strArray46);
         assertNotNull(strArray48);
         assertTrue("'" + int53 + "' != '" + 0 + "'", int53 == 0);
-    }
-
-    @Test
-    public void test34() throws Throwable {
-        if (debug)
-            System.out.format("%n%s%n", "RegressionTest0.test34");
-        edu.cmu.tartan.account.AccountManager accountManager0 = new edu.cmu.tartan.account.AccountManager();
-        int int3 = accountManager0.registerUser("", "");
-        assertTrue("'" + int3 + "' != '" + 0 + "'", int3 == 0);
     }
 
     @Test
