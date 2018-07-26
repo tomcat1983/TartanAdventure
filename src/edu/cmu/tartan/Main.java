@@ -2,6 +2,8 @@ package edu.cmu.tartan;
 
 import java.io.*;
 
+import edu.cmu.tartan.client.Client;
+
 /**
  * A simple driver for the game
  */
