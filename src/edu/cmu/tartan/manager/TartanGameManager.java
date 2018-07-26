@@ -2,14 +2,22 @@ package edu.cmu.tartan.manager;
 
 import java.util.HashMap;
 
+import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.socket.ISocketHandler;
 
 public class TartanGameManager implements Runnable{
+	
+	/**
+	 * Game interface for game message and log
+	 */
+	private GameInterface gameInterface = GameInterface.getInterface();
 	
 	private ISocketHandler socketServer;
 	private IQueueHandler messageQueue;
 	
 	private HashMap<String, IGameControlMessage> tartanGames;
+	
+	private boolean isLoop = true;
 	
 	
 	public TartanGameManager (ISocketHandler socketServer, IQueueHandler messageQueue) {
@@ -28,7 +36,7 @@ public class TartanGameManager implements Runnable{
 	public void dequeue() {
 		String message = null;
 
-        while(true){
+        while(isLoop){
             message = messageQueue.consume();
             
             if (message != null && !message.isEmpty()) {
@@ -39,7 +47,7 @@ public class TartanGameManager implements Runnable{
 	}
 	
 	public void processMessage(String message) {
-		System.out.println("RCV : " + message);
+		gameInterface.println("RCV : " + message);
 	}
 	
 	private void login(String userId) {
@@ -83,6 +91,7 @@ public class TartanGameManager implements Runnable{
 	
 	public boolean endGame() {
 		
+		isLoop = false;
 		return false;
 	}
 

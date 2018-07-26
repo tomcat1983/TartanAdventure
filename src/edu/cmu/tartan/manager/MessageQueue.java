@@ -3,7 +3,14 @@ package edu.cmu.tartan.manager;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import edu.cmu.tartan.GameInterface;
+
 public class MessageQueue implements IQueueHandler{
+	
+	/**
+	 * Game interface for game message and log
+	 */
+	private GameInterface gameInterface = GameInterface.getInterface();
 	
 	private static final int QUEUE_SIZE = 100;
 	
@@ -24,7 +31,8 @@ public class MessageQueue implements IQueueHandler{
 			return queue.contains(message);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			gameInterface.println("InterruptException : " + e.getMessage());
+			Thread.currentThread().interrupt();
 		}
 		return false;
 	}
@@ -38,7 +46,8 @@ public class MessageQueue implements IQueueHandler{
 			if (message != null) return message;
             
         }catch(InterruptedException e) {
-            e.printStackTrace();
+        	gameInterface.println("InterruptException : " + e.getMessage());
+        	Thread.currentThread().interrupt();
         }
 		
 		return null;
