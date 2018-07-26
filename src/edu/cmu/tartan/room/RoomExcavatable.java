@@ -31,14 +31,16 @@ public class RoomExcavatable extends Room {
     /**
      * Perform the excavation
      */
-	public void dig() {
+	public boolean dig() {
 		if(this.getPlayer().hasItem(Item.getInstance("shovel"))) {
 			gameInterface.println(digMessage);
 			this.wasDugUp = true;
 			this.getItems().addAll(this.revealableItems);
+			return true;
 		}
 		else {
 			gameInterface.println("You do not have an item you can use to dig.");
+			return false;
 		}
 	}
 }

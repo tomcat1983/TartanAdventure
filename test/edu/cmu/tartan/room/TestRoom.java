@@ -13,7 +13,6 @@ import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemKey;
-import edu.cmu.tartan.item.ItemLock;
 
 public class TestRoom {
 
@@ -248,5 +247,12 @@ public class TestRoom {
 		makeDifferentRoom();
         
         assertEquals(-1, room1.compareTo(room2));
+	}
+	
+	@Test
+	public void testWhenConstructor() {
+		Room room = new Room();
+		assertEquals(Room.DEFAULT_DESC, room.description());
+		assertEquals(Room.DEFAULT_SHORT_DESC, room.shortDescription());
 	}
 }

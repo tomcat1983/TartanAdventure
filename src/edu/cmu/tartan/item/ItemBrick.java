@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.properties.Chuckable;
 import edu.cmu.tartan.properties.Holdable;
 
 /**
@@ -10,7 +11,7 @@ import edu.cmu.tartan.properties.Holdable;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class ItemBrick extends Item implements Holdable {
+public class ItemBrick extends Item implements Holdable, Chuckable {
 
     /**
      * Create a brick
@@ -23,4 +24,9 @@ public class ItemBrick extends Item implements Holdable {
         super(s, sd, a);
         setValue(5);
     }
+
+	@Override
+	public void chuck() {
+		gameInterface.println("~~~~~~~~~throwing!!!");
+	}
 }

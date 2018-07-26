@@ -26,7 +26,4 @@ public class ActionExecutionUnit {
     public Item indirectObject() {
         return this.indirectObject;
     }
-    
-    
-
 }
