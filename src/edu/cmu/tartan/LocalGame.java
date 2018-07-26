@@ -4,8 +4,8 @@ import edu.cmu.tartan.manager.IGameControlMessage;
 
 public class LocalGame extends Game implements IGameControlMessage {
 
-	public LocalGame() {
-		super();
+	public LocalGame(String userId) {
+		super(userId);
 	}
 	
 	@Override

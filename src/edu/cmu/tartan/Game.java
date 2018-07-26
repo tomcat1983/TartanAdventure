@@ -62,15 +62,19 @@ public abstract class Game implements Serializable {
      * The set of goals for a game
      */
     private ArrayList<GameGoal> goals = new ArrayList<>();
-
+    /**
+     * The userId is user name with local game. But if game is network mode, user name set userId.
+     */
+    protected String userId;
 
     /**
      * Create and configure a new game.
      */
-    public Game() {
+    public Game(String userId) {
         // Parse room from file
         this.scanner = new Scanner(System.in);
         this.interpreter = new PlayerInterpreter();
+        this.userId = userId;
     }
 
     /**

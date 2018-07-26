@@ -15,7 +15,7 @@ public class TestMain {
 		
 		commander.apply();
 	    
-		LocalGame game = new LocalGame();
+		LocalGame game = new LocalGame(Player.DEFAULT_USER_NAME);
 		if(game.configureGame()) {
 			game.start();			
 		}
