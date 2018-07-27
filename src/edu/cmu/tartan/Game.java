@@ -30,11 +30,6 @@ public class Game {
 	private GameInterface gameInterface = GameInterface.getInterface();
 
     /**
-     * Reads input from the command line.
-     */
-    private Scanner scanner;
-
-    /**
      * Attempt to interpret input more flexibly.
      */
     private PlayerInterpreter interpreter;
@@ -62,8 +57,6 @@ public class Game {
      * Create and configure a new game.
      */
     public Game() {
-        // Parse room from file
-        this.scanner = new Scanner(System.in);
         this.interpreter = new PlayerInterpreter();
     }
 
@@ -148,7 +141,7 @@ public class Game {
             while(!result) {
                 printMenu(menu);
                 gameInterface.print("> ");
-                String input = this.scanner.nextLine();
+                String input = gameInterface.getCommand();
                 result = loadGame(input, menu); 
             }
         }
@@ -200,7 +193,7 @@ public class Game {
             while(true) {
             	gameInterface.print("> ");
 
-                input = this.scanner.nextLine();
+                input = gameInterface.getCommand();
                 if(processGameCommand(input)) {
                 	break;
                 }

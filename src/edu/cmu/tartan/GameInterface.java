@@ -57,6 +57,10 @@ public class GameInterface {
 		return instance;
 	}
 	
+	public void resetInterface() {
+		scanner = new Scanner(System.in);
+	}
+	
 	// For log message
 	public void severe(String msg) {
 		logger.severe(msg);
