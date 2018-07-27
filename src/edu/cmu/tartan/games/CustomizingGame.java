@@ -6,10 +6,7 @@ import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
-<<<<<<< HEAD
-=======
 
->>>>>>> upstream/master
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.room.*;
 
