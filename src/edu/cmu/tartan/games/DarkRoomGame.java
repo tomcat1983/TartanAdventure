@@ -9,7 +9,6 @@ import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomDark;
 
-import java.util.LinkedList;
 import java.util.ArrayList;
 
 /**
@@ -40,7 +39,7 @@ public class DarkRoomGame extends GameConfiguration {
         Room room1 = new Room("You are in the first room. There seems to be a room to the North.", "Room1");
         // player would type 'go north'
 
-        LinkedList<Item> items = new LinkedList<>();
+        ArrayList<Item> items = new ArrayList<>();
         String classroomDescription = "You are in a classroom.";
         String classroomShortDescription = "Classroom";
         String classroomDarkDescription = "It is dark. Perhaps you can find a way to see...";

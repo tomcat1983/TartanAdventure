@@ -10,7 +10,6 @@ import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomLockable;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * A collection game is one where a player must collect certain items to win.

@@ -11,7 +11,7 @@ import java.util.Map;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -55,7 +55,7 @@ public class Room implements Comparable, Serializable {
     protected boolean roomWasVisited;
 
     // items in the room
-    private List<Item> items;
+    private ArrayList<Item> items;
 	
 	// the player within the room
     private Player player;
@@ -76,7 +76,7 @@ public class Room implements Comparable, Serializable {
         this.roomWasVisited = false;
         this.description = description;
         this.shortDescription = shortDescription;
-        this.items = new LinkedList<>();
+        this.items = new ArrayList<>();
         this.adjacentRooms = new EnumMap<>(Action.class);
         this.transitionMessages = new EnumMap<>(Action.class);
         this.transitionDelay = 0;
@@ -189,7 +189,7 @@ public class Room implements Comparable, Serializable {
      * @param items the items
      * @return true successful, false failure
      */
-    public boolean putItems(@NonNull List<Item> items) {
+    public boolean putItems(@NonNull ArrayList<Item> items) {
     	Iterator<Item> iter = items.iterator();
     	int insertSize = 0;
     	while (iter.hasNext()) {
@@ -228,7 +228,7 @@ public class Room implements Comparable, Serializable {
         }
     }
 
-    public List<Item> getItems() {
+    public ArrayList<Item> getItems() {
 		return items;
 	}
     

@@ -9,8 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +30,7 @@ class TestPlayer {
 		player.grabItem(Item.getInstance("lock"));
 		player.grabItem(Item.getInstance("gold"));
 
-		List<Item> testItems = new LinkedList<>();
+		ArrayList<Item> testItems = new ArrayList<>();
 		testItems.add(Item.getInstance("brick"));
 		testItems.add(Item.getInstance("key"));		
 	    assertTrue(room1.putItems(testItems));
