@@ -75,7 +75,7 @@ public class RoomElevator extends Room {
 		for(int i=0; i < 3; i++) {
 			gameInterface.println("...");
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(DELAY_TIME);
 			} catch(Exception e1) {
 				gameInterface.severe("Exception: " + e1.getMessage());
 			}

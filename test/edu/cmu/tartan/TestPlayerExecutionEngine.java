@@ -16,6 +16,7 @@ import edu.cmu.tartan.item.ItemButton;
 import edu.cmu.tartan.item.ItemClayPot;
 import edu.cmu.tartan.item.ItemDocument;
 import edu.cmu.tartan.item.ItemDynamite;
+import edu.cmu.tartan.item.ItemFlashlight;
 import edu.cmu.tartan.item.ItemFolder;
 import edu.cmu.tartan.item.ItemFood;
 import edu.cmu.tartan.item.ItemKey;
@@ -25,10 +26,12 @@ import edu.cmu.tartan.item.ItemSafe;
 import edu.cmu.tartan.item.ItemShovel;
 import edu.cmu.tartan.item.ItemVendingMachine;
 import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.room.RoomDark;
 import edu.cmu.tartan.room.RoomElevator;
 import edu.cmu.tartan.room.RoomExcavatable;
 import edu.cmu.tartan.room.RoomRequiredItem;
 import edu.cmu.tartan.room.TestRoom;
+import edu.cmu.tartan.room.TestRoomDark;
 
 class TestPlayerExecutionEngine {
 
@@ -402,6 +405,29 @@ class TestPlayerExecutionEngine {
     	dynamite.setRelatedRoom(room2);
     	room1.setAdjacentRoom(action, room2);
     	action = interpreter.interpretString("detonate dynamite", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	}
+	
+	@Test
+	void testWhenexecuteActionCallWithMove() {
+		RoomDark room2 = new RoomDark(TestRoomDark.DARK_ROOM_DESC1, TestRoomDark.DARK_ROOM_SHORT_DESC1, TestRoomDark.DARK_DESC, TestRoomDark.DARK_SHORT_DESC);
+		ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight");
+		room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2);
+		player.grabItem(flashlight);
+		
+		Action action = interpreter.interpretString("east", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	action = interpreter.interpretString("west", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	    	
+    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
+    	RoomRequiredItem room3 = new RoomRequiredItem("You are in the room that required food", "Required",
+                "pit", "Warning you need key", mbox);
+		room2.setAdjacentRoom(Action.ACTION_GO_WEST, room3);
+		player.grabItem(mbox);
+		
+    	action = interpreter.interpretString("w", actionExecutionUnit);
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	}
 }
