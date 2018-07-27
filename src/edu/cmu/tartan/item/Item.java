@@ -177,8 +177,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
         return this.aliases;
     }
 
-    @Override
-	public String toString() {
+    public String toString() {
         return this.description;
     }
 
@@ -199,19 +198,16 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
     /**
      * Control visibility
      */
-    @Override
-	public boolean isVisible() {
+    public boolean isVisible() {
         return visible;
     }
 
-    @Override
-	public void setVisible(boolean b) {
+    public void setVisible(boolean b) {
         this.visible = b;
     }
 
     // Inspectable
-    @Override
-	public Boolean inspect() {
+    public Boolean inspect() {
         if (this.inspectMessage != null) {
         	gameInterface.println(this.inspectMessage);
         } else {
@@ -220,8 +216,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
         return true;
     }
 
-    @Override
-	public void setInspectMessage(String message) {
+    public void setInspectMessage(String message) {
         this.inspectMessage = message;
     }
 

@@ -62,13 +62,11 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
      * Install an item in the microwave
      * @param i the item to install
      */
-    @Override
-	public void install(Item i) {
+    public void install(Item i) {
         this.installedItem = i;
     }
 
-    @Override
-	public boolean uninstall(Item i) {
+    public boolean uninstall(Item i) {
         if (this.installedItem == null) {
             return false;
         } else if (this.installedItem == i) {
@@ -79,8 +77,7 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
         }
     }
 
-    @Override
-	public Item installedItem() {
+    public Item installedItem() {
         return this.installedItem;
     }
     

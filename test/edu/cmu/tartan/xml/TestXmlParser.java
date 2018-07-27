@@ -428,7 +428,6 @@ class XmlParserSpy extends XmlParser {
 		return xmlParseResult; 
 	}
 	
-	@Override
 	protected void printNodeInfo(Node node) {
 		super.printNodeInfo(node);
 		isPrintNodeCalled = true; 

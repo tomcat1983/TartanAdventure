@@ -178,7 +178,7 @@ public class Player implements Comparable, Serializable {
     public void putItemInItem(Item direct, Item indirect) {
         ((Hostable)indirect).install(direct);
         if(indirect instanceof ItemMagicBox && direct instanceof Valuable) {
-            score(direct);
+            score((Valuable)direct);
         }
     }
 

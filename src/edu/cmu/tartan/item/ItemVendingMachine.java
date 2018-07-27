@@ -28,13 +28,11 @@ public class ItemVendingMachine extends Item implements Shakeable {
      * Shaking this machine too much can cause an accident
      * @return true if an accident can occur; false otherwise
      */
-    @Override
-	public boolean accident() {
+    public boolean accident() {
         return this.count > 2;
     }
 
-    @Override
-	public void shake() {
+    public void shake() {
         switch (this.count) {
             case 0:
                 gameInterface.println("You shake the vending machine, and your favorite treat inches its way off the tray.");

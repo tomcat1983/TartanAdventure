@@ -15,8 +15,7 @@ public class DemoGoal implements GameGoal {
      * Fetch status of this goal
      * @return a displayable string for progress towards this goal
      */
-    @Override
-	public String getStatus() {
+    public String getStatus() {
         return "Demo status";
     }
 

@@ -30,8 +30,7 @@ public class ItemKeycardReader extends Item implements Hostable {
      * Install a keycard
      * @param item the keycard to install in the reader
      */
-    @Override
-	public void install(Item item) {
+    public void install(Item item) {
         if (!(item instanceof ItemKeycard)) return;
         installedItem = item;
 
@@ -72,8 +71,7 @@ public class ItemKeycardReader extends Item implements Hostable {
      * Fetch the installed keycard
      * @return
      */
-    @Override
-	public Item installedItem() {
+    public Item installedItem() {
         return this.installedItem;
     }
 
