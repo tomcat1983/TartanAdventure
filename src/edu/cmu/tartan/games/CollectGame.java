@@ -9,7 +9,6 @@ import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomLockable;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -44,7 +43,7 @@ public class CollectGame extends GameConfiguration {
 
         end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);
 
-        List<Item> startItems = new LinkedList<>();
+        ArrayList<Item> startItems = new ArrayList<>();
         startItems.add(Item.getInstance("brick"));
         startItems.add(Item.getInstance("key"));
         startItems.add(Item.getInstance("lock"));
@@ -60,7 +59,7 @@ public class CollectGame extends GameConfiguration {
         start.putItems(startItems);
 
         // Now we configure the goal based on picking up items
-        List<String> goalItems = new ArrayList<>();
+        ArrayList<String> goalItems = new ArrayList<>();
         goalItems.add("brick");
         goalItems.add("key");
         goalItems.add("gold");

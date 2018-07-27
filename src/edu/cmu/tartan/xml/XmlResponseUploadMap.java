@@ -424,9 +424,9 @@ public class XmlResponseUploadMap extends XmlResponse {
 	}
 
 
-	private List<String> makeListStringSplitedByDash(String strTobeSplited) {
+	private ArrayList<String> makeListStringSplitedByDash(String strTobeSplited) {
 				
-		List<String> itemList = new ArrayList<String>();
+		ArrayList<String> itemList = new ArrayList<String>();
 		
 		//type="collect" object="diamond-shovel" 
 		String[] splitedToEachItem = strTobeSplited.split("-");		

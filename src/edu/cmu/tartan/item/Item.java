@@ -260,6 +260,3 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
     	return description.hashCode() + detailDescription.hashCode();
     }
 }
-
-
-
