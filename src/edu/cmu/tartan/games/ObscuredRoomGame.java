@@ -2,6 +2,7 @@ package edu.cmu.tartan.games;
 
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GameExploreGoal;
@@ -31,7 +32,7 @@ public class ObscuredRoomGame extends GameConfiguration {
      * @throws InvalidGameException
      */
     @Override
-    public void configure(Game game) throws InvalidGameException{
+    public boolean configure(GameContext context) throws InvalidGameException{
 
         String passageDescription = "You are in a dark corridor dimly lit by torches.";
 		String passageShortDescription = "Dark Corridor.";
@@ -51,17 +52,18 @@ public class ObscuredRoomGame extends GameConfiguration {
 		room1.putItem(fridge);
 		fridge.setRelatedRoom(passage);
 
-        Player player = new Player(room1);
+        Player player = new Player(room1, Player.DEFAULT_USER_NAME);
         ArrayList<String> goalItems = new ArrayList<>();
         goalItems.add("passage");
         goalItems.add("room1");
 
-        game.setPlayer(player);
-        game.addGoal(new GameExploreGoal(goalItems,player));
+        context.setPlayer(player);
+        context.addGoal(new GameExploreGoal(goalItems,player));
 
-        game.setDescription("The objective of this game is to earn explore an obscured room");
+        context.setGameDescription("The objective of this game is to earn explore an obscured room");
 
-        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
+        if (!context.validate()) throw new InvalidGameException("Game improperly configured");
 
+        return true;
     }
 }

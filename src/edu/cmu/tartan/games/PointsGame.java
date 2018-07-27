@@ -2,6 +2,7 @@ package edu.cmu.tartan.games;
 
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.*;
@@ -27,7 +28,7 @@ import edu.cmu.tartan.room.Room;
      * @throws InvalidGameException
      */
     @Override
-    public void configure(Game game) throws InvalidGameException{
+    public boolean configure(GameContext context) throws InvalidGameException{
 
         String officeD = "You are in an office. It seems that the occupant has only recently left.";
         String officeSD = "Office.";
@@ -55,12 +56,14 @@ import edu.cmu.tartan.room.Room;
         // Keep scores for things in this room
         int points = document.value() + coffee.value() + safe.value();
 
-        Player player = new Player(office);
-        game.setPlayer(player);
-        game.addGoal(new GamePointsGoal(points, player));
+        Player player = new Player(office, Player.DEFAULT_USER_NAME);
+        context.setPlayer(player);
+        context.addGoal(new GamePointsGoal(points, player));
 
-        game.setDescription("The objective of this game is to earn points by doing certain things. You must earn" + points + " to win");
+        context.setGameDescription("The objective of this game is to earn points by doing certain things. You must earn" + points + " to win");
 
-        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
+        if (!context.validate()) throw new InvalidGameException("Game improperly configured");
+        
+        return true;
     }
 }

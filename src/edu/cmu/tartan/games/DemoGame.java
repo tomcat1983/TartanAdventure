@@ -2,6 +2,7 @@ package edu.cmu.tartan.games;
 
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.DemoGoal;
@@ -30,7 +31,7 @@ public class DemoGame extends GameConfiguration {
      * @throws InvalidGameException
      */
     @Override
-    public void configure(Game game) throws InvalidGameException {
+    public boolean configure(GameContext context) throws InvalidGameException {
 
         Room room1 = new Room("You are in the first room. There seems to be a dark room to the East.",
                 "Room1");
@@ -85,13 +86,15 @@ public class DemoGame extends GameConfiguration {
         room4.setAdjacentRoom(Action.ACTION_GO_WEST, room5);
 
         // Set the initial room
-        Player player = new Player(room1);
-        game.setPlayer(player);
-        game.addGoal(new DemoGoal());
+        Player player = new Player(room1, Player.DEFAULT_USER_NAME);
+        context.setPlayer(player);
+        context.addGoal(new DemoGoal());
 
-        game.setDescription("Demo game rooms.");
+        context.setGameDescription("Demo game rooms.");
 
-        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
+        if (!context.validate()) throw new InvalidGameException("Game improperly configured");
+        
+        return true;
     }
 }
 

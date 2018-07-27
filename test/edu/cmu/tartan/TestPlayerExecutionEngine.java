@@ -15,6 +15,7 @@ import edu.cmu.tartan.item.ItemButton;
 import edu.cmu.tartan.item.ItemClayPot;
 import edu.cmu.tartan.item.ItemDocument;
 import edu.cmu.tartan.item.ItemDynamite;
+import edu.cmu.tartan.item.ItemFlashlight;
 import edu.cmu.tartan.item.ItemFolder;
 import edu.cmu.tartan.item.ItemFood;
 import edu.cmu.tartan.item.ItemKey;
@@ -24,10 +25,12 @@ import edu.cmu.tartan.item.ItemSafe;
 import edu.cmu.tartan.item.ItemShovel;
 import edu.cmu.tartan.item.ItemVendingMachine;
 import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.room.RoomDark;
 import edu.cmu.tartan.room.RoomElevator;
 import edu.cmu.tartan.room.RoomExcavatable;
 import edu.cmu.tartan.room.RoomRequiredItem;
 import edu.cmu.tartan.room.TestRoom;
+import edu.cmu.tartan.room.TestRoomDark;
 
 class TestPlayerExecutionEngine {
 
@@ -41,7 +44,7 @@ class TestPlayerExecutionEngine {
 	void beforeEach() {
 		interpreter = new PlayerInterpreter();
 		room1 = new Room(TestRoom.FORK_ROOM_DESCRIPTION, TestRoom.FORK);
-		player = new Player(room1);
+		player = new Player(room1, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);
 		actionExecutionUnit = new ActionExecutionUnit(null, null);
 		
@@ -144,7 +147,7 @@ class TestPlayerExecutionEngine {
     	
     	RoomRequiredItem room2 = new RoomRequiredItem("You are in the room that required food", "Required",
                 "pit", "Warning you need key", mbox);
-    	player = new Player(room2);
+    	player = new Player(room2, Player.DEFAULT_USER_NAME);
     	playerExecutionEngine = new PlayerExecutionEngine(player);
     	action = interpreter.interpretString("drop pit", actionExecutionUnit);
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
@@ -278,7 +281,7 @@ class TestPlayerExecutionEngine {
         ArrayList<Integer> restrictedFloors = new ArrayList<>();
         restrictedFloors.add(2);
         elevator.setRestrictedFloors(restrictedFloors);
-        player = new Player(elevator);
+        player = new Player(elevator, Player.DEFAULT_USER_NAME);
         playerExecutionEngine = new PlayerExecutionEngine(player);
     	
     	action = interpreter.interpretString("push 1", actionExecutionUnit);
@@ -304,7 +307,7 @@ class TestPlayerExecutionEngine {
     	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
     	
     	RoomExcavatable romm2 = new RoomExcavatable("Shovel","digdig","^~~~^");
-    	player = new Player(romm2);
+    	player = new Player(romm2, Player.DEFAULT_USER_NAME);
     	player.grabItem(shovel);
     	playerExecutionEngine = new PlayerExecutionEngine(player);
     	action = interpreter.interpretString("dig shovel", actionExecutionUnit);
@@ -323,7 +326,7 @@ class TestPlayerExecutionEngine {
 
     	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
     	RoomExcavatable romm2 = new RoomExcavatable("Shovel","digdig","^~~~^");
-    	player = new Player(romm2);
+    	player = new Player(romm2, Player.DEFAULT_USER_NAME);
 		player.grabItem(food);
 		player.grabItem(mbox);
 		playerExecutionEngine = new PlayerExecutionEngine(player);
@@ -401,6 +404,29 @@ class TestPlayerExecutionEngine {
     	dynamite.setRelatedRoom(room2);
     	room1.setAdjacentRoom(action, room2);
     	action = interpreter.interpretString("detonate dynamite", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	}
+	
+	@Test
+	void testWhenexecuteActionCallWithMove() {
+		RoomDark room2 = new RoomDark(TestRoomDark.DARK_ROOM_DESC1, TestRoomDark.DARK_ROOM_SHORT_DESC1, TestRoomDark.DARK_DESC, TestRoomDark.DARK_SHORT_DESC);
+		ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight");
+		room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2);
+		player.grabItem(flashlight);
+		
+		Action action = interpreter.interpretString("east", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	action = interpreter.interpretString("west", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	    	
+    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
+    	RoomRequiredItem room3 = new RoomRequiredItem("You are in the room that required food", "Required",
+                "pit", "Warning you need key", mbox);
+		room2.setAdjacentRoom(Action.ACTION_GO_WEST, room3);
+		player.grabItem(mbox);
+		
+    	action = interpreter.interpretString("w", actionExecutionUnit);
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	}
 }

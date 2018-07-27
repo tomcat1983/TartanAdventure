@@ -13,6 +13,8 @@ import edu.cmu.tartan.properties.Startable;
  * 1.0 March 2018 - initial version
  */
 public class ItemMicrowave extends Item implements Hostable, Startable {
+	public static final int MIC_OP_TIME = 100;
+	
 	private Item installedItem;
 
     /**
@@ -37,7 +39,7 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
         for (int i = 0; i < 3; i++) {
             gameInterface.println("...");
             try {
-                Thread.sleep(1000);
+                Thread.sleep(MIC_OP_TIME);
             } catch (Exception e1) {
             	gameInterface.severe(e1.getMessage());
             }

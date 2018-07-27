@@ -8,7 +8,7 @@ import edu.cmu.tartan.Player;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemFlashlight;
 
-class TestRoomDark {
+public class TestRoomDark {
 	public static final String DARK_ROOM_DESC1 = "You are in a dark room. You can go South to West to the beginning and you can go South";
 	public static final String DARK_ROOM_DESC2 = "You are in a dark room. You can go East to North to the beginning and you can go North";
 	public static final String DARK_ROOM_SHORT_DESC1 = "room1";
@@ -33,7 +33,7 @@ class TestRoomDark {
 	void testWhensetDarkwithisDarkAnddescription() {
 		makeSameRoomDark();
 		ItemFlashlight item = (ItemFlashlight) Item.getInstance("flashlight");
-		Player player = new Player(room1);
+		Player player = new Player(room1, Player.DEFAULT_USER_NAME);
 
 		room1.setDark(true);
 		assertEquals(room1.description(), DARK_DESC);
@@ -57,7 +57,7 @@ class TestRoomDark {
 	void testWhensetDarkwithisDarkAndtoString() {
 		makeSameRoomDark();
 		ItemFlashlight item = (ItemFlashlight) Item.getInstance("flashlight");
-		Player player = new Player(room1);
+		Player player = new Player(room1, Player.DEFAULT_USER_NAME);
 
 		room1.setDark(true);
 		assertEquals(room1.toString(), DARK_DESC);

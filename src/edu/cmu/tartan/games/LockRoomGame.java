@@ -2,6 +2,7 @@ package edu.cmu.tartan.games;
 
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GameExploreGoal;
@@ -10,7 +11,6 @@ import edu.cmu.tartan.item.ItemLock;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomLockable;
 
-import java.util.LinkedList;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +33,7 @@ public class LockRoomGame extends GameConfiguration {
      * @throws InvalidGameException
      */
     @Override
-    public void configure(Game game) throws InvalidGameException {
+    public boolean configure(GameContext context) throws InvalidGameException {
 
         Room mid1 = new Room("There is a fork", "Fork");
         Room mid2 = new Room("Ferocious bear", "bear");
@@ -43,7 +43,7 @@ public class LockRoomGame extends GameConfiguration {
 
         end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);
 
-        LinkedList<Item> startItems = new LinkedList<>();
+        ArrayList<Item> startItems = new ArrayList<>();
         Item lock = Item.getInstance("lock");
 
         // Install the lock and key to unlock the locked room. You must 'open' or 'unlock' the lock
@@ -66,13 +66,15 @@ public class LockRoomGame extends GameConfiguration {
         goals.add("bear");
         goals.add("interior");
 
-        Player player = new Player(start);
+        Player player = new Player(start, Player.DEFAULT_USER_NAME);
 
-        game.setPlayer(player);
-        game.addGoal(new GameExploreGoal(goals, game.getPlayer()));
+        context.setPlayer(player);
+        context.addGoal(new GameExploreGoal(goals, context.getPlayer()));
 
-        game.setDescription("The objective of this game is to unlock a room.");
+        context.setGameDescription("The objective of this game is to unlock a room.");
 
-        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
+        if (!context.validate()) throw new InvalidGameException("Game improperly configured");
+        
+        return true;
     }
 }

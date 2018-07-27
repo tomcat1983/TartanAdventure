@@ -368,7 +368,7 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private void actionPut(@NonNull Item itemToPut, @NonNull Item itemToBePutInto) {
+    private void actionPut(@NonNull Item itemToPut, Item itemToBePutInto) {
     	
         if(!player.hasItem(itemToPut)) {
             gameInterface.println("You don't have that object in your inventory.");

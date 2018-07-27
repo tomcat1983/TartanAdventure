@@ -2,6 +2,7 @@ package edu.cmu.tartan.games;
 
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GameExploreGoal;
@@ -32,7 +33,7 @@ public class ExploreGame extends GameConfiguration {
      * @throws InvalidGameException
      */
     @Override
-    public void configure(Game game) throws InvalidGameException {
+    public boolean configure(GameContext context) throws InvalidGameException {
 
         Room room1 = new Room("You are in the first room. There seems to be a room to the North.", "Room1");
         Room room2 = new Room("You are in the second room. You can go South to return to the beginning and you can go East to get to Room 3.", "Room2");
@@ -52,13 +53,15 @@ public class ExploreGame extends GameConfiguration {
         goalItems.add("room2");
         goalItems.add("room3");
 
-        Player player = new Player(room1);
-        game.setPlayer(player);
-        game.addGoal(new GameExploreGoal(goalItems,  game.getPlayer()));
+        Player player = new Player(room1, Player.DEFAULT_USER_NAME);
+        context.setPlayer(player);
+        context.addGoal(new GameExploreGoal(goalItems,  context.getPlayer()));
 
-        game.setDescription("Explore different connected rooms.");
+        context.setGameDescription("Explore different connected rooms.");
 
-        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
+        if (!context.validate()) throw new InvalidGameException("Game improperly configured");
+        
+        return true;
     }
 }
 

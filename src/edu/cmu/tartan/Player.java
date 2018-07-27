@@ -12,7 +12,6 @@ import edu.cmu.tartan.room.*;
 import java.util.Map;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The player for a game.
@@ -22,8 +21,8 @@ import java.util.List;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Player implements Serializable {
-
+public class Player implements Comparable, Serializable {
+	public static final String DEFAULT_USER_NAME = "Tony";
 	/**
 	 * Version for serialization
 	 */
@@ -40,9 +39,14 @@ public class Player implements Serializable {
     private int score=0;
 
     /**
+     * The player's name
+     */
+    private String userName;
+
+    /**
      * The list of rooms that this player has visited.
      */
-    private List<Room> roomsVisited = new ArrayList<>();
+    private ArrayList<Room> roomsVisited = new ArrayList<>();
 
     /**
      * The points that this player can possibly score.
@@ -52,12 +56,12 @@ public class Player implements Serializable {
     /**
      * The inventory of items this player has.
      */
-    private List<Item> items = new ArrayList<>();
+    private ArrayList<Item> items = new ArrayList<>();
 
     /**
      * This player's goals
      */
-    private List<GameGoal> goals = new ArrayList<>();
+    private ArrayList<GameGoal> goals = new ArrayList<>();
 
     /**
      * The current room this player is in.
@@ -69,8 +73,8 @@ public class Player implements Serializable {
      *
      * @param currentRoom the current room
      */
-    public Player(Room currentRoom) {
-        this(currentRoom, new ArrayList<>());
+    public Player(Room currentRoom, String userName) {
+        this(currentRoom, new ArrayList<>(), userName);
     }
 
     /**
@@ -78,11 +82,12 @@ public class Player implements Serializable {
      * @param currentRoom the current room
      * @param items the player's items
      */
-    public Player(Room currentRoom, List<Item>items) {
+    public Player(Room currentRoom, ArrayList<Item>items, String userName) {
         this.items = items;
         this.score = 0;
         this.currentRoom = currentRoom;
         this.currentRoom.setPlayer(this);
+        this.userName = userName;
     }
 
     /**
@@ -166,7 +171,7 @@ public class Player implements Serializable {
      * Get the current set of items.
      * @return the items.
      */
-    public List<Item> getCollectedItems() {
+    public ArrayList<Item> getCollectedItems() {
         return this.items;
     }
 
@@ -233,7 +238,7 @@ public class Player implements Serializable {
      * Get the list of rooms visited.
      * @return The list of visited rooms.
      */
-    public List<Room> getRoomsVisited() {
+    public ArrayList<Room> getRoomsVisited() {
         return roomsVisited;
     }
 
@@ -371,7 +376,34 @@ public class Player implements Serializable {
      * Fetch the goals for this Player.
      * @return the list of this Player's goals.
      */
-    public List<GameGoal> getGoals() {
+    public ArrayList<GameGoal> getGoals() {
         return goals;
     }
+
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+		return result;
+	}
+
+	@Override
+    public int compareTo(Object other) {
+        if (userName.compareTo(((Player) other).userName) == 0) {
+            return 0;
+        }
+        return -1;
+    }
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Player) {
+			Player player = (Player)obj;
+    		if(player.userName.equals(userName)) {
+    			return true;
+    		}
+    	}
+		return false;
+	}
 }

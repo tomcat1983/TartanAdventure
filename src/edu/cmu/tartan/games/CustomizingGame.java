@@ -4,7 +4,12 @@ import java.util.ArrayList;
 
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.room.*;
 
@@ -48,20 +53,22 @@ public class CustomizingGame extends GameConfiguration {
      * @throws InvalidGameException
      */
     @Override
-    public void configure(Game game) throws InvalidGameException {
+    public boolean configure(GameContext context) throws InvalidGameException {
         
         // Set the initial room
-        Player player = new Player(rooms.get(0));
-        game.setPlayer(player);
+        Player player = new Player(rooms.get(0), Player.DEFAULT_USER_NAME);
+        context.setPlayer(player);
         
         for (GameGoal gameGoal : goals) {
         	gameGoal.setPlayer(player);
-            game.addGoal(gameGoal);
+        	context.addGoal(gameGoal);
 		}
         
-        game.setDescription("Customizing Room(TODO)");
+        context.setGameDescription("Customizing Room(TODO)");
 
-        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
+        if (!context.validate()) throw new InvalidGameException("Game improperly configured");
+        
+        return true;
     }
 }
 

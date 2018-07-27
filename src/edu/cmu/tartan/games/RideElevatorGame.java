@@ -2,6 +2,7 @@ package edu.cmu.tartan.games;
 
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GamePointsGoal;
@@ -34,7 +35,7 @@ public class RideElevatorGame extends GameConfiguration {
      * @throws InvalidGameException
      */
     @Override
-    public void configure(Game game) throws InvalidGameException{
+    public boolean configure(GameContext context) throws InvalidGameException{
 
         String elevatorDescription = "Elevator";
 
@@ -85,12 +86,14 @@ public class RideElevatorGame extends GameConfiguration {
         restrictedFloors.add(2);
         elevator.setRestrictedFloors(restrictedFloors);
 
-        Player player = new Player(elevator);
-        game.setPlayer(player);
-        game.addGoal(new GamePointsGoal(10, player));
+        Player player = new Player(elevator, Player.DEFAULT_USER_NAME);
+        context.setPlayer(player);
+        context.addGoal(new GamePointsGoal(10, player));
 
-        game.setDescription("The objective of this game is to demo an elevator");
+        context.setGameDescription("The objective of this game is to demo an elevator");
 
-        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
+        if (!context.validate()) throw new InvalidGameException("Game improperly configured");
+        
+        return true;
     }
 }
