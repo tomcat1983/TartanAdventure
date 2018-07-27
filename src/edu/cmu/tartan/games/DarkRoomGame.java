@@ -2,6 +2,7 @@ package edu.cmu.tartan.games;
 
 import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GameExploreGoal;
@@ -34,7 +35,7 @@ public class DarkRoomGame extends GameConfiguration {
      * @throws InvalidGameException
      */
     @Override
-    public void configure(Game game) throws InvalidGameException{
+    public boolean configure(GameContext context) throws InvalidGameException{
 
         Room room1 = new Room("You are in the first room. There seems to be a room to the North.", "Room1");
         // player would type 'go north'
@@ -63,11 +64,13 @@ public class DarkRoomGame extends GameConfiguration {
         goalItems.add("room1");
         goalItems.add("Classroom");
 
-        game.setPlayer(player);
-        game.addGoal(new GameExploreGoal(goalItems,player));
+        context.setPlayer(player);
+        context.addGoal(new GameExploreGoal(goalItems,player));
 
-        game.setDescription("Explore a dark room");
+        context.setGameDescription("Explore a dark room");
 
-        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
+        if (!context.validate()) throw new InvalidGameException("Game improperly configured");
+        
+        return true;
     }
 }

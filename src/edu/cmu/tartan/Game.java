@@ -11,6 +11,9 @@ import edu.cmu.tartan.room.Room;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
+
+import org.eclipse.jdt.annotation.NonNull;
+
 import java.util.List;
 
 /**
@@ -28,46 +31,32 @@ public abstract class Game {
 	 */
 	protected static final GameInterface gameInterface = GameInterface.getInterface();
  
+	/**
+	 * Game context for load and save
+	 */
+	@NonNull protected GameContext context;
     /**
      * Reads input from the command line.
      */
-    private Scanner scanner;
+	@NonNull private Scanner scanner;
 
     /**
      * Attempt to interpret input more flexibly.
      */
-    private PlayerInterpreter interpreter;
-    /**
-     * The player for the game
-     */
-    private Player player;
-
+	private PlayerInterpreter interpreter;
     /**
      * The game execute
      */
     private PlayerExecutionEngine playerExecutionEngine;
-    /**
-     * The name and description of the active game
-     */
-    private String gameName = "";
-    private String gameDescription = "";
-    /**
-     * The set of goals for a game
-     */
-    private ArrayList<GameGoal> goals = new ArrayList<>();
-    /**
-     * The userId is user name with local game. But if game is network mode, user name set userId.
-     */
-    protected String userId;
 
     /**
      * Create and configure a new game.
      */
-    public Game(String userId) {
+    public Game(@NonNull String userId) {
         // Parse room from file
+    	this.context = new GameContext(userId);
         this.scanner = new Scanner(System.in);
         this.interpreter = new PlayerInterpreter();
-        this.userId = userId;
     }
 
     /**
@@ -81,15 +70,6 @@ public abstract class Game {
             sb.append( (i+1) + ":  " + menu.get(i).getName() + "\n");
         }
         gameInterface.println(sb.toString());
-    }
-
-    /**
-     * Set player game goal(Is it right?)
-     */
-    private void setPlayerGameGoal() {
-        for (GameGoal g : goals) {
-            this.player.addGoal(g);
-        }
     }
 
     private ArrayList<GameConfiguration> loadGameMenu() {
@@ -119,9 +99,8 @@ public abstract class Game {
             	select = Integer.parseInt(input) - 1;
             	if(select > 0 || menu.size() >= select) {
                     GameConfiguration gameConfig = menu.get(select);
-                    gameName = gameConfig.getName();
-                    gameConfig.configure(this);
-                    return true;
+                    context.setGameName(gameConfig.getName());
+                    return gameConfig.configure(context);
             	} else {
             		gameInterface.println("Invaild selection");
             		return false;
@@ -143,7 +122,6 @@ public abstract class Game {
      * Configure the game.
      */
     public boolean configureGame() {
-
     	ArrayList<GameConfiguration> menu = loadGameMenu();
     	
         if(!menu.isEmpty()) {
@@ -156,21 +134,22 @@ public abstract class Game {
             }
         }
         // Once the game has been configured, it is time to play!
-        this.showIntro();
+        showIntro();
         // Configure the game, add the goals and exe
-        setPlayerGameGoal();
+        context.setPlayerGameGoal();
+        this.playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());
         return true;
     }
     
     private boolean processGameCommand(String input) {
     	if (input.compareTo("quit") == 0) {
-            for (GameGoal g: goals) {
+            for (GameGoal g: context.getGoals()) {
             	gameInterface.println(g.getStatus());
             }
             return true;
         }
         else if (input.compareTo("look") == 0) {
-            this.player.lookAround();
+            context.getPlayer().lookAround();
         }
         else if (input.compareTo("help") == 0) {
             help();
@@ -196,7 +175,7 @@ public abstract class Game {
      */
     public void start() {    	
         // Orient the player
-        this.player.lookAround();
+        context.getPlayer().lookAround();
 
         try {
             String input = null;
@@ -223,14 +202,14 @@ public abstract class Game {
 
     	gameInterface.println("Congrats!");
 
-    	gameInterface.println("You've won the '" + gameName + "' game!\n" );
-    	gameInterface.println("- Final score: " + player.getScore());
+    	gameInterface.println("You've won the '" + context.getGameName() + "' game!\n" );
+    	gameInterface.println("- Final score: " + context.getPlayer().getScore());
     	gameInterface.println("- Final inventory: ");
-        if (player.getCollectedItems().isEmpty()) {
+        if (context.getPlayer().getCollectedItems().isEmpty()) {
         	gameInterface.println("You don't have any items.");
         }
         else {
-            for (Item i : player.getCollectedItems()) {
+            for (Item i : context.getPlayer().getCollectedItems()) {
                 gameInterface.println(i.toString() + " ");
             }
         }
@@ -242,7 +221,7 @@ public abstract class Game {
      * @return
      */
     private Boolean evaluateGame() {
-        List<GameGoal> playerGoals = player.getGoals();
+        List<GameGoal> playerGoals = context.getPlayer().getGoals();
 
         for (Iterator<GameGoal> iterator = playerGoals.iterator(); iterator.hasNext(); ) {
             GameGoal g = iterator.next();
@@ -254,11 +233,13 @@ public abstract class Game {
     }
 
     private void status() {
-        gameInterface.println("The current game is '" + gameName + "': " + gameDescription + "\n");
-        gameInterface.println("- There are " + goals.size() + " goals to achieve:");
+    	Player player = context.getPlayer();
+    	
+        gameInterface.println("The current game is '" + context.getGameName() + "': " + context.getGameDescription() + "\n");
+        gameInterface.println("- There are " + context.getGoals().size() + " goals to achieve:");
 
-        for (int i=0; i < goals.size(); i++) {
-            gameInterface.println("  * " + (i+1)+ ": "+ goals.get(i).describe() + ", status: " + goals.get(i).getStatus());
+        for (int i=0; i < context.getGoals().size(); i++) {
+            gameInterface.println("  * " + (i+1)+ ": "+ context.getGoals().get(i).describe() + ", status: " + context.getGoals().get(i).getStatus());
         }
         gameInterface.println("\n");
         gameInterface.println("- Current room:  " + player.currentRoom() + "\n");
@@ -289,15 +270,6 @@ public abstract class Game {
                 gameInterface.println("  * " +r.description() + " ");
             }
         }
-    }
-
-    /**
-     *  Getter for a player.
-     *
-     * @return the current player.
-     */
-    public Player getPlayer() {
-        return player;
     }
 
     private void appendString(Action action, StringBuilder builder) {
@@ -348,46 +320,11 @@ public abstract class Game {
     }
 
     /**
-     * Add a goal to the game.
-     * @param g the goal to add.
-     */
-    public void addGoal(GameGoal g) {
-        goals.add(g);
-    }
-
-    /**
-     * Set the player for the game.
-     * @param player the player to add to the game.
-     */
-    public void setPlayer(Player player) {
-        this.player = player;
-        this.playerExecutionEngine = new PlayerExecutionEngine(this.player);
-    }
-
-    /**
      * Show the game introduction
      */
     public void showIntro() {
-
         gameInterface.println("Welcome to Tartan Adventure (1.0), by Tartan Inc..");
-        gameInterface.println("Game: " + gameDescription);
+        gameInterface.println("Game: " + context.getGameDescription());
         gameInterface.println("To get help type 'help' ... let's begin\n");
-    }
-
-    /**
-     * Setter for game description
-     * @param description the description
-     */
-    public void setDescription(String description) {
-        this.gameDescription = description;
-    }
-
-    /**
-     * Ensure that the game parameters are all set
-     * @return true if valid, false otherwise
-     */
-    public boolean validate() {
-        // TODO: This method is way too simple. A more thorough validation must be done!
-        return (gameName!= null && gameDescription != null);
     }
 }

@@ -1,7 +1,7 @@
 package edu.cmu.tartan.games;
 
-import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GameCollectGoal;
@@ -34,7 +34,7 @@ public class CollectGame extends GameConfiguration {
      * @throws InvalidGameException
      */
     @Override
-    public void configure(Game game) throws InvalidGameException {
+    public boolean configure(GameContext context) throws InvalidGameException {
 
         Room mid1 = new Room("There is a fork", "Fork");
         Room mid2 = new Room("Ferocious bear", "bear");
@@ -65,16 +65,17 @@ public class CollectGame extends GameConfiguration {
 
         // Create the game's player and install the goals
         Player player = new Player(start, Player.DEFAULT_USER_NAME);
-        game.setPlayer(player);
-        game.addGoal(new GameCollectGoal(goalItems, player));
-
+        context.setPlayer(player);
+        context.addGoal(new GameCollectGoal(goalItems, player));
+        
         StringBuilder sb = new StringBuilder("Collect the following items:\n");
         sb.append(" * a brick\n");
         sb.append(" * a key\n");
         sb.append(" * a peice of gold\n");
+        context.setGameDescription(sb.toString());
 
-        game.setDescription(sb.toString());
-
-        if (!game.validate()) throw new InvalidGameException("Game improperly configured");
+        if (!context.validate()) throw new InvalidGameException("Game improperly configured");
+        
+        return true;
     }
 }

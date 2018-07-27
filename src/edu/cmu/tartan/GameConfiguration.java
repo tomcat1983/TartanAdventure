@@ -30,11 +30,11 @@ public abstract class GameConfiguration {
 	
     /**
      * Configure the game
-     * @param game the Game object that will manage exectuion
+     * @param game the Game object that will manage execution
      * @throws InvalidGameException indicates configuration error
      * @see Game
      */
-    public abstract void configure(Game game) throws InvalidGameException;
+    public abstract boolean  configure(GameContext context) throws InvalidGameException;
 
 }
 
