@@ -15,7 +15,8 @@ import java.util.List;
  * 1.0 March 2018 - initial version
  */
 public class RoomElevator extends Room {
-
+	//
+	public static final int EV_MOVE_TIME = 100;
     // current floor
     private int currentFloor;
 
@@ -75,7 +76,7 @@ public class RoomElevator extends Room {
 		for(int i=0; i < 3; i++) {
 			gameInterface.println("...");
 			try {
-				Thread.sleep(DELAY_TIME);
+				Thread.sleep(EV_MOVE_TIME);
 			} catch(Exception e1) {
 				gameInterface.severe("Exception: " + e1.getMessage());
 			}

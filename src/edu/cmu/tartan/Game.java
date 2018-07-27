@@ -10,10 +10,7 @@ import edu.cmu.tartan.room.Room;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Scanner;
-
 import org.eclipse.jdt.annotation.NonNull;
-
 import java.util.List;
 
 /**
@@ -36,11 +33,6 @@ public abstract class Game {
 	 */
 	@NonNull protected GameContext context;
     /**
-     * Reads input from the command line.
-     */
-	@NonNull private Scanner scanner;
-
-    /**
      * Attempt to interpret input more flexibly.
      */
 	private PlayerInterpreter interpreter;
@@ -55,7 +47,6 @@ public abstract class Game {
     public Game(@NonNull String userId) {
         // Parse room from file
     	this.context = new GameContext(userId);
-        this.scanner = new Scanner(System.in);
         this.interpreter = new PlayerInterpreter();
     }
 
@@ -129,7 +120,7 @@ public abstract class Game {
             while(!result) {
                 printMenu(menu);
                 gameInterface.print("> ");
-                String input = this.scanner.nextLine();
+                String input = gameInterface.getCommand();
                 result = loadGame(input, menu); 
             }
         }
@@ -182,7 +173,7 @@ public abstract class Game {
             while(true) {
             	gameInterface.print("> ");
 
-                input = this.scanner.nextLine();
+                input = gameInterface.getCommand();
                 if(processGameCommand(input)) {
                 	break;
                 }
