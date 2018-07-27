@@ -1,7 +1,8 @@
 package edu.cmu.tartan.client;
 
-import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameInterface;
+import edu.cmu.tartan.LocalGame;
+import edu.cmu.tartan.Player;
 
 public class Client {
 
@@ -69,10 +70,9 @@ public class Client {
 	}
 	
 	private boolean newGame() {
-		Game game = new Game();
-
-		if(game.configureGame()) {
-			game.start();			
+		LocalGame localGame = new LocalGame(Player.DEFAULT_USER_NAME);
+		if(localGame.configureGame()) {
+			localGame.start();
 		}
 		
 		return true;

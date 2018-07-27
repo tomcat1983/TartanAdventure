@@ -51,7 +51,7 @@ public class ObscuredRoomGame extends GameConfiguration {
 		room1.putItem(fridge);
 		fridge.setRelatedRoom(passage);
 
-        Player player = new Player(room1);
+        Player player = new Player(room1, Player.DEFAULT_USER_NAME);
         ArrayList<String> goalItems = new ArrayList<>();
         goalItems.add("passage");
         goalItems.add("room1");

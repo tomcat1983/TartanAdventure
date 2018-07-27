@@ -52,7 +52,7 @@ public class ExploreGame extends GameConfiguration {
         goalItems.add("room2");
         goalItems.add("room3");
 
-        Player player = new Player(room1);
+        Player player = new Player(room1, Player.DEFAULT_USER_NAME);
         game.setPlayer(player);
         game.addGoal(new GameExploreGoal(goalItems,  game.getPlayer()));
 

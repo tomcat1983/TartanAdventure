@@ -66,7 +66,7 @@ public class LockRoomGame extends GameConfiguration {
         goals.add("bear");
         goals.add("interior");
 
-        Player player = new Player(start);
+        Player player = new Player(start, Player.DEFAULT_USER_NAME);
 
         game.setPlayer(player);
         game.addGoal(new GameExploreGoal(goals, game.getPlayer()));

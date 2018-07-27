@@ -59,7 +59,7 @@ public class DarkRoomGame extends GameConfiguration {
 
         room1.setAdjacentRoom(Action.ACTION_GO_NORTH, classroom);
 
-        Player player = new Player(room1);
+        Player player = new Player(room1, Player.DEFAULT_USER_NAME);
         ArrayList<String> goalItems = new ArrayList<>();
         goalItems.add("room1");
         goalItems.add("Classroom");

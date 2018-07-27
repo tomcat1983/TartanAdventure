@@ -2,17 +2,29 @@ package edu.cmu.tartan.room;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import edu.cmu.tartan.Player;
+import edu.cmu.tartan.PlayerExecutionEngine;
+import edu.cmu.tartan.PlayerInterpreter;
 import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemKey;
+import edu.cmu.tartan.item.ItemShovel;
 
 public class TestRoom {
 
@@ -26,13 +38,13 @@ public class TestRoom {
 	
 	private Room room1;
 	private Room room2;
-
+	
 	@AfterEach
 	public void testItemallVisible() {
-		Item.getInstance("brick").isVisible();
-		Item.getInstance("key").isVisible();
-		Item.getInstance("lock").isVisible();
-	    Item.getInstance("gold").isVisible();
+		Item.getInstance("brick").setVisible(true);
+		Item.getInstance("key").setVisible(true);
+		Item.getInstance("lock").setVisible(true);
+	    Item.getInstance("gold").setVisible(true);
 	}
 	
 	public void makeSameRoom() {
@@ -44,11 +56,45 @@ public class TestRoom {
 		room1 = new Room(FORK_ROOM_DESCRIPTION, FORK);
         room2 = new Room(PARK_ROOM_DESCRIPTION, PARK);
 	}
+	
+	@Test
+	void testCanRoomSerialization() {
+		room1 = new Room(TestRoom.FORK_ROOM_DESCRIPTION, TestRoom.FORK);
+		Player player = new Player(room1, Player.DEFAULT_USER_NAME);
+
+		List<Item> testItems = new LinkedList<>();
+		testItems.add(Item.getInstance("brick"));
+		testItems.add(Item.getInstance("key"));
+		testItems.add(Item.getInstance("lock"));
+	    testItems.add(Item.getInstance("gold"));
+
+	    assertTrue(room1.putItems(testItems));
+	    
+		try {
+			FileOutputStream fos = new FileOutputStream("Room.serial");
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			ObjectOutputStream out = new ObjectOutputStream(bos);
+			out.writeObject(room1);
+			out.close();
+
+			FileInputStream fis = new FileInputStream("Room.serial");
+			BufferedInputStream bis = new BufferedInputStream(fis);
+			ObjectInputStream in = new ObjectInputStream(bis);
+			final Room restoredRoom = (Room) in.readObject();
+			assertEquals(restoredRoom, room1);
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}				
+	}
 
 	@Test
 	public void testTrueWhenCallsetPlayerAndgetPlayer() {
 		makeSameRoom();
-		Player player = new Player(room1);
+		Player player = new Player(room1, Player.DEFAULT_USER_NAME);
 	    		
 	    room1.setPlayer(player);
 		assertNotNull(room1.getPlayer());

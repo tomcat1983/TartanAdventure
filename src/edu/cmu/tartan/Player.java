@@ -10,6 +10,7 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.*;
 
 import java.util.Map;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,17 +22,27 @@ import java.util.List;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Player {
+public class Player implements Comparable, Serializable {
+	public static final String DEFAULT_USER_NAME = "Tony";
+	/**
+	 * Version for serialization
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Game interface for game message and log
 	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
+	private static final transient GameInterface gameInterface = GameInterface.getInterface();
 
 	/**
      * The player's score.
      */
     private int score=0;
+
+    /**
+     * The player's score.
+     */
+    private String userName;
 
     /**
      * The list of rooms that this player has visited.
@@ -63,8 +74,8 @@ public class Player {
      *
      * @param currentRoom the current room
      */
-    public Player(Room currentRoom) {
-        this(currentRoom, new ArrayList<>());
+    public Player(Room currentRoom, String userName) {
+        this(currentRoom, new ArrayList<>(), userName);
     }
 
     /**
@@ -72,11 +83,12 @@ public class Player {
      * @param currentRoom the current room
      * @param items the player's items
      */
-    public Player(Room currentRoom, List<Item>items) {
+    public Player(Room currentRoom, List<Item>items, String userName) {
         this.items = items;
         this.score = 0;
         this.currentRoom = currentRoom;
         this.currentRoom.setPlayer(this);
+        this.userName = userName;
     }
 
     /**
@@ -368,4 +380,31 @@ public class Player {
     public List<GameGoal> getGoals() {
         return goals;
     }
+
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+		return result;
+	}
+
+	@Override
+    public int compareTo(Object other) {
+        if (userName.compareTo(((Player) other).userName) == 0) {
+            return 0;
+        }
+        return -1;
+    }
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Player) {
+			Player player = (Player)obj;
+    		if(player.userName.equals(userName)) {
+    			return true;
+    		}
+    	}
+		return false;
+	}
 }

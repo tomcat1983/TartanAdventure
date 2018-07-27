@@ -8,9 +8,9 @@ import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Scanner;
 import java.util.List;
 
 /**
@@ -22,17 +22,22 @@ import java.util.List;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Game {
+public abstract class Game implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Game interface for game message and log
 	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
-
+	protected static final transient GameInterface gameInterface = GameInterface.getInterface();
+ 
     /**
      * Attempt to interpret input more flexibly.
      */
-    private PlayerInterpreter interpreter;
+    private transient PlayerInterpreter interpreter;
     /**
      * The player for the game
      */
@@ -41,7 +46,7 @@ public class Game {
     /**
      * The game execute
      */
-    private PlayerExecutionEngine playerExecutionEngine;
+    private transient PlayerExecutionEngine playerExecutionEngine;
     /**
      * The name and description of the active game
      */
@@ -51,13 +56,17 @@ public class Game {
      * The set of goals for a game
      */
     private ArrayList<GameGoal> goals = new ArrayList<>();
-
+    /**
+     * The userId is user name with local game. But if game is network mode, user name set userId.
+     */
+    protected String userId;
 
     /**
      * Create and configure a new game.
      */
-    public Game() {
+    public Game(String userId) {
         this.interpreter = new PlayerInterpreter();
+        this.userId = userId;
     }
 
     /**

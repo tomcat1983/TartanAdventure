@@ -1,5 +1,7 @@
 package edu.cmu.tartan.goal;
 
+import java.io.Serializable;
+
 import edu.cmu.tartan.Player;
 
 /**
@@ -10,7 +12,7 @@ import edu.cmu.tartan.Player;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public interface GameGoal {
+public interface GameGoal extends Serializable {
     /**
      * Evaluate goal progress
      * @return true if achieved; false otherwise.

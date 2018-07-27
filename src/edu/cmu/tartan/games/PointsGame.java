@@ -55,7 +55,7 @@ import edu.cmu.tartan.room.Room;
         // Keep scores for things in this room
         int points = document.value() + coffee.value() + safe.value();
 
-        Player player = new Player(office);
+        Player player = new Player(office, Player.DEFAULT_USER_NAME);
         game.setPlayer(player);
         game.addGoal(new GamePointsGoal(points, player));
 

@@ -85,7 +85,7 @@ public class DemoGame extends GameConfiguration {
         room4.setAdjacentRoom(Action.ACTION_GO_WEST, room5);
 
         // Set the initial room
-        Player player = new Player(room1);
+        Player player = new Player(room1, Player.DEFAULT_USER_NAME);
         game.setPlayer(player);
         game.addGoal(new DemoGoal());
 

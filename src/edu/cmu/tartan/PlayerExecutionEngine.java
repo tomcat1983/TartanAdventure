@@ -368,7 +368,7 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private void actionPut(Item itemToPut, Item itemToBePutInto) {
+    private void actionPut(@NonNull Item itemToPut, @NonNull Item itemToBePutInto) {
     	
         if(!player.hasItem(itemToPut)) {
             gameInterface.println("You don't have that object in your inventory.");
@@ -392,7 +392,7 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private void actionTake(Item contents, Item container) {
+    private void actionTake(@NonNull Item contents,@NonNull Item container) {
     	if(!player.currentRoom().hasItem(container)) {
 			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
         }
@@ -411,7 +411,7 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private boolean hasIndirectObject(Action action, ActionExecutionUnit actionExecutionUnit) {
+    private boolean hasIndirectObject(@NonNull Action action,@NonNull ActionExecutionUnit actionExecutionUnit) {
     	Item directItem = actionExecutionUnit.directObject();
         Item indirectItem = actionExecutionUnit.indirectObject();
         
@@ -429,7 +429,7 @@ public class PlayerExecutionEngine {
         return true;
     }
     
-    private boolean hasNoObject(Action action) {
+    private boolean hasNoObject(@NonNull Action action) {
     	switch(action) {
 	        case ACTION_LOOK:
 	            player.lookAround();

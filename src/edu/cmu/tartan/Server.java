@@ -9,10 +9,9 @@ public class Server {
 
 	public Server(String ip, String port) {
 		gameInterface.info("Run server : " + ip + ":" + port);
-		Game game = new Game();
-
-		if(game.configureGame()) {
-			game.start();			
+		LocalGame localGame = new LocalGame(Player.DEFAULT_USER_NAME);
+		if(localGame.configureGame()) {
+			localGame.start();
 		}
 	}
 }
