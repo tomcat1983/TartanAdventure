@@ -52,7 +52,8 @@ public class GameExploreGoal implements GameGoal {
      * Fetch status of this goal
      * @return a displayable string for progress towards this goal
      */
-    public String getStatus() {
+    @Override
+	public String getStatus() {
         return "You have explored " + count + " out of " + itinerary.size() + " rooms.";
     }
 

@@ -1,8 +1,5 @@
 package edu.cmu.tartan.manager;
 
-import edu.cmu.tartan.socket.ISocketHandler;
-import edu.cmu.tartan.socket.SocketServer;
-
 public class TartanGameServer {
 
 	/*

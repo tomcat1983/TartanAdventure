@@ -240,7 +240,8 @@ public class Room implements Comparable, Serializable {
         this.player = player;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         return description + visibleItems();
     }
 

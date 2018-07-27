@@ -66,7 +66,8 @@ public class ItemSafe extends Item implements Hostable, Openable {
      * Fetch the installed item
      * @return the installed item
      */
-    public Item installedItem() {
+    @Override
+	public Item installedItem() {
         return installedItem;
     }
 

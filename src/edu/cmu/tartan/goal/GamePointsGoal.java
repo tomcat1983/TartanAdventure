@@ -41,7 +41,8 @@ public class GamePointsGoal implements GameGoal {
      * Fetch the current status of this goal.
      * @return the current status for display.
      */
-    public String getStatus() {
+    @Override
+	public String getStatus() {
         return "You scored " + player.getScore() + " out of " + winningScore + " points.";
     }
 

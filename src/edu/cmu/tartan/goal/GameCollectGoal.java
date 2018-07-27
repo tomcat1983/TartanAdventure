@@ -46,7 +46,8 @@ public class GameCollectGoal implements GameGoal {
         return count == itemsList.size();
     }
 
-    public String getStatus() {
+    @Override
+	public String getStatus() {
         return "You collected " + count + " out of " + player.getCollectedItems().size() + " items.";
     }
 
