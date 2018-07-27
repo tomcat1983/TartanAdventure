@@ -5,7 +5,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.cmu.tartan.GameInterface;
+
 public class Commander {
+	/**
+	 * Game interface for game message and log
+	 */
+	private GameInterface gameInterface = GameInterface.getInterface();
+	
 	final String newLine = System.getProperty("line.separator").toString();
 	List<String> commandList = new ArrayList<>();
 	
@@ -27,5 +34,7 @@ public class Commander {
 		System.setIn(in);
 		
 		commandList.clear();
+		
+		gameInterface.resetInterface();
 	}
 }

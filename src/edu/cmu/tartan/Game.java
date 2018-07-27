@@ -11,7 +11,6 @@ import edu.cmu.tartan.room.Room;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Scanner;
 import java.util.List;
 
 /**
@@ -35,11 +34,6 @@ public abstract class Game implements Serializable {
 	 */
 	protected static final transient GameInterface gameInterface = GameInterface.getInterface();
  
-    /**
-     * Reads input from the command line.
-     */
-    private transient Scanner scanner;
-
     /**
      * Attempt to interpret input more flexibly.
      */
@@ -71,8 +65,6 @@ public abstract class Game implements Serializable {
      * Create and configure a new game.
      */
     public Game(String userId) {
-        // Parse room from file
-        this.scanner = new Scanner(System.in);
         this.interpreter = new PlayerInterpreter();
         this.userId = userId;
     }
@@ -158,7 +150,7 @@ public abstract class Game implements Serializable {
             while(!result) {
                 printMenu(menu);
                 gameInterface.print("> ");
-                String input = this.scanner.nextLine();
+                String input = gameInterface.getCommand();
                 result = loadGame(input, menu); 
             }
         }
@@ -210,7 +202,7 @@ public abstract class Game implements Serializable {
             while(true) {
             	gameInterface.print("> ");
 
-                input = this.scanner.nextLine();
+                input = gameInterface.getCommand();
                 if(processGameCommand(input)) {
                 	break;
                 }
