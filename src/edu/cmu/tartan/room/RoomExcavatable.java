@@ -2,32 +2,34 @@ package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.item.Item;
 
-import java.util.List;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class RoomExcavatable extends Room {
-
+	/**
+	 * serial Version ID
+	 */
+	private static final long serialVersionUID = 1L;
 	protected String digMessage;
 	protected boolean wasDugUp;
-	protected List<Item> revealableItems;
+	protected ArrayList<Item> revealableItems;
 
 	public RoomExcavatable(String description, String shortDescription, String digMessage) {
 		super(description, shortDescription);
 		this.digMessage = digMessage;
 		this.wasDugUp = false;
-		this.revealableItems = new LinkedList<>();
+		this.revealableItems = new ArrayList<>();
 	}
 
     /**
      * Set the item(s) to be excavated
      * @param items the list of excavatable items
      */
-	public void setRevealableItems(List<Item> items) {
+	public void setRevealableItems(ArrayList<Item> items) {
 		if(items != null) {
 			this.revealableItems = items;
 		}
 	}
-
+	
     /**
      * Perform the excavation
      */

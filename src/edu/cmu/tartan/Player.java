@@ -12,7 +12,6 @@ import edu.cmu.tartan.room.*;
 import java.util.Map;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The player for a game.
@@ -40,14 +39,14 @@ public class Player implements Comparable, Serializable {
     private int score=0;
 
     /**
-     * The player's score.
+     * The player's name
      */
     private String userName;
 
     /**
      * The list of rooms that this player has visited.
      */
-    private List<Room> roomsVisited = new ArrayList<>();
+    private ArrayList<Room> roomsVisited = new ArrayList<>();
 
     /**
      * The points that this player can possibly score.
@@ -57,12 +56,12 @@ public class Player implements Comparable, Serializable {
     /**
      * The inventory of items this player has.
      */
-    private List<Item> items = new ArrayList<>();
+    private ArrayList<Item> items = new ArrayList<>();
 
     /**
      * This player's goals
      */
-    private List<GameGoal> goals = new ArrayList<>();
+    private ArrayList<GameGoal> goals = new ArrayList<>();
 
     /**
      * The current room this player is in.
@@ -83,7 +82,7 @@ public class Player implements Comparable, Serializable {
      * @param currentRoom the current room
      * @param items the player's items
      */
-    public Player(Room currentRoom, List<Item>items, String userName) {
+    public Player(Room currentRoom, ArrayList<Item>items, String userName) {
         this.items = items;
         this.score = 0;
         this.currentRoom = currentRoom;
@@ -172,7 +171,7 @@ public class Player implements Comparable, Serializable {
      * Get the current set of items.
      * @return the items.
      */
-    public List<Item> getCollectedItems() {
+    public ArrayList<Item> getCollectedItems() {
         return this.items;
     }
 
@@ -239,7 +238,7 @@ public class Player implements Comparable, Serializable {
      * Get the list of rooms visited.
      * @return The list of visited rooms.
      */
-    public List<Room> getRoomsVisited() {
+    public ArrayList<Room> getRoomsVisited() {
         return roomsVisited;
     }
 
@@ -377,7 +376,7 @@ public class Player implements Comparable, Serializable {
      * Fetch the goals for this Player.
      * @return the list of this Player's goals.
      */
-    public List<GameGoal> getGoals() {
+    public ArrayList<GameGoal> getGoals() {
         return goals;
     }
 
