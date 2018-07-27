@@ -430,4 +430,56 @@ class TestPlayerExecutionEngine {
     	action = interpreter.interpretString("w", actionExecutionUnit);
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	}
+	
+	@Test
+	void testWhenexecuteActionCallWithHasNoObject() {
+		Action action = interpreter.interpretString("lookAround", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	action = interpreter.interpretString("l", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	action = interpreter.interpretString("jump", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	    			
+    	action = interpreter.interpretString("climb", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	
+    	action = interpreter.interpretString("inventory", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+		ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight");
+		player.grabItem(flashlight);
+    	
+    	action = interpreter.interpretString("inventory", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	
+    	action = interpreter.interpretString("pass", actionExecutionUnit);
+    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	// terminate
+    	//action = interpreter.interpretString("terminate", actionExecutionUnit);
+    	//assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	}
+	
+	@Test
+	void testWhenexecuteActionCallWithInDirectObject() {
+		Action action = interpreter.interpretString("put key in pit", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight");
+		player.grabItem(flashlight);
+    	
+    	action = interpreter.interpretString("put flashlight in any", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	action = interpreter.interpretString("put flashlight in pit", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+    	
+    	action = interpreter.interpretString("remove key from pit", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+    	action = interpreter.interpretString("remove any from pit", actionExecutionUnit);
+    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+	}
 }

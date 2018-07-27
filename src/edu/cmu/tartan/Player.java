@@ -326,8 +326,9 @@ public class Player implements Comparable, Serializable {
     /**
      * Print information about the room
      */
-    public void lookAround() {
+    public boolean lookAround() {
         gameInterface.println(this.currentRoom.toString());
+        return true;
     }
 
     /**
