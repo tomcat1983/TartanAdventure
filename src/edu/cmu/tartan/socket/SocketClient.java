@@ -30,8 +30,8 @@ public class SocketClient implements Runnable {
 
 	@Override
 	public void run() {
-		connectToServer();
-
+		if (connectToServer())
+			gameInterface.info("Connected");
 	}
 	
 	public boolean connectToServer() {
@@ -58,13 +58,29 @@ public class SocketClient implements Runnable {
         } catch (UnknownHostException e) {
  
         	gameInterface.println("Server not found: " + e.getMessage());
+        	return false;
  
         } catch (IOException e) {
  
         	gameInterface.println("IOException : " + e.getMessage());
+        	return false;
         }
-		
+
 		return true;
+	}
+	
+	public boolean waitToConnection(int timeout) {
+		while (timeout > 0 && socket == null) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException exception) {
+				break;
+			}
+			
+			timeout -= 10;
+		}
+		
+		return (socket != null);
 	}
 	
 	public boolean receiveMessage(String message) {

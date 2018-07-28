@@ -3,6 +3,9 @@ package edu.cmu.tartan.client;
 import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.LocalGame;
 import edu.cmu.tartan.Player;
+import edu.cmu.tartan.socket.ISocketHandler;
+import edu.cmu.tartan.socket.SocketClient;
+import edu.cmu.tartan.socket.SocketServer;
 
 public class Client {
 
@@ -15,10 +18,22 @@ public class Client {
 	 * Client interface instance
 	 */
 	private ClientInterface clientInterface;
+	
+	/**
+	 * Server IP
+	 */
+	String serverIp;
+	
+	/**
+	 * Server port
+	 */
+	int serverPort;
 
 	
 	public Client(String ip, String port) {
-		gameInterface.info("Run Client : " + ip + ":" + port);
+		serverIp = ip;
+		serverPort = Integer.parseInt(port);
+		
 		clientInterface = new ClientInterface();
 	}
 	
@@ -79,8 +94,19 @@ public class Client {
 	}
 
 	private boolean runNetworkMode() {
-		gameInterface.println("TBD");
-		return true;
+		SocketClient socketClient = new SocketClient(serverIp, serverPort);
+		Thread socketClientThread = new Thread((Runnable)socketClient);
+		socketClientThread.start();
+		
+		if (socketClient.waitToConnection(1000)) {
+			gameInterface.println("Send message : " + Player.DEFAULT_USER_NAME);
+			socketClient.sendMessage(Player.DEFAULT_USER_NAME);
+			return true;
+		} else {
+			gameInterface.println("Connetion fail");
+		}
+		
+		return false;
 	}
 	
 	private boolean runDesignerMode() {
