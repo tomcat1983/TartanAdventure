@@ -7,7 +7,7 @@ import edu.cmu.tartan.properties.Visible;
 import edu.cmu.tartan.room.Room;
 
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * This is the main class for game items. Items are things that can be used in the game
@@ -41,7 +41,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
      * Items can have a list of unique aliases
      */
     private String[] aliases;
-    private static LinkedList<Item> sharedInstances;
+    private static ArrayList<Item> sharedInstances;
 
     /*
      *  items can open rooms, call elevators, etc (e.g., an ItemButton instance)
@@ -77,7 +77,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
      */
     private static void initSharedInstances() {
 
-        sharedInstances = new LinkedList<>();
+        sharedInstances = new ArrayList<>();
         sharedInstances.add(new ItemShovel("shovel", "metal shovel", new String[]{"shovel"}));
         sharedInstances.add(new ItemBrick("brick", "clay brick", new String[]{"brick"}));
         sharedInstances.add(new ItemFood("food", "food", new String[]{"food"}));
@@ -260,6 +260,3 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
     	return description.hashCode() + detailDescription.hashCode();
     }
 }
-
-
-

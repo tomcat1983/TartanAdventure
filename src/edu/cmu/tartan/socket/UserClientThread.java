@@ -35,6 +35,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 		receiveMessage();
 	}
 
+	@Override
 	public boolean sendMessage(String message) {
 		try {
 			OutputStream output = clientSocket.getOutputStream();

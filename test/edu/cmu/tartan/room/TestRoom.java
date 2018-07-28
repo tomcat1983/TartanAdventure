@@ -9,8 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
@@ -62,7 +61,7 @@ public class TestRoom {
 		room1 = new Room(TestRoom.FORK_ROOM_DESCRIPTION, TestRoom.FORK);
 		Player player = new Player(room1, Player.DEFAULT_USER_NAME);
 
-		List<Item> testItems = new LinkedList<>();
+		ArrayList<Item> testItems = new ArrayList<>();
 		testItems.add(Item.getInstance("brick"));
 		testItems.add(Item.getInstance("key"));
 		testItems.add(Item.getInstance("lock"));
@@ -104,7 +103,7 @@ public class TestRoom {
 	@Test
 	public void testTrueFalseFalseWhenCallvisibleItems() {
 		makeSameRoom();
-		List<Item> testItems = new LinkedList<>();
+		ArrayList<Item> testItems = new ArrayList<>();
 		testItems.add(Item.getInstance("brick"));
 		testItems.add(Item.getInstance("key"));
 		testItems.add(Item.getInstance("lock"));
@@ -123,14 +122,14 @@ public class TestRoom {
 	@Test
 	public void testTrueWhenCallToputItemsAndgetItems() {
 		makeSameRoom();
-		List<Item> testItems = new LinkedList<>();
+		ArrayList<Item> testItems = new ArrayList<>();
 		testItems.add(Item.getInstance("brick"));
 		testItems.add(Item.getInstance("key"));
 		testItems.add(Item.getInstance("lock"));
 	    testItems.add(Item.getInstance("gold"));
 				
 	    assertTrue(room1.putItems(testItems));
-		List<Item> getItemsList = new LinkedList<>();
+	    ArrayList<Item> getItemsList = new ArrayList<>();
 		getItemsList = room1.getItems();
 		
 		assertEquals(testItems, getItemsList);
