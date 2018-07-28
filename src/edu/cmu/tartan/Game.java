@@ -7,12 +7,15 @@ import edu.cmu.tartan.games.*;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.xml.XmlParser;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.eclipse.jdt.annotation.NonNull;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * The main class for game logic. Many if not all decisions about game play are made
@@ -69,6 +72,19 @@ public abstract class Game {
         }
         gameInterface.println(sb.toString());
     }
+    
+    private GameConfiguration loaclGameFromXML() {
+		XmlParser parseXml;
+		try {
+			parseXml = new XmlParser(); 
+			return (GameConfiguration) parseXml.loadGameMapXml(context.getUserId());
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe("Game loading failure. Exception: \n" + e);
+	       	gameLogger.severe(e.getMessage());
+	       	return null;
+		}
+
+    }
 
     private ArrayList<GameConfiguration> loadGameMenu() {
     	// Need to load about real game from XML(new game feature)
@@ -85,6 +101,12 @@ public abstract class Game {
         menu.add(new ObscuredRoomGame());
         menu.add(new DemoGame());
 
+        // XML loading game
+        GameConfiguration loaclGame = loaclGameFromXML();
+        if(loaclGame!=null) {
+            menu.add(loaclGame);
+        	
+        }
     	return menu;
     }
     
@@ -155,6 +177,14 @@ public abstract class Game {
         else if (input.compareTo("status") == 0) {
             status();
         }
+        else if(input.compareTo("save") == 0 ) {
+        	if(this instanceof LocalGame) {
+        		((LocalGame)this).save(context.getUserId());
+        		gameInterface.print(GamePlayMessage.SAVE_SUCCESSFUL_10_4);
+        	} else {
+        		gameInterface.println(GamePlayMessage.SAVE_FAILURE_2_3);
+        	}
+        }
         else {
         	ActionExecutionUnit actionExecutionUnit = new ActionExecutionUnit(null, null);
         	actionExecutionUnit.setUserId(context.getUserId());
@@ -172,10 +202,11 @@ public abstract class Game {
     /**
      * Start the Game.
      */
-    public void start() {    	
+    public void start() {
+    	gameInterface.print("Enjoy your game!");
+
         // Orient the player
         context.getPlayer().lookAround();
-
         try {
             String input = null;
             while(true) {
@@ -278,7 +309,6 @@ public abstract class Game {
      * Display help menu
      */
     private void help() {
-
         // Credit to emacs Dunnet by Ron Schnell
         gameInterface.println("Welcome to TartanAdventure RPG Help." +
                 "Here is some useful information (read carefully because there are one\n" +
@@ -315,7 +345,6 @@ public abstract class Game {
         gameInterface.println("- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
         gameInterface.println("- You can quit by typing \"quit\"\n");
         gameInterface.println("- Good luck!\n");
-
     }
 
     /**
