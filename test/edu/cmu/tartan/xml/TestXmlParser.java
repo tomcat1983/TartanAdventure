@@ -401,7 +401,7 @@ public class TestXmlParser {
 	public void testWritingLoginResultOK() throws ParserConfigurationException {
 		
 		XmlResponseLogin xr = new XmlResponseLogin(); 
-		xr.setLoginResult(XmlResultString.OK, XmlLoginNgReason.OK, XmlLoginRole.DESIGNER);
+		xr.setLoginResult(XmlResultString.OK, XmlNgReason.OK, XmlLoginRole.DESIGNER);
 		xr.makeResponseXmlString();
 	}
 	
@@ -410,10 +410,29 @@ public class TestXmlParser {
 	public void testWritingLoginResultFail() throws ParserConfigurationException {
 		
 		XmlResponseLogin xr = new XmlResponseLogin(); 
-		xr.setLoginResult(XmlResultString.NG, XmlLoginNgReason.SERVER_BUSY, XmlLoginRole.NONE);
+		xr.setLoginResult(XmlResultString.NG, XmlNgReason.SERVER_BUSY, XmlLoginRole.NONE);
 		xr.makeResponseXmlString();
 	}
 	
+	@Test
+	public void testParsingAddUserId() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(addUserXmlFileName));
+		XmlResponse xr = parseXml.getXmlResponse();
+		String id = ((XmlResponseAddUser) xr).getId();
+		assertTrue(id.equals("takhh"));
+	}
+	
+	@Test
+	public void testParsingAddUserPw() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(addUserXmlFileName));
+		XmlResponse xr = parseXml.getXmlResponse();
+		String pw = ((XmlResponseAddUser) xr).getPw();
+		assertTrue(pw.equals("awefaweg14ro4aw3"));
+	}
 	
 	/*
 	 * methods for test only 
