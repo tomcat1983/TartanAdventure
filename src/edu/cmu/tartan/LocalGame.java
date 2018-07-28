@@ -34,7 +34,7 @@ public class LocalGame extends Game implements IGameControlMessage {
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			ObjectInputStream in = new ObjectInputStream(bis)
 		) {
-			context= ((GameContext)in.readObject());
+			context = ((GameContext)in.readObject());
 		} catch (IOException|ClassNotFoundException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
@@ -68,7 +68,7 @@ public class LocalGame extends Game implements IGameControlMessage {
 		return false;
 	}
 	
-	private boolean writeGameData(GameContext context, Player player) {
+	private boolean writeGameData(GameContext context) {
 		try (
 			FileOutputStream fos = new FileOutputStream(SAVE_FILE_NAME);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
@@ -87,7 +87,7 @@ public class LocalGame extends Game implements IGameControlMessage {
 		if(context.getUserId().equals(userId)) {
 			// 1. saving GameContext(Room information isn't save.)
 			// 2. saving Player(with Items)
-			return writeGameData(context, context.getPlayer());
+			return writeGameData(context);
 		}
 		return false;
 	}
