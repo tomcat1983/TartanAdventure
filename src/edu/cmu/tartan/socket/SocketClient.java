@@ -31,7 +31,7 @@ public class SocketClient implements Runnable {
 	@Override
 	public void run() {
 		connectToServer();
-
+		gameInterface.info("Connected");
 	}
 	
 	public boolean connectToServer() {
@@ -65,6 +65,20 @@ public class SocketClient implements Runnable {
         }
 		
 		return true;
+	}
+	
+	public boolean waitToConnection(int timeout) {
+		while (timeout > 0 || socket == null) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException exception) {
+				break;
+			}
+			
+			timeout -= 10;
+		}
+		
+		return (socket != null);
 	}
 	
 	public boolean receiveMessage(String message) {

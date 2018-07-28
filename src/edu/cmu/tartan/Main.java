@@ -3,6 +3,7 @@ package edu.cmu.tartan;
 import java.io.*;
 
 import edu.cmu.tartan.client.Client;
+import edu.cmu.tartan.server.Server;
 
 /**
  * A simple driver for the game
@@ -58,7 +59,8 @@ public class Main {
 		}
 		
 		if (mode.equals("server")) {
-			new Server(ip, port);
+			Server server = new Server(ip, port);
+			server.start();
 		} else
 		if (mode.equals("client")) {
 			Client client = new Client(ip, port);
