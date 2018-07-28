@@ -27,12 +27,12 @@ class TestPlayer {
 		room1 = new Room(TestRoom.FORK_ROOM_DESCRIPTION, TestRoom.FORK);
 		player = new Player(room1, Player.DEFAULT_USER_NAME);
 
-		player.grabItem(Item.getInstance("lock"));
-		player.grabItem(Item.getInstance("gold"));
+		player.grabItem(Item.getInstance("lock", Player.DEFAULT_USER_NAME));
+		player.grabItem(Item.getInstance("gold", Player.DEFAULT_USER_NAME));
 
 		ArrayList<Item> testItems = new ArrayList<>();
-		testItems.add(Item.getInstance("brick"));
-		testItems.add(Item.getInstance("key"));		
+		testItems.add(Item.getInstance("brick", Player.DEFAULT_USER_NAME));
+		testItems.add(Item.getInstance("key", Player.DEFAULT_USER_NAME));		
 	    assertTrue(room1.putItems(testItems));
 	    
 		try {

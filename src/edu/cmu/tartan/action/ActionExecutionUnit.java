@@ -5,8 +5,23 @@ import edu.cmu.tartan.item.Item;
 public class ActionExecutionUnit {
     private Item directObject;
     private Item indirectObject;
+    private String userId;
 
-    public ActionExecutionUnit(Item directObject, Item indirectObject) {
+    /**
+	 * @return the userId
+	 */
+	public String getUserId() {
+		return userId;
+	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public ActionExecutionUnit(Item directObject, Item indirectObject) {
     	this.directObject = directObject;
     	this.indirectObject = indirectObject;
     }

@@ -1,6 +1,5 @@
 package edu.cmu.tartan.games;
 
-import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
@@ -47,7 +46,7 @@ public class DarkRoomGame extends GameConfiguration {
         String classroomDarkShortDescription = "Darkness";
 
         // A flashlight (or any luminous object) is needed or the player will lose!
-        items.add(Item.getInstance("flashlight"));
+        items.add(Item.getInstance("flashlight", context.getUserId()));
 
         RoomDark classroom =
                 new RoomDark(classroomDescription,

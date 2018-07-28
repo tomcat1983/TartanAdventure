@@ -1,6 +1,5 @@
 package edu.cmu.tartan.games;
 
-import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
@@ -41,12 +40,12 @@ public class ObscuredRoomGame extends GameConfiguration {
                 "Room1");
 
         // You must push the fridge to expose the hidden passage
-        Item fridge = Item.getInstance("fridge");
+        Item fridge = Item.getInstance("fridge", context.getUserId());
 		RoomObscured passage = new RoomObscured(passageDescription ,passageShortDescription, fridge);
 		passage.setObscured(true);
         passage.setUnobscureMessage("You've revelealed a hidden passage to the east!");
         passage.setObscureMessage("This room is hidden");
-        passage.putItem(Item.getInstance("torch"));
+        passage.putItem(Item.getInstance("torch", context.getUserId()));
 
         room1.setAdjacentRoom(Action.ACTION_GO_EAST,passage);
 		room1.putItem(fridge);

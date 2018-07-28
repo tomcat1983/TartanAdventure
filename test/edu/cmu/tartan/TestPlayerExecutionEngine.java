@@ -49,13 +49,13 @@ class TestPlayerExecutionEngine {
 		playerExecutionEngine = new PlayerExecutionEngine(player);
 		actionExecutionUnit = new ActionExecutionUnit(null, null);
 		
-		Item.getInstance("pot").setVisible(true);
-		Item.getInstance("key").setVisible(true);
+		Item.getInstance("pot", Player.DEFAULT_USER_NAME).setVisible(true);
+		Item.getInstance("key", Player.DEFAULT_USER_NAME).setVisible(true);
 	}
 	
 	@Test
 	void testWhenexecuteActionCallWithDestoryWithDirectObjectAnd() {
-		ItemKey keyItem = (ItemKey) Item.getInstance("key");
+		ItemKey keyItem = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
     	room1.putItem(keyItem);
     	// Destroy key
     	Action action = interpreter.interpretString("destroy key", actionExecutionUnit);
@@ -66,7 +66,7 @@ class TestPlayerExecutionEngine {
 		assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
     	
 		// Destroy real item
-		ItemClayPot itemClayPot = (ItemClayPot) Item.getInstance("pot");
+		ItemClayPot itemClayPot = (ItemClayPot) Item.getInstance("pot", Player.DEFAULT_USER_NAME);
 		room1.putItem(itemClayPot);
 		action = interpreter.interpretString("destroy pot", actionExecutionUnit);
 		assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
@@ -74,8 +74,8 @@ class TestPlayerExecutionEngine {
 	
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionAtDropItem() {
-    	ItemKey key = (ItemKey) Item.getInstance("key");
-    	ItemButton button = (ItemButton) Item.getInstance("Button");
+    	ItemKey key = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
+    	ItemButton button = (ItemButton) Item.getInstance("Button", Player.DEFAULT_USER_NAME);
     	room1.putItem(key);
     	room1.putItem(button);
 
@@ -94,11 +94,11 @@ class TestPlayerExecutionEngine {
 
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionPickupItemAndItemSafe() {
-        ItemSafe safe = (ItemSafe)Item.getInstance("safe");
+        ItemSafe safe = (ItemSafe)Item.getInstance("safe", Player.DEFAULT_USER_NAME);
         safe.setInspectMessage("This safe appears to require a 4 digit PIN number.");
         safe.setPIN(9292);
 
-        ItemDocument document = (ItemDocument) Item.getInstance("document");
+        ItemDocument document = (ItemDocument) Item.getInstance("document", Player.DEFAULT_USER_NAME);
         document.setInspectMessage("The document is encrypted with a cipher. The cryptographers at the CIA will need to decrypt it.");
         safe.install(document);
         document.setVisible(false);
@@ -120,9 +120,9 @@ class TestPlayerExecutionEngine {
 	
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionPickupItemAndDropItem() {
-    	ItemKey key = (ItemKey) Item.getInstance("key");
-    	ItemButton button = (ItemButton) Item.getInstance("Button");
-    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
+    	ItemKey key = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
+    	ItemButton button = (ItemButton) Item.getInstance("Button", Player.DEFAULT_USER_NAME);
+    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
     	room1.putItem(key);
     	room1.putItem(button);
     	room1.putItem(mbox);
@@ -160,7 +160,7 @@ class TestPlayerExecutionEngine {
     	Action action = interpreter.interpretString("inspect pot", actionExecutionUnit);
     	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 
-		ItemKey key = (ItemKey) Item.getInstance("key");
+		ItemKey key = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
 		key.setInspectMessage("It's a key.");
     	room1.putItem(key);
 
@@ -170,8 +170,8 @@ class TestPlayerExecutionEngine {
 	
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionThrow() {
-    	ItemBrick brick = (ItemBrick) Item.getInstance("brick");
-    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
+    	ItemBrick brick = (ItemBrick) Item.getInstance("brick", Player.DEFAULT_USER_NAME);
+    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
     	player.grabItem(brick);
     	player.grabItem(mbox);
 
@@ -188,9 +188,9 @@ class TestPlayerExecutionEngine {
 	
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionShake() {
-		ItemVendingMachine vm = (ItemVendingMachine) Item.getInstance("machine");
+		ItemVendingMachine vm = (ItemVendingMachine) Item.getInstance("machine", Player.DEFAULT_USER_NAME);
 		room1.putItem(vm);
-		ItemKey key = (ItemKey) Item.getInstance("key");
+		ItemKey key = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
     	player.grabItem(key);
     	// Shake
     	Action action = interpreter.interpretString("shake machine", actionExecutionUnit);
@@ -205,9 +205,9 @@ class TestPlayerExecutionEngine {
 	
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionEnable() {
-		ItemMicrowave micro = (ItemMicrowave) Item.getInstance("microwave");
+		ItemMicrowave micro = (ItemMicrowave) Item.getInstance("microwave", Player.DEFAULT_USER_NAME);
 		room1.putItem(micro);
-		ItemKey key = (ItemKey) Item.getInstance("key");
+		ItemKey key = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
     	player.grabItem(key);
     	// Enable
     	Action action = interpreter.interpretString("enable machine", actionExecutionUnit);
@@ -219,8 +219,8 @@ class TestPlayerExecutionEngine {
     	action = interpreter.interpretString("enable microwave", actionExecutionUnit);
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
     	
-    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
-    	ItemFood food = (ItemFood) Item.getInstance("food");
+    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
+    	ItemFood food = (ItemFood) Item.getInstance("food", Player.DEFAULT_USER_NAME);
     	food.setMeltItem(mbox);
     	micro.install(food);
     	
@@ -230,9 +230,9 @@ class TestPlayerExecutionEngine {
 	
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionPush() {
-		ItemButton button = (ItemButton) Item.getInstance("button");
+		ItemButton button = (ItemButton) Item.getInstance("button", Player.DEFAULT_USER_NAME);
 		room1.putItem(button);
-		ItemKey key = (ItemKey) Item.getInstance("key");
+		ItemKey key = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
     	player.grabItem(key);
     	// Enable
     	Action action = interpreter.interpretString("push machine", actionExecutionUnit);
@@ -246,26 +246,26 @@ class TestPlayerExecutionEngine {
     	
         String elevatorDescription = "Elevator";
         RoomElevator elevator = new RoomElevator(elevatorDescription, elevatorDescription);
-        elevator.putItem(Item.getInstance("1"));
-        elevator.putItem(Item.getInstance("2"));
-        elevator.putItem(Item.getInstance("3"));
-        elevator.putItem(Item.getInstance("4"));
+        elevator.putItem(Item.getInstance("1", Player.DEFAULT_USER_NAME));
+        elevator.putItem(Item.getInstance("2", Player.DEFAULT_USER_NAME));
+        elevator.putItem(Item.getInstance("3", Player.DEFAULT_USER_NAME));
+        elevator.putItem(Item.getInstance("4", Player.DEFAULT_USER_NAME));
         // configure the floors and buttons needed to reach them
         Room floor1 = new Room("floor1", elevatorDescription);
-        Item b1 = Item.getInstance("1");
+        Item b1 = Item.getInstance("1", Player.DEFAULT_USER_NAME);
         b1.setRelatedRoom(elevator);
         floor1.putItem(b1);
         Room floor2 = new Room("floor2", elevatorDescription);
-        Item b2 = Item.getInstance("2");
+        Item b2 = Item.getInstance("2", Player.DEFAULT_USER_NAME);
         b2.setRelatedRoom(elevator);
         floor2.putItem(b2);
         Room floor3 = new Room("floor3", elevatorDescription);
-        Item b3 = Item.getInstance("3");
+        Item b3 = Item.getInstance("3", Player.DEFAULT_USER_NAME);
         b3.setRelatedRoom(elevator);
         floor3.putItem(b3);
         // restricted floors cannot be reached
         Room floor4 = new Room("floor4", elevatorDescription);
-        Item b4 = Item.getInstance("4");
+        Item b4 = Item.getInstance("4", Player.DEFAULT_USER_NAME);
         b4.setRelatedRoom(elevator);
         floor4.putItem(b4);
         ArrayList<Room> list = new ArrayList<>();
@@ -300,7 +300,7 @@ class TestPlayerExecutionEngine {
 	
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionDig() {
-		ItemShovel shovel = (ItemShovel) Item.getInstance("shovel");
+		ItemShovel shovel = (ItemShovel) Item.getInstance("shovel", Player.DEFAULT_USER_NAME);
 		room1.putItem(shovel);
 		player.grabItem(shovel);
 		// Dig
@@ -317,7 +317,7 @@ class TestPlayerExecutionEngine {
 	
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionEat() {
-		ItemFood food = (ItemFood) Item.getInstance("food");
+		ItemFood food = (ItemFood) Item.getInstance("food", Player.DEFAULT_USER_NAME);
     	Action action = interpreter.interpretString("eat food", actionExecutionUnit);
     	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 
@@ -325,7 +325,7 @@ class TestPlayerExecutionEngine {
     	action = interpreter.interpretString("eat food", actionExecutionUnit);
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 
-    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
+    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
     	RoomExcavatable romm2 = new RoomExcavatable("Shovel","digdig","^~~~^");
     	player = new Player(romm2, Player.DEFAULT_USER_NAME);
 		player.grabItem(food);
@@ -344,21 +344,21 @@ class TestPlayerExecutionEngine {
 
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionOpen() {
-        ItemSafe safe = (ItemSafe)Item.getInstance("safe");
+        ItemSafe safe = (ItemSafe)Item.getInstance("safe", Player.DEFAULT_USER_NAME);
         safe.setInspectMessage("This safe appears to require a 4 digit PIN number.");
         safe.setPIN(9292);
 
-        ItemDocument document = (ItemDocument) Item.getInstance("document");
+        ItemDocument document = (ItemDocument) Item.getInstance("document", Player.DEFAULT_USER_NAME);
         document.setInspectMessage("The document is encrypted with a cipher. The cryptographers at the CIA will need to decrypt it.");
         safe.install(document);
         document.setVisible(false);
 
-        ItemFolder folder = (ItemFolder)Item.getInstance("folder");
+        ItemFolder folder = (ItemFolder)Item.getInstance("folder", Player.DEFAULT_USER_NAME);
         folder.setOpenMessage("Good for you");
     	room1.putItem(safe);
     	room1.putItem(folder);
     	
-    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
+    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
     	player.grabItem(mbox);
     	//room1.putItem(document);
         
@@ -382,8 +382,8 @@ class TestPlayerExecutionEngine {
 
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionExplode() {
-        ItemDynamite dynamite = (ItemDynamite)Item.getInstance("dynamite");
-        ItemDocument document = (ItemDocument) Item.getInstance("document");
+        ItemDynamite dynamite = (ItemDynamite)Item.getInstance("dynamite", Player.DEFAULT_USER_NAME);
+        ItemDocument document = (ItemDocument) Item.getInstance("document", Player.DEFAULT_USER_NAME);
         document.setInspectMessage("The document is encrypted with a cipher. The cryptographers at the CIA will need to decrypt it.");
 
     	room1.putItem(dynamite);
@@ -411,7 +411,7 @@ class TestPlayerExecutionEngine {
 	@Test
 	void testWhenexecuteActionCallWithMove() {
 		RoomDark room2 = new RoomDark(TestRoomDark.DARK_ROOM_DESC1, TestRoomDark.DARK_ROOM_SHORT_DESC1, TestRoomDark.DARK_DESC, TestRoomDark.DARK_SHORT_DESC);
-		ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight");
+		ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight", Player.DEFAULT_USER_NAME);
 		room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2);
 		player.grabItem(flashlight);
 		
@@ -421,7 +421,7 @@ class TestPlayerExecutionEngine {
     	action = interpreter.interpretString("west", actionExecutionUnit);
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
     	    	
-    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit");
+    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
     	RoomRequiredItem room3 = new RoomRequiredItem("You are in the room that required food", "Required",
                 "pit", "Warning you need key", mbox);
 		room2.setAdjacentRoom(Action.ACTION_GO_WEST, room3);
@@ -448,7 +448,7 @@ class TestPlayerExecutionEngine {
     	action = interpreter.interpretString("inventory", actionExecutionUnit);
     	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 
-		ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight");
+		ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight", Player.DEFAULT_USER_NAME);
 		player.grabItem(flashlight);
     	
     	action = interpreter.interpretString("inventory", actionExecutionUnit);
@@ -466,7 +466,7 @@ class TestPlayerExecutionEngine {
 		Action action = interpreter.interpretString("put key in pit", actionExecutionUnit);
     	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 
-    	ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight");
+    	ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight", Player.DEFAULT_USER_NAME);
 		player.grabItem(flashlight);
     	
     	action = interpreter.interpretString("put flashlight in any", actionExecutionUnit);

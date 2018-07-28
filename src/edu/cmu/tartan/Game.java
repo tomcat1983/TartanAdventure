@@ -157,6 +157,7 @@ public abstract class Game {
         }
         else {
         	ActionExecutionUnit actionExecutionUnit = new ActionExecutionUnit(null, null);
+        	actionExecutionUnit.setUserId(context.getUserId());
         	Action action = interpreter.interpretString(input, actionExecutionUnit);
         	playerExecutionEngine.executeAction(action, actionExecutionUnit);
         	// every time an action is executed the game state must be evaluated

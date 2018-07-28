@@ -40,10 +40,10 @@ public class TestRoom {
 	
 	@AfterEach
 	public void testItemallVisible() {
-		Item.getInstance("brick").setVisible(true);
-		Item.getInstance("key").setVisible(true);
-		Item.getInstance("lock").setVisible(true);
-	    Item.getInstance("gold").setVisible(true);
+		Item.getInstance("brick", Player.DEFAULT_USER_NAME).setVisible(true);
+		Item.getInstance("key", Player.DEFAULT_USER_NAME).setVisible(true);
+		Item.getInstance("lock", Player.DEFAULT_USER_NAME).setVisible(true);
+	    Item.getInstance("gold", Player.DEFAULT_USER_NAME).setVisible(true);
 	}
 	
 	public void makeSameRoom() {
@@ -62,10 +62,10 @@ public class TestRoom {
 		Player player = new Player(room1, Player.DEFAULT_USER_NAME);
 
 		ArrayList<Item> testItems = new ArrayList<>();
-		testItems.add(Item.getInstance("brick"));
-		testItems.add(Item.getInstance("key"));
-		testItems.add(Item.getInstance("lock"));
-	    testItems.add(Item.getInstance("gold"));
+		testItems.add(Item.getInstance("brick", Player.DEFAULT_USER_NAME));
+		testItems.add(Item.getInstance("key", Player.DEFAULT_USER_NAME));
+		testItems.add(Item.getInstance("lock", Player.DEFAULT_USER_NAME));
+	    testItems.add(Item.getInstance("gold", Player.DEFAULT_USER_NAME));
 
 	    assertTrue(room1.putItems(testItems));
 	    
@@ -85,7 +85,6 @@ public class TestRoom {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}				
 	}
@@ -104,10 +103,10 @@ public class TestRoom {
 	public void testTrueFalseFalseWhenCallvisibleItems() {
 		makeSameRoom();
 		ArrayList<Item> testItems = new ArrayList<>();
-		testItems.add(Item.getInstance("brick"));
-		testItems.add(Item.getInstance("key"));
-		testItems.add(Item.getInstance("lock"));
-	    testItems.add(Item.getInstance("gold"));
+		testItems.add(Item.getInstance("brick", Player.DEFAULT_USER_NAME));
+		testItems.add(Item.getInstance("key", Player.DEFAULT_USER_NAME));
+		testItems.add(Item.getInstance("lock", Player.DEFAULT_USER_NAME));
+	    testItems.add(Item.getInstance("gold", Player.DEFAULT_USER_NAME));
 	    
 	    String result = room1.visibleItems();		
 	    assertTrue("".equals(result));
@@ -123,10 +122,10 @@ public class TestRoom {
 	public void testTrueWhenCallToputItemsAndgetItems() {
 		makeSameRoom();
 		ArrayList<Item> testItems = new ArrayList<>();
-		testItems.add(Item.getInstance("brick"));
-		testItems.add(Item.getInstance("key"));
-		testItems.add(Item.getInstance("lock"));
-	    testItems.add(Item.getInstance("gold"));
+		testItems.add(Item.getInstance("brick", Player.DEFAULT_USER_NAME));
+		testItems.add(Item.getInstance("key", Player.DEFAULT_USER_NAME));
+		testItems.add(Item.getInstance("lock", Player.DEFAULT_USER_NAME));
+	    testItems.add(Item.getInstance("gold", Player.DEFAULT_USER_NAME));
 				
 	    assertTrue(room1.putItems(testItems));
 	    ArrayList<Item> getItemsList = new ArrayList<>();
@@ -138,7 +137,7 @@ public class TestRoom {
 	@Test
 	public void testFalseWhenCallToputItemAndWithhasItem() {
 		makeSameRoom();
-		ItemKey keyItem = (ItemKey) Item.getInstance("key");
+		ItemKey keyItem = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
 		keyItem.setVisible(false);
 		ItemKey keytItem2 = null;
 				
@@ -152,7 +151,7 @@ public class TestRoom {
 	@Test
 	public void testNullWhenCallToremoveWithhasItem() {
 		makeSameRoom();
-		ItemKey keyItem = (ItemKey) Item.getInstance("key");
+		ItemKey keyItem = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
 		ItemKey keytItem2 = null;
 		if(!room1.hasItem(keyItem)) {
 			keytItem2 = (ItemKey)room1.remove(keyItem);
@@ -163,7 +162,7 @@ public class TestRoom {
 	@Test
 	public void testTrueWhenCallToputItemAndremoveWithhasItem() {
 		makeSameRoom();
-		ItemKey keyItem = (ItemKey) Item.getInstance("key");
+		ItemKey keyItem = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
 		ItemKey keytItem2 = null;
 		
 		keyItem.setVisible(true);

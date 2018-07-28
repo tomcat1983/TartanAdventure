@@ -17,6 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.games.CustomizingGame;
 import edu.cmu.tartan.goal.GameCollectGoal;
@@ -235,7 +236,7 @@ public class TestXmlParser {
 		
 		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		assertTrue(cGame.getRoomIndex(4) instanceof RoomLockable);
 	}
 	
@@ -244,7 +245,7 @@ public class TestXmlParser {
 		
 		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		assertFalse(cGame.getRoomIndex(4).canMoveToRoomInDirection(Action.ACTION_GO_NORTH));
 	}
 	
@@ -253,7 +254,7 @@ public class TestXmlParser {
 		
 		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		assertTrue(cGame.getRoomIndex(4).canMoveToRoomInDirection(Action.ACTION_GO_EAST));
 	}
 	
@@ -262,7 +263,7 @@ public class TestXmlParser {
 		
 		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		RoomLockable roomLock = (RoomLockable) cGame.getRoomIndex(4); 
 		assertTrue(roomLock.isLocked());
 	}
@@ -274,7 +275,7 @@ public class TestXmlParser {
 		//<room index="3" type="normal" south="2" />
 		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		RoomLockable roomLock = (RoomLockable) cGame.getRoomIndex(4); 
 		Room roomDontHaveKey = cGame.getRoomIndex(1); 
 		List<Item> items = roomDontHaveKey.getItems();
@@ -291,7 +292,7 @@ public class TestXmlParser {
 		//<room index="3" type="normal" south="2" />
 		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		RoomLockable roomLock = (RoomLockable) cGame.getRoomIndex(4); 
 		Room roomHaveKey = cGame.getRoomIndex(3); 
 		List<Item> items = roomHaveKey.getItems();
@@ -306,7 +307,7 @@ public class TestXmlParser {
 		
 		//<room index="6" type="dark" south="7" west="1" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		assertTrue(cGame.getRoomIndex(6) instanceof RoomDark);
 	}
 	
@@ -315,7 +316,7 @@ public class TestXmlParser {
 		
 		//<room index="8" type="excavatable" north="7" west="9" east="13" item_list="microwave:1" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		assertTrue(cGame.getRoomIndex(8) instanceof RoomExcavatable);
 	}
 	
@@ -324,7 +325,7 @@ public class TestXmlParser {
 		
 		//<room index="10" type="obscured" north="12" west="11" east="9" obstacle="fridge:9" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		assertTrue(cGame.getRoomIndex(10) instanceof RoomObscured);
 	}
 	
@@ -333,7 +334,7 @@ public class TestXmlParser {
 		
 		//<room index="13" type="require" west="8" require_item="gold:11:2"/>
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		assertTrue(cGame.getRoomIndex(13) instanceof RoomRequiredItem);
 	}
 	
@@ -343,35 +344,35 @@ public class TestXmlParser {
 		
 		//<room index="13" type="require" west="8" require_item="gold:11:2"/>
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		RoomRequiredItem roomRequire = (RoomRequiredItem) cGame.getRoomIndex(13);  
-		assertTrue(roomRequire.requiredItem().equals(Item.getInstance("gold")));
+		assertTrue(roomRequire.requiredItem().equals(Item.getInstance("gold", Player.DEFAULT_USER_NAME)));
 	}
 	
-	@Disabled("왜때문인지 모르겠는데 Eclipse 에서는 제대로 도는데 travis 에서는 안돈다. ")
+	@Disabled("�솢�븣臾몄씤吏� 紐⑤Ⅴ寃좊뒗�뜲 Eclipse �뿉�꽌�뒗 �젣��濡� �룄�뒗�뜲 travis �뿉�꽌�뒗 �븞�룉�떎. ")
 	@Test
 	public void testGoal1IsCollectType() throws ParserConfigurationException {
 		//<goal index="0" type="collect" object="diamond-shovel" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		assertTrue(cGame.getGameGoalIndex(0) instanceof GameCollectGoal);
 	}
 	
-	@Disabled("왜때문인지 모르겠는데 Eclipse 에서는 제대로 도는데 travis 에서는 안돈다. ")
+	@Disabled("�솢�븣臾몄씤吏� 紐⑤Ⅴ寃좊뒗�뜲 Eclipse �뿉�꽌�뒗 �젣��濡� �룄�뒗�뜲 travis �뿉�꽌�뒗 �븞�룉�떎. ")
 	@Test
 	public void testGoal2IsExploreType() throws ParserConfigurationException {
 		//<goal index="1" type="explore" object="6-11-12-13" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		assertTrue(cGame.getGameGoalIndex(1) instanceof GameExploreGoal);
 	}
 	
-	@Disabled("왜때문인지 모르겠는데 Eclipse 에서는 제대로 도는데 travis 에서는 안돈다. ")
+	@Disabled("�솢�븣臾몄씤吏� 紐⑤Ⅴ寃좊뒗�뜲 Eclipse �뿉�꽌�뒗 �젣��濡� �룄�뒗�뜲 travis �뿉�꽌�뒗 �븞�룉�떎. ")
 	@Test
 	public void testGoal3IsPointType() throws ParserConfigurationException {
 		//<goal index="2" type="point" object="100" />
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		assertTrue(cGame.getGameGoalIndex(2) instanceof GamePointsGoal);
 	}
 	

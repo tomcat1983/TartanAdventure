@@ -31,13 +31,30 @@ public class XmlResponseUploadMap extends XmlResponse {
 
 	XmlParseResult xmlParseResult; 
 	CustomizingGame customizingGame; 
+	private String userId;
 	
 	XmlResponseUploadMap() {
 		xmlParseResult = XmlParseResult.SUCCESS; 
-		customizingGame = new CustomizingGame(); 
+		customizingGame = new CustomizingGame();
 	}
 	
 	
+	/**
+	 * @return the userId
+	 */
+	public String getUserId() {
+		return userId;
+	}
+
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+
 	@Override
 	public void makeResponseXmlString() {
 		
@@ -179,8 +196,8 @@ public class XmlResponseUploadMap extends XmlResponse {
 		Room keyLocatedRoom = customizingGame.getRoomIndex(keyLocationIndex);
 		Room lockLocatedRoom = customizingGame.getRoomIndex(lockLocationIndex);
 
-		Item lock = Item.getInstance(lockName);
-        Item key = Item.getInstance(keyName);
+		Item lock = Item.getInstance(lockName, userId);
+        Item key = Item.getInstance(keyName, userId);
 		((ItemLock) lock).install(key);
 		lock.setRelatedRoom(currentRoom);
 		lockLocatedRoom.putItem(lock);
@@ -207,7 +224,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 		int itemCnt = Integer.parseInt(splited[2]);
 
 		Room itemLocatedRoom = customizingGame.getRoomIndex(itemLocationIndex);
-		Item requireItem = Item.getInstance(itemName);
+		Item requireItem = Item.getInstance(itemName, userId);
 		currentRoom.setRequiredItem(requireItem);
 
 		for(int i=0; i<itemCnt; i++)
@@ -231,7 +248,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 		int itemLocationIndex = Integer.parseInt(splited[1]);
 
 		Room itemLocatedRoom = customizingGame.getRoomIndex(itemLocationIndex);
-		Item obstacle = Item.getInstance(itemName);
+		Item obstacle = Item.getInstance(itemName, userId);
 		currentRoom.setObscuringItem(obstacle);
 		currentRoom.setObscured(true);
 		currentRoom.setUnobscureMessage("You've revelealed a hidden room to direction(TODO)");
@@ -270,7 +287,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 	
 	public void setHiddenItem(Room currentRoom, String hiddenItemStr) {
 		
-		Item hiddenItem = Item.getInstance(hiddenItemStr);
+		Item hiddenItem = Item.getInstance(hiddenItemStr, userId);
 		
 		if(hiddenItem != null) {
 			List<Item> items = currentRoom.getItems();
@@ -336,7 +353,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 			String itemName = splited[0];
 			String itemCnt = splited[1];
 			
-			Item item = Item.getInstance(itemName);
+			Item item = Item.getInstance(itemName, userId);
 			for(int j=0; j<Integer.parseInt(itemCnt); j++)
 				room.putItem(item);
 		}

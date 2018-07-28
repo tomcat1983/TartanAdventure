@@ -37,7 +37,7 @@ public class DemoGame extends GameConfiguration {
                 "Room1");
 
         // put the item in room1 for use in room 2
-        room1.putItem(Item.getInstance("torch"));
+        room1.putItem(Item.getInstance("torch", context.getUserId()));
         RoomDark room2 = new RoomDark("You are in a dark room. You can go South to West to the beginning and you can go South",
                 "room2", "You cannot see", "blind!");
 
@@ -45,12 +45,12 @@ public class DemoGame extends GameConfiguration {
         Room room3 = new Room("You are in room3. There is a locked room to the West and a room to the East.",
                 "room3");
 
-        Item key = Item.getInstance("key");
+        Item key = Item.getInstance("key", context.getUserId());
         // Install the lock and key to open room 4
         Room room4 = new RoomLockable("You are in the locked room. There is a fridge here", "locked",
                 true, key);
         // Create the new lock item (note that key was created above)
-        Item lock = Item.getInstance("lock");
+        Item lock = Item.getInstance("lock", context.getUserId());
         ((ItemLock) lock).install(key);
         // This lock "locks" room4
         lock.setRelatedRoom(room4);
@@ -58,12 +58,12 @@ public class DemoGame extends GameConfiguration {
         room3.putItem(lock);
         room3.putItem(key);
 
-        Item food = Item.getInstance("food");
+        Item food = Item.getInstance("food", context.getUserId());
         RoomRequiredItem room6 = new RoomRequiredItem("You are in the room that required food", "Required",
                 "food", "Warning you need food", food);
 
         room3.putItem(food);
-        Item fridge = Item.getInstance("fridge");
+        Item fridge = Item.getInstance("fridge", context.getUserId());
         RoomObscured room5 = new RoomObscured("Obscured Room 5" ,"Room5", fridge);
         room5.setObscured(true);
         room5.setUnobscureMessage("You've revelealed a hidden room to the West!");
