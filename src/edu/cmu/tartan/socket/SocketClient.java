@@ -29,6 +29,8 @@ public class SocketClient implements Runnable {
 	
 	Socket socket = null;
 	
+	private boolean isLoop = true;
+	
 	public SocketClient(String serverIp, int serverPort) {
 		this.serverIp = serverIp;
 		this.serverPort = serverPort;
@@ -50,8 +52,9 @@ public class SocketClient implements Runnable {
 			
             String message = "";
  
-            while((message = reader.readLine()) != null) {
+            while(isLoop) {
             	
+            	if ((message = reader.readLine()) == null) break;
             	//TODO Check a null state
 				if (message.equals("null")) break;
 				
@@ -104,6 +107,18 @@ public class SocketClient implements Runnable {
 			 gameInterface.println("Server IOException: " + e.getMessage());
 		}
 		return false;
+	}
+	
+	public boolean stopSocket() {
+		boolean returnValue = false;
+		isLoop = false;
+		
+		try {
+			socket.close();
+		} catch (IOException e) {
+			gameInterface.println("Server IOException: " + e.getMessage());
+		}
+		return returnValue;
 	}
 
 }
