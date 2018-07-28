@@ -52,10 +52,11 @@ public class LocalGame extends Game implements IGameControlMessage {
 				CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(userId);
 				
 				if(cGame!=null && readGameData()) {
+					gameInterface.println(GamePlayMessage.GANE_IS_STARTED_10_1);
 					// 1. loading Player(with Items) and GameContext(without room?)
 					start();
 				} else {
-					gameLogger.severe("Game loading failure.");
+					gameLogger.severe(GamePlayMessage.LOAD_FAILURE_10_2);
 					return false;
 				}
 			} catch (ParserConfigurationException e) {

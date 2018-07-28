@@ -105,7 +105,6 @@ public abstract class Game {
         GameConfiguration loaclGame = loaclGameFromXML();
         if(loaclGame!=null) {
             menu.add(loaclGame);
-        	
         }
     	return menu;
     }
@@ -178,12 +177,7 @@ public abstract class Game {
             status();
         }
         else if(input.compareTo("save") == 0 ) {
-        	if(this instanceof LocalGame) {
-        		((LocalGame)this).save(context.getUserId());
-        		gameInterface.print(GamePlayMessage.SAVE_SUCCESSFUL_10_4);
-        	} else {
-        		gameInterface.println(GamePlayMessage.SAVE_FAILURE_2_3);
-        	}
+        	handleSave();
         }
         else {
         	ActionExecutionUnit actionExecutionUnit = new ActionExecutionUnit(null, null);
@@ -354,5 +348,18 @@ public abstract class Game {
         gameInterface.println("Welcome to Tartan Adventure (1.0), by Tartan Inc..");
         gameInterface.println("Game: " + context.getGameDescription());
         gameInterface.println("To get help type 'help' ... let's begin\n");
+    }
+    
+    public void handleSave() {
+    	if(this instanceof ServerGame) {
+    		gameInterface.print(GamePlayMessage.SAVE_CANNOT_10_6);
+    		return;
+    	}
+    	if(this instanceof LocalGame) {
+    		((LocalGame)this).save(context.getUserId());
+    		gameInterface.print(GamePlayMessage.SAVE_SUCCESSFUL_10_4);
+    	} else {
+    		gameInterface.println(GamePlayMessage.SAVE_FAILURE_2_3);
+    	}    	
     }
 }
