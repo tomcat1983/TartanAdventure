@@ -56,13 +56,15 @@ public class SocketClient implements Runnable {
             	
             	if ((message = reader.readLine()) == null) break;
             	//TODO Check a null state
-				if (message.equals("null")) break;
+				if (message.equals("null")
+						|| message.equals("exit")
+						|| message.equals("quit")) break;
 				
 				receiveMessage(message);
  
             }
  
-            socket.close();
+            stopSocket();
  
         } catch (UnknownHostException e) {
  
