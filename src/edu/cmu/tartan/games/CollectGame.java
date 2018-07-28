@@ -38,18 +38,18 @@ public class CollectGame extends GameConfiguration {
 
         Room mid1 = new Room("There is a fork", "Fork");
         Room mid2 = new Room("Ferocious bear", "bear");
-        Room end = new RoomLockable("You are inside of a building", "Building interior", true, Item.getInstance("key"));
+        Room end = new RoomLockable("You are inside of a building", "Building interior", true, Item.getInstance("key", context.getUserId()));
 
         end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);
 
         ArrayList<Item> startItems = new ArrayList<>();
-        startItems.add(Item.getInstance("brick"));
-        startItems.add(Item.getInstance("key"));
-        startItems.add(Item.getInstance("lock"));
-        startItems.add(Item.getInstance("gold"));
+        startItems.add(Item.getInstance("brick", context.getUserId()));
+        startItems.add(Item.getInstance("key", context.getUserId()));
+        startItems.add(Item.getInstance("lock", context.getUserId()));
+        startItems.add(Item.getInstance("gold", context.getUserId()));
         // destroy item
-        startItems.add(Item.getInstance("pot"));
-        startItems.add(Item.getInstance("microwave"));
+        startItems.add(Item.getInstance("pot", context.getUserId()));
+        startItems.add(Item.getInstance("microwave", context.getUserId()));
 
         Room start = new Room("There is a tree, with a building to the West. There is a lock on the door.", "Tree" );
         start.setAdjacentRoom(Action.ACTION_GO_NORTH, mid1);

@@ -37,14 +37,14 @@ public class LockRoomGame extends GameConfiguration {
 
         Room mid1 = new Room("There is a fork", "Fork");
         Room mid2 = new Room("Ferocious bear", "bear");
-        Item key = Item.getInstance("key");
+        Item key = Item.getInstance("key", context.getUserId());
         Room end = new RoomLockable("You are inside of a building", "interior",
                 true, key);
 
         end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);
 
         ArrayList<Item> startItems = new ArrayList<>();
-        Item lock = Item.getInstance("lock");
+        Item lock = Item.getInstance("lock", context.getUserId());
 
         // Install the lock and key to unlock the locked room. You must 'open' or 'unlock' the lock
         // to go through the door into the locked room

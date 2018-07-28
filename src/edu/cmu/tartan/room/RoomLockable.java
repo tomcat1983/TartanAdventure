@@ -46,16 +46,6 @@ public class RoomLockable extends Room {
 	}
 	
     /**
-     * Create a locked room (unlocked by default)
-     * @param description description
-     * @param shortDescription short description
-     */
-	public RoomLockable(String description, String shortDescription) {
-		// unlocked by default
-		this(description, shortDescription, false, Item.getInstance("unknown"));
-	}
-
-    /**
      * Indicate whether room is locked
      * @return
      */

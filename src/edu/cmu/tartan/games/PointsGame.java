@@ -34,13 +34,13 @@ import edu.cmu.tartan.room.Room;
         String officeSD = "Office.";
 
         Room office = new Room(officeD, officeSD);
-        ItemComputer computer = (ItemComputer) Item.getInstance("computer");
+        ItemComputer computer = (ItemComputer) Item.getInstance("computer", context.getUserId());
         computer.setInspectMessage("You flip the computer's keyboard over, and unsuprisingly encounter a yellow sticky note. It reads:\n\n9292\n");
-        ItemSafe safe = (ItemSafe)Item.getInstance("safe");
+        ItemSafe safe = (ItemSafe)Item.getInstance("safe", context.getUserId());
         safe.setInspectMessage("This safe appears to require a 4 digit PIN number.");
         safe.setPIN(9292);
 
-        ItemDocument document = (ItemDocument) Item.getInstance("document");
+        ItemDocument document = (ItemDocument) Item.getInstance("document", context.getUserId());
         document.setVisible(false);
         document.setInspectMessage("The document is encrypted with a cipher. The cryptographers at the CIA will need to decrypt it.");
         safe.install(document);
@@ -49,9 +49,9 @@ import edu.cmu.tartan.room.Room;
         office.putItem(safe);
         office.putItem(computer);
 
-        ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee");
+        ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee", context.getUserId());
         office.putItem(coffee);
-        office.putItem(Item.getInstance("light"));
+        office.putItem(Item.getInstance("light", context.getUserId()));
 
         // Keep scores for things in this room
         int points = document.value() + coffee.value() + safe.value();

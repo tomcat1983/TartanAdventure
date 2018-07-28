@@ -32,7 +32,7 @@ public class PlayerInterpreter {
     	if(string.length > 1) {
             String d = string[1];
             // item is the direct object of the action
-            actionExecutionUnit.setDirectObject(Item.getInstance(d));
+            actionExecutionUnit.setDirectObject(Item.getInstance(d, actionExecutionUnit.getUserId()));
             return action;
         }
         else {
@@ -44,7 +44,7 @@ public class PlayerInterpreter {
     private Action getIndirectObject(Action action, String[] string, ActionExecutionUnit actionExecutionUnit) {
         if(string.length > 0) {
             String d = string[1];
-            Item item = Item.getInstance(d);
+            Item item = Item.getInstance(d, actionExecutionUnit.getUserId());
             // item is the direct object of the action
             actionExecutionUnit.setDirectObject(item);
             if(string.length > 2) {
@@ -52,7 +52,7 @@ public class PlayerInterpreter {
                 if(in.equals("in") || in.equals("from")) {
                     if(string.length > 3) {
                         String io = string[3];
-                        Item indob = Item.getInstance(io);
+                        Item indob = Item.getInstance(io, actionExecutionUnit.getUserId());
                         actionExecutionUnit.setIndirectObject(indob);
                         return action;
                     }

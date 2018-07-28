@@ -44,7 +44,7 @@ public class ExploreGame extends GameConfiguration {
         room2.setAdjacentRoom(Action.ACTION_GO_EAST, room3);
 
         // player would type 'drink coffee'
-        ItemCoffee coffee = (ItemCoffee) Item.getInstance("coffee");
+        ItemCoffee coffee = (ItemCoffee) Item.getInstance("coffee", context.getUserId());
         room2.putItem(coffee);
 
         // These are the rooms the must be explored

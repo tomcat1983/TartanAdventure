@@ -32,7 +32,7 @@ public class TestRoomDark {
     @Test
 	void testWhensetDarkwithisDarkAnddescription() {
 		makeSameRoomDark();
-		ItemFlashlight item = (ItemFlashlight) Item.getInstance("flashlight");
+		ItemFlashlight item = (ItemFlashlight) Item.getInstance("flashlight", Player.DEFAULT_USER_NAME);
 		Player player = new Player(room1, Player.DEFAULT_USER_NAME);
 
 		room1.setDark(true);
@@ -56,7 +56,7 @@ public class TestRoomDark {
     @Test
 	void testWhensetDarkwithisDarkAndtoString() {
 		makeSameRoomDark();
-		ItemFlashlight item = (ItemFlashlight) Item.getInstance("flashlight");
+		ItemFlashlight item = (ItemFlashlight) Item.getInstance("flashlight", Player.DEFAULT_USER_NAME);
 		Player player = new Player(room1, Player.DEFAULT_USER_NAME);
 
 		room1.setDark(true);

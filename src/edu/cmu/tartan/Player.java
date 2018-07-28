@@ -43,7 +43,7 @@ public class Player implements Comparable, Serializable {
      */
     private String userName;
 
-    /**
+	/**
      * The list of rooms that this player has visited.
      */
     private ArrayList<Room> roomsVisited = new ArrayList<>();
@@ -89,6 +89,20 @@ public class Player implements Comparable, Serializable {
         this.currentRoom.setPlayer(this);
         this.userName = userName;
     }
+
+    /**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
     /**
      * Drop an item

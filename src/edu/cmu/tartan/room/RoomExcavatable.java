@@ -34,7 +34,7 @@ public class RoomExcavatable extends Room {
      * Perform the excavation
      */
 	public boolean dig() {
-		if(this.getPlayer().hasItem(Item.getInstance("shovel"))) {
+		if(this.getPlayer().hasItem(Item.getInstance("shovel", this.getPlayer().getUserName()))) {
 			gameInterface.println(digMessage);
 			this.wasDugUp = true;
 			this.getItems().addAll(this.revealableItems);

@@ -142,13 +142,14 @@ public class XmlParser {
 	}
 	
 	@Nullable
-	public GameConfiguration processMessageReturnGameConfiguration(String messageType) {
+	public GameConfiguration processMessageReturnGameConfiguration(String messageType, String userId) {
 		
 		XmlResponseUploadMap xmlResponse; 
 		
 		// If Game variable is included, only support UPLOAD_MAP_DESIGN 
 		if(messageType.equals(XmlMessageType.UPLOAD_MAP_DESIGN.name())) {
 			xmlResponse = new XmlResponseUploadMap();
+			xmlResponse.setUserId(userId);
 			xmlResponse.setMsgType(XmlMessageType.UPLOAD_MAP_DESIGN);
 		}
 		else {
@@ -253,13 +254,13 @@ public class XmlParser {
 	}
 	
 	@Nullable
-	public GameConfiguration loadGameMapXml() {
+	public GameConfiguration loadGameMapXml(String userId) {
 		
-		return parseXmlFromFileReturnGameConfiguration("gameMap.xml");
+		return parseXmlFromFileReturnGameConfiguration("gameMap.xml", userId);
 	}
 	
 	@Nullable
-	public GameConfiguration parseXmlFromFileReturnGameConfiguration(String fileName) {
+	public GameConfiguration parseXmlFromFileReturnGameConfiguration(String fileName, String userId) {
 		
 		try {
 			File fXmlFile = new File(fileName);
@@ -275,7 +276,7 @@ public class XmlParser {
 			if(messageType == null)	//incase there is no <message type=" xxx" > 
 				return null; 
 			
-			return processMessageReturnGameConfiguration(messageType); 
+			return processMessageReturnGameConfiguration(messageType, userId); 
 			
 		} catch (Exception e) {
 			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
