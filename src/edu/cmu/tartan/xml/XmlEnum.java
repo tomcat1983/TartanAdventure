@@ -4,6 +4,10 @@ package edu.cmu.tartan.xml;
  * These enum class should have same string with real xml response. 
  */
 
+enum XmlParserType {
+	SERVER, CLIENT
+}
+
 enum XmlParseResult {
 	SUCCESS, INVALID_XML, INVALID_DATA, UNKNOWN_MESSAGE
 }
@@ -20,6 +24,7 @@ enum XmlResultString {
 	OK, NG
 }
 
-enum XmlLoginNgReason { 
-	OK, INVALID_INFO, SERVER_BUSY
+enum XmlNgReason { 
+	OK, INVALID_INFO, SERVER_BUSY, DUP_ID
 }
+

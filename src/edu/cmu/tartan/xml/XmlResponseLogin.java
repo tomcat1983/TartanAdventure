@@ -1,7 +1,5 @@
 package edu.cmu.tartan.xml;
 
-
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -11,7 +9,7 @@ public class XmlResponseLogin extends XmlResponse {
 	private String idStr;
 	private String pwStr;
 	private XmlResultString loginResult; 
-	private XmlLoginNgReason reason; 
+	private XmlNgReason reason; 
 	private XmlLoginRole role;
 	
 	
@@ -46,7 +44,7 @@ public class XmlResponseLogin extends XmlResponse {
 		return responseXml; 
 	}
 	
-	public void setLoginResult (XmlResultString loginResult, XmlLoginNgReason reason, XmlLoginRole role) {
+	public void setLoginResult (XmlResultString loginResult, XmlNgReason reason, XmlLoginRole role) {
 		this.loginResult = loginResult; 
 		this.reason = reason; 
 		this.role = role; 

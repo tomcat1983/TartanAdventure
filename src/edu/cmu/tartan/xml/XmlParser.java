@@ -24,7 +24,7 @@ public class XmlParser {
 	private Document doc;
 	private NodeList nList;
 	private XmlResponse xmlResponse; 	//server will refer this object 
-
+	private XmlParserType parserType; 
 	
 	/**
 	 * Game logger for game log
@@ -32,12 +32,18 @@ public class XmlParser {
 	protected Logger gameLogger = Logger.getGlobal();
 
 	public XmlParser() throws ParserConfigurationException {
+		this(XmlParserType.SERVER);		// default is parser for server 
+	}
+	
+	public XmlParser(XmlParserType parserType) throws ParserConfigurationException {
 
 		dbFactory = DocumentBuilderFactory.newInstance();
 		dBuilder = dbFactory.newDocumentBuilder();
 		doc = null; 
-		nList = null; 
+		nList = null;
+		this.parserType = parserType;
 	}
+
 
 	public NodeList getNodeList() {
 		return nList;
@@ -106,7 +112,10 @@ public class XmlParser {
 		if(messageType == null)	//incase there is no <message type=" xxx" > 
 			return XmlParseResult.UNKNOWN_MESSAGE; 
 		
-		parseResult = processMessage(messageType);
+		if(parserType.equals(XmlParserType.SERVER))
+			parseResult = processMessage(messageType);
+		else 
+			parseResult = processMessageClient(messageType);
 		
 		return parseResult; 
 			
@@ -114,9 +123,7 @@ public class XmlParser {
 	
 	@Nullable
 	public String getMessageType() {
-		
 		return getValueByTagAndAttribute("message", "type");
-
 	}
 	
 	public XmlParseResult processMessage(String messageType) {
@@ -141,6 +148,19 @@ public class XmlParser {
 		return result;
 			
 	}
+	
+	public XmlParseResult processMessageClient(String messageType) {
+		
+		for (XmlMessageType msgType : XmlMessageType.values()) {
+			if(messageType.equals(msgType.name())) {
+				xmlResponse = new XmlResponseClient(msgType);
+				return xmlResponse.doYourJob(doc); 
+			}
+		}
+		
+		return XmlParseResult.UNKNOWN_MESSAGE;	
+	}
+	
 	
 	@Nullable
 	public GameConfiguration processMessageReturnGameConfiguration(String messageType, String userId) {
