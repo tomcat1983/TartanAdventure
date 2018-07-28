@@ -98,12 +98,15 @@ public class Client {
 		Thread socketClientThread = new Thread((Runnable)socketClient);
 		socketClientThread.start();
 		
-		socketClient.waitToConnection(1000);
-
-		gameInterface.println("Send message : " + Player.DEFAULT_USER_NAME);
-		socketClient.sendMessage(Player.DEFAULT_USER_NAME);
+		if (socketClient.waitToConnection(1000)) {
+			gameInterface.println("Send message : " + Player.DEFAULT_USER_NAME);
+			socketClient.sendMessage(Player.DEFAULT_USER_NAME);
+			return true;
+		} else {
+			gameInterface.println("Connetion fail");
+		}
 		
-		return true;
+		return false;
 	}
 	
 	private boolean runDesignerMode() {
