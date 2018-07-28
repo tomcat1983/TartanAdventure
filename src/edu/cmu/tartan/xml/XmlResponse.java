@@ -54,5 +54,4 @@ public abstract class XmlResponse {
 		
 		return result;
 	}
-	
 }

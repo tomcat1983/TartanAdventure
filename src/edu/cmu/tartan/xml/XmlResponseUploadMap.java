@@ -182,11 +182,10 @@ public class XmlResponseUploadMap extends XmlResponse {
 		if(keyItemStr == null || lockItemStr == null)
 			return XmlParseResult.INVALID_DATA; 
 		
-		//key_item="itemName:roomIndex:itemCnt" 
+		//key_item="itemName:roomIndex" 
 		String[] splited = keyItemStr.split(":");
 		String keyName = splited[0];
 		int keyLocationIndex = Integer.parseInt(splited[1]);
-		int keyCnt = Integer.parseInt(splited[2]);
 		
 		//lock_item="itemName:roomIndex" 
 		splited = lockItemStr.split(":");
@@ -201,8 +200,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 		((ItemLock) lock).install(key);
 		lock.setRelatedRoom(currentRoom);
 		lockLocatedRoom.putItem(lock);
-		for(int i=0; i<keyCnt; i++)
-			keyLocatedRoom.putItem(key);
+		keyLocatedRoom.putItem(key);
 		
 		currentRoom.setKey(key);
 		
@@ -217,18 +215,15 @@ public class XmlResponseUploadMap extends XmlResponse {
 		if(requireItemStr == null)
 			return XmlParseResult.INVALID_DATA; 
 
-		//require_item="itemName:roomIndex:itemCnt" 
+		//require_item="itemName:roomIndex" 
 		String[] splited = requireItemStr.split(":");
 		String itemName = splited[0];
 		int itemLocationIndex = Integer.parseInt(splited[1]);
-		int itemCnt = Integer.parseInt(splited[2]);
 
 		Room itemLocatedRoom = customizingGame.getRoomIndex(itemLocationIndex);
 		Item requireItem = Item.getInstance(itemName, userId);
 		currentRoom.setRequiredItem(requireItem);
-
-		for(int i=0; i<itemCnt; i++)
-			itemLocatedRoom.putItem(requireItem);
+		itemLocatedRoom.putItem(requireItem);
 
 		return XmlParseResult.SUCCESS;
 	}
@@ -342,20 +337,12 @@ public class XmlResponseUploadMap extends XmlResponse {
 	
 	public void putItemListIntoRoom (Room room, String itemList) {
 		
-		//itemList="shovel:5-key:3"
+		//itemList="shovel-key"
 		String[] splitedToEachItem = itemList.split("-");
 		
-		//splitedToItemAndCnt[0] = "shovel:5", splitedToItemAndCnt[1] = "key:2",  
-		for (String itemAndCnt : splitedToEachItem) {
-			//splited[0] = "shovel", splited[1] = "5",  
-
-			String[] splited = itemAndCnt.split(":");
-			String itemName = splited[0];
-			String itemCnt = splited[1];
-			
+		for (String itemName : splitedToEachItem) {
 			Item item = Item.getInstance(itemName, userId);
-			for(int j=0; j<Integer.parseInt(itemCnt); j++)
-				room.putItem(item);
+			room.putItem(item);
 		}
 	}
 	

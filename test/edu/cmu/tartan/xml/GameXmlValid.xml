@@ -3,19 +3,19 @@
 	<common_info user_id="takhh" />
 	<room_info room_cnt="14" >
 		<room index="0" type="normal" east="1" />	<!-- index 0 is start room -->
-		<room index="1" type="normal" north="2" west="0" east="6" item_list="shovel:5-document:3" />
+		<room index="1" type="normal" north="2" west="0" east="6" item_list="shovel-document" />
 		<room index="2" type="normal" north="3" south="1" west="4" />
 		<room index="3" type="normal" south="2" />
-		<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
-		<room index="5" type="normal" east="4" item_list="torch:4" />
+		<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3" />
+		<room index="5" type="normal" east="4" item_list="torch" />
 		<room index="6" type="dark" south="7" west="1" />
 		<room index="7" type="normal" north="6" south="8" />
-		<room index="8" type="excavatable" north="7" west="9" east="13" item_list="microwave:1" />
+		<room index="8" type="excavatable" north="7" west="9" east="13" item_list="microwave" />
 		<room index="9" type="normal" west="10" east="8" item_list="fridge:1" />
 		<room index="10" type="obscured" north="12" west="11" east="9" obstacle="fridge:9" />
 		<room index="11" type="normal" east="10" />
-		<room index="12" type="normal" south="10" item_list="food:2" hidden_item="diamond"/>
-		<room index="13" type="require" west="8" require_item="gold:11:2"/>
+		<room index="12" type="normal" south="10" item_list="food" hidden_item="diamond"/>
+		<room index="13" type="require" west="8" require_item="gold:11"/>
 		<!-- each room informations..  -->
 	</room_info>
 	<goal_info goal_cnt="3" >
