@@ -5,7 +5,7 @@ import java.util.logging.*;
 
 public class GameInterface {
 
-	class GameInterfaceFormatter extends Formatter {
+	static class GameInterfaceFormatter extends Formatter {
 		 
 		@Override
 		public String format(LogRecord record) {
@@ -46,7 +46,7 @@ public class GameInterface {
         messageHandler.setLevel(Level.ALL);
         logger.addHandler(messageHandler);
         
-        scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in, "UTF-8");
 	}
 	
 	public static GameInterface getInterface() {
@@ -58,7 +58,7 @@ public class GameInterface {
 	}
 	
 	public void resetInterface() {
-		scanner = new Scanner(System.in);
+		scanner = new Scanner(System.in, "UTF-8");
 	}
 	
 	// For log message

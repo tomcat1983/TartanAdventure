@@ -48,7 +48,7 @@ public class Main {
 		File settingFile = new File(fileUri);
 		
 		try {
-			bufferReader = new BufferedReader(new FileReader(settingFile));
+			bufferReader = new BufferedReader(new InputStreamReader(new FileInputStream(settingFile), "UTF-8"));
 
 			mode = bufferReader.readLine().toLowerCase();
 			ip = bufferReader.readLine();
