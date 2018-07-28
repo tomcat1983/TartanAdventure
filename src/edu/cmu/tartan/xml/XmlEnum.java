@@ -11,3 +11,15 @@ enum XmlParseResult {
 enum XmlMessageType {
 	UPLOAD_MAP_DESIGN, REQ_LOGIN, ADD_USER
 }
+
+enum XmlLoginRole {
+	PLAYER, DESIGNER, NONE
+}
+
+enum XmlResultString { 
+	OK, NG
+}
+
+enum XmlLoginNgReason { 
+	OK, INVALID_INFO, SERVER_BUSY
+}

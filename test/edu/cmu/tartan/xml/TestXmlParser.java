@@ -376,6 +376,44 @@ public class TestXmlParser {
 		assertTrue(cGame.getGameGoalIndex(2) instanceof GamePointsGoal);
 	}
 	
+	@Test
+	public void testParsingLoginId() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
+		XmlResponse xr = parseXml.getXmlResponse();
+		String id = ((XmlResponseLogin) xr).getId();
+		assertTrue(id.equals("takhh"));
+	}
+	
+	@Test
+	public void testParsingLoginPw() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
+		XmlResponse xr = parseXml.getXmlResponse();
+		String pw = ((XmlResponseLogin) xr).getPw();
+		assertTrue(pw.equals("awefaweg14ro4aw3"));
+	}
+	
+	@Disabled("Describe how to make login result XML")
+	@Test
+	public void testWritingLoginResultOK() throws ParserConfigurationException {
+		
+		XmlResponseLogin xr = new XmlResponseLogin(); 
+		xr.setLoginResult(XmlResultString.OK, XmlLoginNgReason.OK, XmlLoginRole.DESIGNER);
+		xr.makeResponseXmlString();
+	}
+	
+	@Disabled("Describe how to make login result XML")
+	@Test
+	public void testWritingLoginResultFail() throws ParserConfigurationException {
+		
+		XmlResponseLogin xr = new XmlResponseLogin(); 
+		xr.setLoginResult(XmlResultString.NG, XmlLoginNgReason.SERVER_BUSY, XmlLoginRole.NONE);
+		xr.makeResponseXmlString();
+	}
+	
 	
 	/*
 	 * methods for test only 

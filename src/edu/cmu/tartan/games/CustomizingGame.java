@@ -61,6 +61,7 @@ public class CustomizingGame extends GameConfiguration {
         	context.addGoal(gameGoal);
 		}
         
+        //TODO set game description by goal
         context.setGameDescription("Customizing Room(TODO)");
 
         if (!context.validate()) throw new InvalidGameException("Game improperly configured");

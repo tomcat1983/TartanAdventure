@@ -4,9 +4,14 @@ import org.w3c.dom.Document;
 
 public class XmlResponseAddUser extends XmlResponse {
 
+	public XmlResponseAddUser() {
+		msgType = XmlMessageType.ADD_USER;
+	}
+	
 	@Override
-	public void makeResponseXmlString() {
-		 
+	public String makeResponseXmlString() {
+	
+		return responseXml; 
 	}
 
 	@Override
