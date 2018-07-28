@@ -35,7 +35,6 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
 	 */
 	protected static final transient GameInterface gameInterface = GameInterface.getInterface();
 	
-	private static final String UNKNOWN = "unknown"; 
 
     // every item is visible by default
     private boolean visible = true;
@@ -118,6 +117,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
         	StringBuilder sd =  new StringBuilder("Elevator Floor ").append(i).append(" Button");
         	itemMap.put(s.toString(), new ItemButton(s.toString(), sd.toString(), new String[]{Integer.toString(i)}));
         }
+        itemMap.put(StringForItems.UNKNOWN, new ItemUnknown(StringForItems.UNKNOWN, StringForItems.UNKNOWN, new String[]{StringForItems.UNKNOWN}));
     	itemMapbyUser.put(userId, itemMap);
     	checkUniqueAliases(itemMap.values());
     }

@@ -35,7 +35,6 @@ public class LocalGame extends Game implements IGameControlMessage {
 			ObjectInputStream in = new ObjectInputStream(bis)
 		) {
 			context= ((GameContext)in.readObject());
-			context.setPlayer((Player) in.readObject());
 		} catch (IOException|ClassNotFoundException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
@@ -76,7 +75,6 @@ public class LocalGame extends Game implements IGameControlMessage {
 			ObjectOutputStream out = new ObjectOutputStream(bos)
 		) {
 			out.writeObject(context);
-			out.writeObject(player);
 		} catch (IOException e) {
 			gameLogger.severe("Game saving failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
