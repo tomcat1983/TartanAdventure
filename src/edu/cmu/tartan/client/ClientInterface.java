@@ -77,7 +77,7 @@ public class ClientInterface {
 	public boolean printLocalModeMessage() {
 		gameInterface.println("[Local mode]");
 		gameInterface.println("");
-		gameInterface.println("Let¡¯s play :");
+		gameInterface.println("Let's play :");
 		gameInterface.println("> continue    Play the latest saved game continuously");
 		gameInterface.println("> new         Play a new game.");
 		gameInterface.println("");
@@ -105,5 +105,4 @@ public class ClientInterface {
 		
 		return localCommand;
 	}
-
 }
