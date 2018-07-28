@@ -368,45 +368,55 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private void actionPut(@NonNull Item itemToPut, Item itemToBePutInto) {
+    private boolean actionPut(@NonNull Item itemToPut, Item itemToBePutInto) {
     	
         if(!player.hasItem(itemToPut)) {
             gameInterface.println("You don't have that object in your inventory.");
+            return false;
         }
         else if(itemToBePutInto == null) {
             gameInterface.println("You must supply an indirect object.");
+            return false;
         }
         else if(!player.currentRoom().hasItem(itemToBePutInto)) {
             gameInterface.println("That object doesn't exist in this room.");
+            return false;
         }
         else if(itemToBePutInto instanceof ItemMagicBox && !(itemToPut instanceof Valuable)) {
             gameInterface.println("This item has no value--putting it in this " + itemToBePutInto + " will not score you any points.");
+            return false;
         }
         else if(!(itemToBePutInto instanceof Hostable) || !(itemToPut instanceof Installable)) {
             gameInterface.println("You cannot put a " + itemToPut + " into this " + itemToBePutInto);
+            return false;
         }
         else {
             gameInterface.println("Done.");
             player.drop(itemToPut);
             player.putItemInItem(itemToPut, itemToBePutInto);
+            return true;
         }
     }
     
-    private void actionTake(@NonNull Item contents,@NonNull Item container) {
+    private boolean actionTake(@NonNull Item contents,@NonNull Item container) {
     	if(!player.currentRoom().hasItem(container)) {
 			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			return false;
         }
         else if(!(container instanceof Hostable)) {
             gameInterface.println("You can't have an item inside that.");
+            return false;
         }
         else {
             if(((Hostable)container).installedItem() == contents) {
                 ((Hostable)container).uninstall(contents);
                 player.pickup(contents);
 				gameInterface.println(GamePlayMessage.TAKEN);
+				return true;
             }
             else {
                 gameInterface.println("That item is not inside this " + container);
+                return false;
             }
         }
     }
@@ -417,29 +427,23 @@ public class PlayerExecutionEngine {
         
         switch(action) {
         	case ACTION_PUT:
-        		actionPut(directItem, indirectItem);
-        		break;
+        		return actionPut(directItem, indirectItem);
         	case ACTION_TAKE:
-        		actionTake(directItem, indirectItem);
-        		break;
+        		return actionTake(directItem, indirectItem);
         	default :
         		 gameInterface.println("There is not indirect object action");
         		 return false;
         }
-        return true;
     }
     
     private boolean hasNoObject(@NonNull Action action) {
     	switch(action) {
 	        case ACTION_LOOK:
-	            player.lookAround();
-	            break;
+	            return player.lookAround();
 	        case ACTION_CLIMB:
-	            player.move(Action.ACTION_GO_UP);
-	            break;
+	            return player.move(Action.ACTION_GO_UP);
 	        case ACTION_JUMP:
-	            player.move(Action.ACTION_GO_DOWN);
-	            break;
+	            return player.move(Action.ACTION_GO_DOWN);
 	        case ACTION_VIEW_ITEMS:
 	            List<Item> items = player.getCollectedItems();
 	            if (items.isEmpty()) {
@@ -450,15 +454,15 @@ public class PlayerExecutionEngine {
 	                    gameInterface.println("You have a " + item.description() + ".");
 	                }
 	            }
-	            break;
+	            return true;
 	        case ACTION_DIE:
 	            player.terminate();
-	            break;
+	            return true;
 	        default:
+	        	// unreachable
 	        	gameInterface.println("There is not no object action");
 	        	return false;
     	}
-    	return true;
     }
     
     private boolean unknownObject(Action action) {
@@ -504,6 +508,7 @@ public class PlayerExecutionEngine {
             case TYPE_UNKNOWN: 
             	return unknownObject(action);
             default:
+            	// unreachable
                 gameInterface.println("I don't understand that");
                 return false;
         }
