@@ -1,20 +1,33 @@
-package edu.cmu.tartan.manager;
+package edu.cmu.tartan.server;
 
-public class TartanGameServer {
+import java.util.logging.Logger;
 
-	/*
-	public static void main(String[] args) {
-		
+import edu.cmu.tartan.manager.*;
+import edu.cmu.tartan.socket.*;
+
+public class Server {
+
+	/**
+	 * Game logger for game log
+	 */
+	private Logger gameLogger = Logger.getGlobal();
+
+	public Server(String ip, String port) {
+	}
+	
+	public boolean start() {
+		gameLogger.info("Run server");
+
 		IQueueHandler messageQueue = new MessageQueue();
 		
 		ISocketHandler socketServer = new SocketServer(messageQueue);
 		Thread socketServerThread = new Thread((Runnable)socketServer);
 		socketServerThread.start();
 		
-		
 		TartanGameManager tartanGameManager = new TartanGameManager(socketServer, messageQueue);
 		Thread gameManagerThread = new Thread(tartanGameManager);
 		gameManagerThread.start();
+		
+		return true;
 	}
-	*/
 }

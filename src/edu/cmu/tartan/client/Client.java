@@ -3,6 +3,7 @@ package edu.cmu.tartan.client;
 import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.LocalGame;
 import edu.cmu.tartan.Player;
+import edu.cmu.tartan.socket.SocketClient;
 
 public class Client {
 
@@ -15,10 +16,26 @@ public class Client {
 	 * Client interface instance
 	 */
 	private ClientInterface clientInterface;
-
+	
+	/**
+	 * Server IP
+	 */
+	String serverIp;
+	
+	/**
+	 * Server port
+	 */
+	int serverPort;
+	
+	/**
+	 * Socket to server
+	 */
+	SocketClient socket;
 	
 	public Client(String ip, String port) {
-		gameInterface.info("Run Client : " + ip + ":" + port);
+		serverIp = ip;
+		serverPort = Integer.parseInt(port);
+		
 		clientInterface = new ClientInterface();
 	}
 	
@@ -37,7 +54,7 @@ public class Client {
 			result = runDesignerMode();
 			break;
 		default:
-			gameInterface.severe("Unknown running mode");
+			gameInterface.println("Unknown running mode");
 			break;
 		}
 		
@@ -47,21 +64,18 @@ public class Client {
 	private boolean runLocalMode() {
 		clientInterface.printLocalModeMessage();
 		ClientInterface.LocalModeCommand command = clientInterface.getLocalModeCommand();
-		boolean result = false;
 
 		switch (command) {
 		case CONTINUE:
-			result = continueGame();
-			break;
+			return continueGame();
 		case NEW:
-			result = newGame();
-			break;
+			return newGame();
 		default:
-			gameInterface.severe("Unknow local mode command");
+			gameInterface.println("Unknow local mode command");
 			break;
 		}
 
-		return result;
+		return false;
 	}
 	
 	private boolean continueGame() {
@@ -77,14 +91,40 @@ public class Client {
 		
 		return true;
 	}
-
+	
+	private boolean connectServer(int timeout) {
+		socket = new SocketClient(serverIp, serverPort);
+		Thread socketClientThread = new Thread((Runnable)socket);
+		socketClientThread.start();
+		
+		return socket.waitToConnection(timeout);
+	}
+	
+	private boolean sendMessage(String message) {
+		return socket.sendMessage(message);
+	}
+	
 	private boolean runNetworkMode() {
-		gameInterface.println("TBD");
-		return true;
+		if (connectServer(1000)) {
+			gameInterface.println("Send message : " + Player.DEFAULT_USER_NAME);
+			sendMessage(Player.DEFAULT_USER_NAME);
+			return true;
+		} else {
+			gameInterface.println("Connetion fail");
+		}
+		
+		return false;
 	}
 	
 	private boolean runDesignerMode() {
-		gameInterface.println("TBD");
+		if (connectServer(1000)) {
+			gameInterface.println("Send message : " + Player.DEFAULT_USER_NAME);
+			sendMessage(Player.DEFAULT_USER_NAME);
+			return true;
+		} else {
+			gameInterface.println("Connetion fail");
+		}
+
 		return true;
 	}
 }

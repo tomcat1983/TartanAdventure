@@ -7,13 +7,10 @@ import edu.cmu.tartan.properties.Visible;
 import edu.cmu.tartan.room.Room;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
+import java.util.logging.Logger;
 /**
  * This is the main class for game items. Items are things that can be used in the game
  * <p>
@@ -28,6 +25,14 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Game logger for game log
+	 */
+	protected static final transient Logger gameLogger = Logger.getGlobal();
+
+	/**
+	 * Game interface for game message
+	 */
 	protected static final transient GameInterface gameInterface = GameInterface.getInterface();
 	
 	private static final String UNKNOWN = "unknown"; 

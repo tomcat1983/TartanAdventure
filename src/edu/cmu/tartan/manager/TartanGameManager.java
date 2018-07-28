@@ -12,16 +12,15 @@ public class TartanGameManager implements Runnable{
 	 */
 	private GameInterface gameInterface = GameInterface.getInterface();
 	
-	private ISocketHandler socketServer;
+	private ISocketHandler socket;
 	private IQueueHandler messageQueue;
 	
 	private HashMap<String, IGameControlMessage> tartanGames;
 	
 	private boolean isLoop = true;
 	
-	
-	public TartanGameManager (ISocketHandler socketServer, IQueueHandler messageQueue) {
-		this.socketServer = socketServer;
+	public TartanGameManager (ISocketHandler socket, IQueueHandler messageQueue) {
+		this.socket = socket;
 		this.messageQueue = messageQueue;
 		
 		tartanGames = new HashMap<String, IGameControlMessage>();
@@ -58,16 +57,48 @@ public class TartanGameManager implements Runnable{
 		
 		boolean returnValue = false;
 		
-		returnValue = socketServer.sendToAll(userId, message);
+		returnValue = socket.sendToAll(userId, message);
 		
 		return returnValue;
 	}
 	
+	
+	/**
+	 * Achieve a goal of the game
+	 * @param userId	a game user ID
+	 * @return	
+	 */
 	public boolean achievedGoal(String userId) {
 		return false;
 	}
 	
+	/**
+	 * Game message notify to one user  
+	 * @param userId	a game user ID
+	 * @param message	a game message
+	 * @return
+	 */
 	public boolean updateGameState(String userId, String message) {
+		return false;
+	}
+	
+	/**
+	 * Game message notify to all user
+	 * @param message	a game message
+	 * @return
+	 */
+	public boolean updateGameState(String message) {
+		return false;
+	}
+	
+	
+	/**
+	 * Exit game
+	 * @param userId	a game user ID
+	 * @param message	a game message
+	 * @return
+	 */
+	public boolean updateGameExit(String userId, String message) {
 		return false;
 	}
 	
@@ -95,4 +126,5 @@ public class TartanGameManager implements Runnable{
 		return false;
 	}
 
+	
 }

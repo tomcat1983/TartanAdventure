@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.logging.Logger;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -27,11 +28,10 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import edu.cmu.tartan.GameInterface;
 
 public class XmlWriter {
 
-	protected static GameInterface gameInterface = GameInterface.getInterface();
+	protected static Logger gameLogger = Logger.getGlobal();
 
 	DocumentBuilderFactory dbFactory;
 	DocumentBuilder dBuilder;
@@ -106,9 +106,9 @@ public class XmlWriter {
 
 			result = sw.toString();
 		} catch (TransformerConfigurationException e) {
-			gameInterface.severe("TransformerConfigurationException");
+			gameLogger.severe("TransformerConfigurationException");
 		} catch (TransformerException e) {
-			gameInterface.severe("TransformerException");
+			gameLogger.severe("TransformerException");
 		}
 
 		return result; 
@@ -120,7 +120,7 @@ public class XmlWriter {
 				PrintWriter out = new PrintWriter(fileName)) {
 			out.print(xmlString);
 		} catch (FileNotFoundException e) {
-			gameInterface.severe("FileNotFoundException");
+			gameLogger.severe("FileNotFoundException");
 		}
 	}
 
@@ -142,7 +142,7 @@ public class XmlWriter {
 			close(os);
 		}
 		catch (Exception e) {
-			gameInterface.severe("Exception occur when overWriteFile from " + sourceFileName + " to " + destFileName);
+			gameLogger.severe("Exception occur when overWriteFile from " + sourceFileName + " to " + destFileName);
 		}
 	}
 
@@ -151,7 +151,7 @@ public class XmlWriter {
 		try {
 			c.close();
 		} catch (IOException e) {
-			gameInterface.severe("IOException occur when closing io stream");
+			gameLogger.severe("IOException occur when closing io stream");
 		}
 	}
 

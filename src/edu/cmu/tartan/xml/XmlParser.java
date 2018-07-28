@@ -3,6 +3,7 @@ package edu.cmu.tartan.xml;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,8 +15,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import edu.cmu.tartan.GameConfiguration;
-import edu.cmu.tartan.GameInterface;
-
 
 
 public class XmlParser {
@@ -26,9 +25,9 @@ public class XmlParser {
 	private NodeList nList;
 	
 	/**
-	 * Game interface for game message and log
+	 * Game logger for game log
 	 */
-	protected GameInterface gameInterface = GameInterface.getInterface();
+	protected Logger gameLogger = Logger.getGlobal();
 
 	public XmlParser() throws ParserConfigurationException {
 
@@ -49,7 +48,7 @@ public class XmlParser {
 		try {
 			result = parseXmlFromStringThrowException(xmlUri);
 		} catch (Exception e) {
-			gameInterface.severe(e.getClass().getSimpleName());
+			gameLogger.severe(e.getClass().getSimpleName());
 			result = XmlParseResult.INVALID_XML;
 		}
 		
@@ -64,7 +63,7 @@ public class XmlParser {
 		try {
 			result = parseXmlFromFileThrowException(fileName);
 		} catch (Exception e) {
-			gameInterface.severe(e.getClass().getSimpleName());
+			gameLogger.severe(e.getClass().getSimpleName());
 			result = XmlParseResult.INVALID_XML;
 		}
 
@@ -279,7 +278,7 @@ public class XmlParser {
 			return processMessageReturnGameConfiguration(messageType, userId); 
 			
 		} catch (Exception e) {
-			gameInterface.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
+			gameLogger.severe("parseXmlFromString throw exception :" + e.getClass().getSimpleName());
 		}
 
 		return null;		
