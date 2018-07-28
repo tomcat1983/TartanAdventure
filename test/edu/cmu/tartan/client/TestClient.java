@@ -9,14 +9,14 @@ import edu.cmu.tartan.test.Commander;
 class TestClient {
 
 	Commander commander = null;
-	
+
 	@BeforeEach
 	void testMakeCommander() {
 		commander = new Commander();
 	}
-	
+
 	@AfterEach
-	void testRunClient() {		
+	void testRunClient() {
 		Client client = new Client("localhost", "8088");
 		client.start();
 	}
@@ -38,7 +38,7 @@ class TestClient {
 		commander.add("new");
 		commander.add("1");
 		commander.add("quit");
-		commander.apply();		
+		commander.apply();
 	}
 
 	@Test
@@ -47,7 +47,7 @@ class TestClient {
 		commander.add("new");
 		commander.add("1");
 		commander.add("quit");
-		commander.apply();		
+		commander.apply();
 	}
 
 	@Test

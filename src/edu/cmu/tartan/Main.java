@@ -1,6 +1,7 @@
 package edu.cmu.tartan;
 
 import java.io.*;
+import java.util.logging.Logger;
 
 import edu.cmu.tartan.client.Client;
 import edu.cmu.tartan.server.Server;
@@ -9,11 +10,12 @@ import edu.cmu.tartan.server.Server;
  * A simple driver for the game
  */
 public class Main {
+
 	/**
-	 * Game interface for game message and log
+	 * Game logger for game log
 	 */
-	private static GameInterface gameInterface = GameInterface.getInterface();
-	
+	protected static final Logger gameLogger = Logger.getGlobal();
+
 	/*
 	 * Game running mode
 	 */
@@ -40,7 +42,7 @@ public class Main {
 		if (args.length == 1) {
 			fileUri = args[0] + File.separator + fileUri;
 		} else {
-			gameInterface.info("Use default setting.xml location");
+			gameLogger.info("Use default setting.xml location");
 			fileUri = System.getProperty("user.dir") + File.separator
 					+ "resources" + File.separator + fileUri;
 		}
@@ -54,7 +56,7 @@ public class Main {
 			ip = bufferReader.readLine();
 			port = bufferReader.readLine();
 		} catch (IOException exception) {
-			gameInterface.severe("Setting xml error : " + exception.getMessage());
+			gameLogger.severe("Setting xml error : " + exception.getMessage());
 			return;
 		}
 		
@@ -66,7 +68,7 @@ public class Main {
 			Client client = new Client(ip, port);
 			client.start();
 		} else {
-			gameInterface.severe("Unknown mode : " + mode);
+			gameLogger.severe("Unknown mode : " + mode);
 		}		
 	}
 }

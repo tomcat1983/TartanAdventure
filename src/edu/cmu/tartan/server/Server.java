@@ -1,21 +1,22 @@
 package edu.cmu.tartan.server;
 
-import edu.cmu.tartan.*;
+import java.util.logging.Logger;
+
 import edu.cmu.tartan.manager.*;
 import edu.cmu.tartan.socket.*;
 
 public class Server {
 
 	/**
-	 * Game interface for game message and log
+	 * Game logger for game log
 	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
+	private Logger gameLogger = Logger.getGlobal();
 
 	public Server(String ip, String port) {
 	}
 	
 	public boolean start() {
-		gameInterface.info("Run server");
+		gameLogger.info("Run server");
 
 		IQueueHandler messageQueue = new MessageQueue();
 		

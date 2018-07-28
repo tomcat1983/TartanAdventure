@@ -1,5 +1,6 @@
 package edu.cmu.tartan.xml;
 
+import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.Nullable;
 import org.w3c.dom.Document;
@@ -8,13 +9,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
-import edu.cmu.tartan.GameInterface;
-
 public abstract class XmlResponse {
 	
 	String responseXml; 
 	XmlMessageType msgType;
-	protected GameInterface gameInterface = GameInterface.getInterface();
+	protected Logger gameLogger = Logger.getGlobal();
 
 	
 	//every child have different response 

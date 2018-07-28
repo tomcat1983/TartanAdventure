@@ -13,6 +13,7 @@ import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -35,8 +36,14 @@ public class Room implements Comparable, Serializable {
 
 	public static final String DEFAULT_DESC = "You are in a room";
 	public static final String DEFAULT_SHORT_DESC = "Room";
+
 	/**
-	 * Game interface for game message and log
+	 * Game logger for game log
+	 */
+	protected static final transient Logger gameLogger = Logger.getGlobal();
+	
+	/**
+	 * Game interface for game message
 	 */
 	protected static final transient GameInterface gameInterface = GameInterface.getInterface();
 

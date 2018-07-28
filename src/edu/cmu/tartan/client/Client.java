@@ -54,7 +54,7 @@ public class Client {
 			result = runDesignerMode();
 			break;
 		default:
-			gameInterface.severe("Unknown running mode");
+			gameInterface.println("Unknown running mode");
 			break;
 		}
 		
@@ -71,7 +71,7 @@ public class Client {
 		case NEW:
 			return newGame();
 		default:
-			gameInterface.severe("Unknow local mode command");
+			gameInterface.println("Unknow local mode command");
 			break;
 		}
 

@@ -64,13 +64,13 @@ public class XmlResponseUploadMap extends XmlResponse {
 			responseXml = xmlWriter.convertDocumentToString();
 			
 		} catch (ParserConfigurationException e) {
-			gameInterface.severe("ParserConfigurationException");
+			gameLogger.severe("ParserConfigurationException");
 		} 
 		catch (IOException e) {
-			gameInterface.severe("IOException occur when copying userMap.xml to gameMap.xml");
+			gameLogger.severe("IOException occur when copying userMap.xml to gameMap.xml");
 		} 
 		
-		gameInterface.info(responseXml);
+		gameLogger.info(responseXml);
 	}
 	
 	@Override
