@@ -8,10 +8,16 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 import edu.cmu.tartan.GameInterface;
 
 public class SocketClient implements Runnable {
+
+	/**
+	 * Game logger for game log
+	 */
+	protected static final Logger gameLogger = Logger.getGlobal();
 	
 	/**
 	 * Game interface for game message and log
@@ -31,7 +37,7 @@ public class SocketClient implements Runnable {
 	@Override
 	public void run() {
 		if (connectToServer())
-			gameInterface.info("Connected");
+			gameLogger.info("Connected");
 	}
 	
 	public boolean connectToServer() {

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.eclipse.jdt.annotation.NonNull;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * The main class for game logic. Many if not all decisions about game play are made
@@ -23,8 +24,14 @@ import java.util.List;
  * 1.0 March 2018 - initial version
  */
 public abstract class Game {
+
 	/**
-	 * Game interface for game message and log
+	 * Game logger for game log
+	 */
+	protected static final Logger gameLogger = Logger.getGlobal();
+
+	/**
+	 * Game interface for game message
 	 */
 	protected static final GameInterface gameInterface = GameInterface.getInterface();
  
@@ -179,8 +186,8 @@ public abstract class Game {
                 }
             }
         } catch(Exception e) {
-        	gameInterface.severe("I don't understand that \n\nException: \n" + e);
-        	gameInterface.severe(e.getMessage());
+        	gameLogger.severe("I don't understand that \n\nException: \n" + e);
+        	gameLogger.severe(e.getMessage());
             start();
         }
         gameInterface.println("Game Over");
