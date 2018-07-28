@@ -36,6 +36,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 	XmlResponseUploadMap() {
 		xmlParseResult = XmlParseResult.SUCCESS; 
 		customizingGame = new CustomizingGame();
+		msgType = XmlMessageType.UPLOAD_MAP_DESIGN;
 	}
 	
 	
@@ -56,7 +57,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 
 
 	@Override
-	public void makeResponseXmlString() {
+	public String makeResponseXmlString() {
 		
 		XmlWriter xmlWriter; 
 
@@ -68,7 +69,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 			
 			if(xmlParseResult.equals( XmlParseResult.SUCCESS )) {
 				xmlWriter.setAttributeToElement("result", "OK");
-				xmlWriter.setAttributeToElement("ng_reason", "-");
+				xmlWriter.setAttributeToElement("ng_reason", "OK");
 			
 				XmlWriter.overWriteFile("gameMap.xml", "userMap.xml");
 			
@@ -88,6 +89,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 		} 
 		
 		gameLogger.info(responseXml);
+		return responseXml; 
 	}
 	
 	@Override

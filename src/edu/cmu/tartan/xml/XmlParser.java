@@ -23,6 +23,8 @@ public class XmlParser {
 	private final DocumentBuilder dBuilder;
 	private Document doc;
 	private NodeList nList;
+	private XmlResponse xmlResponse; 	//server will refer this object 
+
 	
 	/**
 	 * Game logger for game log
@@ -39,6 +41,10 @@ public class XmlParser {
 
 	public NodeList getNodeList() {
 		return nList;
+	}
+	
+	public XmlResponse getXmlResponse() {
+		return xmlResponse;
 	}
 	
 	public XmlParseResult parseXmlFromString(String xmlUri) {
@@ -115,20 +121,16 @@ public class XmlParser {
 	
 	public XmlParseResult processMessage(String messageType) {
 		
-		XmlResponse xmlResponse; 
 		XmlParseResult result; 
 		
 		if(messageType.equals(XmlMessageType.UPLOAD_MAP_DESIGN.name())) {
 			xmlResponse = new XmlResponseUploadMap(); 
-			xmlResponse.setMsgType(XmlMessageType.UPLOAD_MAP_DESIGN);
 		}
 		else if(messageType.equals(XmlMessageType.REQ_LOGIN.name())) {
 			xmlResponse = new XmlResponseLogin(); 
-			xmlResponse.setMsgType(XmlMessageType.REQ_LOGIN);
 		}
 		else if(messageType.equals(XmlMessageType.ADD_USER.name())) {
 			xmlResponse = new XmlResponseAddUser();
-			xmlResponse.setMsgType(XmlMessageType.REQ_LOGIN);
 		}
 		else {
 			return XmlParseResult.UNKNOWN_MESSAGE;
@@ -142,20 +144,17 @@ public class XmlParser {
 	
 	@Nullable
 	public GameConfiguration processMessageReturnGameConfiguration(String messageType, String userId) {
-		
-		XmlResponseUploadMap xmlResponse; 
-		
+
 		// If Game variable is included, only support UPLOAD_MAP_DESIGN 
 		if(messageType.equals(XmlMessageType.UPLOAD_MAP_DESIGN.name())) {
 			xmlResponse = new XmlResponseUploadMap();
-			xmlResponse.setUserId(userId);
-			xmlResponse.setMsgType(XmlMessageType.UPLOAD_MAP_DESIGN);
+			((XmlResponseUploadMap) xmlResponse).setUserId(userId);
 		}
 		else {
 			return null;
 		}
 		
-		return xmlResponse.doYourJobReturnGameConfiguration(doc);
+		return ((XmlResponseUploadMap) xmlResponse).doYourJobReturnGameConfiguration(doc);
 	}
 	
 	@Nullable
