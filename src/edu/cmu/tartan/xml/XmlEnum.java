@@ -17,7 +17,7 @@ enum XmlMessageType {
 }
 
 enum XmlLoginRole {
-	PLAYER, DESIGNER, NONE
+	PLAYER, DESIGNER
 }
 
 enum XmlResultString { 

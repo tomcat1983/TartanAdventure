@@ -401,7 +401,7 @@ public class TestXmlParser {
 	public void testWritingLoginResultOK() throws ParserConfigurationException {
 		
 		XmlResponseLogin xr = new XmlResponseLogin(); 
-		xr.setLoginResult(XmlResultString.OK, XmlNgReason.OK, XmlLoginRole.DESIGNER);
+		xr.setLoginResult(XmlResultString.OK, XmlNgReason.OK);
 		xr.makeResponseXmlString();
 	}
 	
@@ -410,7 +410,7 @@ public class TestXmlParser {
 	public void testWritingLoginResultFail() throws ParserConfigurationException {
 		
 		XmlResponseLogin xr = new XmlResponseLogin(); 
-		xr.setLoginResult(XmlResultString.NG, XmlNgReason.SERVER_BUSY, XmlLoginRole.NONE);
+		xr.setLoginResult(XmlResultString.NG, XmlNgReason.SERVER_BUSY);
 		xr.makeResponseXmlString();
 	}
 	

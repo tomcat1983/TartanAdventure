@@ -94,16 +94,7 @@ public class TestXmlParserClient {
 		XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
 		assertTrue(xr.getNgReason().equals(XmlNgReason.OK));
 	}
-	
-	@Test
-	public void testParsingLoginRole() throws ParserConfigurationException {
 		
-		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
-		parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
-		XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
-		assertTrue(xr.getRole().equals(XmlLoginRole.PLAYER));
-	}
-	
 	@Test
 	public void testParsingAddUserResult() throws ParserConfigurationException {
 		
@@ -128,7 +119,7 @@ public class TestXmlParserClient {
 	public void testWritingXmlLogin() throws ParserConfigurationException {
 		
 		XmlWriterClient xw = new XmlWriterClient(); 
-		xw.makeXmlForLogin("tak", "abcdefg");
+		xw.makeXmlForLogin("tak", "abcdefg", XmlLoginRole.PLAYER);
 	}
 	
 	@Disabled("Describe how to make add user XML")
