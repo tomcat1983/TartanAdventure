@@ -53,7 +53,7 @@ public class GameCollectGoal implements GameGoal {
     @Override
     public String describe() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Game Collect Goal: You must collect the following items:");
+        sb.append("Game Collect Goal: You must collect the following items\n");
         for (String i : itemsList) {
             sb.append(" * " + i + "\n");
         }

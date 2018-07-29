@@ -163,10 +163,7 @@ public abstract class Game {
     
     private boolean processGameCommand(String input) throws TerminateGameException {
     	if (input.compareTo("quit") == 0) {
-            for (GameGoal g: context.getGoals()) {
-            	gameInterface.println(g.getStatus());
-            }
-            return true;
+    		return handleQuit();
         }
         else if (input.compareTo("look") == 0) {
             context.getPlayer().lookAround();
@@ -353,16 +350,34 @@ public abstract class Game {
         gameInterface.println("To get help type 'help' ... let's begin\n");
     }
     
-    public void handleSave() {
+    public boolean handleSave() {
     	if(this instanceof ServerGame) {
     		gameInterface.print(GamePlayMessage.SAVE_CANNOT_10_6);
-    		return;
+    		return false;
     	}
     	if(this instanceof LocalGame) {
     		((LocalGame)this).save(context.getUserId());
     		gameInterface.print(GamePlayMessage.SAVE_SUCCESSFUL_10_4);
+    		return true;
     	} else {
     		gameInterface.println(GamePlayMessage.SAVE_FAILURE_2_3);
+    		return false;
     	}    	
+    }
+    
+    public boolean handleQuit() {
+        for (GameGoal g: context.getGoals()) {
+        	gameInterface.println(g.getStatus());
+        }
+        gameInterface.println(GamePlayMessage.WILL_YOU_SAVE_2_1);
+        gameInterface.print("> ");
+
+        String input = gameInterface.getCommand();
+        if("yes".equalsIgnoreCase(input)) {
+        	return handleSave();
+        } else {
+        	gameInterface.println(GamePlayMessage.REJECT_SAVE_2_4);
+        	return true;
+        }    	
     }
 }

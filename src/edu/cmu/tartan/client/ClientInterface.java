@@ -32,17 +32,17 @@ public class ClientInterface {
 
 		return true;
 	}
-	
+
 	public RunningMode getRunningMode() {
 		RunningMode gameMode = RunningMode.UNDECIDED;
-		
+
 		do {
 			gameInterface.println("");
 			gameInterface.println("Choose the mode");
 			gameInterface.print("> ");
 
 			String command = gameInterface.getCommand();
-			
+
 			switch (command) {
 			case "exit":
 				gameMode = RunningMode.EXIT;
@@ -62,12 +62,14 @@ public class ClientInterface {
 			case "99":
 				gameMode = RunningMode.DESIGNER;
 				break;
+			case "":
+				break;
 			default:
 				gameInterface.println("Invalid command : " + command);
 				break;
 			}
 		} while (gameMode == RunningMode.UNDECIDED);
-		
+
 		return gameMode;
 	}
 
@@ -88,17 +90,17 @@ public class ClientInterface {
 
 		return true;
 	}
-	
+
 	public LocalModeCommand getLocalModeCommand() {
 		LocalModeCommand localCommand = LocalModeCommand.UNDECIDED;
-		
+
 		do {
 			gameInterface.println("");
 			gameInterface.println("Please select the game play mode.");
 			gameInterface.print("> ");
-			
+
 			String command = gameInterface.getCommand();
-			
+
 			if (command.equals("continue")) {
 				localCommand = LocalModeCommand.CONTINUE;
 			} else
@@ -109,8 +111,15 @@ public class ClientInterface {
 				localCommand = LocalModeCommand.QUIT;
 			}
 		} while(localCommand == LocalModeCommand.UNDECIDED);
-		
+
 		return localCommand;
+	}
+
+	public boolean printServerBusyMessage() {
+		gameInterface.println("Iâ€™m sorry. The game server is busy.");
+		gameInterface.println("Please retry to connect later.");
+
+		return true;
 	}
 
 	/**
@@ -122,19 +131,18 @@ public class ClientInterface {
 
 	public NetworkModeCommand getNetworkModeCommand() {
 		NetworkModeCommand networkCommand = NetworkModeCommand.UNDECIDED;
-		
-		gameInterface.println("Log in");
+
 		gameInterface.println("");
 		gameInterface.println("> login      Log in and play game.");
 		gameInterface.println("> register   Register an account for playing game");
-	
+
 		do {
 			gameInterface.println("");
 			gameInterface.println("Please select the menu");
 			gameInterface.print("> ");
-			
+
 			String command = gameInterface.getCommand();
-			
+
 			if (command.equals("login")) {
 				networkCommand = NetworkModeCommand.LOGIN;
 			} else
@@ -145,26 +153,26 @@ public class ClientInterface {
 				networkCommand = NetworkModeCommand.QUIT;
 			}
 		} while(networkCommand == NetworkModeCommand.UNDECIDED);
-		
+
 		return networkCommand;
 	}
-	
+
 	public String[] getLoginInfo() {
 		String[] loginInfo = new String[2];
-		
+
 		gameInterface.println("Please enter your ID :");
 		gameInterface.print("> ");
-		
+
 		loginInfo[0] = gameInterface.getCommand();
 
 		gameInterface.println("Please enter your Password :");
 		gameInterface.print("> ");
-		
+
 		loginInfo[1] = gameInterface.getCommand();
 
 		return loginInfo;
 	}
-	
+
 	public boolean printWelcomMessage(boolean isDesigner) {
 		if (isDesigner) {
 			gameInterface.println("");
@@ -181,18 +189,16 @@ public class ClientInterface {
 		}
 		return true;
 	}
-	
+
 	public String getUserIdForRegister() {
 		gameInterface.println("");
 		gameInterface.println("Please enter the ID you want to use :");
 		gameInterface.println("/Rule of ID/");
 		gameInterface.print("> ");
-		
-		String id = gameInterface.getCommand();
 
-		return id;
+		return gameInterface.getCommand();
 	}
-	
+
 	public boolean printInvalidIdMessageForRegister() {
 		gameInterface.println("");
 		gameInterface.println("The ID you entered is invalid.");
@@ -200,16 +206,14 @@ public class ClientInterface {
 
 		return true;
 	}
-	
+
 	public String getUserPwForRegister() {
 		gameInterface.println("");
 		gameInterface.println("Please enter the password you want.");
 		gameInterface.println("/Rule for password/");
 		gameInterface.print("> ");
-		
-		String pw = gameInterface.getCommand();
 
-		return pw;
+		return gameInterface.getCommand();
 	}
 
 	public boolean printInvalidPwMessageForRegister() {
@@ -224,10 +228,8 @@ public class ClientInterface {
 		gameInterface.println("");
 		gameInterface.println("Re-enter the password to confirm.");
 		gameInterface.print("> ");
-		
-		String pw = gameInterface.getCommand();
 
-		return pw;
+		return gameInterface.getCommand();
 	}
 
 	public boolean printUnmatchPwMessageForRegister() {
@@ -236,7 +238,7 @@ public class ClientInterface {
 
 		return true;
 	}
-	
+
 	public boolean printSuccessMessageForRegister() {
 		gameInterface.println("");
 		gameInterface.println("Your account is registered successfully.");
@@ -247,30 +249,52 @@ public class ClientInterface {
 
 	public boolean printFailMessageForRegister() {
 		gameInterface.println("");
-		gameInterface.println("I¡¯m sorry. The ID is already occupied. Please retry registration.");
+		gameInterface.println("I'm sorry. The ID is already occupied. Please retry registration.");
 
 		return true;
 	}
-	
+
 	String getNetworkCommand() {
 		String command = "";
-		
+
 		do {
 			gameInterface.println("");
 			gameInterface.print("> ");
-	
+
 			command = gameInterface.getCommand();
 		} while (command.equals(""));
-		
+
 		return command;
 	}
-	
-	public boolean printInvalidMap() {
+
+	public boolean printNoMap() {
 		gameInterface.println("There is no file which of the name is what you entered.");
 		gameInterface.println("Please check whether the file is in the folder which the game is saved or not.");
 		gameInterface.println("");
 		gameInterface.println("Re-enter the file name.");
-		
+
+		return true;
+	}
+
+	public boolean printValidateMessageForMapUpload() {
+		gameInterface.println("");
+		gameInterface.println("The server is validating the map file.");
+
+		return true;
+	}
+
+	public boolean printValidateSucceessMessageForMapUpload() {
+		gameInterface.println("");
+		gameInterface.println("The map file is valid and saved successfully in the server.");
+
+		return true;
+	}
+
+	public boolean printValidateFailMessageForMapUpload() {
+		gameInterface.println("");
+		gameInterface.println("The map file is invalid.");
+		gameInterface.println("Please check the file again and retry.");
+
 		return true;
 	}
 }

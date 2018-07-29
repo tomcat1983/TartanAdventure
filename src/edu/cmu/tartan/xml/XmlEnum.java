@@ -13,7 +13,9 @@ enum XmlParseResult {
 }
 
 enum XmlMessageType {
-	UPLOAD_MAP_DESIGN, REQ_LOGIN, ADD_USER
+	UPLOAD_MAP_DESIGN, REQ_LOGIN, ADD_USER, 
+	REQ_GAME_START, REQ_GAME_END, HEART_BEAT, 
+	SEND_COMMAND, EVENT_MESSAGE, GAME_END
 }
 
 enum XmlLoginRole {
@@ -25,6 +27,6 @@ enum XmlResultString {
 }
 
 enum XmlNgReason { 
-	OK, INVALID_INFO, SERVER_BUSY, DUP_ID
+	OK, INVALID_INFO, SERVER_BUSY, DUP_ID, NO_PLAYERS
 }
 

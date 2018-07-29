@@ -63,10 +63,10 @@
         <artifactId>pitest-maven</artifactId>
         <version>1.4.0</version>
         <configuration>
-          <avoidCallsTo>
-              <avoidCallsTo>java.util.logging</avoidCallsTo>
-              <avoidCallsTo>org.junit.jupiter</avoidCallsTo>
-          </avoidCallsTo>
+          <excludedMethods>
+            <param>print</param>
+            <param>println</param>
+          </excludedMethods>
         </configuration>
         <dependencies>
           <dependency>

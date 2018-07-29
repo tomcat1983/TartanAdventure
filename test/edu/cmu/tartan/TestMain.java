@@ -12,7 +12,7 @@ public class TestMain {
 		
 		commander.add("1");
 		commander.add("quit");
-		
+		commander.add("no");
 		commander.apply();
 	    
 		LocalGame game = new LocalGame(Player.DEFAULT_USER_NAME);

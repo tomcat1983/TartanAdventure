@@ -2,8 +2,11 @@ package edu.cmu.tartan.client;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
+
 import org.junit.jupiter.api.*;
 
+import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.test.Commander;
 
 class TestClient {
@@ -17,7 +20,10 @@ class TestClient {
 
 	@AfterEach
 	void testRunClient() {
-		Client client = new Client("localhost", "8088");
+		String fileUri = System.getProperty("user.dir") + File.separator + "config.properties";
+		new Config(fileUri);
+		
+		Client client = new Client();
 		client.start();
 	}
 
@@ -28,6 +34,7 @@ class TestClient {
 		commander.add("new");
 		commander.add("1");
 		commander.add("quit");
+		commander.add("no");
 		commander.add("exit");
 		commander.apply();
 	}
@@ -39,6 +46,7 @@ class TestClient {
 		commander.add("new");
 		commander.add("1");
 		commander.add("quit");
+		commander.add("no");
 		commander.add("exit");
 		commander.apply();
 	}
@@ -49,6 +57,7 @@ class TestClient {
 		commander.add("new");
 		commander.add("1");
 		commander.add("quit");
+		commander.add("no");
 		commander.add("exit");
 		commander.apply();
 	}
@@ -58,6 +67,7 @@ class TestClient {
 		commander.add("1");
 		commander.add("continue");
 		commander.add("quit");
+		commander.add("no");
 		commander.add("exit");
 		commander.apply();
 	}

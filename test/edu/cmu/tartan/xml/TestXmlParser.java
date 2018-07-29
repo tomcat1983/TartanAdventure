@@ -41,6 +41,9 @@ public class TestXmlParser {
 	String unknownMessageXmlFileName; 
 	String gameXmlInvalidGoalCntMatchFileName;
 	String gameXmlInvalidRoomCntMatchFileName;
+	String gameStartXmlFileName;
+	String gameEndXmlFileName;
+
 	
     @BeforeEach
     public void testXmlSetup() {
@@ -53,6 +56,8 @@ public class TestXmlParser {
     	notExistFileName = "na.xml";
     	gameXmlInvalidGoalCntMatchFileName = "test/edu/cmu/tartan/xml/GameXmlInvalidGoalCntMatch.xml";
     	gameXmlInvalidRoomCntMatchFileName = "test/edu/cmu/tartan/xml/GameXmlInvalidRoomCntMatch.xml";
+    	gameStartXmlFileName = "test/edu/cmu/tartan/xml/RequestGameStart.xml";
+    	gameEndXmlFileName = "test/edu/cmu/tartan/xml/RequestGameEnd.xml";
 
     }
 	
@@ -400,19 +405,35 @@ public class TestXmlParser {
 	@Test
 	public void testWritingLoginResultOK() throws ParserConfigurationException {
 		
-		XmlResponseLogin xr = new XmlResponseLogin(); 
-		xr.setLoginResult(XmlResultString.OK, XmlNgReason.OK);
-		xr.makeResponseXmlString();
+		XmlWriterServer xw = new XmlWriterServer(); 
+		xw.makeXmlForLogin(XmlResultString.OK, XmlNgReason.OK);
 	}
 	
 	@Disabled("Describe how to make login result XML")
 	@Test
 	public void testWritingLoginResultFail() throws ParserConfigurationException {
 		
-		XmlResponseLogin xr = new XmlResponseLogin(); 
-		xr.setLoginResult(XmlResultString.NG, XmlNgReason.SERVER_BUSY);
-		xr.makeResponseXmlString();
+		XmlWriterServer xw = new XmlWriterServer(); 
+		xw.makeXmlForLogin(XmlResultString.NG, XmlNgReason.SERVER_BUSY);
 	}
+	
+	@Disabled("Describe how to make game upload XML")
+	@Test
+	public void testWritingUploadMapOK() throws ParserConfigurationException {
+		
+		XmlWriterServer xw = new XmlWriterServer(); 
+		xw.makeXmlForGameUpload(XmlParseResult.SUCCESS, XmlNgReason.OK);
+	}
+	
+	
+	@Disabled("Describe how to make EventMessage")
+	@Test
+	public void testWritingEventMessage() throws ParserConfigurationException {
+		
+		XmlWriterServer xw = new XmlWriterServer(); 
+		xw.makeXmlForEventMessage("hello client\n this is message from server");
+	}
+	
 	
 	@Test
 	public void testParsingAddUserId() throws ParserConfigurationException {
@@ -443,6 +464,37 @@ public class TestXmlParser {
 		RoomRequiredItem roomRequire = (RoomRequiredItem) cGame.getRoomIndex(13);  
 		assertTrue(roomRequire.requiredItem().equals(Item.getInstance("gold", Player.DEFAULT_USER_NAME)));
 	}
+	
+	@Test
+	public void testParsingGameStartId() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(gameStartXmlFileName));
+		XmlResponse xr = parseXml.getXmlResponse();
+		String id = ((XmlResponseGameStart) xr).getId();
+		assertTrue(id.equals("takhh"));
+	}
+	
+	
+	@Test
+	public void testParsingGameEndId() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(gameEndXmlFileName));
+		XmlResponse xr = parseXml.getXmlResponse();
+		String id = ((XmlResponseGameEnd) xr).getId();
+		assertTrue(id.equals("gameEndId"));
+	}
+	
+	
+	@Test
+	public void testGameDescription() throws ParserConfigurationException {
+		//<goal index="0" type="collect" object="diamond-shovel" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
+		System.out.println(cGame.makeGameDescription());
+	}
+	
 	
 	/*
 	 * methods for test only 
