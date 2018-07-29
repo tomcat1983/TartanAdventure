@@ -281,6 +281,8 @@ public class PlayerExecutionEngine {
                 }
                 return false;
             }
+        } else {
+        	gameInterface.println("I don't see that here.");
         }
         return false;
     }

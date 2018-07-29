@@ -95,4 +95,3 @@ public class CustomizingGame extends GameConfiguration {
 		return gameDescription.toString(); 
 	}
 }
-

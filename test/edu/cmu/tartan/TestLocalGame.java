@@ -50,6 +50,17 @@ public class TestLocalGame {
 		commander.add("push fridge");
 		commander.add("west");
 		commander.add("west");
+		commander.add("pickup gold");
+		commander.add("east");
+		commander.add("north");
+		commander.add("pickup food");
+		commander.add("south");
+		commander.add("east");
+		commander.add("east");
+		commander.add("put food in microwave");
+		commander.add("use microwave");
+		commander.add("remove diamond from microwave");
+		commander.add("east");
 		commander.add("quit");
 		commander.add("no");
 		commander.apply();
