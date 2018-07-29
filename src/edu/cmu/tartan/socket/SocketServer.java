@@ -77,8 +77,8 @@ public class SocketServer implements Runnable, ISocketHandler {
 				gameLogger.info("Client Port : " + clientPort);
 				gameLogger.info("Client IP : " + clientIp);
 
-				UserClientThread clientHandler = new UserClientThread(socket, messageQueue);
 				String threadName = String.format("User %d", socketCounter);
+				UserClientThread clientHandler = new UserClientThread(socket, messageQueue, threadName);
 				Thread thread = new Thread(clientHandler, threadName);
 				thread.start();
 				
@@ -143,10 +143,10 @@ public class SocketServer implements Runnable, ISocketHandler {
 	}
 
 	@Override
-	public boolean addClient(String userId) {
-		for(UserClientThread clientThread : clientThreadList) {
-			if (userId.equals(clientThread.getUserId())) {
-				clientThreadMap.put(userId, clientThread);
+	public boolean addClient(String userId, String threadName) {
+		for(UserClientThread client : clientThreadList) {
+			if (threadName.equals(client.getThreadName())) {
+				clientThreadMap.put(userId, client);
 			}
 		}
 		return clientThreadMap.containsKey(userId);
@@ -155,15 +155,17 @@ public class SocketServer implements Runnable, ISocketHandler {
 	@Override
 	public boolean removeClient(String userId) {
 		if (clientThreadMap.containsKey(userId)) {
+			clientThreadList.remove(clientThreadMap.get(userId));
 			clientThreadMap.remove(userId);
+			
 		}
 		return !clientThreadMap.containsKey(userId);
 	}
 	
-	public boolean removeClientFromList(String userId) {
-		for(UserClientThread clientThread : clientThreadList) {
-			if (userId.equals(clientThread.getUserId())) {
-				return clientThreadList.remove(clientThread);
+	public boolean removeClientFromList(String threadName) {
+		for(UserClientThread client : clientThreadList) {
+			if (threadName.equals(client.getThreadName())) {
+				return clientThreadList.remove(client);
 			}
 		}
 		socketCounter--;
@@ -171,8 +173,60 @@ public class SocketServer implements Runnable, ISocketHandler {
 	}
 	
 	@Override
-	public void updateClientState(String userId, String message) {
+	public void updateClientState(String userId, CommandResult result, String threadName) {
 		
+		switch (result) {
+			case LOGIN_SUCCESS:
+				login(true, userId, threadName);
+				break;
+			case LOGIN_FAIL:
+				login(false, userId, threadName);
+				break;
+			case REGISTER_SUCCESS:
+				break;
+			case REGISTER_FAIL:
+				break;
+			case START_GAME_SUCCESS:
+				startGame(true, userId);
+				break;
+			case END_GAME_SUCCESS:
+				endGame(true, userId, threadName);
+				break;
+			case END_GAME_ALL_USER:
+				setIsPlaying(false);
+				break;
+			default:
+				break;
+		}
+		
+	}
+	
+	public boolean login(boolean isSuccess, String userId, String threadName) {
+		
+		boolean returnValue = false;
+		
+		if (isSuccess) {
+			returnValue = addClient(userId, threadName);
+		}
+		return returnValue;
+	}
+	
+	public void startGame(boolean isSuccess, String userId) {
+		isPlaying = true;
+	}
+	
+	public boolean endGame(boolean isSuccess, String userId, String threadName) {
+		boolean returnValue = false;
+		
+		if (isSuccess) {
+			if (userId != null && !userId.isEmpty()) {
+				returnValue = removeClient(userId);
+			} else {
+				returnValue = removeClientFromList(threadName);
+			}
+		}
+		
+		return returnValue;
 	}
 	
 	public void setIsPlaying(boolean isPlaying) {

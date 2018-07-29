@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import edu.cmu.tartan.account.AccountManager;
 import edu.cmu.tartan.account.ReturnType;
 import edu.cmu.tartan.socket.SocketClient;
+import edu.cmu.tartan.xml.XmlLoginRole;
 
 
 public class TartanGameManagerClient implements Runnable, IUserCommand{
@@ -38,7 +39,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	}
 	
 	@Override
-	public boolean login(String userId, String userPw) {
+	public boolean login(String name, String userId, String userPw, XmlLoginRole role) {
 		sendMessage(userId, userPw);
 		waitResponseMessage();
 		
@@ -81,7 +82,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	}
 	
 	@Override
-	public boolean endGame(String message) {
+	public boolean endGame(String threadName, String message) {
 		
 		// TODO Send To server
 		

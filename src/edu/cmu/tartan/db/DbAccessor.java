@@ -10,8 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
-import edu.cmu.tartan.GameInterface;
-
 public class DbAccessor {
 
 	/**
@@ -125,7 +123,7 @@ public class DbAccessor {
 	/**
 	 * select all rows in the warehouses table
 	 */
-	public String selectByUserId(String query, String userId) {
+	public String selectByUserId(String query, String userId, String param) {
 		String sql = query;
 
 		String userPw = null;
@@ -138,7 +136,7 @@ public class DbAccessor {
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				userPw = rs.getString("user_pw");
+				userPw = rs.getString(param);
 			}
 		} catch (SQLException e) {
 			gameLogger.warning("SQLException : " + e.getMessage());
@@ -150,7 +148,18 @@ public class DbAccessor {
 	public String getPassword(String userId) {
 		
 		String query = "SELECT user_id, user_pw, user_type FROM T_USER_INFO where user_id = ?";
-		String userPw = selectByUserId(query, userId);
+		String userPw = selectByUserId(query, userId, "user_pw");
+
+		if (userPw == null)
+			return null;
+
+		return userPw;
+	}
+	
+	public String getUserRole(String userId) {
+		
+		String query = "SELECT user_id, user_pw, user_type FROM T_USER_INFO where user_id = ?";
+		String userPw = selectByUserId(query, userId, "user_type");
 
 		if (userPw == null)
 			return null;
