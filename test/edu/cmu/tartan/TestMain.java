@@ -29,6 +29,7 @@ public class TestMain {
 	void testRunClient() {
 		Main.main(args);
 	}
+
 	@Test
 	public void testServerMode() {
 		System.out.println("testServerMode");
