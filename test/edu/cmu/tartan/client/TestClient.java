@@ -57,6 +57,7 @@ class TestClient {
 	void testWhenSelectLocalGameAndContinueGame() {
 		commander.add("1");
 		commander.add("continue");
+		commander.add("quit");
 		commander.add("exit");
 		commander.apply();
 	}
