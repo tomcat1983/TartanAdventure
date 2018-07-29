@@ -259,11 +259,16 @@ public abstract class Game {
     private void status() {
     	Player player = context.getPlayer();
     	
-        gameInterface.println("The current game is '" + context.getGameName() + "': " + context.getGameDescription() + "\n");
-        gameInterface.println("- There are " + context.getGoals().size() + " goals to achieve:");
+        gameInterface.println("The current game is '" + context.getGameName() + "': " + context.getGameDescription());
 
+		if(context.getGoals().size() == 1)
+			gameInterface.println("- There is a goal to achive");
+		else
+			gameInterface.println("- There are " + context.getGoals().size() + " goals to achive");
+        
+        
         for (int i=0; i < context.getGoals().size(); i++) {
-            gameInterface.println("  * " + (i+1)+ ": "+ context.getGoals().get(i).describe() + ", status: " + context.getGoals().get(i).getStatus());
+            gameInterface.println((i+1)+ " "+ context.getGoals().get(i).describe() + " - status: " + context.getGoals().get(i).getStatus());
         }
         gameInterface.println("\n");
         gameInterface.println("- Current room:  " + player.currentRoom() + "\n");

@@ -202,15 +202,18 @@ public class TestXmlParserClient {
 	public void testWritingXmlForSendCommand() throws ParserConfigurationException {
 		
 		final String COMMAND = "go south";
+		final String ID_STR = "commandId";
 
 		XmlWriterClient xw = new XmlWriterClient(); 
-		String commandXml = xw.makeXmlForCommand(COMMAND);
+		String commandXml = xw.makeXmlForCommand(ID_STR, COMMAND);
 		
 		XmlParser xp = new XmlParser(XmlParserType.SERVER);
 		xp.parseXmlFromString(commandXml);
 		
 		XmlResponseCommand xr = (XmlResponseCommand) xp.getXmlResponse();
 		assertTrue(xr.getCmd().equals(COMMAND));
+		assertTrue(xr.getId().equals(ID_STR));
+
 	}
 	
 	@Test
