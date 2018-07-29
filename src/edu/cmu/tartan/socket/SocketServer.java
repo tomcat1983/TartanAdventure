@@ -9,29 +9,26 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
-import edu.cmu.tartan.GameInterface;
-import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.manager.IQueueHandler;
 
 public class SocketServer implements Runnable, ISocketHandler {
 
 	/**
-	 * Game interface for game message and log
+	 * Game logger for game log
 	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
+	protected static final Logger gameLogger = Logger.getGlobal();
 
 	static final int MAX_USER_CONNECTION = 5;
-	static final int MAX_DESIGNER_CONNECTION = 1;
+	static final int MAX_DESIGNER_CONNECTION = 5;
 	
 	private int serverPort = 10015;
-//	private int designerServerPort = 10016;
-	
-	private int userSocketCounter = 0;
-//	private int designerSocketCounter = 0;
+	private int socketCounter = 0;
+	private int maxSocket = MAX_USER_CONNECTION;
 	
 	private boolean isLoop = true;
-//	private boolean isRunning = false;
+	private boolean isPlaying = false;
 	
 	private List<UserClientThread> clientThreadList = new ArrayList<UserClientThread>();
 	private HashMap<String, UserClientThread> clientThreadMap = new HashMap<>();
@@ -42,7 +39,6 @@ public class SocketServer implements Runnable, ISocketHandler {
 	public SocketServer(IQueueHandler messageQueue) {
 		this.messageQueue = messageQueue;
 		serverSocket = null;
-		serverPort = Config.getServerPort();
 	}
 	
 	@Override
@@ -56,41 +52,41 @@ public class SocketServer implements Runnable, ISocketHandler {
 		try {
 			serverSocket = new ServerSocket(serverPort);
 
-			gameInterface.println("Server Started");
-			gameInterface.println("Server is listening on port " + serverPort);
-			gameInterface.println("Waiting for client");
+			gameLogger.info("Server Started");
+			gameLogger.info("Server is listening on port " + serverPort);
+			gameLogger.info("Waiting for client");
 
 			while (isLoop) {
 				Socket socket = serverSocket.accept();
 
-				if (userSocketCounter > MAX_USER_CONNECTION) {
-					gameInterface.println("Too many client");
-					sendMessage(socket, "I'm sorry. The game server is busy. Please retry to connect later.");
+				if (socketCounter > maxSocket || isPlaying) {
+					sendMessage(socket, "I’m sorry. The game server is busy. Please retry to connect later.");
 					socket.close();
 				}
 
-				gameInterface.println("New client connected");
-				userSocketCounter++;
+				gameLogger.info("New client connected");
+				socketCounter++;
 				
 				InetAddress inetAddress = socket.getInetAddress();
 				int clientPort = socket.getPort();
 				String clientIp = inetAddress.getHostAddress();
 
-				gameInterface.println("Client Port : " + clientPort);
-				gameInterface.println("Client IP : " + clientIp);
+				gameLogger.info("Client Port : " + clientPort);
+				gameLogger.info("Client IP : " + clientIp);
 
 				UserClientThread clientHandler = new UserClientThread(socket, messageQueue);
-				Thread thread = new Thread(clientHandler);
+				String threadName = String.format("User %d", socketCounter);
+				Thread thread = new Thread(clientHandler, threadName);
 				thread.start();
 				
 				clientThreadList.add(clientHandler);
 			}
 
 		} catch (IOException e) {
-			gameInterface.println("Server IOException: " + e.getMessage());
+			gameLogger.info("Server IOException: " + e.getMessage());
 		}
 	}
-
+	
 	@Override
 	public boolean stopSocket() {
 		
@@ -101,9 +97,9 @@ public class SocketServer implements Runnable, ISocketHandler {
 			serverSocket.close();
 			returnValue = true;
 		} catch (IOException e) {
-			gameInterface.println("Server IOException: " + e.getMessage());
+			gameLogger.warning("IOException: " + e.getMessage());
 		}
-		userSocketCounter = 0;
+		socketCounter = 0;
 		
 		return returnValue;
 	}
@@ -113,11 +109,11 @@ public class SocketServer implements Runnable, ISocketHandler {
 			OutputStream output = clientSocket.getOutputStream();
 			PrintWriter writer = new PrintWriter(output, true);
 			
-			writer.println("Server: " + message);
+			writer.println(message);
 			
 			return true;
 		} catch (IOException e) {
-			gameInterface.println("Server IOException: " + e.getMessage());
+			gameLogger.warning("IOException: " + e.getMessage());
 		}
 		return false;
 	}
@@ -167,12 +163,20 @@ public class SocketServer implements Runnable, ISocketHandler {
 				return clientThreadList.remove(clientThread);
 			}
 		}
-		userSocketCounter--;
+		socketCounter--;
 		return false;
 	}
 	
 	@Override
 	public void updateClientState(String userId, String message) {
 		
+	}
+	
+	public void setIsPlaying(boolean isPlaying) {
+		this.isPlaying = isPlaying;
+	}
+	
+	public boolean getIsPlaying() {
+		return isPlaying;
 	}
 }

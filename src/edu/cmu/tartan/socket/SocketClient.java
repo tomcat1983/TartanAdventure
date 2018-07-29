@@ -10,7 +10,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
-import edu.cmu.tartan.GameInterface;
+import edu.cmu.tartan.manager.IQueueHandler;
+import edu.cmu.tartan.manager.ResponseMessage;
 import edu.cmu.tartan.config.Config;
 
 public class SocketClient implements Runnable {
@@ -19,17 +20,22 @@ public class SocketClient implements Runnable {
 	 * Game logger for game log
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
-
-	/**
-	 * Game interface for game message and log
-	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
-
-	Socket socket = null;
-
-	private boolean isLoop = true;
-
-	public SocketClient() {
+	
+	private String serverIp = "127.0.0.1";
+	int serverPort = 10015;
+	
+	private Socket socket = null;
+	private ResponseMessage responseMessage;
+	private IQueueHandler messageQueue;
+	
+	private boolean isLoop;
+	
+	public SocketClient(ResponseMessage responseMessage, IQueueHandler messageQueue) {
+		isLoop = true;
+		this.serverIp = serverIp;
+		this.serverPort = serverPort;
+		this.responseMessage = responseMessage;
+		this.messageQueue = messageQueue;
 	}
 
 	@Override
@@ -37,47 +43,47 @@ public class SocketClient implements Runnable {
 		if (connectToServer())
 			gameLogger.info("Connected");
 	}
-
+	
 	public boolean connectToServer() {
-		String serverIp = Config.getServerIp();
-		int serverPort = Config.getServerPort();
-
+		serverIp = Config.getServerIp();
+		serverPort = Config.getServerPort();
+		
 		try {
 			socket = new Socket(serverIp, serverPort);
-
+			 
 			InputStream input = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-
+			
             String message = "";
-
+ 
             while(isLoop) {
-
+            	
             	if ((message = reader.readLine()) == null) break;
             	//TODO Check a null state
 				if (message.equals("null")
 						|| message.equals("exit")
 						|| message.equals("quit")) break;
-
+				
 				receiveMessage(message);
-
+ 
             }
-
+ 
             stopSocket();
-
+ 
         } catch (UnknownHostException e) {
-
-        	gameInterface.println("Server not found: " + e.getMessage());
+ 
+        	gameLogger.severe("Server not found: " + e.getMessage());
         	return false;
-
+ 
         } catch (IOException e) {
-
-        	gameInterface.println("IOException : " + e.getMessage());
+ 
+        	gameLogger.severe("IOException : " + e.getMessage());
         	return false;
         }
 
 		return true;
 	}
-
+	
 	public boolean waitToConnection(int timeout) {
 		while (timeout > 0 && socket == null) {
 			try {
@@ -86,18 +92,27 @@ public class SocketClient implements Runnable {
 				gameLogger.info("Exception :" + exception.getMessage());
 				break;
 			}
-
+			
 			timeout -= 10;
 		}
-
+		
 		return (socket != null);
 	}
-
+	
 	public boolean receiveMessage(String message) {
-		gameInterface.println(message);
+		//TODO parse a message
+		
+		try {
+			synchronized (responseMessage) {
+				responseMessage.setMessage(message);
+				responseMessage.notify();
+			}
+		} catch (IllegalMonitorStateException e) {
+			gameLogger.severe("IllegalMonitorStateException : " + e.getMessage());
+		}
 		return false;
 	}
-
+	
 	public boolean sendMessage(String message) {
 		try {
 			OutputStream output = socket.getOutputStream();
@@ -106,19 +121,19 @@ public class SocketClient implements Runnable {
 			writer.println(message);
 			return true;
 		} catch (IOException e) {
-			 gameInterface.println("Server IOException: " + e.getMessage());
+			gameLogger.severe("Server IOException: " + e.getMessage());
 		}
 		return false;
 	}
-
+	
 	public boolean stopSocket() {
 		boolean returnValue = false;
 		isLoop = false;
-
+		
 		try {
 			socket.close();
 		} catch (IOException e) {
-			gameInterface.println("Server IOException: " + e.getMessage());
+			gameLogger.severe("Server IOException: " + e.getMessage());
 		}
 		return returnValue;
 	}
