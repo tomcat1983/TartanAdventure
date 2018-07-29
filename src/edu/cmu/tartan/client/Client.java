@@ -113,13 +113,8 @@ public class Client {
 	}
 
 	private boolean connectServer(int timeout) {
-<<<<<<< HEAD
-		socket = new SocketClient(serverIp, serverPort, null, null);
-		socketClientThread = new Thread((Runnable)socket);
-=======
-		socket = new SocketClient();
+		socket = new SocketClient(null, null);
 		socketClientThread = new Thread(socket);
->>>>>>> upstream/master
 		socketClientThread.start();
 
 		return socket.waitToConnection(timeout);

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.manager.IQueueHandler;
 
 public class SocketServer implements Runnable, ISocketHandler {
@@ -48,6 +49,8 @@ public class SocketServer implements Runnable, ISocketHandler {
 
 	@Override
 	public void startSocket() {
+		
+		serverPort = Config.getServerPort();
 
 		try {
 			serverSocket = new ServerSocket(serverPort);

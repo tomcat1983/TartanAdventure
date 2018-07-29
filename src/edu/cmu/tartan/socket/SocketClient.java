@@ -26,16 +26,14 @@ public class SocketClient implements Runnable {
 	
 	private Socket socket = null;
 	private ResponseMessage responseMessage;
-	private IQueueHandler messageQueue;
+	private IQueueHandler queue;
 	
 	private boolean isLoop;
 	
-	public SocketClient(ResponseMessage responseMessage, IQueueHandler messageQueue) {
+	public SocketClient(ResponseMessage responseMessage, IQueueHandler queue) {
 		isLoop = true;
-		this.serverIp = serverIp;
-		this.serverPort = serverPort;
 		this.responseMessage = responseMessage;
-		this.messageQueue = messageQueue;
+		this.queue = queue;
 	}
 
 	@Override
