@@ -74,11 +74,11 @@ public abstract class Game {
         gameInterface.println(sb.toString());
     }
     
-    private GameConfiguration loaclGameFromXML() {
+    protected GameConfiguration gameFromXML(GameMode mode) {
 		XmlParser parseXml;
 		try {
 			parseXml = new XmlParser(); 
-			return parseXml.loadGameMapXml(GameMode.LOCAL, context.getUserId());
+			return parseXml.loadGameMapXml(mode, context.getUserId());
 		} catch (ParserConfigurationException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
@@ -103,7 +103,7 @@ public abstract class Game {
         menu.add(new DemoGame());
 
         // XML loading game
-        GameConfiguration loaclGame = loaclGameFromXML();
+        GameConfiguration loaclGame = gameFromXML(GameMode.LOCAL);
         if(loaclGame!=null) {
             menu.add(loaclGame);
         }
