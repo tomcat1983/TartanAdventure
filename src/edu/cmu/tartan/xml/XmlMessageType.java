@@ -1,0 +1,7 @@
+package edu.cmu.tartan.xml;
+
+public enum XmlMessageType {
+	UPLOAD_MAP_DESIGN, REQ_LOGIN, ADD_USER, 
+	REQ_GAME_START, REQ_GAME_END, HEART_BEAT, 
+	SEND_COMMAND, EVENT_MESSAGE, GAME_END
+}
