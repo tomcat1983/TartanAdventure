@@ -88,7 +88,6 @@ public class CustomizingGame extends GameConfiguration {
 		
 		gameDescription.append("Game");
 
-			
 		return gameDescription.toString(); 
 	}
 }
