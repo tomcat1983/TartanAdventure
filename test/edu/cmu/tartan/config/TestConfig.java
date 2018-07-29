@@ -13,6 +13,7 @@ public class TestConfig {
 	@BeforeEach
 	public void beforeTest() {
 		config = new Config(fileName);
+		config.readPropertyFile();
 	}
 
 	@Test

@@ -33,7 +33,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	
 	private List<UserClientThread> clientThreadList = new ArrayList<UserClientThread>();
 	private HashMap<String, UserClientThread> clientThreadMap = new HashMap<>();
-	
+
 	private ServerSocket serverSocket;
 	private IQueueHandler messageQueue;
 
@@ -41,7 +41,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 		this.messageQueue = messageQueue;
 		serverSocket = null;
 	}
-	
+
 	@Override
 	public void run() {
 		startSocket();
@@ -81,7 +81,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 				String threadName = String.format("User %d", socketCounter);
 				Thread thread = new Thread(clientHandler, threadName);
 				thread.start();
-				
+
 				clientThreadList.add(clientHandler);
 			}
 
@@ -92,12 +92,13 @@ public class SocketServer implements Runnable, ISocketHandler {
 	
 	@Override
 	public boolean stopSocket() {
-		
+
 		boolean returnValue = false;
 		isLoop = false;
-		
+
 		try {
-			serverSocket.close();
+			if (serverSocket != null)
+				serverSocket.close();
 			returnValue = true;
 		} catch (IOException e) {
 			gameLogger.warning("IOException: " + e.getMessage());
@@ -106,7 +107,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 		
 		return returnValue;
 	}
-	
+
 	private boolean sendMessage(Socket clientSocket, String message) {
 		try {
 			OutputStream output = clientSocket.getOutputStream();
@@ -120,7 +121,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean sendToClient(String userId, String message) {
 		boolean returnValue = false;
@@ -129,7 +130,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 		}
 		return returnValue;
 	}
-	
+
 	@Override
 	public boolean sendToAll(String userId, String message) {
 		boolean returnValue = false;
@@ -138,7 +139,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 				returnValue = clientThreadMap.get(clientId).sendMessage(message);
 			}
 		}
-		
+
 		return returnValue;
 	}
 
@@ -159,7 +160,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 		}
 		return !clientThreadMap.containsKey(userId);
 	}
-	
+
 	public boolean removeClientFromList(String userId) {
 		for(UserClientThread clientThread : clientThreadList) {
 			if (userId.equals(clientThread.getUserId())) {
@@ -169,10 +170,10 @@ public class SocketServer implements Runnable, ISocketHandler {
 		socketCounter--;
 		return false;
 	}
-	
+
 	@Override
 	public void updateClientState(String userId, String message) {
-		
+
 	}
 	
 	public void setIsPlaying(boolean isPlaying) {
