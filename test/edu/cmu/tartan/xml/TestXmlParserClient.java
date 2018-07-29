@@ -168,20 +168,34 @@ public class TestXmlParserClient {
 		xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_START, "startId");
 	}
 	
-	@Disabled("Describe how to make game end packet")
 	@Test
-	public void testWritingXmlForGameEnd() {
+	public void testWritingXmlForGameEnd() throws ParserConfigurationException {
 		
+		final String ID_STR = "endId";
+
 		XmlWriterClient xw = new XmlWriterClient(); 
-		xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_END, "endId");
+		String xmlStr = xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_END, ID_STR);
+		
+		XmlParser xp = new XmlParser(XmlParserType.SERVER);
+		xp.parseXmlFromString(xmlStr);
+		
+		XmlResponseGameEnd xr = (XmlResponseGameEnd) xp.getXmlResponse();
+		assertTrue(xr.getId().equals(ID_STR));
 	}
 	
-	@Disabled("Describe how to make HB packet")
 	@Test
-	public void testWritingXmlForHeartBeat() {
+	public void testWritingXmlForHeartBeat() throws ParserConfigurationException {
 		
+		final String ID_STR = "heartBeatId";
+		 
 		XmlWriterClient xw = new XmlWriterClient(); 
-		xw.makeXmlForHeartBeat("heartBeatId");
+		String xmlStr = xw.makeXmlForHeartBeat(ID_STR);
+		
+		XmlParser xp = new XmlParser(XmlParserType.SERVER);
+		xp.parseXmlFromString(xmlStr);
+		
+		XmlResponseHeartBeat xr = (XmlResponseHeartBeat) xp.getXmlResponse();
+		assertTrue(xr.getId().equals(ID_STR));
 	}
 	
 	@Test
