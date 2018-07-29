@@ -486,6 +486,16 @@ public class TestXmlParser {
 		assertTrue(id.equals("gameEndId"));
 	}
 	
+	
+	@Test
+	public void testGameDescription() throws ParserConfigurationException {
+		//<goal index="0" type="collect" object="diamond-shovel" />
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
+		System.out.println(cGame.makeGameDescription());
+	}
+	
+	
 	/*
 	 * methods for test only 
 	 */

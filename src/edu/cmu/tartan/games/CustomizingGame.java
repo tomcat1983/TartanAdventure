@@ -2,12 +2,10 @@ package edu.cmu.tartan.games;
 
 import java.util.ArrayList;
 
-import edu.cmu.tartan.Game;
 import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
-
-import edu.cmu.tartan.goal.GameGoal;
+import edu.cmu.tartan.goal.*;
 import edu.cmu.tartan.room.*;
 
 /**
@@ -20,53 +18,81 @@ import edu.cmu.tartan.room.*;
  */
 public class CustomizingGame extends GameConfiguration {
 
-    public CustomizingGame() {
-        super("Customizing game made with XML");
-    }
-    
-    private ArrayList<Room> rooms = new ArrayList<>();
-    private ArrayList<GameGoal> goals = new ArrayList<>();
+	public CustomizingGame() {
+		super("Customizing game made with XML");
+	}
 
-    
-    public void addRoom(Room room) {
-    	rooms.add(room);
-    }
-    
-    public Room getRoomIndex(int i) {
-    	return rooms.get(i);
-    }
-    
-    public void addGoal(GameGoal goal) {
-    	goals.add(goal); 
-    }
-    
-    public GameGoal getGameGoalIndex(int i) {
-    	return goals.get(i);
-    }
-    
-    /**
-     * Configure the game
-     * @param game the Game object that will manage exectuion
-     * @throws InvalidGameException
-     */
-    @Override
-    public boolean configure(GameContext context) throws InvalidGameException {
-        
-        // Set the initial room
-        Player player = new Player(rooms.get(0), Player.DEFAULT_USER_NAME);
-        context.setPlayer(player);
-        
-        for (GameGoal gameGoal : goals) {
-        	gameGoal.setPlayer(player);
-        	context.addGoal(gameGoal);
+	private ArrayList<Room> rooms = new ArrayList<>();
+	private ArrayList<GameGoal> goals = new ArrayList<>();
+
+
+	public void addRoom(Room room) {
+		rooms.add(room);
+	}
+
+	public Room getRoomIndex(int i) {
+		return rooms.get(i);
+	}
+
+	public void addGoal(GameGoal goal) {
+		goals.add(goal); 
+	}
+
+	public GameGoal getGameGoalIndex(int i) {
+		return goals.get(i);
+	}
+
+	/**
+	 * Configure the game
+	 * @param game the Game object that will manage exectuion
+	 * @throws InvalidGameException
+	 */
+	@Override
+	public boolean configure(GameContext context) throws InvalidGameException {
+
+		// Set the initial room
+		Player player = new Player(rooms.get(0), Player.DEFAULT_USER_NAME);
+		context.setPlayer(player);
+
+		for (GameGoal gameGoal : goals) {
+			gameGoal.setPlayer(player);
+			context.addGoal(gameGoal);
 		}
-        
-        //TODO set game description by goal
-        context.setGameDescription("Customizing Room(TODO)");
 
-        if (!context.validate()) throw new InvalidGameException("Game improperly configured");
-        
-        return true;
-    }
+		context.setGameDescription(makeGameDescription());
+
+
+		if (!context.validate()) throw new InvalidGameException("Game improperly configured");
+
+		return true;
+	}
+
+	public String makeGameDescription() {
+		
+		int i = 1; 
+		
+		StringBuilder gameDescription = new StringBuilder();
+		if(goals.size() == 1)
+			gameDescription.append("There is a goal to achive\n");
+		else
+			gameDescription.append("There are " + goals.size() + " goals to achive\n");
+		
+		for (GameGoal gameGoal : goals) {
+
+			if(gameGoal instanceof GameCollectGoal) {
+				gameDescription.append(i + " " + ((GameCollectGoal)gameGoal).describe());
+			}
+			else if(gameGoal instanceof GameExploreGoal) {
+				gameDescription.append(i + " " + ((GameExploreGoal)gameGoal).describe());
+			}
+			else if(gameGoal instanceof GamePointsGoal) {
+				gameDescription.append(i + " " + ((GamePointsGoal)gameGoal).describe());
+			}
+			
+			i++;
+		}
+			
+		return gameDescription.toString(); 
+	}
 }
 

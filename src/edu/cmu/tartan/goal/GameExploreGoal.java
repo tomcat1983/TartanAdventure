@@ -41,7 +41,7 @@ public class GameExploreGoal implements GameGoal {
     @Override
     public String describe() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Game Explore Goal: You must visit the following rooms:");
+        sb.append("Game Explore Goal: You must visit the following rooms\n");
         for (String i : itinerary) {
             sb.append(" * " + i + "\n");
         }
