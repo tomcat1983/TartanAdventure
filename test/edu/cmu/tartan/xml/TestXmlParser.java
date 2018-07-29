@@ -401,7 +401,7 @@ public class TestXmlParser {
 	public void testWritingLoginResultOK() throws ParserConfigurationException {
 		
 		XmlResponseLogin xr = new XmlResponseLogin(); 
-		xr.setLoginResult(XmlResultString.OK, XmlNgReason.OK, XmlLoginRole.DESIGNER);
+		xr.setLoginResult(XmlResultString.OK, XmlNgReason.OK);
 		xr.makeResponseXmlString();
 	}
 	
@@ -410,7 +410,7 @@ public class TestXmlParser {
 	public void testWritingLoginResultFail() throws ParserConfigurationException {
 		
 		XmlResponseLogin xr = new XmlResponseLogin(); 
-		xr.setLoginResult(XmlResultString.NG, XmlNgReason.SERVER_BUSY, XmlLoginRole.NONE);
+		xr.setLoginResult(XmlResultString.NG, XmlNgReason.SERVER_BUSY);
 		xr.makeResponseXmlString();
 	}
 	
@@ -432,6 +432,16 @@ public class TestXmlParser {
 		XmlResponse xr = parseXml.getXmlResponse();
 		String pw = ((XmlResponseAddUser) xr).getPw();
 		assertTrue(pw.equals("awefaweg14ro4aw3"));
+	}
+	
+	@Test
+	public void testLocalGameRoom14RequireGold() throws ParserConfigurationException {
+		
+		//<room index="13" type="require" west="8" require_item="gold:11:2"/>
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(GameMode.LOCAL, Player.DEFAULT_USER_NAME);
+		RoomRequiredItem roomRequire = (RoomRequiredItem) cGame.getRoomIndex(13);  
+		assertTrue(roomRequire.requiredItem().equals(Item.getInstance("gold", Player.DEFAULT_USER_NAME)));
 	}
 	
 	/*

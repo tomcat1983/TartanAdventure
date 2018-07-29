@@ -7,6 +7,7 @@ import edu.cmu.tartan.games.*;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.xml.GameMode;
 import edu.cmu.tartan.xml.XmlParser;
 
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public abstract class Game {
 		XmlParser parseXml;
 		try {
 			parseXml = new XmlParser(); 
-			return (GameConfiguration) parseXml.loadGameMapXml(context.getUserId());
+			return (GameConfiguration) parseXml.loadGameMapXml(GameMode.LOCAL, context.getUserId());
 		} catch (ParserConfigurationException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
@@ -160,7 +161,7 @@ public abstract class Game {
         return true;
     }
     
-    private boolean processGameCommand(String input) {
+    private boolean processGameCommand(String input) throws TerminateGameException {
     	if (input.compareTo("quit") == 0) {
             for (GameGoal g: context.getGoals()) {
             	gameInterface.println(g.getStatus());
@@ -211,11 +212,13 @@ public abstract class Game {
                 	break;
                 }
             }
+        } catch(TerminateGameException e) {
+        	return;
         } catch(Exception e) {
         	gameLogger.severe("I don't understand that \n\nException: \n" + e);
         	gameLogger.severe(e.getMessage());
             start();
-        }
+        } 
         gameInterface.println("Game Over");
     }
 
