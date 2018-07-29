@@ -7,6 +7,8 @@ import org.eclipse.jdt.annotation.NonNull;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.item.ItemCPU;
+import edu.cmu.tartan.item.ItemComputer;
 import edu.cmu.tartan.item.ItemMagicBox;
 import edu.cmu.tartan.properties.Chuckable;
 import edu.cmu.tartan.properties.Destroyable;
@@ -279,6 +281,8 @@ public class PlayerExecutionEngine {
                 }
                 return false;
             }
+        } else {
+        	gameInterface.println("I don't see that here.");
         }
         return false;
     }
@@ -394,6 +398,10 @@ public class PlayerExecutionEngine {
             gameInterface.println("Done.");
             player.drop(itemToPut);
             player.putItemInItem(itemToPut, itemToBePutInto);
+            if(itemToPut instanceof ItemCPU && itemToBePutInto instanceof ItemComputer) {
+            	gameInterface.println("Computer isn't working. Need more item. To be continued...");
+            	player.score(itemToPut.value() + itemToBePutInto.value());
+            }
             return true;
         }
     }
