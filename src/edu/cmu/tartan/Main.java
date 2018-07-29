@@ -1,6 +1,7 @@
 package edu.cmu.tartan;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.client.Client;
@@ -24,18 +25,18 @@ public class Main {
 
 	public static void main(String[] args) {
 		String fileUri = "config.properties";
-		
+
 		if (args.length == 1) {
 			fileUri = args[0] + File.separator + fileUri;
 		} else {
 			gameLogger.info("Use default config.properties location");
 			fileUri = System.getProperty("user.dir") + File.separator + fileUri;
 		}
-		
+
 		new Config(fileUri);
-		
+
 		Config.RunningMode mode = Config.getMode();
-		
+
 		switch (mode) {
 		case SERVER:
 			Server server = new Server();
@@ -46,7 +47,7 @@ public class Main {
 			client.start();
 			break;
 		case UNKNOWN:
-			gameLogger.severe("Unknown mode : " + mode);
+			gameLogger.severe("Unknown mode");
 			break;
 		}
 	}
