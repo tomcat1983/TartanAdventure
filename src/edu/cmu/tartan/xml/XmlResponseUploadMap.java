@@ -139,12 +139,61 @@ public class XmlResponseUploadMap extends XmlResponse {
 				return result; 
 			
 			result = setRelationship(nList, i);
+			if( !result.equals(XmlParseResult.SUCCESS))
+				return result; 
+			
+			updateRoomDescription(i);
 		}
 
 		return result;
 	}
 	
 	
+	private void updateRoomDescription(int roomIndex) {
+		
+		StringBuilder sb = new StringBuilder(); 
+		Room currentRoom = customizingGame.getRoomIndex(roomIndex);
+		sb.append("\nYou are in " + currentRoom.shortDescription() + ". \n");
+		
+		String directionStr; 
+		
+		directionStr = getDirectionString(currentRoom, Action.ACTION_GO_EAST); 
+		if(directionStr != null ) 
+			sb.append(directionStr);
+		
+		directionStr = getDirectionString(currentRoom, Action.ACTION_GO_SOUTH); 
+		if(directionStr != null ) 
+			sb.append(directionStr);
+		
+		directionStr = getDirectionString(currentRoom, Action.ACTION_GO_NORTH); 
+		if(directionStr != null ) 
+			sb.append(directionStr);
+		
+		directionStr = getDirectionString(currentRoom, Action.ACTION_GO_WEST); 
+		if(directionStr != null ) 
+			sb.append(directionStr);
+		
+		currentRoom.setDescription(sb.toString());
+		
+	}
+
+
+	private String getDirectionString(Room currentRoom, Action actionGoDirection) {
+		
+		String directionStr = null; 
+		Room adjacentRooms; 
+		
+		adjacentRooms = currentRoom.getRoomForDirection(actionGoDirection);
+		if(adjacentRooms == null)
+			return null; 
+		
+		String directionAlias[] = actionGoDirection.getAliases();
+		directionStr = "You can go " + directionAlias[0] + " to " + adjacentRooms.shortDescription() + ". \n";
+		
+		return directionStr;
+	}
+
+
 	//type="lockable" lock_item="lock:2" key_item="key:3:3"
 	public XmlParseResult setRelationshipForRoomLockable(RoomLockable currentRoom, NodeList nList, int roomIndex) {
 
@@ -204,7 +253,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 	//type="obscured" obstacle="fridge:9" />
 	public XmlParseResult setRelationshipForRoomObscured(RoomObscured currentRoom, NodeList nList, int roomIndex) {
 
-		String obstacleStr = getAttributeValueAtNthTag("require_item", nList, roomIndex);
+		String obstacleStr = getAttributeValueAtNthTag("obstacle", nList, roomIndex);
 
 		if(obstacleStr == null)
 			return XmlParseResult.INVALID_DATA; 
@@ -241,7 +290,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 		else if(currentRoom instanceof RoomObscured) {
 			result = setRelationshipForRoomObscured((RoomObscured)currentRoom, nList, roomIndex);
 		}
-		
+				
 		if( result.equals(XmlParseResult.SUCCESS)) {
 			String hiddenItemStr= getAttributeValueAtNthTag("hidden_item", nList, roomIndex);
 			//for hiddenItem.  item_list="food:2" hidden_item="diamond"
@@ -322,20 +371,21 @@ public class XmlResponseUploadMap extends XmlResponse {
 	public Room makeRoom(String roomType, String roomIndex) {
 		
 		Room room = null; 
+		String shortDescription = "Room"+ (Integer.parseInt(roomIndex)+1);
 		
 		//room type normal, dark, lockable, excavatable, obscured, require
 		if(roomType.equals("normal"))
-			room = new Room("Description", "Room"+ (Integer.parseInt(roomIndex)+1) );
+			room = new Room("Description", shortDescription);
 		else if(roomType.equals("dark"))
-			room = new RoomDark("Description Dark", "Room"+ (Integer.parseInt(roomIndex)+1) , "You cannot see", "blind!");
+			room = new RoomDark("Description Dark", shortDescription+"(Dark)", "You cannot see", "blind!");
 		else if(roomType.equals("lockable"))
-			room = new RoomLockable("Description lock", "locked", true);
+			room = new RoomLockable("Description lock", shortDescription+"(Locked)", true);
 		else if(roomType.equals("excavatable"))
-			room = new RoomExcavatable("Description excavatable", "excavatable", "digdig");
+			room = new RoomExcavatable("Description excavatable", shortDescription+"(Excavatable)", "digdig");
 		else if(roomType.equals("obscured"))
-			room = new RoomObscured("Description obscured", "obscured");
+			room = new RoomObscured("Description obscured", shortDescription+"(Obscured)");
 		else if(roomType.equals("require"))
-			room = new RoomRequiredItem("Description require", "Required", "itemName", "Warning you need itemName");
+			room = new RoomRequiredItem("Description require", shortDescription+"(Required)", "itemName", "Warning you need itemName");
 
 		return room; 
 	}
