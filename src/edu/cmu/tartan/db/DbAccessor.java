@@ -8,15 +8,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 import edu.cmu.tartan.GameInterface;
 
 public class DbAccessor {
 
 	/**
-	 * Game interface for game message and log
+	 * Game logger for game log
 	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
+	protected static final Logger gameLogger = Logger.getGlobal();
 
 	private String url;
 //	private String dbLocation = "/Users/zhyuny/Downloads/sqlite/db/";
@@ -41,7 +42,7 @@ public class DbAccessor {
 		try {
 			conn = DriverManager.getConnection(url);
 		} catch (SQLException e) {
-			gameInterface.println(e.getMessage());
+			gameLogger.warning("SQLException : " + e.getMessage());
 		}
 		return conn;
 	}
@@ -55,20 +56,19 @@ public class DbAccessor {
 		File file = new File(dbLocation + dbName);
 
 		if (file.isFile()) {
-			gameInterface.println("Database already exists");
+			gameLogger.info("Database already exists");
 			return false;
 		}
 
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
 				DatabaseMetaData meta = conn.getMetaData();
-				gameInterface.println("The driver name is " + meta.getDriverName());
-				gameInterface.println("A new database has been created.");
+				gameLogger.info("A new database has been created.");
 			}
 			return true;
 
 		} catch (SQLException e) {
-			gameInterface.println("SQLException : " + e.getMessage());
+			gameLogger.warning("SQLException : " + e.getMessage());
 		}
 		return false;
 	}
@@ -92,7 +92,7 @@ public class DbAccessor {
 			stmt.execute(sql);
 			return true;
 		} catch (SQLException e) {
-			gameInterface.println("SQLException" + e.getMessage());
+			gameLogger.warning("SQLException : " + e.getMessage());
 		}
 		return false;
 	}
@@ -103,19 +103,20 @@ public class DbAccessor {
 	 * @param name
 	 * @param capacity
 	 */
-	public int insert(String userId, String userPw, String userType) {
+	public boolean insert(String userId, String userPw, String userType) {
 		
 		String sql = "INSERT INTO T_USER_INFO(user_id,user_pw, user_type) VALUES(?,?,?)";
 
-		int returnValue = 0;
+		boolean returnValue = false;
 
 		try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, userId);
 			pstmt.setString(2, userPw);
 			pstmt.setString(3, userType);
-			returnValue = pstmt.executeUpdate();
+			pstmt.executeUpdate();
+			returnValue = true;
 		} catch (SQLException e) {
-			gameInterface.println(e.getMessage());
+			gameLogger.warning("SQLException : " + e.getMessage());
 		}
 
 		return returnValue;
@@ -140,7 +141,7 @@ public class DbAccessor {
 				userPw = rs.getString("user_pw");
 			}
 		} catch (SQLException e) {
-			gameInterface.println(e.getMessage());
+			gameLogger.warning("SQLException : " + e.getMessage());
 		}
 
 		return userPw;
@@ -157,11 +158,11 @@ public class DbAccessor {
 		return userPw;
 	}
 	
-	public int delete(String userId) {
+	public boolean delete(String userId) {
 		
 		String sql = "DELETE FROM T_USER_INFO where user_id= ?";
 		
-		int returnValue = 0;
+		boolean returnValue = false;
 
 		try (Connection conn = DriverManager.getConnection(url);
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -169,10 +170,11 @@ public class DbAccessor {
 			// set the corresponding param
             pstmt.setString(1, userId);
             // execute the delete statement
-            returnValue = pstmt.executeUpdate();
+            pstmt.executeUpdate();
+            returnValue = true;
             
 		} catch (SQLException e) {
-			gameInterface.println(e.getMessage());
+			gameLogger.warning("SQLException : " + e.getMessage());
 		}
 		
 		return returnValue;

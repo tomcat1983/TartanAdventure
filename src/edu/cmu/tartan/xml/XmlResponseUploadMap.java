@@ -54,43 +54,6 @@ public class XmlResponseUploadMap extends XmlResponse {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
-
-	@Override
-	public String makeResponseXmlString() {
-		
-		XmlWriter xmlWriter; 
-
-		try {
-			
-			xmlWriter = new XmlWriter(); 
-			xmlWriter.startWritingXml(msgType, "server", "client");
-			xmlWriter.addChildElement("game_info");
-			
-			if(xmlParseResult.equals( XmlParseResult.SUCCESS )) {
-				xmlWriter.setAttributeToElement("result", "OK");
-				xmlWriter.setAttributeToElement("ng_reason", "OK");
-			
-				XmlWriter.overWriteFile("gameMap.xml", "userMap.xml");
-			
-			}
-			else {
-				xmlWriter.setAttributeToElement("result", "NG");
-				xmlWriter.setAttributeToElement("ng_reason", xmlParseResult.name());
-			}
-
-			responseXml = xmlWriter.convertDocumentToString();
-			
-		} catch (ParserConfigurationException e) {
-			gameLogger.severe("ParserConfigurationException");
-		} 
-		catch (IOException e) {
-			gameLogger.severe("IOException occur when copying userMap.xml to gameMap.xml");
-		} 
-		
-		gameLogger.info(responseXml);
-		return responseXml; 
-	}
 	
 	@Override
 	public XmlParseResult doYourJob(Document doc) {
@@ -100,11 +63,18 @@ public class XmlResponseUploadMap extends XmlResponse {
 		if(xmlParseResult.equals(XmlParseResult.SUCCESS))
 			xmlParseResult = parsingGoalInfo(doc);
 		
-		makeResponseXmlString(); 
-		
-		//For save map to server PC
-		String mapXml = XmlWriter.convertDocumentToString(doc);
-		XmlWriter.saveXmlStringToFile("userMap.xml", mapXml);
+		if(xmlParseResult.equals( XmlParseResult.SUCCESS )) {
+			
+			//For save map to server PC
+			String mapXml = XmlWriter.convertDocumentToString(doc);
+			XmlWriter.saveXmlStringToFile("userMap.xml", mapXml);
+			
+			try {
+				XmlWriter.overWriteFile("gameMap.xml", "userMap.xml");
+			} catch (IOException e) {
+				gameLogger.severe("IOException occur when copying userMap.xml to gameMap.xml");
+			}		
+		}
 		
 		return xmlParseResult;
 	}
@@ -234,13 +204,13 @@ public class XmlResponseUploadMap extends XmlResponse {
 	//type="obscured" obstacle="fridge:9" />
 	public XmlParseResult setRelationshipForRoomObscured(RoomObscured currentRoom, NodeList nList, int roomIndex) {
 
-		String pbstacleStr = getAttributeValueAtNthTag("require_item", nList, roomIndex);
+		String obstacleStr = getAttributeValueAtNthTag("require_item", nList, roomIndex);
 
-		if(pbstacleStr == null)
+		if(obstacleStr == null)
 			return XmlParseResult.INVALID_DATA; 
 
 		//obstacle="itemName:roomIndex" 
-		String[] splited = pbstacleStr.split(":");
+		String[] splited = obstacleStr.split(":");
 		String itemName = splited[0];
 		int itemLocationIndex = Integer.parseInt(splited[1]);
 
@@ -420,9 +390,9 @@ public class XmlResponseUploadMap extends XmlResponse {
 		 * 	<goal index="2" type="point" object="100" /> 
 		 */
 		if(goalType.equals("collect"))
-			goal = new GameCollectGoal(makeListStringSplitedByDash(goalObjects));
+			goal = new GameCollectGoal(makeItemListStringSplitedByDash(goalObjects));
 		else if(goalType.equals("explore"))
-			goal = new GameExploreGoal(makeListStringSplitedByDash(goalObjects));
+			goal = new GameExploreGoal(makeRoomListStringSplitedByDash(goalObjects));
 		else if(goalType.equals("point"))
 			goal = new GamePointsGoal(Integer.valueOf(goalObjects)); 
 
@@ -430,9 +400,9 @@ public class XmlResponseUploadMap extends XmlResponse {
 	}
 
 
-	private ArrayList<String> makeListStringSplitedByDash(String strTobeSplited) {
+	private ArrayList<String> makeItemListStringSplitedByDash(String strTobeSplited) {
 				
-		ArrayList<String> itemList = new ArrayList<String>();
+		ArrayList<String> itemList = new ArrayList<>();
 		
 		//type="collect" object="diamond-shovel" 
 		String[] splitedToEachItem = strTobeSplited.split("-");		
@@ -441,5 +411,19 @@ public class XmlResponseUploadMap extends XmlResponse {
 		}
 		
 		return itemList; 
+	}
+	
+	private ArrayList<String> makeRoomListStringSplitedByDash(String strTobeSplited) {
+		
+		ArrayList<String> roomList = new ArrayList<>();
+		
+		//<goal index="1" type="explore" object="6-11-12-13" />
+		String[] splitedToEachItem = strTobeSplited.split("-");		
+		for (String roomIndex : splitedToEachItem) {
+			int roomNumber = Integer.parseInt(roomIndex)+1;
+			roomList.add("Room" + roomNumber);
+		}
+		
+		return roomList; 
 	}
 }

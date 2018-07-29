@@ -2,8 +2,8 @@ package edu.cmu.tartan.manager;
 
 public interface IQueueHandler {
 	
-	public boolean produce(String message);
-	public String consume();
+	public boolean produce(SocketMessage message);
+	public SocketMessage consume();
 	public int clearQueue();
 
 }

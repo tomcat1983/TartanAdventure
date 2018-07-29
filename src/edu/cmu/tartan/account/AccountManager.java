@@ -2,10 +2,6 @@ package edu.cmu.tartan.account;
 
 import edu.cmu.tartan.db.DbAccessor;
 
-enum ReturnType {
-	SUCCESS, INVALID_ID, INVALID_PW, NONEXISTENCE_ID, MISMATCHED_PW
-}
-
 public class AccountManager implements IAccountHandler {
 	
 	DbAccessor dbAccessor;
@@ -16,24 +12,23 @@ public class AccountManager implements IAccountHandler {
 	}
 
 	@Override
-	public int registerUser(String userId, String userPw, String userType) {
-		dbAccessor.insert(userId, userPw, userType);
-		return 0;
+	public boolean registerUser(String userId, String userPw, String userType) {
+		boolean returnValue = false;
+		returnValue = dbAccessor.insert(userId, userPw, userType);
+		return returnValue;
 	}
 
 	@Override
-	public int loginUser(String userId, String userPw, String userType) {
+	public boolean loginUser(String userId, String userPw, String userType) {
 		String returnValue = dbAccessor.getPassword(userId);
 		
 		if (userPw.equals(returnValue)) {
-			return 1;
+			return true;
 		}
 		
-		// TODO : Type compare
-		if (userType.equals("")) {
-			return 2;
-		}
-		return 0;
+		// TODO : User Type compare
+		
+		return false;
 	}
 
 	public ReturnType validateId(String userId) {
