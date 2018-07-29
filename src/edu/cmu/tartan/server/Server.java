@@ -11,8 +11,13 @@ public class Server {
 	 * Game logger for game log
 	 */
 	private Logger gameLogger = Logger.getGlobal();
+	
+	/**
+	 * Server port
+	 */
+	int port;
 
-	public Server(String ip, String port) {
+	public Server() {
 	}
 	
 	public boolean start() {

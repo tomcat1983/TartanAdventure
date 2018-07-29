@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.LocalGame;
 import edu.cmu.tartan.Player;
+import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.socket.SocketClient;
 import network.NetworkInterface;
 
@@ -26,16 +27,6 @@ public class Client {
 	private ClientInterface clientInterface;
 	
 	/**
-	 * Server IP
-	 */
-	String serverIp;
-	
-	/**
-	 * Server port
-	 */
-	int serverPort;
-	
-	/**
 	 * Socket to server
 	 */
 	SocketClient socket;
@@ -50,10 +41,7 @@ public class Client {
 	 */
 	String userId;
 	
-	public Client(String ip, String port) {
-		serverIp = ip;
-		serverPort = Integer.parseInt(port);
-		
+	public Client() {
 		clientInterface = new ClientInterface();
 	}
 	
@@ -126,11 +114,18 @@ public class Client {
 	}
 	
 	private boolean connectServer(int timeout) {
+		String serverIp = Config.getServerIp();
+		int serverPort = Config.getServerPort();
+		
 		socket = new SocketClient(serverIp, serverPort);
 		socketClientThread = new Thread((Runnable)socket);
 		socketClientThread.start();
 		
 		return socket.waitToConnection(timeout);
+	}
+	
+	private boolean disconnectServer() {
+		return socket.stopSocket();
 	}
 	
 	private boolean sendMessage(String message) {
@@ -245,6 +240,9 @@ public class Client {
 						sendMessage(loginPacket);
 					}
 				} while (running);
+				
+				disconnectServer();
+				
 				break;
 			case REGISTER:
 				register();		

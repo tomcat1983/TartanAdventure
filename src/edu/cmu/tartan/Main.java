@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.client.Client;
+import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.server.Server;
 
 /**
@@ -17,58 +18,36 @@ public class Main {
 	protected static final Logger gameLogger = Logger.getGlobal();
 
 	/*
-	 * Game running mode
-	 */
-	static String mode;
-	
-	/*
-	 * IP
-	 */
-	static String ip;
-	
-	/*
-	 * Port
-	 */
-	static String port;
-	
-	/*
 	 * Setting file reader
 	 */
 	static BufferedReader bufferReader;
 
 	public static void main(String[] args) {
-		String fileUri = "settings.xml";
+		String fileUri = "config.properties";
 		
 		if (args.length == 1) {
 			fileUri = args[0] + File.separator + fileUri;
 		} else {
-			gameLogger.info("Use default setting.xml location");
-			fileUri = System.getProperty("user.dir") + File.separator
-					+ "resources" + File.separator + fileUri;
+			gameLogger.info("Use default config.properties location");
+			fileUri = System.getProperty("user.dir") + File.separator + fileUri;
 		}
 		
-		File settingFile = new File(fileUri);
+		new Config(fileUri);
 		
-		try {
-			bufferReader = new BufferedReader(new InputStreamReader(new FileInputStream(settingFile), "UTF-8"));
-
-			mode = bufferReader.readLine().toLowerCase();
-			ip = bufferReader.readLine();
-			port = bufferReader.readLine();
-		} catch (IOException exception) {
-			gameLogger.severe("Setting xml error : " + exception.getMessage());
-			return;
-		}
+		Config.RunningMode mode = Config.getMode();
 		
-		if (mode.equals("server")) {
-			Server server = new Server(ip, port);
+		switch (mode) {
+		case SERVER:
+			Server server = new Server();
 			server.start();
-		} else
-		if (mode.equals("client")) {
-			Client client = new Client(ip, port);
+			break;
+		case CLIENT:
+			Client client = new Client();
 			client.start();
-		} else {
+			break;
+		case UNKNOWN:
 			gameLogger.severe("Unknown mode : " + mode);
-		}		
+			break;
+		}
 	}
 }
