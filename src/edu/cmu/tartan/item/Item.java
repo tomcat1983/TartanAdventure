@@ -113,8 +113,8 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
         itemMap.put(StringForItems.DYNAMITE, new ItemDynamite(StringForItems.DYNAMITE, StringForItems.BUNDLE_OF_DYNAMITE, new String[]{StringForItems.DYNAMITE, StringForItems.EXPLOSIVE, StringForItems.EXPLOSIVES}));
         itemMap.put(StringForItems.BUTTON, new ItemButton(StringForItems.BUTTON, StringForItems.ELEVATOR_BUTTON, new String[]{StringForItems.BUTTON_SMALL}));
         for(int i=1; i<5; i++) {
-        	StringBuilder s  = new StringBuilder("Floor ").append(i).append(" Button"); 
-        	StringBuilder sd =  new StringBuilder("Elevator Floor ").append(i).append(" Button");
+        	StringBuilder s  = new StringBuilder("Floor_").append(i).append(" Button"); 
+        	StringBuilder sd =  new StringBuilder("Elevator_Floor_").append(i).append(" Button");
         	itemMap.put(s.toString(), new ItemButton(s.toString(), sd.toString(), new String[]{Integer.toString(i)}));
         }
         itemMap.put(StringForItems.UNKNOWN, new ItemUnknown(StringForItems.UNKNOWN, StringForItems.UNKNOWN, new String[]{StringForItems.UNKNOWN}));

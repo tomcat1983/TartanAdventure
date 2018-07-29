@@ -536,7 +536,7 @@ class TestPlayerExecutionEngine {
     	ItemShovel shovel = (ItemShovel) Item.getInstance("shovel", Player.DEFAULT_USER_NAME);
     	player.grabItem(shovel);
     	Action action = interpreter.interpretString("eat shovel", actionExecutionUnit);
-    	assertThrows(TerminateGameException.class,() -> {
+    	Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);	
     	});
 	}
@@ -545,7 +545,7 @@ class TestPlayerExecutionEngine {
 	public void testItShouldThrowTerminateGameExceptionWhenUserInputTerminate() {
 		// terminate
     	Action action = interpreter.interpretString("terminate", actionExecutionUnit);
-    	assertThrows(TerminateGameException.class,() -> {
+    	Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
 	}
@@ -557,7 +557,7 @@ class TestPlayerExecutionEngine {
 		room1.putItem(vm);
 		// Shake
     	Action action = interpreter.interpretString("shake machine", actionExecutionUnit);
-    	assertThrows(TerminateGameException.class,() -> {
+    	Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
@@ -572,8 +572,7 @@ class TestPlayerExecutionEngine {
 		room1.setAdjacentRoom(Action.ACTION_GO_WEST, end);
 		//player.grabItem(flashlight);
 		
-		
-    	assertThrows(TerminateGameException.class,() -> {
+		Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		Action action = interpreter.interpretString("west", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		action = interpreter.interpretString("east", actionExecutionUnit);
@@ -582,6 +581,7 @@ class TestPlayerExecutionEngine {
     		action = interpreter.interpretString("west", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
+		assertEquals("Terminate Game", exception.getMessage());
 	}
 
 	@Test
@@ -594,10 +594,11 @@ class TestPlayerExecutionEngine {
 		room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2);
 		((RoomRequiredItem)room2).setPlayerDiesOnEntry(true);
 		
-    	assertThrows(TerminateGameException.class,() -> {
+		Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		Action action = interpreter.interpretString("west", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
+		assertEquals("Terminate Game", exception.getMessage());
 	}
 
 	@Test
@@ -609,12 +610,13 @@ class TestPlayerExecutionEngine {
 		playerExecutionEngine = new PlayerExecutionEngine(player);	
 		player.grabItem(mbox);
 		
-    	assertThrows(TerminateGameException.class,() -> {
+		Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		Action action = interpreter.interpretString("drop pit", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		((RoomRequiredItem)room2).setPlayerDiesOnItemDiscard(true);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
+		assertEquals("Terminate Game", exception.getMessage());
 	}
 	
 	@Test
@@ -625,10 +627,11 @@ class TestPlayerExecutionEngine {
 		player = new Player(room2, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);	
 		
-    	assertThrows(TerminateGameException.class,() -> {
+		Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		Action action = interpreter.interpretString("east", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
+		assertEquals("Terminate Game", exception.getMessage());
 	}
 
 	@Test
@@ -637,9 +640,11 @@ class TestPlayerExecutionEngine {
 		player = new Player(room2, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);
 		
-		assertThrows(TerminateGameException.class,() -> {
+		Throwable exception = assertThrows(TerminateGameException.class,() -> {
 			Action action = interpreter.interpretString("west", actionExecutionUnit);
 			playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
+		
+		assertEquals("Terminate Game", exception.getMessage());
 	}
 }
