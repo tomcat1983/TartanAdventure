@@ -401,7 +401,7 @@ public class TestXmlParser {
 		assertTrue(pw.equals("awefaweg14ro4aw3"));
 	}
 	
-//	@Disabled("Describe how to make login result XML")
+	@Disabled("Describe how to make login result XML")
 	@Test
 	public void testWritingLoginResultOK() throws ParserConfigurationException {
 		
@@ -409,7 +409,7 @@ public class TestXmlParser {
 		xw.makeXmlForLogin(XmlResultString.OK, XmlNgReason.OK);
 	}
 	
-//	@Disabled("Describe how to make login result XML")
+	@Disabled("Describe how to make login result XML")
 	@Test
 	public void testWritingLoginResultFail() throws ParserConfigurationException {
 		
@@ -417,7 +417,7 @@ public class TestXmlParser {
 		xw.makeXmlForLogin(XmlResultString.NG, XmlNgReason.SERVER_BUSY);
 	}
 	
-//	@Disabled("Describe how to make game upload XML")
+	@Disabled("Describe how to make game upload XML")
 	@Test
 	public void testWritingUploadMapOK() throws ParserConfigurationException {
 		
