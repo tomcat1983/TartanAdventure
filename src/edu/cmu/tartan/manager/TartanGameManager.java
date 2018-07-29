@@ -46,10 +46,16 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	}
 	
 	public void dequeue() {
+		
+		SocketMessage socketMessage = null;
 		String message = null;
+		String threadName = null;
+		
 
         while(isLoop){
-            message = messageQueue.consume();
+            socketMessage = messageQueue.consume();
+            threadName = socketMessage.getThreadName();
+            message = socketMessage.getMessage();
             
             if (message != null && !message.isEmpty()) {
             	processMessage(message);

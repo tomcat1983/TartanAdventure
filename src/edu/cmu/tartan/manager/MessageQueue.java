@@ -2,51 +2,48 @@ package edu.cmu.tartan.manager;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
 
-import edu.cmu.tartan.GameInterface;
 
 public class MessageQueue implements IQueueHandler{
 	
-	/**
-	 * Game interface for game message and log
-	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
+	protected static final Logger gameLogger = Logger.getGlobal();
 	
 	private static final int QUEUE_SIZE = 100;
 	
-	private BlockingQueue<String> queue;
+	private BlockingQueue<SocketMessage> queue;
 	
 	public MessageQueue() {
-		queue = new LinkedBlockingQueue<String>(QUEUE_SIZE); 
+		queue = new LinkedBlockingQueue<SocketMessage>(QUEUE_SIZE); 
 	}
 	
-	public BlockingQueue<String> getQueue() {
+	public BlockingQueue<SocketMessage> getQueue() {
 		return queue;
 	}
 	
 	@Override
-	public boolean produce (String message) {
+	public boolean produce (SocketMessage message) {
 		try {
 			queue.put(message);
 			return queue.contains(message);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
-			gameInterface.println("InterruptException : " + e.getMessage());
+			gameLogger.severe("InterruptException : " + e.getMessage());
 			Thread.currentThread().interrupt();
 		}
 		return false;
 	}
 	
 	@Override
-	public String consume() {
-		String message = null;
+	public SocketMessage consume() {
+		SocketMessage message = null;
 
 		try{
 			message = queue.take();
 			if (message != null) return message;
             
         }catch(InterruptedException e) {
-        	gameInterface.println("InterruptException : " + e.getMessage());
+        	gameLogger.severe("InterruptException : " + e.getMessage());
         	Thread.currentThread().interrupt();
         }
 		

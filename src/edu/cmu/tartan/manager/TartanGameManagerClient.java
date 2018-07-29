@@ -88,7 +88,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		socket.stopSocket();
 		
 		isLoop = false;
-		messageQueue.produce(message);
+		messageQueue.produce(new SocketMessage(Thread.currentThread().getName(), message));
 		int returnValue = messageQueue.clearQueue();
 		
 		if (returnValue == 0) {
@@ -132,10 +132,14 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	}
 	
 	public void dequeue() {
+		SocketMessage socketMessage = null;
 		String message = null;
+		String threadName = null;
 
         while(isLoop){
-            message = messageQueue.consume();
+        	socketMessage = messageQueue.consume();
+            threadName = socketMessage.getThreadName();
+            message = socketMessage.getMessage();
             
             if (message != null && !message.isEmpty()) {
             	//TODO Send to CLI
