@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 public class Config {
 
-	private static final int defaultPort = 10015;
+	private static final int DEFAULT_PORT = 10015;
 
 	/**
 	 * Game interface for game message and log
@@ -73,7 +73,7 @@ public class Config {
 	}
 
 	public static int getServerPort() {
-		int port = defaultPort;
+		int port = DEFAULT_PORT;
 
 		if (properties.containsKey("tartan.server.port"))
 			port = Integer.parseInt(properties.getProperty("tartan.server.port"));

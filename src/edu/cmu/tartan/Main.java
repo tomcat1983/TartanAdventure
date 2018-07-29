@@ -1,6 +1,5 @@
 package edu.cmu.tartan;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.util.logging.Logger;
 
@@ -17,11 +16,6 @@ public class Main {
 	 * Game logger for game log
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
-
-	/*
-	 * Setting file reader
-	 */
-	static BufferedReader bufferReader;
 
 	public static void main(String[] args) {
 		String fileUri = "config.properties";
@@ -47,6 +41,7 @@ public class Main {
 			client.start();
 			break;
 		case UNKNOWN:
+		default:
 			gameLogger.severe("Unknown mode");
 			break;
 		}
