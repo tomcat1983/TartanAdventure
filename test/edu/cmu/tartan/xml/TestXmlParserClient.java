@@ -3,33 +3,17 @@ package edu.cmu.tartan.xml;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.Node;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-import edu.cmu.tartan.Player;
-import edu.cmu.tartan.action.Action;
-import edu.cmu.tartan.games.CustomizingGame;
-import edu.cmu.tartan.goal.GameCollectGoal;
-import edu.cmu.tartan.goal.GameExploreGoal;
-import edu.cmu.tartan.goal.GamePointsGoal;
-import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.room.Room;
-import edu.cmu.tartan.room.RoomDark;
-import edu.cmu.tartan.room.RoomExcavatable;
-import edu.cmu.tartan.room.RoomLockable;
-import edu.cmu.tartan.room.RoomObscured;
-import edu.cmu.tartan.room.RoomRequiredItem;
 
 public class TestXmlParserClient {
 
@@ -41,9 +25,11 @@ public class TestXmlParserClient {
 	String unknownMessageXmlFileName; 
 	String gameXmlInvalidGoalCntMatchFileName;
 	String gameXmlInvalidRoomCntMatchFileName;
+	protected Logger gameLogger = Logger.getGlobal();
+
 	
     @BeforeEach
-    public void testXmlSetup() {
+    public void testXmlSetup(TestInfo testInfo) {
 
     	validXmlFileName = "test/edu/cmu/tartan/xml/GameXmlResponse.xml";
     	loginXmlFileName = "test/edu/cmu/tartan/xml/LoginResponseOK.xml";
@@ -51,72 +37,108 @@ public class TestXmlParserClient {
     }
 	
 	@Test
-	public void testParsingMessageTypeForLogin() throws ParserConfigurationException {
+	public void testParsingMessageTypeForLogin() {
 		
-		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
-		parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
-		XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
-		assertTrue(xr.getMsgType().equals(XmlMessageType.REQ_LOGIN));
+		XmlParser parseXml;
+		try {
+			parseXml = new XmlParser(XmlParserType.CLIENT);
+			parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
+			XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
+			assertTrue(xr.getMsgType().equals(XmlMessageType.REQ_LOGIN));
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe("ParserConfigurationException");
+		}
 	}
 	
 	@Test
-	public void testParsingMessageTypeForUploadMap() throws ParserConfigurationException {
+	public void testParsingMessageTypeForUploadMap() {
 		
-		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
-		parseXml.parseXmlFromString(readAllBytes(validXmlFileName));
-		XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
-		assertTrue(xr.getMsgType().equals(XmlMessageType.UPLOAD_MAP_DESIGN));
+		XmlParser parseXml;
+		try {
+			parseXml = new XmlParser(XmlParserType.CLIENT);
+			parseXml.parseXmlFromString(readAllBytes(validXmlFileName));
+			XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
+			assertTrue(xr.getMsgType().equals(XmlMessageType.UPLOAD_MAP_DESIGN));
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe("ParserConfigurationException");
+		}
 	}
 	
 	@Test
-	public void testParsingMessageTypeForAddUser() throws ParserConfigurationException {
+	public void testParsingMessageTypeForAddUser() {
 		
-		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
-		parseXml.parseXmlFromString(readAllBytes(addUserXmlFileName));
-		XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
-		assertTrue(xr.getMsgType().equals(XmlMessageType.ADD_USER));
+		XmlParser parseXml;
+		try {
+			parseXml = new XmlParser(XmlParserType.CLIENT);
+			parseXml.parseXmlFromString(readAllBytes(addUserXmlFileName));
+			XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
+			assertTrue(xr.getMsgType().equals(XmlMessageType.ADD_USER));
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe("ParserConfigurationException");
+		}
 	}
 	
 	@Test
-	public void testParsingLoginResult() throws ParserConfigurationException {
-		
-		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
-		parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
-		XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
-		assertTrue(xr.getResultStr().equals(XmlResultString.OK));
+	public void testParsingLoginResult() {
+
+		XmlParser parseXml;
+		try {
+	
+			parseXml = new XmlParser(XmlParserType.CLIENT);
+			parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
+			XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
+			assertTrue(xr.getResultStr().equals(XmlResultString.OK));
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe("ParserConfigurationException");
+		}
 	}
 	
 	@Test
-	public void testParsingLoginNgReason() throws ParserConfigurationException {
+	public void testParsingLoginNgReason() {
 		
-		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
-		parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
-		XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
-		assertTrue(xr.getNgReason().equals(XmlNgReason.OK));
+		XmlParser parseXml;
+		try {
+			parseXml = new XmlParser(XmlParserType.CLIENT);
+			parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
+			XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
+			assertTrue(xr.getNgReason().equals(XmlNgReason.OK));
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe("ParserConfigurationException");
+		}
 	}
 		
 	@Test
-	public void testParsingAddUserResult() throws ParserConfigurationException {
+	public void testParsingAddUserResult() {
 		
-		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
-		parseXml.parseXmlFromString(readAllBytes(addUserXmlFileName));
-		XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
-		assertTrue(xr.getResultStr().equals(XmlResultString.OK));
+		XmlParser parseXml;
+		try {
+			parseXml = new XmlParser(XmlParserType.CLIENT);
+			parseXml.parseXmlFromString(readAllBytes(addUserXmlFileName));
+			XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
+			assertTrue(xr.getResultStr().equals(XmlResultString.OK));
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe("ParserConfigurationException");
+		}
 	}
 	
 	@Test
-	public void testParsingAddUserNgReason() throws ParserConfigurationException {
+	public void testParsingAddUserNgReason() {
 		
-		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
-		parseXml.parseXmlFromString(readAllBytes(addUserXmlFileName));
-		XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
-		assertTrue(xr.getNgReason().equals(XmlNgReason.OK));
+		XmlParser parseXml;
+		try {
+			parseXml = new XmlParser(XmlParserType.CLIENT);
+			parseXml.parseXmlFromString(readAllBytes(addUserXmlFileName));
+			XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
+			assertTrue(xr.getNgReason().equals(XmlNgReason.OK));
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe("ParserConfigurationException");
+		}
 	}
 	
 	
 	@Disabled("Describe how to make login XML")
 	@Test
-	public void testWritingXmlLogin() throws ParserConfigurationException {
+	public void testWritingXmlLogin() {
 		
 		XmlWriterClient xw = new XmlWriterClient(); 
 		xw.makeXmlForLogin("tak", "abcdefg", XmlLoginRole.PLAYER);
@@ -124,12 +146,19 @@ public class TestXmlParserClient {
 	
 	@Disabled("Describe how to make add user XML")
 	@Test
-	public void testWritingXmlForAddUser() throws ParserConfigurationException {
+	public void testWritingXmlForAddUser() {
 		
 		XmlWriterClient xw = new XmlWriterClient(); 
 		xw.makeXmlForAddUser("tak", "abcdefg");
 	}
 	
+	@Disabled("Describe how to make upload Map XML")
+	@Test
+	public void testWritingXmlForUploadMap() {
+		
+		XmlWriterClient xw = new XmlWriterClient(); 
+		xw.makeXmlForUploadMap("userMap.xml"); 
+	}
 	
 	/*
 	 * methods for test only 

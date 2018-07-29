@@ -1,5 +1,9 @@
 package edu.cmu.tartan.xml;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 public class XmlWriterClient extends XmlWriter {
@@ -45,5 +49,27 @@ public class XmlWriterClient extends XmlWriter {
 		gameLogger.info(xmlString);
 		
 		return xmlString; 
+	}
+	
+	public String makeXmlForUploadMap(String fileName) {
+		String xmlString = null;
+		
+		try{
+			xmlString = readAllBytes(fileName);
+		}
+		catch (IOException e) {
+			gameLogger.severe("IOException");
+		}
+
+		gameLogger.info(xmlString);
+		
+		return xmlString; 
+	}
+	
+	private String readAllBytes(String filePath) throws IOException{
+	    String content = "";
+        content = new String (Files.readAllBytes( Paths.get(filePath)));
+	    
+	    return content;
 	}
 }

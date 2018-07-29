@@ -434,6 +434,16 @@ public class TestXmlParser {
 		assertTrue(pw.equals("awefaweg14ro4aw3"));
 	}
 	
+	@Test
+	public void testLocalGameRoom14RequireGold() throws ParserConfigurationException {
+		
+		//<room index="13" type="require" west="8" require_item="gold:11:2"/>
+		XmlParser parseXml = new XmlParser();
+		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(GameMode.LOCAL, Player.DEFAULT_USER_NAME);
+		RoomRequiredItem roomRequire = (RoomRequiredItem) cGame.getRoomIndex(13);  
+		assertTrue(roomRequire.requiredItem().equals(Item.getInstance("gold", Player.DEFAULT_USER_NAME)));
+	}
+	
 	/*
 	 * methods for test only 
 	 */

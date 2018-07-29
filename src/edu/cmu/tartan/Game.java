@@ -7,6 +7,7 @@ import edu.cmu.tartan.games.*;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.xml.GameMode;
 import edu.cmu.tartan.xml.XmlParser;
 
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public abstract class Game {
 		XmlParser parseXml;
 		try {
 			parseXml = new XmlParser(); 
-			return (GameConfiguration) parseXml.loadGameMapXml(context.getUserId());
+			return (GameConfiguration) parseXml.loadGameMapXml(GameMode.LOCAL, context.getUserId());
 		} catch (ParserConfigurationException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());

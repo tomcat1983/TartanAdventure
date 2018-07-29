@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <message type="UPLOAD_MAP_DESIGN" sender="designer" receiver="server">
-	<common_info user_id="takhh" />
 	<room_info room_cnt="14" >
 		<room index="0" type="normal" east="1" />	<!-- index 0 is start room -->
 		<room index="1" type="normal" north="2" west="0" east="6" item_list="shovel-document" />
