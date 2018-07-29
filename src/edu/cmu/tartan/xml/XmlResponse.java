@@ -17,7 +17,6 @@ public abstract class XmlResponse {
 
 	
 	//every child have different response 
-	public abstract String makeResponseXmlString();
 	public abstract XmlParseResult doYourJob(Document doc);
 	
 	

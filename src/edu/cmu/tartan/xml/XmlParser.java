@@ -139,6 +139,18 @@ public class XmlParser {
 		else if(messageType.equals(XmlMessageType.ADD_USER.name())) {
 			xmlResponse = new XmlResponseAddUser();
 		}
+		else if(messageType.equals(XmlMessageType.REQ_GAME_START.name())) {
+			xmlResponse = new XmlResponseGameStart();
+		}
+		else if(messageType.equals(XmlMessageType.REQ_GAME_END.name())) {
+			xmlResponse = new XmlResponseGameEnd();
+		}
+		else if(messageType.equals(XmlMessageType.SEND_COMMAND.name())) {
+			xmlResponse = new XmlResponseCommand();
+		}
+		else if(messageType.equals(XmlMessageType.HEART_BEAT.name())) {
+			xmlResponse = new XmlResponseHeartBeat();
+		}
 		else {
 			return XmlParseResult.UNKNOWN_MESSAGE;
 		}
