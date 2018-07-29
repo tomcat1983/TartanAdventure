@@ -98,13 +98,14 @@ public class XmlWriterClient extends XmlWriter {
 		return xmlString; 
 	}
 	
-	public String makeXmlForCommand(String commandStr) {
+	public String makeXmlForCommand(String id, String commandStr) {
 		String xmlString = null;
 		
 		try {
-			//	<common_info user_id="takhh" /> <!-- heart beat message from client every 1 min -->
+			//<command user_id="takakak" text="go south" />
 			startWritingXml(XmlMessageType.SEND_COMMAND, CLIENT_STR, SERVER_STR); 			
 			addChildElement("command");
+			setAttributeToElement("user_id", id);
 			setAttributeToElement("text", commandStr);
 			
 			xmlString = convertDocumentToString();
