@@ -61,6 +61,10 @@ public final class StringForItems {
 	public static final String APPLE = "apple";
 	public static final String KEYBOARD = "keyboard";
 	public static final String IMAC = "imac";
+	// ItemCPU
+	public static final String CPU = "cpu";
+	public static final String APPLE_COMPUTER_CPU = "Apple computer cpu";
+	public static final String APPLE_CPU = "apple cpu";
 
 	public static final String COFFEE = "coffee";
 	public static final String COFFEE_STAMING = "steaming cup of coffee";

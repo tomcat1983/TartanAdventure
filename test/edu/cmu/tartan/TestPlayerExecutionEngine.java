@@ -246,7 +246,9 @@ class TestPlayerExecutionEngine {
 	    	ItemFood food = (ItemFood) Item.getInstance("food", Player.DEFAULT_USER_NAME);
 	    	food.setMeltItem(mbox);
 	    	micro.install(food);
-	    	
+	    	//player.grabItem(food);
+	    	//action = interpreter.interpretString("put food in microwave", actionExecutionUnit);
+	    	//assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	    	action = interpreter.interpretString("enable microwave", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 		} catch (TerminateGameException e) {

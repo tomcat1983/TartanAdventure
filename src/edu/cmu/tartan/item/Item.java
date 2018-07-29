@@ -108,6 +108,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
         itemMap.put(StringForItems.DOCUMENT, new ItemDocument(StringForItems.DOCUMENT, StringForItems.SECRET_DOCUMENT, new String[]{StringForItems.DOCUMENT}));
         itemMap.put(StringForItems.FAN, new ItemLock(StringForItems.FAN, StringForItems.VENTILATION_FAN, new String[]{StringForItems.FAN}));
         itemMap.put(StringForItems.COMPUTER, new ItemComputer(StringForItems.COMPUTER, StringForItems.APPLE_COMPUTER, new String[]{StringForItems.APPLE, StringForItems.COMPUTER, StringForItems.KEYBOARD, StringForItems.IMAC}));
+        itemMap.put(StringForItems.CPU, new ItemCPU(StringForItems.CPU, StringForItems.APPLE_COMPUTER_CPU, new String[]{StringForItems.APPLE_CPU, StringForItems.CPU}));
         itemMap.put(StringForItems.COFFEE, new ItemCoffee(StringForItems.COFFEE, StringForItems.COFFEE_STAMING, new String[]{StringForItems.COFFEE, StringForItems.BEVERAGE, StringForItems.MUG}));
         itemMap.put(StringForItems.LIGHT, new ItemDeskLight(StringForItems.LIGHT, StringForItems.DESK_LIGHT, new String[]{StringForItems.LIGHT}));
         itemMap.put(StringForItems.DYNAMITE, new ItemDynamite(StringForItems.DYNAMITE, StringForItems.BUNDLE_OF_DYNAMITE, new String[]{StringForItems.DYNAMITE, StringForItems.EXPLOSIVE, StringForItems.EXPLOSIVES}));
