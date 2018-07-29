@@ -133,6 +133,10 @@ public class Client {
 		return socket.waitToConnection(timeout);
 	}
 	
+	private boolean disconnectServer() {
+		return socket.stopSocket();
+	}
+	
 	private boolean sendMessage(String message) {
 		return socket.sendMessage(message);
 	}
@@ -245,6 +249,9 @@ public class Client {
 						sendMessage(loginPacket);
 					}
 				} while (running);
+				
+				disconnectServer();
+				
 				break;
 			case REGISTER:
 				register();		
