@@ -9,7 +9,7 @@
 		<room index="6" south="7" type="dark" west="1"/>
 		<room index="7" north="6" south="8" type="normal"/>
 		<room east="13" index="8" item_list="microwave" north="7" type="excavatable" west="9"/>
-		<room east="8" index="9" item_list="fridge" type="normal" west="10"/>
+		<room east="8" index="9" type="normal" west="10"/>
 		<room east="9" index="10" north="12" obstacle="fridge:9" type="obscured" west="11"/>
 		<room east="10" index="11" type="normal"/>
 		<room hidden_item="diamond" index="12" item_list="food" south="10" type="normal"/>
