@@ -9,7 +9,8 @@ public class XmlResponseClient extends XmlResponse {
 
 	private XmlResultString resultStr;	//OK or NG
 	private XmlNgReason ngReason;
-	private XmlLoginRole role;			//login role, designer 
+	private static final String NG_REASON = "ng_reason";
+
 	
 	
 	public XmlResponseClient(XmlMessageType msgType) {
@@ -24,36 +25,7 @@ public class XmlResponseClient extends XmlResponse {
 		return ngReason;
 	}
 	
-	public XmlLoginRole getRole() {
-		return role;
-	}
 	
-	@Override
-	public String makeResponseXmlString() {
-	
-		//<user_info add_result="OK" ng_reason="-"  />
-		XmlWriter xmlWriter; 
-
-		try {
-			
-			xmlWriter = new XmlWriter(); 
-			xmlWriter.startWritingXml(msgType, "server", "client");
-			xmlWriter.addChildElement("user_info");
-			
-			xmlWriter.setAttributeToElement("add_result", resultStr.name());
-			xmlWriter.setAttributeToElement("ng_reason", ngReason.name());
-
-			responseXml = xmlWriter.convertDocumentToString();
-			
-		} catch (ParserConfigurationException e) {
-			gameLogger.severe("ParserConfigurationException");
-		} 
-		
-		gameLogger.info(responseXml);
-		
-		return responseXml;  
-	}
-
 	@Override
 	public XmlParseResult doYourJob(Document doc) {
 		
@@ -76,7 +48,7 @@ public class XmlResponseClient extends XmlResponse {
 		
 		//<user_info add_result="OK" ng_reason="-"  />
 		nList = getNodeListOfGivenTag("user_info", doc);
-		parsingResultAndNgReason("add_result", "ng_reason", nList);
+		parsingResultAndNgReason("add_result", NG_REASON, nList);
 		
 		if(resultStr == null || ngReason == null)
 			return XmlParseResult.INVALID_DATA;
@@ -90,11 +62,9 @@ public class XmlResponseClient extends XmlResponse {
 		
 		//<login_info ng_reason="OK" result="OK" role="player"/>
 		nList = getNodeListOfGivenTag("login_info", doc);
-		parsingResultAndNgReason("result", "ng_reason", nList);
-		
-		role = XmlLoginRole.valueOf(getAttributeValueAtNthTag("role", nList, 0).toUpperCase());
+		parsingResultAndNgReason("result", NG_REASON, nList);
 
-		if(resultStr == null || ngReason == null || role == null)
+		if(resultStr == null || ngReason == null)
 			return XmlParseResult.INVALID_DATA;
 		else 
 			return XmlParseResult.SUCCESS;		
@@ -105,7 +75,7 @@ public class XmlResponseClient extends XmlResponse {
 		
 		//<game_info result="OK" ng_reason="-" />
 		nList = getNodeListOfGivenTag("game_info", doc);
-		parsingResultAndNgReason("result", "ng_reason", nList);
+		parsingResultAndNgReason("result", NG_REASON, nList);
 		
 		if(resultStr == null || ngReason == null )
 			return XmlParseResult.INVALID_DATA;

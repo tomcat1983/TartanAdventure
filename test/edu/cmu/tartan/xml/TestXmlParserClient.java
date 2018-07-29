@@ -160,6 +160,30 @@ public class TestXmlParserClient {
 		xw.makeXmlForUploadMap("userMap.xml"); 
 	}
 	
+	@Disabled("Describe how to make game start packet")
+	@Test
+	public void testWritingXmlForGameStart() {
+		
+		XmlWriterClient xw = new XmlWriterClient(); 
+		xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_START, "startId");
+	}
+	
+	@Disabled("Describe how to make game end packet")
+	@Test
+	public void testWritingXmlForGameEnd() {
+		
+		XmlWriterClient xw = new XmlWriterClient(); 
+		xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_END, "endId");
+	}
+	
+	@Disabled("Describe how to make HB packet")
+	@Test
+	public void testWritingXmlForHeartBeat() {
+		
+		XmlWriterClient xw = new XmlWriterClient(); 
+		xw.makeXmlForHeartBeat("heartBeatId");
+	}
+	
 	/*
 	 * methods for test only 
 	 */

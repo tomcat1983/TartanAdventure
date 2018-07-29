@@ -1,16 +1,24 @@
 package edu.cmu.tartan.xml;
 
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-public class XmlResponseLogin extends XmlResponse {
+public class XmlResponseCommand extends XmlResponse {
 
 	private String idStr;
 	private String pwStr;
 	private XmlLoginRole role;
+	private XmlResultString loginResult; 
+	private XmlNgReason reason; 	
 	
-	public XmlResponseLogin() {
+	public XmlResponseCommand() {
 		msgType = XmlMessageType.REQ_LOGIN;
+	}
+		
+	public void setLoginResult (XmlResultString loginResult, XmlNgReason reason) {
+		this.loginResult = loginResult; 
+		this.reason = reason; 
 	}
 	
 	
