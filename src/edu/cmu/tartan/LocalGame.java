@@ -14,6 +14,7 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import edu.cmu.tartan.games.CustomizingGame;
 import edu.cmu.tartan.manager.IGameControlMessage;
+import edu.cmu.tartan.xml.GameMode;
 import edu.cmu.tartan.xml.XmlParser;
 
 public class LocalGame extends Game implements IGameControlMessage {
@@ -49,7 +50,7 @@ public class LocalGame extends Game implements IGameControlMessage {
 			XmlParser parseXml;
 			try {
 				parseXml = new XmlParser(); 
-				CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(userId);
+				CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(GameMode.LOCAL, userId);
 				
 				if(cGame!=null && readGameData()) {
 					gameInterface.println(GamePlayMessage.GANE_IS_STARTED_10_1);

@@ -8,10 +8,9 @@ public class XmlResponseLogin extends XmlResponse {
 
 	private String idStr;
 	private String pwStr;
-	private XmlResultString loginResult; 
-	private XmlNgReason reason; 
 	private XmlLoginRole role;
-	
+	private XmlResultString loginResult; 
+	private XmlNgReason reason; 	
 	
 	public XmlResponseLogin() {
 		msgType = XmlMessageType.REQ_LOGIN;
@@ -31,7 +30,6 @@ public class XmlResponseLogin extends XmlResponse {
 			
 			xmlWriter.setAttributeToElement("result", loginResult.name());
 			xmlWriter.setAttributeToElement("ng_reason", reason.name());
-			xmlWriter.setAttributeToElement("role", role.name().toLowerCase());
 
 			responseXml = xmlWriter.convertDocumentToString();
 			
@@ -44,10 +42,9 @@ public class XmlResponseLogin extends XmlResponse {
 		return responseXml; 
 	}
 	
-	public void setLoginResult (XmlResultString loginResult, XmlNgReason reason, XmlLoginRole role) {
+	public void setLoginResult (XmlResultString loginResult, XmlNgReason reason) {
 		this.loginResult = loginResult; 
 		this.reason = reason; 
-		this.role = role; 
 	}
 	
 	
@@ -59,6 +56,9 @@ public class XmlResponseLogin extends XmlResponse {
 		return pwStr; 
 	}
 	
+	public XmlLoginRole getRole() {
+		return role; 
+	}
 
 	@Override
 	public XmlParseResult doYourJob(Document doc) {
@@ -76,8 +76,9 @@ public class XmlResponseLogin extends XmlResponse {
 		nList = getNodeListOfGivenTag("login_info", doc);
 		idStr = getAttributeValueAtNthTag("id", nList, 0);	//id should be unique. 
 		pwStr = getAttributeValueAtNthTag("pw", nList, 0);	//pw should be unique. encrypted.  
-
-		if(idStr == null || pwStr == null) {
+		role = XmlLoginRole.valueOf(getAttributeValueAtNthTag("role", nList, 0));	//role should be unique. 
+		
+		if(idStr == null || pwStr == null || role == null) {
 			return XmlParseResult.INVALID_DATA;
 		}
 		
