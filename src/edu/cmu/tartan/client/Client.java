@@ -222,14 +222,19 @@ public class Client {
 				running = false;
 			}
 			else if (isDesigner) {
-				if (command.equals("")) { //TODO: map check
-					clientInterface.printInvalidMap();
+				if (command.equals("")) { //TODO: map file check
+					clientInterface.printNoMap();
 				} else {
 					NetworkInterface.PacketType packetType = NetworkInterface.PacketType.MAP;
 					String[] data = { command };
 					String loginPacket = NetworkInterface.makePacket(packetType, userId, data);
 
-					sendMessage(loginPacket);
+					clientInterface.printValidateMessageForMapUpload();
+
+					if (sendMessage(loginPacket)) //TODO: map check
+						clientInterface.printValidateSucceessMessageForMapUpload();
+					else
+						clientInterface.printValidateFailMessageForMapUpload();
 				}
 			}
 			else {
@@ -270,7 +275,7 @@ public class Client {
 
 			return true;
 		} else {
-			gameInterface.println("Uh-oh, The connection to server is lost.");
+			clientInterface.printServerBusyMessage();
 		}
 
 		return false;
