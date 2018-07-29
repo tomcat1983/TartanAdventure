@@ -215,8 +215,9 @@ public class Player implements Comparable, Serializable {
     /**
      * Move the player to a new room.
      * @param nextRoom the new room.
+     * @throws TerminateGameException 
      */
-    public void move(Room nextRoom) {
+    public void move(Room nextRoom) throws TerminateGameException {
 
         nextRoom.setPlayer(this);
         if(this.currentRoom != null && nextRoom.compareTo(this.currentRoom) != 0) {
@@ -230,7 +231,7 @@ public class Player implements Comparable, Serializable {
             RoomRequiredItem r = (RoomRequiredItem)nextRoom;
             if(r.diesOnEntry()) {
                 gameInterface.println(r.loseMessage());
-                this.terminate();
+                terminate();
             }
         }
 
@@ -256,27 +257,27 @@ public class Player implements Comparable, Serializable {
         return roomsVisited;
     }
 
-    private void roomRequiredItemCheck(RoomRequiredItem room, Action action)  {
+    private void roomRequiredItemCheck(RoomRequiredItem room, Action action) throws TerminateGameException  {
     	if(room.shouldLoseForAction(action)) {
             gameInterface.println(room.loseMessage());
             terminate();
         }
     }
     
-    private void roomRequiredLuminousItem(RoomDark room) {
+    private void roomRequiredLuminousItem(RoomDark room) throws TerminateGameException {
     	if(room.isDark() && !hasLuminousItem()) {
             gameInterface.println(room.deathMessage());
             terminate();
         }
     }
     
-    private boolean isNextRoomRequiredCheck(Room nextRoom) {
+    private boolean isNextRoomRequiredCheck(Room nextRoom) throws TerminateGameException {
     	if(nextRoom instanceof RoomLockable) {
             RoomLockable lockedRoom = (RoomLockable)nextRoom;
             if(lockedRoom.isLocked()) {
                 if(lockedRoom.causesDeath()) {
                     gameInterface.println(lockedRoom.deathMessage());
-                    this.terminate();
+                    terminate();
                 }
                 gameInterface.println("This door is locked.");
                 return true;
@@ -295,8 +296,9 @@ public class Player implements Comparable, Serializable {
     /**
      * Move version two based on an action
      * @param action the action associated with the move.
+     * @throws TerminateGameException 
      */
-    public boolean move(Action action) {
+    public boolean move(Action action) throws TerminateGameException {
 
         if(this.currentRoom instanceof RoomRequiredItem) {
             RoomRequiredItem room = (RoomRequiredItem)this.currentRoom;
@@ -366,9 +368,9 @@ public class Player implements Comparable, Serializable {
     /**
      * Terminate this player.
      */
-    public void terminate() {
+    public void terminate() throws TerminateGameException {
         gameInterface.println("You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
-        System.exit(0);
+        throw new TerminateGameException("Teminate Game");
     }
 
     /**
