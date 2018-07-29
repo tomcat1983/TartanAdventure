@@ -277,6 +277,15 @@ public class XmlParser {
 		return parseXmlFromFileReturnGameConfiguration("gameMap.xml", userId);
 	}
 	
+	public GameConfiguration loadGameMapXml(GameMode gMode, String userId) {
+		
+		if(gMode.equals(GameMode.LOCAL))
+			return parseXmlFromFileReturnGameConfiguration("localMap.xml", userId);
+		else
+			return parseXmlFromFileReturnGameConfiguration("gameMap.xml", userId);
+	}
+	
+	
 	@Nullable
 	public GameConfiguration parseXmlFromFileReturnGameConfiguration(String fileName, String userId) {
 		

@@ -1,1 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><message receiver="client" sender="server" type="REQ_LOGIN"><login_info ng_reason="OK" result="OK" role="player"/></message>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><message receiver="client" sender="server" type="REQ_LOGIN">
+<login_info ng_reason="OK" result="OK" />
+</message>
