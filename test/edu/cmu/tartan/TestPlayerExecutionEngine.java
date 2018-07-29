@@ -29,6 +29,7 @@ import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomDark;
 import edu.cmu.tartan.room.RoomElevator;
 import edu.cmu.tartan.room.RoomExcavatable;
+import edu.cmu.tartan.room.RoomLockable;
 import edu.cmu.tartan.room.RoomRequiredItem;
 import edu.cmu.tartan.room.TestRoom;
 import edu.cmu.tartan.room.TestRoomDark;
@@ -369,12 +370,6 @@ class TestPlayerExecutionEngine {
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	    	action = interpreter.interpretString("eat pit", actionExecutionUnit);
 	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
-	    	
-//	    	ItemShovel shovel = (ItemShovel) Item.getInstance("shovel");
-//	    	player.grabItem(shovel);
-//	    	action = interpreter.interpretString("eat shovel", actionExecutionUnit);
-//	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
-
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
 		}
@@ -506,9 +501,6 @@ class TestPlayerExecutionEngine {
 	    	
 	    	action = interpreter.interpretString("pass", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
-	    	// terminate
-	    	//action = interpreter.interpretString("terminate", actionExecutionUnit);
-	    	//assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
 		}
@@ -537,5 +529,117 @@ class TestPlayerExecutionEngine {
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void testItShouldThrowTerminateGameExceptionWhenEatUneatableItem() {
+    	ItemShovel shovel = (ItemShovel) Item.getInstance("shovel", Player.DEFAULT_USER_NAME);
+    	player.grabItem(shovel);
+    	Action action = interpreter.interpretString("eat shovel", actionExecutionUnit);
+    	assertThrows(TerminateGameException.class,() -> {
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);	
+    	});
+	}
+	
+	@Test
+	public void testItShouldThrowTerminateGameExceptionWhenUserInputTerminate() {
+		// terminate
+    	Action action = interpreter.interpretString("terminate", actionExecutionUnit);
+    	assertThrows(TerminateGameException.class,() -> {
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    	});
+	}
+	
+	@Test
+	public void testItShouldThrowTerminateGameExceptionWhenUserShakeVendingMachine() {
+		// terminate
+		ItemVendingMachine vm = (ItemVendingMachine) Item.getInstance("machine", Player.DEFAULT_USER_NAME);
+		room1.putItem(vm);
+		// Shake
+    	Action action = interpreter.interpretString("shake machine", actionExecutionUnit);
+    	assertThrows(TerminateGameException.class,() -> {
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    	});
+	}
+
+	@Test
+	public void testItShouldThrowTerminateGameExceptionWhenUserMoveRoomLockableWithoutKey() {
+		Room end = new RoomLockable("You are inside of a building", "Building interior", true, Item.getInstance("key", Player.DEFAULT_USER_NAME));
+		//RoomDark room2 = new RoomDark(TestRoomDark.DARK_ROOM_DESC1, TestRoomDark.DARK_ROOM_SHORT_DESC1, TestRoomDark.DARK_DESC, TestRoomDark.DARK_SHORT_DESC);
+		//ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight", Player.DEFAULT_USER_NAME);
+		room1.setAdjacentRoom(Action.ACTION_GO_WEST, end);
+		//player.grabItem(flashlight);
+		
+		
+    	assertThrows(TerminateGameException.class,() -> {
+    		Action action = interpreter.interpretString("west", actionExecutionUnit);
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    		action = interpreter.interpretString("east", actionExecutionUnit);
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    		((RoomLockable)end).setCausesDeath(true, "Bye~Bye~~");
+    		action = interpreter.interpretString("west", actionExecutionUnit);
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    	});
+	}
+
+	@Test
+	public void testItShouldThrowTerminateGameExceptionWhenUserMoveRoomRequiredCheck() {
+		ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
+		RoomRequiredItem room2 = new RoomRequiredItem("You are in the room that required food", "Required",
+	            "pit", "Warning you need key", mbox);
+		player = new Player(room1, Player.DEFAULT_USER_NAME);
+		playerExecutionEngine = new PlayerExecutionEngine(player);
+		room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2);
+		((RoomRequiredItem)room2).setPlayerDiesOnEntry(true);
+		
+    	assertThrows(TerminateGameException.class,() -> {
+    		Action action = interpreter.interpretString("west", actionExecutionUnit);
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    	});
+	}
+
+	@Test
+	public void testItShouldThrowTerminateGameExceptionWhenUserDropItemAboutRoomRequired() {
+		ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
+		RoomRequiredItem room2 = new RoomRequiredItem("You are in the room that required food", "Required",
+	            "pit", "Warning you need key", mbox);
+		player = new Player(room2, Player.DEFAULT_USER_NAME);
+		playerExecutionEngine = new PlayerExecutionEngine(player);	
+		player.grabItem(mbox);
+		
+    	assertThrows(TerminateGameException.class,() -> {
+    		Action action = interpreter.interpretString("drop pit", actionExecutionUnit);
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    		((RoomRequiredItem)room2).setPlayerDiesOnItemDiscard(true);
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    	});
+	}
+	
+	@Test
+	public void testItShouldThrowTerminateGameExceptionWhenUserMoveOtherRoomInCurrentRoomTypeIsRoomRequired() {
+		ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
+		RoomRequiredItem room2 = new RoomRequiredItem("You are in the room that required food", "Required",
+	            "pit", "Warning you need key", mbox);
+		player = new Player(room2, Player.DEFAULT_USER_NAME);
+		playerExecutionEngine = new PlayerExecutionEngine(player);	
+		
+    	assertThrows(TerminateGameException.class,() -> {
+    		Action action = interpreter.interpretString("east", actionExecutionUnit);
+    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    	});
+	}
+
+	@Test
+	public void testItShouldThrowTerminateGameExceptionWhenUserMoveRoomDarkWithLight() {
+		RoomDark room2 = new RoomDark(TestRoomDark.DARK_ROOM_DESC1, TestRoomDark.DARK_ROOM_SHORT_DESC1, TestRoomDark.DARK_DESC, TestRoomDark.DARK_SHORT_DESC);
+		player = new Player(room2, Player.DEFAULT_USER_NAME);
+		playerExecutionEngine = new PlayerExecutionEngine(player);
+		
+		assertThrows(TerminateGameException.class,() -> {
+			Action action = interpreter.interpretString("west", actionExecutionUnit);
+			playerExecutionEngine.executeAction(action, actionExecutionUnit);
+    	});
 	}
 }
