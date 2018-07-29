@@ -10,7 +10,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
-import edu.cmu.tartan.GameInterface;
+import edu.cmu.tartan.manager.IQueueHandler;
+import edu.cmu.tartan.manager.ResponseMessage;
 
 public class SocketClient implements Runnable {
 
@@ -19,21 +20,21 @@ public class SocketClient implements Runnable {
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
 	
-	/**
-	 * Game interface for game message and log
-	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
-	
 	private String serverIp = "127.0.0.1";
 	int serverPort = 10015;
 	
-	Socket socket = null;
+	private Socket socket = null;
+	private ResponseMessage responseMessage;
+	private IQueueHandler messageQueue;
 	
-	private boolean isLoop = true;
+	private boolean isLoop;
 	
-	public SocketClient(String serverIp, int serverPort) {
+	public SocketClient(String serverIp, int serverPort, ResponseMessage responseMessage, IQueueHandler messageQueue) {
+		isLoop = true;
 		this.serverIp = serverIp;
 		this.serverPort = serverPort;
+		this.responseMessage = responseMessage;
+		this.messageQueue = messageQueue;
 	}
 
 	@Override
@@ -68,12 +69,12 @@ public class SocketClient implements Runnable {
  
         } catch (UnknownHostException e) {
  
-        	gameInterface.println("Server not found: " + e.getMessage());
+        	gameLogger.severe("Server not found: " + e.getMessage());
         	return false;
  
         } catch (IOException e) {
  
-        	gameInterface.println("IOException : " + e.getMessage());
+        	gameLogger.severe("IOException : " + e.getMessage());
         	return false;
         }
 
@@ -95,7 +96,16 @@ public class SocketClient implements Runnable {
 	}
 	
 	public boolean receiveMessage(String message) {
-		gameInterface.println(message);
+		//TODO parse a message
+		
+		try {
+			synchronized (responseMessage) {
+				responseMessage.setMessage(message);
+				responseMessage.notify();
+			}
+		} catch (IllegalMonitorStateException e) {
+			gameLogger.severe("IllegalMonitorStateException : " + e.getMessage());
+		}
 		return false;
 	}
 	
@@ -107,7 +117,7 @@ public class SocketClient implements Runnable {
 			writer.println(message);
 			return true;
 		} catch (IOException e) {
-			 gameInterface.println("Server IOException: " + e.getMessage());
+			gameLogger.severe("Server IOException: " + e.getMessage());
 		}
 		return false;
 	}
@@ -119,7 +129,7 @@ public class SocketClient implements Runnable {
 		try {
 			socket.close();
 		} catch (IOException e) {
-			gameInterface.println("Server IOException: " + e.getMessage());
+			gameLogger.severe("Server IOException: " + e.getMessage());
 		}
 		return returnValue;
 	}

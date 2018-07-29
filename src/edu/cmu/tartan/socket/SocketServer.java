@@ -30,7 +30,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 //	private int designerSocketCounter = 0;
 	
 	private boolean isLoop = true;
-//	private boolean isRunning = false;
+	private boolean isPlaying = false;
 	
 	private List<UserClientThread> clientThreadList = new ArrayList<UserClientThread>();
 	private HashMap<String, UserClientThread> clientThreadMap = new HashMap<>();
@@ -61,8 +61,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 			while (isLoop) {
 				Socket socket = serverSocket.accept();
 
-				if (userSocketCounter > MAX_USER_CONNECTION) {
-					gameInterface.println("Too many client");
+				if (userSocketCounter > MAX_USER_CONNECTION || isPlaying) {
 					sendMessage(socket, "I’m sorry. The game server is busy. Please retry to connect later.");
 					socket.close();
 				}
@@ -172,5 +171,13 @@ public class SocketServer implements Runnable, ISocketHandler {
 	@Override
 	public void updateClientState(String userId, String message) {
 		
+	}
+	
+	public void setIsPlaying(boolean isPlaying) {
+		this.isPlaying = isPlaying;
+	}
+	
+	public boolean getIsPlaying() {
+		return isPlaying;
 	}
 }

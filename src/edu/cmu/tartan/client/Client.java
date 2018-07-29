@@ -126,7 +126,7 @@ public class Client {
 	}
 	
 	private boolean connectServer(int timeout) {
-		socket = new SocketClient(serverIp, serverPort);
+		socket = new SocketClient(serverIp, serverPort, null, null);
 		socketClientThread = new Thread((Runnable)socket);
 		socketClientThread.start();
 		
