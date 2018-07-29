@@ -78,7 +78,7 @@ public abstract class Game {
 		XmlParser parseXml;
 		try {
 			parseXml = new XmlParser(); 
-			return (GameConfiguration) parseXml.loadGameMapXml(GameMode.LOCAL, context.getUserId());
+			return parseXml.loadGameMapXml(GameMode.LOCAL, context.getUserId());
 		} catch (ParserConfigurationException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
