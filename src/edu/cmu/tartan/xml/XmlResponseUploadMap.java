@@ -20,6 +20,7 @@ import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemLock;
 import edu.cmu.tartan.properties.Meltable;
+import edu.cmu.tartan.properties.Pushable;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomDark;
 import edu.cmu.tartan.room.RoomExcavatable;
@@ -140,7 +141,10 @@ public class XmlResponseUploadMap extends XmlResponse {
 			
 			result = setRelationship(nList, i);
 			if( !result.equals(XmlParseResult.SUCCESS))
-				return result; 
+				return result; 			
+		}
+		
+		for(i=0; i<roomCnt; i++) {
 			
 			updateRoomDescription(i);
 		}
@@ -153,7 +157,29 @@ public class XmlResponseUploadMap extends XmlResponse {
 		
 		StringBuilder sb = new StringBuilder(); 
 		Room currentRoom = customizingGame.getRoomIndex(roomIndex);
-		sb.append("\nYou are in " + currentRoom.shortDescription() + ". \n");
+		sb.append("\nYou are in " + currentRoom.shortDescription());
+		
+		
+		if(currentRoom instanceof RoomRequiredItem) {
+			String requiredItem = ((RoomRequiredItem)currentRoom).requiredItem().toString(); 
+			sb.append("that require " + requiredItem); 
+			// don't display direction for hidden room
+			String warningStr = "You need " + requiredItem; 
+			((RoomRequiredItem)currentRoom).setWarningDescription(warningStr+" long");
+			((RoomRequiredItem)currentRoom).setShortWarningDescription(warningStr+" short");
+		}
+		else if(currentRoom instanceof RoomLockable) {
+			sb.append("(Locked)"); 
+		}
+		else if(currentRoom instanceof RoomDark) {
+			sb.append("(Dark)"); 
+		}
+		else if(currentRoom instanceof RoomExcavatable) {
+			sb.append("(Excavatable)"); 
+		}
+
+		sb.append(".\n"); 
+		
 		
 		String directionStr; 
 		
@@ -188,7 +214,27 @@ public class XmlResponseUploadMap extends XmlResponse {
 			return null; 
 		
 		String directionAlias[] = actionGoDirection.getAliases();
-		directionStr = "You can go " + directionAlias[0] + " to " + adjacentRooms.shortDescription() + ". \n";
+		
+		if(adjacentRooms instanceof RoomObscured) {
+			
+			ArrayList<Item> items = currentRoom.getItems();
+			for (Item item : items) {
+				if(item instanceof Pushable )
+					((RoomObscured)adjacentRooms).setUnobscureMessage( "You've revelealed a hidden room to the " + directionAlias[0] + "!");
+			}
+			// don't display direction for hidden room
+		}
+		else if(adjacentRooms instanceof RoomDark) {
+			directionStr = "There seems to be a dark room to the " + directionAlias[0] + ". \n";
+		}
+		else if(adjacentRooms instanceof RoomLockable) {
+			directionStr = "There is a locked room to the " + directionAlias[0] + ". \n";
+		}
+		else if(adjacentRooms instanceof RoomExcavatable) {
+			directionStr = "There is a excavable room to the " + directionAlias[0] + ". \n";
+		}
+		else
+			directionStr = "You can go " + directionAlias[0] + " to " + adjacentRooms.shortDescription() + ". \n";
 		
 		return directionStr;
 	}
@@ -268,7 +314,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 		currentRoom.setObscuringItem(obstacle);
 		currentRoom.setObscured(true);
 		currentRoom.setUnobscureMessage("You've revelealed a hidden room to direction(TODO)");
-		currentRoom.setObscureMessage("ObscureMessage(TODO)");
+		currentRoom.setObscureMessage("This room is hidden");
 		obstacle.setRelatedRoom(currentRoom);
 		itemLocatedRoom.putItem(obstacle);		
 		
@@ -377,15 +423,15 @@ public class XmlResponseUploadMap extends XmlResponse {
 		if(roomType.equals("normal"))
 			room = new Room("Description", shortDescription);
 		else if(roomType.equals("dark"))
-			room = new RoomDark("Description Dark", shortDescription+"(Dark)", "You cannot see", "blind!");
+			room = new RoomDark("Description Dark", shortDescription, "You cannot see", "blind!");
 		else if(roomType.equals("lockable"))
-			room = new RoomLockable("Description lock", shortDescription+"(Locked)", true);
+			room = new RoomLockable("Description lock", shortDescription, true);
 		else if(roomType.equals("excavatable"))
-			room = new RoomExcavatable("Description excavatable", shortDescription+"(Excavatable)", "digdig");
+			room = new RoomExcavatable("Description excavatable", shortDescription, "digdig");
 		else if(roomType.equals("obscured"))
-			room = new RoomObscured("Description obscured", shortDescription+"(Obscured)");
+			room = new RoomObscured("Description obscured", shortDescription);
 		else if(roomType.equals("require"))
-			room = new RoomRequiredItem("Description require", shortDescription+"(Required)", "itemName", "Warning you need itemName");
+			room = new RoomRequiredItem("Description require", shortDescription, "itemName", "Warning you need itemName");
 
 		return room; 
 	}

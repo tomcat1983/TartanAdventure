@@ -100,8 +100,13 @@ public class GameContext implements Comparable, Serializable {
      * @return true if valid, false otherwise
      */
     public boolean validate() {
-        // TODO: This method is way too simple. A more thorough validation must be done!
-        return (gameName != null && gameDescription != null);
+        
+        if(gameName == null || gameDescription == null)
+        	return false; 
+        
+        GameValidate validater = new GameValidate(this);
+        
+        return true; 
     }
     
     @Override
