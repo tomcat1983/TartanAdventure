@@ -2,7 +2,6 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Edible;
 import edu.cmu.tartan.properties.Holdable;
-import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Installable;
 import edu.cmu.tartan.properties.Meltable;
 

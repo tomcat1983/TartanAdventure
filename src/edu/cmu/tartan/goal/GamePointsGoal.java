@@ -33,7 +33,7 @@ public class GamePointsGoal implements GameGoal {
     @Override
     public String describe() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Game Points Goal: You must score " + winningScore + " points" );
+        sb.append("Game Points Goal: You must score " + winningScore + " points\n" );
         return sb.toString();
     }
 

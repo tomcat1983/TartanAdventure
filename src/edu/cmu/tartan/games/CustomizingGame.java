@@ -69,28 +69,25 @@ public class CustomizingGame extends GameConfiguration {
 
 	public String makeGameDescription() {
 		
-		int i = 1; 
-		
 		StringBuilder gameDescription = new StringBuilder();
-		if(goals.size() == 1)
-			gameDescription.append("There is a goal to achive\n");
-		else
-			gameDescription.append("There are " + goals.size() + " goals to achive\n");
+		
+		gameDescription.append("This is ");
 		
 		for (GameGoal gameGoal : goals) {
 
 			if(gameGoal instanceof GameCollectGoal) {
-				gameDescription.append(i + " " + ((GameCollectGoal)gameGoal).describe());
+				gameDescription.append("[Collect Item] ");
 			}
 			else if(gameGoal instanceof GameExploreGoal) {
-				gameDescription.append(i + " " + ((GameExploreGoal)gameGoal).describe());
+				gameDescription.append("[Explore Room] ");
 			}
 			else if(gameGoal instanceof GamePointsGoal) {
-				gameDescription.append(i + " " + ((GamePointsGoal)gameGoal).describe());
+				gameDescription.append("[Get Point] ");
 			}
-			
-			i++;
 		}
+		
+		gameDescription.append("Game");
+
 			
 		return gameDescription.toString(); 
 	}
