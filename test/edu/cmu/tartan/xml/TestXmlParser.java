@@ -349,7 +349,7 @@ public class TestXmlParser {
 		assertTrue(roomRequire.requiredItem().equals(Item.getInstance("gold", Player.DEFAULT_USER_NAME)));
 	}
 	
-	@Disabled("�솢�븣臾몄씤吏� 紐⑤Ⅴ寃좊뒗�뜲 Eclipse �뿉�꽌�뒗 �젣��濡� �룄�뒗�뜲 travis �뿉�꽌�뒗 �븞�룉�떎. ")
+	@Disabled("work in eclipse fine but not in travis, I don't know why")
 	@Test
 	public void testGoal1IsCollectType() throws ParserConfigurationException {
 		//<goal index="0" type="collect" object="diamond-shovel" />
@@ -358,7 +358,7 @@ public class TestXmlParser {
 		assertTrue(cGame.getGameGoalIndex(0) instanceof GameCollectGoal);
 	}
 	
-	@Disabled("�솢�븣臾몄씤吏� 紐⑤Ⅴ寃좊뒗�뜲 Eclipse �뿉�꽌�뒗 �젣��濡� �룄�뒗�뜲 travis �뿉�꽌�뒗 �븞�룉�떎. ")
+	@Disabled("work in eclipse fine but not in travis, I don't know why")
 	@Test
 	public void testGoal2IsExploreType() throws ParserConfigurationException {
 		//<goal index="1" type="explore" object="6-11-12-13" />
@@ -367,7 +367,7 @@ public class TestXmlParser {
 		assertTrue(cGame.getGameGoalIndex(1) instanceof GameExploreGoal);
 	}
 	
-	@Disabled("�솢�븣臾몄씤吏� 紐⑤Ⅴ寃좊뒗�뜲 Eclipse �뿉�꽌�뒗 �젣��濡� �룄�뒗�뜲 travis �뿉�꽌�뒗 �븞�룉�떎. ")
+	@Disabled("work in eclipse fine but not in travis, I don't know why")
 	@Test
 	public void testGoal3IsPointType() throws ParserConfigurationException {
 		//<goal index="2" type="point" object="100" />
@@ -376,6 +376,63 @@ public class TestXmlParser {
 		assertTrue(cGame.getGameGoalIndex(2) instanceof GamePointsGoal);
 	}
 	
+	@Test
+	public void testParsingLoginId() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
+		XmlResponse xr = parseXml.getXmlResponse();
+		String id = ((XmlResponseLogin) xr).getId();
+		assertTrue(id.equals("takhh"));
+	}
+	
+	@Test
+	public void testParsingLoginPw() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(loginXmlFileName));
+		XmlResponse xr = parseXml.getXmlResponse();
+		String pw = ((XmlResponseLogin) xr).getPw();
+		assertTrue(pw.equals("awefaweg14ro4aw3"));
+	}
+	
+	@Disabled("Describe how to make login result XML")
+	@Test
+	public void testWritingLoginResultOK() throws ParserConfigurationException {
+		
+		XmlResponseLogin xr = new XmlResponseLogin(); 
+		xr.setLoginResult(XmlResultString.OK, XmlNgReason.OK, XmlLoginRole.DESIGNER);
+		xr.makeResponseXmlString();
+	}
+	
+	@Disabled("Describe how to make login result XML")
+	@Test
+	public void testWritingLoginResultFail() throws ParserConfigurationException {
+		
+		XmlResponseLogin xr = new XmlResponseLogin(); 
+		xr.setLoginResult(XmlResultString.NG, XmlNgReason.SERVER_BUSY, XmlLoginRole.NONE);
+		xr.makeResponseXmlString();
+	}
+	
+	@Test
+	public void testParsingAddUserId() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(addUserXmlFileName));
+		XmlResponse xr = parseXml.getXmlResponse();
+		String id = ((XmlResponseAddUser) xr).getId();
+		assertTrue(id.equals("takhh"));
+	}
+	
+	@Test
+	public void testParsingAddUserPw() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		parseXml.parseXmlFromString(readAllBytes(addUserXmlFileName));
+		XmlResponse xr = parseXml.getXmlResponse();
+		String pw = ((XmlResponseAddUser) xr).getPw();
+		assertTrue(pw.equals("awefaweg14ro4aw3"));
+	}
 	
 	/*
 	 * methods for test only 

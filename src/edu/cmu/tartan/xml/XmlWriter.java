@@ -116,8 +116,7 @@ public class XmlWriter {
 
 	public static void saveXmlStringToFile(String fileName, String xmlString) {
 
-		try (
-				PrintWriter out = new PrintWriter(fileName)) {
+		try (PrintWriter out = new PrintWriter(fileName)) {
 			out.print(xmlString);
 		} catch (FileNotFoundException e) {
 			gameLogger.severe("FileNotFoundException");

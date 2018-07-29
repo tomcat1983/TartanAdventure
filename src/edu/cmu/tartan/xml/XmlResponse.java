@@ -12,20 +12,21 @@ import org.w3c.dom.NodeList;
 public abstract class XmlResponse {
 	
 	String responseXml; 
-	XmlMessageType msgType;
+	protected XmlMessageType msgType;
 	protected Logger gameLogger = Logger.getGlobal();
 
 	
 	//every child have different response 
-	public abstract void makeResponseXmlString();
+	public abstract String makeResponseXmlString();
 	public abstract XmlParseResult doYourJob(Document doc);
 	
-	public void setMsgType(XmlMessageType msgType) {
-		this.msgType = msgType; 
-	}
 	
 	public String getResponseXml() {
 		return responseXml;
+	}
+	
+	public XmlMessageType getMsgType() {
+		return msgType;
 	}
 	
 
@@ -54,5 +55,4 @@ public abstract class XmlResponse {
 		
 		return result;
 	}
-	
 }

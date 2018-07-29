@@ -109,6 +109,10 @@ public class Client {
 	
 	private boolean continueGame() {
 		gameInterface.println("TBD");
+		LocalGame localGame = new LocalGame(Player.DEFAULT_USER_NAME);
+		if(localGame.loadAndStart(Player.DEFAULT_USER_NAME)) {
+			
+		}
 		return true;
 	}
 	

@@ -23,6 +23,8 @@ public class XmlParser {
 	private final DocumentBuilder dBuilder;
 	private Document doc;
 	private NodeList nList;
+	private XmlResponse xmlResponse; 	//server will refer this object 
+	private XmlParserType parserType; 
 	
 	/**
 	 * Game logger for game log
@@ -30,15 +32,25 @@ public class XmlParser {
 	protected Logger gameLogger = Logger.getGlobal();
 
 	public XmlParser() throws ParserConfigurationException {
+		this(XmlParserType.SERVER);		// default is parser for server 
+	}
+	
+	public XmlParser(XmlParserType parserType) throws ParserConfigurationException {
 
 		dbFactory = DocumentBuilderFactory.newInstance();
 		dBuilder = dbFactory.newDocumentBuilder();
 		doc = null; 
-		nList = null; 
+		nList = null;
+		this.parserType = parserType;
 	}
+
 
 	public NodeList getNodeList() {
 		return nList;
+	}
+	
+	public XmlResponse getXmlResponse() {
+		return xmlResponse;
 	}
 	
 	public XmlParseResult parseXmlFromString(String xmlUri) {
@@ -100,7 +112,10 @@ public class XmlParser {
 		if(messageType == null)	//incase there is no <message type=" xxx" > 
 			return XmlParseResult.UNKNOWN_MESSAGE; 
 		
-		parseResult = processMessage(messageType);
+		if(parserType.equals(XmlParserType.SERVER))
+			parseResult = processMessage(messageType);
+		else 
+			parseResult = processMessageClient(messageType);
 		
 		return parseResult; 
 			
@@ -108,27 +123,21 @@ public class XmlParser {
 	
 	@Nullable
 	public String getMessageType() {
-		
 		return getValueByTagAndAttribute("message", "type");
-
 	}
 	
 	public XmlParseResult processMessage(String messageType) {
 		
-		XmlResponse xmlResponse; 
 		XmlParseResult result; 
 		
 		if(messageType.equals(XmlMessageType.UPLOAD_MAP_DESIGN.name())) {
 			xmlResponse = new XmlResponseUploadMap(); 
-			xmlResponse.setMsgType(XmlMessageType.UPLOAD_MAP_DESIGN);
 		}
 		else if(messageType.equals(XmlMessageType.REQ_LOGIN.name())) {
 			xmlResponse = new XmlResponseLogin(); 
-			xmlResponse.setMsgType(XmlMessageType.REQ_LOGIN);
 		}
 		else if(messageType.equals(XmlMessageType.ADD_USER.name())) {
 			xmlResponse = new XmlResponseAddUser();
-			xmlResponse.setMsgType(XmlMessageType.REQ_LOGIN);
 		}
 		else {
 			return XmlParseResult.UNKNOWN_MESSAGE;
@@ -140,22 +149,32 @@ public class XmlParser {
 			
 	}
 	
+	public XmlParseResult processMessageClient(String messageType) {
+		
+		for (XmlMessageType msgType : XmlMessageType.values()) {
+			if(messageType.equals(msgType.name())) {
+				xmlResponse = new XmlResponseClient(msgType);
+				return xmlResponse.doYourJob(doc); 
+			}
+		}
+		
+		return XmlParseResult.UNKNOWN_MESSAGE;	
+	}
+	
+	
 	@Nullable
 	public GameConfiguration processMessageReturnGameConfiguration(String messageType, String userId) {
-		
-		XmlResponseUploadMap xmlResponse; 
-		
+
 		// If Game variable is included, only support UPLOAD_MAP_DESIGN 
 		if(messageType.equals(XmlMessageType.UPLOAD_MAP_DESIGN.name())) {
 			xmlResponse = new XmlResponseUploadMap();
-			xmlResponse.setUserId(userId);
-			xmlResponse.setMsgType(XmlMessageType.UPLOAD_MAP_DESIGN);
+			((XmlResponseUploadMap) xmlResponse).setUserId(userId);
 		}
 		else {
 			return null;
 		}
 		
-		return xmlResponse.doYourJobReturnGameConfiguration(doc);
+		return ((XmlResponseUploadMap) xmlResponse).doYourJobReturnGameConfiguration(doc);
 	}
 	
 	@Nullable
