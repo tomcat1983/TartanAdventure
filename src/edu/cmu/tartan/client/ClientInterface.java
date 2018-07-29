@@ -62,6 +62,8 @@ public class ClientInterface {
 			case "99":
 				gameMode = RunningMode.DESIGNER;
 				break;
+			case "":
+				break;
 			default:
 				gameInterface.println("Invalid command : " + command);
 				break;

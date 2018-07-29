@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import edu.cmu.tartan.GameInterface;
+import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.manager.IQueueHandler;
 
 public class SocketServer implements Runnable, ISocketHandler {
@@ -41,6 +42,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	public SocketServer(IQueueHandler messageQueue) {
 		this.messageQueue = messageQueue;
 		serverSocket = null;
+		serverPort = Config.getServerPort();
 	}
 	
 	@Override
@@ -63,7 +65,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 
 				if (userSocketCounter > MAX_USER_CONNECTION) {
 					gameInterface.println("Too many client");
-					sendMessage(socket, "I’m sorry. The game server is busy. Please retry to connect later.");
+					sendMessage(socket, "I'm sorry. The game server is busy. Please retry to connect later.");
 					socket.close();
 				}
 
