@@ -390,9 +390,9 @@ public class XmlResponseUploadMap extends XmlResponse {
 		 * 	<goal index="2" type="point" object="100" /> 
 		 */
 		if(goalType.equals("collect"))
-			goal = new GameCollectGoal(makeListStringSplitedByDash(goalObjects));
+			goal = new GameCollectGoal(makeItemListStringSplitedByDash(goalObjects));
 		else if(goalType.equals("explore"))
-			goal = new GameExploreGoal(makeListStringSplitedByDash(goalObjects));
+			goal = new GameExploreGoal(makeRoomListStringSplitedByDash(goalObjects));
 		else if(goalType.equals("point"))
 			goal = new GamePointsGoal(Integer.valueOf(goalObjects)); 
 
@@ -400,7 +400,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 	}
 
 
-	private ArrayList<String> makeListStringSplitedByDash(String strTobeSplited) {
+	private ArrayList<String> makeItemListStringSplitedByDash(String strTobeSplited) {
 				
 		ArrayList<String> itemList = new ArrayList<String>();
 		
@@ -411,5 +411,19 @@ public class XmlResponseUploadMap extends XmlResponse {
 		}
 		
 		return itemList; 
+	}
+	
+	private ArrayList<String> makeRoomListStringSplitedByDash(String strTobeSplited) {
+		
+		ArrayList<String> roomList = new ArrayList<String>();
+		
+		//<goal index="1" type="explore" object="6-11-12-13" />
+		String[] splitedToEachItem = strTobeSplited.split("-");		
+		for (String roomIndex : splitedToEachItem) {
+			int roomNumber = Integer.parseInt(roomIndex)+1;
+			roomList.add("Room" + roomNumber);
+		}
+		
+		return roomList; 
 	}
 }
