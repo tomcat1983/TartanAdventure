@@ -16,7 +16,6 @@ import edu.cmu.tartan.xml.XmlResponseCommand;
 import edu.cmu.tartan.xml.XmlResponseGameEnd;
 import edu.cmu.tartan.xml.XmlResponseGameStart;
 import edu.cmu.tartan.xml.XmlResponseLogin;
-import edu.cmu.tartan.xml.XmlResponseUploadMap;
 
 public class TartanGameManager implements Runnable, IUserCommand{
 	
@@ -97,7 +96,8 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	 * @param message	a game message
 	 * @return
 	 */
-	public boolean updateGameState(String userId, String message) {
+	@Override
+	public boolean updateGameState(String userId, String command) {
 		return false;
 	}
 	
@@ -110,14 +110,24 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		return false;
 	}
 	
-	
 	/**
-	 * Exit game
+	 * Help message
 	 * @param userId	a game user ID
 	 * @param message	a game message
 	 * @return
 	 */
-	public boolean updateGameExit(String userId, String message) {
+	public boolean updateHelpMessage(String userId, String message) {
+		return false;
+	}
+	
+	
+	/**
+	 * Exit message
+	 * @param userId	a game user ID
+	 * @param message	a game message
+	 * @return
+	 */
+	public boolean updateExitMessage(String userId, String message) {
 		return false;
 	}
 	
@@ -156,7 +166,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 				//TODO Send the result to client				
 				break;
 			case("SEND_COMMAND"):
-				sendCommand("userId", ((XmlResponseCommand)xr).getCmd());
+				sendCommand(((XmlResponseCommand)xr).getId(), ((XmlResponseCommand)xr).getCmd());
 				break;
 			default:
 				break;
