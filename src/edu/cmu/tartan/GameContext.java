@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import edu.cmu.tartan.goal.GameGoal;
 
-public class GameContext implements Serializable {
+public class GameContext implements Comparable, Serializable {
     /**
 	 * serial version UID
 	 */
@@ -103,4 +103,31 @@ public class GameContext implements Serializable {
         // TODO: This method is way too simple. A more thorough validation must be done!
         return (gameName != null && gameDescription != null);
     }
+    
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		return result;
+	}
+
+	@Override
+    public int compareTo(Object other) {
+        if (userId.compareTo(((GameContext) other).userId) == 0) {
+            return 0;
+        }
+        return -1;
+    }
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof GameContext) {
+			GameContext context = (GameContext)obj;
+    		if(context.userId.equals(userId)) {
+    			return true;
+    		}
+    	}
+		return false;
+	}
 }
