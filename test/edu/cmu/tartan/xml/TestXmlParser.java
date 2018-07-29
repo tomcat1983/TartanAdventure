@@ -426,6 +426,15 @@ public class TestXmlParser {
 	}
 	
 	
+	@Disabled("Describe how to make EventMessage")
+	@Test
+	public void testWritingEventMessage() throws ParserConfigurationException {
+		
+		XmlWriterServer xw = new XmlWriterServer(); 
+		xw.makeXmlForEventMessage("hello client\n this is message from server");
+	}
+	
+	
 	@Test
 	public void testParsingAddUserId() throws ParserConfigurationException {
 		

@@ -101,12 +101,32 @@ public class XmlWriterServer extends XmlWriter {
 		String xmlString = null;
 		
 		try {
-			//	<game_start result="OK" ng_reason="OK" />
+			//	<game_info result="OK" ng_reason="OK" />
 			startWritingXml(XmlMessageType.UPLOAD_MAP_DESIGN, SERVER_STR, CLIENT_STR); 			
 			addChildElement("game_info");
 			
 			setAttributeToElement(RESULT_STR, parseResult.name());
 			setAttributeToElement(NG_REASON_STR, reason.name());
+
+			xmlString = convertDocumentToString();
+			
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe(PARSER_EXCEPTION);
+		} 
+		
+		gameLogger.info(xmlString);
+		
+		return xmlString; 
+	}
+	
+	public String makeXmlForEventMessage(String message) {
+		String xmlString = null;
+		
+		try {
+			//		<display text="Hello Client! \n This is a message from server." />
+			startWritingXml(XmlMessageType.EVENT_MESSAGE, SERVER_STR, CLIENT_STR); 			
+			addChildElement("display");
+			setAttributeToElement("text", message);
 
 			xmlString = convertDocumentToString();
 			

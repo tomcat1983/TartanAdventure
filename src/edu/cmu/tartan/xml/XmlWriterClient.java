@@ -98,6 +98,26 @@ public class XmlWriterClient extends XmlWriter {
 		return xmlString; 
 	}
 	
+	public String makeXmlForCommand(String commandStr) {
+		String xmlString = null;
+		
+		try {
+			//	<common_info user_id="takhh" /> <!-- heart beat message from client every 1 min -->
+			startWritingXml(XmlMessageType.SEND_COMMAND, CLIENT_STR, SERVER_STR); 			
+			addChildElement("command");
+			setAttributeToElement("text", commandStr);
+			
+			xmlString = convertDocumentToString();
+			
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe(PARSER_EXCEPTION);
+		} 
+		
+		gameLogger.info(xmlString);
+		
+		return xmlString; 
+	}
+	
 	public String makeXmlForUploadMap(String fileName) {
 		String xmlString = null;
 		

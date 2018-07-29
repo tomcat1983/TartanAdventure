@@ -184,6 +184,35 @@ public class TestXmlParserClient {
 		xw.makeXmlForHeartBeat("heartBeatId");
 	}
 	
+	@Test
+	public void testWritingXmlForSendCommand() throws ParserConfigurationException {
+		
+		final String COMMAND = "go south";
+
+		XmlWriterClient xw = new XmlWriterClient(); 
+		String commandXml = xw.makeXmlForCommand(COMMAND);
+		
+		XmlParser xp = new XmlParser(XmlParserType.SERVER);
+		xp.parseXmlFromString(commandXml);
+		
+		XmlResponseCommand xr = (XmlResponseCommand) xp.getXmlResponse();
+		assertTrue(xr.getCmd().equals(COMMAND));
+	}
+	
+	@Test
+	public void testParsingEventMessage() throws ParserConfigurationException {
+		
+		final String MESSAGE = "hello client\nthis is message from server";
+		XmlWriterServer xw = new XmlWriterServer(); 
+		String eventMsgXml = xw.makeXmlForEventMessage(MESSAGE);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(eventMsgXml);
+		
+		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
+		assertTrue(xr.getEventMsg().equals(MESSAGE));
+	}
+	
 	/*
 	 * methods for test only 
 	 */
