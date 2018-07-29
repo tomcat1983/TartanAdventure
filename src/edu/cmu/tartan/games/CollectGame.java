@@ -6,6 +6,7 @@ import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GameCollectGoal;
 import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.item.StringForItems;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomLockable;
 
@@ -50,7 +51,8 @@ public class CollectGame extends GameConfiguration {
         // destroy item
         startItems.add(Item.getInstance("pot", context.getUserId()));
         startItems.add(Item.getInstance("microwave", context.getUserId()));
-
+        startItems.add(Item.getInstance(StringForItems.CPU, context.getUserId()));
+        startItems.add(Item.getInstance(StringForItems.COMPUTER, context.getUserId()));
         Room start = new Room("There is a tree, with a building to the West. There is a lock on the door.", "Tree" );
         start.setAdjacentRoom(Action.ACTION_GO_NORTH, mid1);
         start.setAdjacentRoom(Action.ACTION_GO_EAST, mid2);

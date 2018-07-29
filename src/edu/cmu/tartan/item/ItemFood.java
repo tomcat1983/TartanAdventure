@@ -84,6 +84,4 @@ public class ItemFood extends Item implements Edible, Holdable, Meltable, Instal
 		}
 		return true;
 	}
-
-
 }
