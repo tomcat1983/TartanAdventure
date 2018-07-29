@@ -115,6 +115,13 @@ public class ClientInterface {
 		return localCommand;
 	}
 
+	public boolean printServerBusyMessage() {
+		gameInterface.println("I’m sorry. The game server is busy.");
+		gameInterface.println("Please retry to connect later.");
+
+		return true;
+	}
+
 	/**
 	 * Local mode command
 	 */
@@ -125,7 +132,6 @@ public class ClientInterface {
 	public NetworkModeCommand getNetworkModeCommand() {
 		NetworkModeCommand networkCommand = NetworkModeCommand.UNDECIDED;
 
-		gameInterface.println("Log in");
 		gameInterface.println("");
 		gameInterface.println("> login      Log in and play game.");
 		gameInterface.println("> register   Register an account for playing game");
@@ -243,7 +249,7 @@ public class ClientInterface {
 
 	public boolean printFailMessageForRegister() {
 		gameInterface.println("");
-		gameInterface.println("I��m sorry. The ID is already occupied. Please retry registration.");
+		gameInterface.println("I'm sorry. The ID is already occupied. Please retry registration.");
 
 		return true;
 	}
@@ -261,11 +267,33 @@ public class ClientInterface {
 		return command;
 	}
 
-	public boolean printInvalidMap() {
+	public boolean printNoMap() {
 		gameInterface.println("There is no file which of the name is what you entered.");
 		gameInterface.println("Please check whether the file is in the folder which the game is saved or not.");
 		gameInterface.println("");
 		gameInterface.println("Re-enter the file name.");
+
+		return true;
+	}
+
+	public boolean printValidateMessageForMapUpload() {
+		gameInterface.println("");
+		gameInterface.println("The server is validating the map file.");
+
+		return true;
+	}
+
+	public boolean printValidateSucceessMessageForMapUpload() {
+		gameInterface.println("");
+		gameInterface.println("The map file is valid and saved successfully in the server.");
+
+		return true;
+	}
+
+	public boolean printValidateFailMessageForMapUpload() {
+		gameInterface.println("");
+		gameInterface.println("The map file is invalid.");
+		gameInterface.println("Please check the file again and retry.");
 
 		return true;
 	}
