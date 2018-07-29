@@ -62,7 +62,7 @@ public class XmlWriterClient extends XmlWriter {
 			//	<common_info user_id="takhh" /> <!-- heart beat message from client every 1 min -->
 			startWritingXml(XmlMessageType.HEART_BEAT, CLIENT_STR, SERVER_STR); 			
 			addChildElement("common_info");
-			setAttributeToElement("id", id);
+			setAttributeToElement("user_id", id);
 			
 			xmlString = convertDocumentToString();
 			
@@ -84,7 +84,7 @@ public class XmlWriterClient extends XmlWriter {
 				//<common_info user_id="takhh" />	
 				startWritingXml(msgType, CLIENT_STR, SERVER_STR); 			
 				addChildElement("common_info");
-				setAttributeToElement("id", id);
+				setAttributeToElement("user_id", id);
 				
 				xmlString = convertDocumentToString();
 				

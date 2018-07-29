@@ -113,7 +113,7 @@ public class Client {
 	}
 
 	private boolean connectServer(int timeout) {
-		socket = new SocketClient();
+		socket = new SocketClient(null, null);
 		socketClientThread = new Thread(socket);
 		socketClientThread.start();
 

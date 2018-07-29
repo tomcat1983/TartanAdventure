@@ -204,13 +204,13 @@ public class XmlResponseUploadMap extends XmlResponse {
 	//type="obscured" obstacle="fridge:9" />
 	public XmlParseResult setRelationshipForRoomObscured(RoomObscured currentRoom, NodeList nList, int roomIndex) {
 
-		String pbstacleStr = getAttributeValueAtNthTag("require_item", nList, roomIndex);
+		String obstacleStr = getAttributeValueAtNthTag("require_item", nList, roomIndex);
 
-		if(pbstacleStr == null)
+		if(obstacleStr == null)
 			return XmlParseResult.INVALID_DATA; 
 
 		//obstacle="itemName:roomIndex" 
-		String[] splited = pbstacleStr.split(":");
+		String[] splited = obstacleStr.split(":");
 		String itemName = splited[0];
 		int itemLocationIndex = Integer.parseInt(splited[1]);
 
@@ -402,7 +402,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 
 	private ArrayList<String> makeItemListStringSplitedByDash(String strTobeSplited) {
 				
-		ArrayList<String> itemList = new ArrayList<String>();
+		ArrayList<String> itemList = new ArrayList<>();
 		
 		//type="collect" object="diamond-shovel" 
 		String[] splitedToEachItem = strTobeSplited.split("-");		
@@ -415,7 +415,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 	
 	private ArrayList<String> makeRoomListStringSplitedByDash(String strTobeSplited) {
 		
-		ArrayList<String> roomList = new ArrayList<String>();
+		ArrayList<String> roomList = new ArrayList<>();
 		
 		//<goal index="1" type="explore" object="6-11-12-13" />
 		String[] splitedToEachItem = strTobeSplited.split("-");		
