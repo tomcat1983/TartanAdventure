@@ -1,5 +1,6 @@
 package edu.cmu.tartan.room;
 
+import edu.cmu.tartan.TerminateGameException;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 
@@ -58,7 +59,7 @@ public class RoomRequiredItem extends Room {
 	}
 	
 	
-	public void playerDidDropRequiredItem() {
+	public void playerDidDropRequiredItem() throws TerminateGameException {
 		if(this.diesOnItemDiscard) {
 			gameInterface.println(this.deathMessage);
 			this.getPlayer().terminate();

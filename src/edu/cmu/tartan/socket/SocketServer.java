@@ -63,7 +63,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 
 				if (userSocketCounter > MAX_USER_CONNECTION) {
 					gameInterface.println("Too many client");
-					sendMessage(socket, "Server too busy. Try later.");
+					sendMessage(socket, "I’m sorry. The game server is busy. Please retry to connect later.");
 					socket.close();
 				}
 
@@ -93,6 +93,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	public boolean stopSocket() {
 		
 		boolean returnValue = false;
+		isLoop = false;
 		
 		try {
 			serverSocket.close();
@@ -100,8 +101,6 @@ public class SocketServer implements Runnable, ISocketHandler {
 		} catch (IOException e) {
 			gameInterface.println("Server IOException: " + e.getMessage());
 		}
-		
-		isLoop = false;
 		userSocketCounter = 0;
 		
 		return returnValue;

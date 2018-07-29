@@ -161,7 +161,7 @@ public abstract class Game {
         return true;
     }
     
-    private boolean processGameCommand(String input) {
+    private boolean processGameCommand(String input) throws TerminateGameException {
     	if (input.compareTo("quit") == 0) {
             for (GameGoal g: context.getGoals()) {
             	gameInterface.println(g.getStatus());
@@ -212,11 +212,13 @@ public abstract class Game {
                 	break;
                 }
             }
+        } catch(TerminateGameException e) {
+        	return;
         } catch(Exception e) {
         	gameLogger.severe("I don't understand that \n\nException: \n" + e);
         	gameLogger.severe(e.getMessage());
             start();
-        }
+        } 
         gameInterface.println("Game Over");
     }
 

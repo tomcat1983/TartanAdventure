@@ -134,7 +134,7 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private boolean actionDrop(@NonNull Item item) {
+    private boolean actionDrop(@NonNull Item item) throws TerminateGameException {
     	boolean result = true;
     	if(player.hasItem(item)) {
             if(item instanceof Holdable) {
@@ -182,7 +182,7 @@ public class PlayerExecutionEngine {
         }    	
     }
     
-    private boolean actionShake(@NonNull Item item) {
+    private boolean actionShake(@NonNull Item item) throws TerminateGameException {
         if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
             if(item instanceof Shakeable) {
                 ((Shakeable)item).shake();
@@ -258,7 +258,7 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private boolean actionEat(@NonNull Item item) {
+    private boolean actionEat(@NonNull Item item) throws TerminateGameException {
         if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
             if(item instanceof Edible) {
                 // eating something gives scores
@@ -330,7 +330,7 @@ public class PlayerExecutionEngine {
         }    	
     }
     
-    private boolean hasDirectObject(@NonNull Action action, @NonNull ActionExecutionUnit actionExecutionUnit) {
+    private boolean hasDirectObject(@NonNull Action action, @NonNull ActionExecutionUnit actionExecutionUnit) throws TerminateGameException {
     	Item item = actionExecutionUnit.directObject();
         if(item==null) {
         	gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
@@ -436,7 +436,7 @@ public class PlayerExecutionEngine {
         }
     }
     
-    private boolean hasNoObject(@NonNull Action action) {
+    private boolean hasNoObject(@NonNull Action action) throws TerminateGameException {
     	switch(action) {
 	        case ACTION_LOOK:
 	            return player.lookAround();
@@ -487,8 +487,9 @@ public class PlayerExecutionEngine {
      * Execute an action in the game. This method is where game play really occurs.
      * @param action The action to execute
      * @return boolean if action handle to case return true, else return false. 
+     * @throws TerminateGameException 
      */
-    public boolean executeAction(Action action, ActionExecutionUnit actionExecutionUnit) {
+    public boolean executeAction(Action action, ActionExecutionUnit actionExecutionUnit) throws TerminateGameException {
 
         switch(action.type()) {
             // Handle navigation
