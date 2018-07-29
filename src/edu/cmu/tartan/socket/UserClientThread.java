@@ -23,6 +23,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 	
 	private boolean isLogin = false;
 	private String userId = "";
+	private boolean isLoop = true;
 	
 
 	public UserClientThread(Socket clientSocket, IQueueHandler messageQueue) {
@@ -58,11 +59,14 @@ public class UserClientThread implements Runnable, ISocketMessage {
 
 			String message = "";
 
-			while ((message = reader.readLine()) != null) {
+			while (isLoop) {
 				
+				if((message = reader.readLine()) == null) break;
 				
 				//TODO Check a null state
-				if (message.equals("null")) break;
+				if (message.equals("null") 
+						|| message.equals("quit")
+						|| message.equals("exit")) break;
 				
 				if (isLogin) {
 					getUserIdFromXml(message);
@@ -71,8 +75,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 				messageQueue.produce(message);
 			}
 
-			gameInterface.println("Closing connection");
-			clientSocket.close();
+			stopSocket();
 
 		} catch (IOException e) {
 			gameInterface.println("Server IOException: " + e.getMessage());
@@ -92,6 +95,23 @@ public class UserClientThread implements Runnable, ISocketMessage {
 	
 	public void setIsLogin(boolean isLogin) {
 		this.isLogin = isLogin;
+	}
+	
+	public boolean stopSocket() {
+		boolean returnValue = false;
+		isLoop = false;
+		
+		try {
+			clientSocket.close();
+			returnValue = true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		gameInterface.println("Closing connection");
+		
+		return returnValue;
 	}
 
 }
