@@ -95,6 +95,7 @@ public class SocketClient implements Runnable {
 	}
 	
 	public boolean receiveMessage(String message) {
+		gameInterface.println(message);
 		return false;
 	}
 	
