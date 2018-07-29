@@ -34,6 +34,7 @@ public class TestLocalGame {
 		commander.add("pickup shovel");
 		commander.add("drop shovel");
 		commander.add("quit");
+		commander.add("no");
 		commander.apply();
 	}
 }
