@@ -74,7 +74,7 @@ public class TestDbAccessor {
 	}
 
 	@Test
-	public void testNotZeroWhenInsert() {
+	public void testTrueWhenInsert() {
 
 		// Given
 		File file = new File(url);
@@ -85,10 +85,10 @@ public class TestDbAccessor {
 		dbAccessor.createNewTable();
 
 		// When
-		int count = dbAccessor.insert(userId, userPw, userType);
+		boolean returnValue = dbAccessor.insert(userId, userPw, userType);
 
 		// Then
-		assertNotEquals(0, count);
+		assertNotEquals(true, returnValue);
 		
 	}
 
@@ -122,13 +122,13 @@ public class TestDbAccessor {
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
 		
-		int rowCount = dbAccessor.insert(userId, userPw, userType);
+		dbAccessor.insert(userId, userPw, userType);
 
 		// When
-		int returnValue = dbAccessor.delete(userId);
+		boolean returnValue = dbAccessor.delete(userId);
 		
 		// Then
-		assertEquals(rowCount, returnValue);
+		assertEquals(true, returnValue);
 	}
 
 }

@@ -43,7 +43,7 @@ public class Server {
 
 			switch (command) {
 			case QUIT:
-				tartanGameManager.endGame();
+				tartanGameManager.endGame("quit");
 				gameManagerThread.interrupt();
 				socketServer.stopSocket();
 				running = false;

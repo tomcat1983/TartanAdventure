@@ -7,27 +7,29 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Logger;
 
-import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.manager.IQueueHandler;
+import edu.cmu.tartan.manager.SocketMessage;
 
 public class DesignerClientThread implements Runnable, ISocketMessage {
 	
 	/**
-	 * Game interface for game message and log
+	 * Game logger for game log
 	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
+	protected static final Logger gameLogger = Logger.getGlobal();
 
 	private Socket clientSocket;
-	private IQueueHandler messageQueue;
+	private IQueueHandler queue;
 	
 	private boolean isLogin = false;
 	private String designerId = "";
+	private boolean isLoop = true;
 	
 
-	public DesignerClientThread(Socket clientSocket, IQueueHandler messageQueue) {
+	public DesignerClientThread(Socket clientSocket, IQueueHandler queue) {
 		this.clientSocket = clientSocket;
-		this.messageQueue = messageQueue;
+		this.queue = queue;
 	}
 
 	@Override
@@ -44,7 +46,7 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 			writer.println(message);
 			return true;
 		} catch (IOException e) {
-			gameInterface.println("Server exception: " + e.getMessage());
+			gameLogger.warning("IOException: " + e.getMessage());
 		}
 		return false;
 	}
@@ -52,35 +54,38 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 	@Override
 	public void receiveMessage() {
 		
+		SocketMessage socketMessage = null;
+		
 		try {
 			InputStream input = clientSocket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
 			String message = "";
 
-			while ((message = reader.readLine()) != null) {
+			while (isLoop) {
 				
+				if((message = reader.readLine()) == null) break;
 				
 				//TODO Check a null state
-				if (message.equals("null")) break;
+				if (message.equals("null") 
+						|| message.equals("quit")
+						|| message.equals("exit")) break;
 				
 				if (isLogin) {
 					getUserIdFromXml(message);
 				}
+				
+				socketMessage = new SocketMessage(Thread.currentThread().getName(), message);
 
-				messageQueue.produce(message);
-				sendMessage(message);
-
+				queue.produce(socketMessage);
 			}
 
-			gameInterface.println("Closing connection");
-			clientSocket.close();
+			stopSocket();
 
 		} catch (IOException e) {
-			gameInterface.println("Server exception: " + e.getMessage());
+			gameLogger.warning("IOException: " + e.getMessage());
 		}
 	}
-	
 	
 	private String getUserIdFromXml(String message) {
 		// TODO : Process message
@@ -95,5 +100,20 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 	public void setIsLogin(boolean isLogin) {
 		this.isLogin = isLogin;
 	}
-
+	
+	public boolean stopSocket() {
+		boolean returnValue = false;
+		isLoop = false;
+		
+		try {
+			clientSocket.close();
+			returnValue = true;
+		} catch (IOException e) {
+			gameLogger.warning("IOException: " + e.getMessage());
+		}
+		
+		gameLogger.info("Closing designer connection");
+		
+		return returnValue;
+	}
 }
