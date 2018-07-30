@@ -58,7 +58,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		
 		waitResponseMessage();
 		
-		if ("true".equals((responseMessage).getMessage())) {
+		if ("SUCCESS".equals((responseMessage).getMessage())) {
 			this.userId = userId;
 			this.userPw = userPw;
 			
@@ -79,7 +79,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		
 		waitResponseMessage();
 		
-		if ("true".equals((responseMessage).getMessage())) {
+		if ("SUCCESS".equals((responseMessage).getMessage())) {
 			return true;
 		}
 		
@@ -118,7 +118,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		
 		waitResponseMessage();
 		
-		if ("true".equals((responseMessage).getMessage())) {
+		if ("SUCCESS".equals((responseMessage).getMessage())) {
 			return true;
 		}
 		
@@ -176,7 +176,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		
 		waitResponseMessage();
 		
-		if ("true".equals((responseMessage).getMessage())) {
+		if ("SUCCESS".equals((responseMessage).getMessage())) {
 			return true;
 		}
 		return false;
