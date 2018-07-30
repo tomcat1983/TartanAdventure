@@ -42,8 +42,11 @@ public class TestXmlParser {
 	String gameXmlInvalidGoalCntMatchFileName;
 	String gameXmlInvalidRoomCntMatchFileName;
 	String gameStartXmlFileName;
+	String gameStartInvalidXmlFileName;
 	String gameEndXmlFileName;
+	String gameEndInvalidXmlFileName;
 	String sendCommandInvalidXmlFileName;
+	String hbInvalidXmlFileName;
 
 	
     @BeforeEach
@@ -59,7 +62,10 @@ public class TestXmlParser {
     	gameXmlInvalidRoomCntMatchFileName = "test/edu/cmu/tartan/xml/GameXmlInvalidRoomCntMatch.xml";
     	gameStartXmlFileName = "test/edu/cmu/tartan/xml/RequestGameStart.xml";
     	gameEndXmlFileName = "test/edu/cmu/tartan/xml/RequestGameEnd.xml";
+    	gameStartInvalidXmlFileName = "test/edu/cmu/tartan/xml/RequestGameStartInvalid.xml";
+    	gameEndInvalidXmlFileName = "test/edu/cmu/tartan/xml/RequestGameEndInvalid.xml";
     	sendCommandInvalidXmlFileName = "test/edu/cmu/tartan/xml/SendCommandInvalid.xml";
+    	hbInvalidXmlFileName = "test/edu/cmu/tartan/xml/HeartbeatInvalid.xml";
 
     }
 	
@@ -546,11 +552,43 @@ public class TestXmlParser {
 	}
 	
 	@Test
-	public void testGameDescription() throws ParserConfigurationException {
-		//<goal index="0" type="collect" object="diamond-shovel" />
+	public void testParsingHeartBeatInvalid() throws ParserConfigurationException {
+		
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
-		System.out.println(cGame.makeGameDescription());
+		XmlParseResult xpr = parseXml.parseXmlFromString(readAllBytes(hbInvalidXmlFileName));
+		assertTrue(xpr.equals(XmlParseResult.INVALID_DATA));
+	}
+	
+	@Test
+	public void testParsingGameStartInvalid() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		XmlParseResult xpr = parseXml.parseXmlFromString(readAllBytes(gameStartInvalidXmlFileName));
+		assertTrue(xpr.equals(XmlParseResult.INVALID_DATA));
+	}
+	
+	@Test
+	public void testParsingGameEndInvalid() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		XmlParseResult xpr = parseXml.parseXmlFromString(readAllBytes(gameEndInvalidXmlFileName));
+		assertTrue(xpr.equals(XmlParseResult.INVALID_DATA));
+	}
+	
+	@Test
+	public void testWritingAddUserResponseOK() throws ParserConfigurationException {
+		
+		XmlResultString addResult = XmlResultString.OK;
+		XmlNgReason reason = XmlNgReason.OK;
+		String xmlUri;
+
+		XmlWriterServer xw = new XmlWriterServer();
+		xmlUri = xw.makeXmlForAddUser(addResult, reason);
+		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
+		parseXml.parseXmlFromString(xmlUri);
+		XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
+		assertTrue(addResult.equals(xr.getResultStr()));
+		assertTrue(reason.equals(xr.getNgReason()));
 	}
 	
 	

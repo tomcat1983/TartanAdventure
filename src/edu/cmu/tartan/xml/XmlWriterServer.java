@@ -63,7 +63,7 @@ public class XmlWriterServer extends XmlWriter {
 		
 		try {
 			//<login_info login_result="OK" ng_reason="-" role="player"/>
-			startWritingXml(XmlMessageType.REQ_LOGIN, SERVER_STR, CLIENT_STR); 			
+			startWritingXml(XmlMessageType.ADD_USER, SERVER_STR, CLIENT_STR); 			
 			addChildElement("user_info");
 			
 			setAttributeToElement("add_result", addResult.name());
