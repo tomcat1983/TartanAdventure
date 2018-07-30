@@ -17,7 +17,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	 * Game interface for game message
 	 */
 	protected static final GameInterface gameInterface = GameInterface.getInterface();
-	
+
 	/**
 	 * Game logger for game log
 	 */
@@ -57,7 +57,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		sendMessage(message);
 
 		waitResponseMessage();
-		
+
 		if ("SUCCESS".equals((responseMessage).getMessage())) {
 			this.userId = userId;
 			this.userPw = userPw;
@@ -78,7 +78,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		sendMessage(message);
 
 		waitResponseMessage();
-		
+
 		if ("SUCCESS".equals((responseMessage).getMessage())) {
 			return true;
 		}
@@ -117,7 +117,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		sendMessage(message);
 
 		waitResponseMessage();
-		
+
 		if ("SUCCESS".equals((responseMessage).getMessage())) {
 			return true;
 		}
@@ -151,16 +151,16 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 	@Override
 	public boolean updateGameState(String userId, String command) {
-		
+
 		boolean returnValue = false;
 
 		String message = null;
 
 		XmlWriterClient xw = new XmlWriterClient();
 		message = xw.makeXmlForCommand(userId, command);
-		
+
 		returnValue = sendMessage(message);
-		
+
 		return returnValue;
 	}
 
@@ -175,7 +175,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		sendMessage(message);
 
 		waitResponseMessage();
-		
+
 		if ("SUCCESS".equals((responseMessage).getMessage())) {
 			return true;
 		}
@@ -209,7 +209,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
             if (message != null && !message.isEmpty()) {
             	gameInterface.println(message);
-            	
+
             }
         }
 	}

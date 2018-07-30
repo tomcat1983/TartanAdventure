@@ -33,12 +33,12 @@ public class Client {
 	/**
 	 * Client game manager
 	 */
-	TartanGameManagerClient gameManager;
+	private TartanGameManagerClient gameManager;
 
 	/**
 	 * User ID
 	 */
-	String userId;
+	private String userId;
 
 	public Client() {
 		clientInterface = new ClientInterface();
@@ -117,8 +117,8 @@ public class Client {
 		ResponseMessage responseMessage = new ResponseMessage("");
 
 		SocketClient socketClient = new SocketClient(responseMessage, messageQueue);
-		Thread socketClienThread = new Thread(socketClient);
-		socketClienThread.start();
+		Thread socketClientThread = new Thread(socketClient);
+		socketClientThread.start();
 
 		gameManager = new TartanGameManagerClient(socketClient, responseMessage, messageQueue);
 		Thread gameManagerThread = new Thread(gameManager);
@@ -130,22 +130,19 @@ public class Client {
 	private boolean login(boolean isDesigner) {
 		String id = null;
 
-		do {
-			String[] loginInfo = clientInterface.getLoginInfo();
-			id = loginInfo[0];
+		String[] loginInfo = clientInterface.getLoginInfo();
+		id = loginInfo[0];
 
-			XmlLoginRole role = XmlLoginRole.PLAYER;
-			if (isDesigner)
-				role = XmlLoginRole.PLAYER;
+		XmlLoginRole role = XmlLoginRole.PLAYER;
+		if (isDesigner)
+			role = XmlLoginRole.PLAYER;
 
-			if (gameManager.login("", loginInfo[0], loginInfo[1], role))
-				break;
+		if (gameManager.login("", loginInfo[0], loginInfo[1], role)) {
+			userId = id;
+			return true;
+		}
 
-		} while (true); //TODO: need listener;
-
-		userId = id;
-
-		return true;
+		return false;
 	}
 
 	private String getUserIdForRegister() {
@@ -186,24 +183,17 @@ public class Client {
 	}
 
 	private boolean register() {
-		String id = "";
-		String pw = "";
+		String id = getUserIdForRegister();
+		String pw = getUserPwForRegister();
 
-		do {
-			id = getUserIdForRegister();
-			pw = getUserPwForRegister();
+		if (gameManager.register(id, pw)) {
+			clientInterface.printSuccessMessageForRegister();
+			return true;
+		}
 
-			if (gameManager.register(id, pw))
-				break;
-			else
-				clientInterface.printFailMessageForRegister();
-		} while (true);
+		clientInterface.printFailMessageForRegister();
 
-		clientInterface.printSuccessMessageForRegister();
-
-		userId = id;
-
-		return true;
+		return false;
 	}
 
 	private boolean runNetworkCommander(boolean isDesigner) {
@@ -235,35 +225,45 @@ public class Client {
 			}
 		} while (running);
 
-		gameManager.endGame("", userId);
-
 		return true;
 	}
 
 	private boolean runNetworkMode(boolean isDesigner) {
 		if (connectServer(1000)) {
-			ClientInterface.NetworkModeCommand networkCommand = ClientInterface.NetworkModeCommand.LOGIN;
+			boolean runNetwork = true;
+			boolean result = true;
 
-			if (!isDesigner)
-				networkCommand = clientInterface.getNetworkModeCommand();
+			do {
+				ClientInterface.NetworkModeCommand networkCommand = ClientInterface.NetworkModeCommand.LOGIN;
 
-			switch (networkCommand) {
-			case LOGIN:
-				login(isDesigner);
-				clientInterface.printWelcomMessage(isDesigner);
-				runNetworkCommander(isDesigner);
-				break;
-			case REGISTER:
-				register();
-				break;
-			case QUIT:
-				break;
-			default:
-				logger.severe("Unknown network command");
-				return false;
-			}
+				if (!isDesigner)
+					networkCommand = clientInterface.getNetworkModeCommand();
 
-			return true;
+				switch (networkCommand) {
+				case LOGIN:
+					if (login(isDesigner)) {
+						clientInterface.printWelcomMessage(isDesigner);
+						runNetworkCommander(isDesigner);
+						runNetwork = false;
+					}
+					break;
+				case REGISTER:
+					register();
+					break;
+				case QUIT:
+					runNetwork = false;
+					break;
+				default:
+					logger.severe("Unknown network command");
+					runNetwork = false;
+					result = false;
+					break;
+				}
+			} while (runNetwork);
+
+			gameManager.endGame("", userId);
+
+			return result;
 		} else {
 			clientInterface.printServerBusyMessage();
 		}
