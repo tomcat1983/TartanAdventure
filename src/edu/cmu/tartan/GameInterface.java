@@ -77,7 +77,7 @@ public class GameInterface {
 		else if (type == MessageType.PRIVATE)
 			tartanManager.sendToClient(userId, message);
 		else if (type == MessageType.PUBLIC)
-			tartanManager.sendToAll(message);
+			tartanManager.sendToAll(userId, message);
 		else
 			tartanManager.achievedGoal(userId);
 	}
@@ -90,7 +90,7 @@ public class GameInterface {
 		else if (type == MessageType.PRIVATE)
 			tartanManager.sendToClient(userId, message);
 		else if (type == MessageType.PUBLIC)
-			tartanManager.sendToAll(message);
+			tartanManager.sendToAll(userId, message);
 		else
 			tartanManager.achievedGoal(userId);
 	}
