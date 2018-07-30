@@ -124,8 +124,6 @@ public class Client {
 		Thread gameManagerThread = new Thread(gameManager);
 		gameManagerThread.start();
 
-		gameManager.waitResponseMessage();
-
 		return true;
 	}
 
