@@ -97,6 +97,30 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	}
 	
 	/**
+	 * Send a message to all client but me
+	 * Called by a game interface
+	 * @param userId	The user ID who sending the message 
+	 * @param message	The game message 
+	 * @return
+	 */
+	public boolean sendToOters(String userId, String message) {
+		
+		boolean returnValue = false;
+		String eventMessage = String.format("[%S] %S", userId, message);
+		
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = xw.makeXmlForEventMessage(userId, eventMessage);
+		
+		for(String key : tartanGames.keySet()) {
+			if(!userId.equals(key)) {
+				returnValue = sendToClient(key, xmlMessage);
+			}
+		}
+		
+		return returnValue;
+	}
+	
+	/**
 	 * Send a message to one client
 	 * @param userId
 	 * @param message
