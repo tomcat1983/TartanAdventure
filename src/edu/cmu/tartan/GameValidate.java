@@ -33,9 +33,9 @@ public class GameValidate  {
 	private boolean isRequiredRoomExist = false;
 	private boolean isObscuredRoomExist = false;
 	private boolean isLockedRoomExist = false;
-	private int gamePointGoalCnt;
-	private int gameCollectGoalCnt;
-	private int gameExploreGoalCnt;
+	private int gamePointGoalCnt = 0;
+	private int gameCollectGoalCnt = 0;
+	private int gameExploreGoalCnt = 0;
 	private ArrayList<MapConfig> configErrors = new ArrayList<>();
 	private int obscuredRoomCnt = 0; 
 	private int obstacleItemCnt = 0;
@@ -84,6 +84,7 @@ public class GameValidate  {
 		}
 		
 		goalTypeCheck();
+		
 		if(gameCollectGoalCnt > 1 || gameExploreGoalCnt > 1 || gamePointGoalCnt > 1)
 			configErrors.add(MapConfig.DUP_GOAL);
 
