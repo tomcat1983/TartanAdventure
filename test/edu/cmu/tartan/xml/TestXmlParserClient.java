@@ -213,22 +213,42 @@ public class TestXmlParserClient {
 		XmlResponseCommand xr = (XmlResponseCommand) xp.getXmlResponse();
 		assertTrue(xr.getCmd().equals(COMMAND));
 		assertTrue(xr.getId().equals(ID_STR));
-
 	}
 	
 	@Test
 	public void testParsingEventMessage() throws ParserConfigurationException {
 		
 		final String MESSAGE = "hello client\nthis is message from server";
+		final String ID_STR = "eventId";
+
 		XmlWriterServer xw = new XmlWriterServer(); 
-		String eventMsgXml = xw.makeXmlForEventMessage(MESSAGE);
+		String eventMsgXml = xw.makeXmlForEventMessage(ID_STR, MESSAGE);
 		
 		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
 		xp.parseXmlFromString(eventMsgXml);
 		
 		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
 		assertTrue(xr.getEventMsg().equals(MESSAGE));
+		assertTrue(xr.getId().equals(ID_STR));
 	}
+	
+	@Test
+	public void testWritingXmlForGameEndWin() throws ParserConfigurationException {
+		
+		final String RESULT = "win";
+		final String ID_STR = "gameEndId";
+
+		XmlWriterServer xw = new XmlWriterServer(); 
+		String commandXml = xw.makeXmlForGameEnd(ID_STR, RESULT);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(commandXml);
+		
+		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
+		assertTrue(xr.getGameResult().equals(RESULT));
+		assertTrue(xr.getId().equals(ID_STR));
+	}
+	
 	
 	/*
 	 * methods for test only 

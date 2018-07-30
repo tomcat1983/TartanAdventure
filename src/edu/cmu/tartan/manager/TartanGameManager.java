@@ -69,7 +69,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		boolean returnValue = false;
 		
 		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = xw.makeXmlForEventMessage(message);
+		String xmlMessage = xw.makeXmlForEventMessage("TODO for Jang S", message);
 		
 		returnValue = socket.sendToAll(xmlMessage);
 		

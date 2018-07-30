@@ -11,13 +11,18 @@ public class XmlWriterServer extends XmlWriter {
 	private static final String RESULT_STR = "result";
 	private static final String NG_REASON_STR = "ng_reason";
 	
-	public String makeXmlForGameEnd(String gameResult) {
+	public String makeXmlForGameEnd(String id, String gameResult) {
 		String xmlString = null;
 		
 		try {
+			//<common_info user_id="userId" />
 			//<game_result result="win" /> <!-- win | loose for each client, score of each player will be printed by EventMessage-->
 			startWritingXml(XmlMessageType.GAME_END, SERVER_STR, CLIENT_STR); 			
-			addChildElement("game_result");
+			
+			addChildElement("common_info");
+			setAttributeToElement("user_id", id);
+			
+			addBrotherElement("game_result");
 			setAttributeToElement(RESULT_STR, gameResult);
 
 			xmlString = convertDocumentToString();
@@ -119,13 +124,18 @@ public class XmlWriterServer extends XmlWriter {
 		return xmlString; 
 	}
 	
-	public String makeXmlForEventMessage(String message) {
+	public String makeXmlForEventMessage(String id, String message) {
 		String xmlString = null;
 		
 		try {
-			//		<display text="Hello Client! \n This is a message from server." />
-			startWritingXml(XmlMessageType.EVENT_MESSAGE, SERVER_STR, CLIENT_STR); 			
-			addChildElement("display");
+			//<common_info user_id="userId" />
+			//<display text="Hello Client! \n This is a message from server." />
+			startWritingXml(XmlMessageType.EVENT_MESSAGE, SERVER_STR, CLIENT_STR);
+			
+			addChildElement("common_info");
+			setAttributeToElement("user_id", id);
+
+			addBrotherElement("display");
 			setAttributeToElement("text", message);
 
 			xmlString = convertDocumentToString();
