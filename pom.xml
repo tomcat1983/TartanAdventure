@@ -63,10 +63,10 @@
         <artifactId>pitest-maven</artifactId>
         <version>1.4.0</version>
         <configuration>
-          <excludedMethods>
-            <param>print</param>
-            <param>println</param>
-          </excludedMethods>
+          <avoidCallsTo>
+            <avoidCallsTo>edu.cmu.tartan.GameInterface.print</avoidCallsTo>
+            <avoidCallsTo>edu.cmu.tartan.GameInterface.println</avoidCallsTo>
+          </avoidCallsTo>
         </configuration>
         <dependencies>
           <dependency>
