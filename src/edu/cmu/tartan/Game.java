@@ -74,11 +74,11 @@ public abstract class Game {
         gameInterface.println(sb.toString());
     }
     
-    private GameConfiguration loaclGameFromXML() {
+    protected GameConfiguration gameFromXML(GameMode mode) {
 		XmlParser parseXml;
 		try {
 			parseXml = new XmlParser(); 
-			return (GameConfiguration) parseXml.loadGameMapXml(GameMode.LOCAL, context.getUserId());
+			return parseXml.loadGameMapXml(mode, context.getUserId());
 		} catch (ParserConfigurationException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
@@ -103,7 +103,7 @@ public abstract class Game {
         menu.add(new DemoGame());
 
         // XML loading game
-        GameConfiguration loaclGame = loaclGameFromXML();
+        GameConfiguration loaclGame = gameFromXML(GameMode.LOCAL);
         if(loaclGame!=null) {
             menu.add(loaclGame);
         }
@@ -259,11 +259,16 @@ public abstract class Game {
     private void status() {
     	Player player = context.getPlayer();
     	
-        gameInterface.println("The current game is '" + context.getGameName() + "': " + context.getGameDescription() + "\n");
-        gameInterface.println("- There are " + context.getGoals().size() + " goals to achieve:");
+        gameInterface.println("The current game is '" + context.getGameName() + "': " + context.getGameDescription());
 
+		if(context.getGoals().size() == 1)
+			gameInterface.println("- There is a goal to achive");
+		else
+			gameInterface.println("- There are " + context.getGoals().size() + " goals to achive");
+        
+        
         for (int i=0; i < context.getGoals().size(); i++) {
-            gameInterface.println("  * " + (i+1)+ ": "+ context.getGoals().get(i).describe() + ", status: " + context.getGoals().get(i).getStatus());
+            gameInterface.println((i+1)+ " "+ context.getGoals().get(i).describe() + " - status: " + context.getGoals().get(i).getStatus());
         }
         gameInterface.println("\n");
         gameInterface.println("- Current room:  " + player.currentRoom() + "\n");

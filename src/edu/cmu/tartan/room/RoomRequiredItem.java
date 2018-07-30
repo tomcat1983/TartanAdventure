@@ -54,6 +54,14 @@ public class RoomRequiredItem extends Room {
 		this(d, dd, w, ws, null);
 	}
 	
+	public void setWarningDescription(String w) {
+		this.warningDescription = w;
+	}
+	
+	public void setShortWarningDescription(String ws) {
+		this.warningShortDescription = ws;
+	}
+	
 	public void setRequiredItem(Item requiredItem) {
 		this.requiredItem = requiredItem;
 	}

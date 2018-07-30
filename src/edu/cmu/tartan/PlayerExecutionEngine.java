@@ -7,6 +7,8 @@ import org.eclipse.jdt.annotation.NonNull;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.item.ItemCPU;
+import edu.cmu.tartan.item.ItemComputer;
 import edu.cmu.tartan.item.ItemMagicBox;
 import edu.cmu.tartan.properties.Chuckable;
 import edu.cmu.tartan.properties.Destroyable;
@@ -250,8 +252,7 @@ public class PlayerExecutionEngine {
     private boolean actionDig(@NonNull Item item) {
     	if (player.currentRoom() instanceof RoomExcavatable && ("Shovel".equals(item.description()) || "shovel".equals(item.description()))) {
             RoomExcavatable curr = (RoomExcavatable) player.currentRoom();
-            curr.dig();
-            return true;
+            return curr.dig();
         } else {
             gameInterface.println("You are not allowed to dig here");
             return false;
@@ -266,6 +267,9 @@ public class PlayerExecutionEngine {
                 e.eat();
                 player.score(item.value());
                 // Once we eat it, then it's gone
+                if(player.hasItem(item)) {	// bug fixed
+                	player.drop(item);
+                }
                 player.currentRoom().remove(item);
                 return true;
             }
@@ -279,6 +283,8 @@ public class PlayerExecutionEngine {
                 }
                 return false;
             }
+        } else {
+        	gameInterface.println("I don't see that here.");
         }
         return false;
     }
@@ -394,6 +400,10 @@ public class PlayerExecutionEngine {
             gameInterface.println("Done.");
             player.drop(itemToPut);
             player.putItemInItem(itemToPut, itemToBePutInto);
+            if(itemToPut instanceof ItemCPU && itemToBePutInto instanceof ItemComputer) {
+            	gameInterface.println("Computer isn't working. Need more item. To be continued...");
+            	player.score(itemToPut.value() + itemToBePutInto.value());
+            }
             return true;
         }
     }

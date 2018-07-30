@@ -108,13 +108,14 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
         itemMap.put(StringForItems.DOCUMENT, new ItemDocument(StringForItems.DOCUMENT, StringForItems.SECRET_DOCUMENT, new String[]{StringForItems.DOCUMENT}));
         itemMap.put(StringForItems.FAN, new ItemLock(StringForItems.FAN, StringForItems.VENTILATION_FAN, new String[]{StringForItems.FAN}));
         itemMap.put(StringForItems.COMPUTER, new ItemComputer(StringForItems.COMPUTER, StringForItems.APPLE_COMPUTER, new String[]{StringForItems.APPLE, StringForItems.COMPUTER, StringForItems.KEYBOARD, StringForItems.IMAC}));
+        itemMap.put(StringForItems.CPU, new ItemCPU(StringForItems.CPU, StringForItems.APPLE_COMPUTER_CPU, new String[]{StringForItems.APPLE_CPU, StringForItems.CPU}));
         itemMap.put(StringForItems.COFFEE, new ItemCoffee(StringForItems.COFFEE, StringForItems.COFFEE_STAMING, new String[]{StringForItems.COFFEE, StringForItems.BEVERAGE, StringForItems.MUG}));
         itemMap.put(StringForItems.LIGHT, new ItemDeskLight(StringForItems.LIGHT, StringForItems.DESK_LIGHT, new String[]{StringForItems.LIGHT}));
         itemMap.put(StringForItems.DYNAMITE, new ItemDynamite(StringForItems.DYNAMITE, StringForItems.BUNDLE_OF_DYNAMITE, new String[]{StringForItems.DYNAMITE, StringForItems.EXPLOSIVE, StringForItems.EXPLOSIVES}));
         itemMap.put(StringForItems.BUTTON, new ItemButton(StringForItems.BUTTON, StringForItems.ELEVATOR_BUTTON, new String[]{StringForItems.BUTTON_SMALL}));
         for(int i=1; i<5; i++) {
-        	StringBuilder s  = new StringBuilder("Floor ").append(i).append(" Button"); 
-        	StringBuilder sd =  new StringBuilder("Elevator Floor ").append(i).append(" Button");
+        	StringBuilder s  = new StringBuilder("Floor_").append(i).append(" Button"); 
+        	StringBuilder sd =  new StringBuilder("Elevator_Floor_").append(i).append(" Button");
         	itemMap.put(s.toString(), new ItemButton(s.toString(), sd.toString(), new String[]{Integer.toString(i)}));
         }
         itemMap.put(StringForItems.UNKNOWN, new ItemUnknown(StringForItems.UNKNOWN, StringForItems.UNKNOWN, new String[]{StringForItems.UNKNOWN}));

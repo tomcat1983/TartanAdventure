@@ -2,6 +2,7 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Edible;
 import edu.cmu.tartan.properties.Holdable;
+import edu.cmu.tartan.properties.Installable;
 import edu.cmu.tartan.properties.Meltable;
 
 /**
@@ -12,7 +13,7 @@ import edu.cmu.tartan.properties.Meltable;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class ItemFood extends Item implements Edible, Holdable, Meltable {
+public class ItemFood extends Item implements Edible, Holdable, Meltable, Installable {
 	private Item hiddenItem = null;
 
     /**
@@ -83,6 +84,4 @@ public class ItemFood extends Item implements Edible, Holdable, Meltable {
 		}
 		return true;
 	}
-
-
 }

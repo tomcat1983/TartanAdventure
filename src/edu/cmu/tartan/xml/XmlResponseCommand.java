@@ -6,6 +6,7 @@ import org.w3c.dom.NodeList;
 public class XmlResponseCommand extends XmlResponse {
 
 	private String commandStr;
+	private String id;
 
 	public XmlResponseCommand() {
 		msgType = XmlMessageType.SEND_COMMAND;
@@ -16,6 +17,9 @@ public class XmlResponseCommand extends XmlResponse {
 		return commandStr; 
 	}
 	
+	public String getId() {
+		return id; 
+	}
 
 	@Override
 	public XmlParseResult doYourJob(Document doc) {
@@ -30,9 +34,11 @@ public class XmlResponseCommand extends XmlResponse {
 		NodeList nList;
 		XmlParseResult result = XmlParseResult.SUCCESS; 
 		
+		//	<command user_id="takakak" text="go south" />
 		nList = getNodeListOfGivenTag("command", doc);
-		commandStr = getAttributeValueAtNthTag("text", nList, 0);	//id should be unique. 
-		
+		commandStr = getAttributeValueAtNthTag("text", nList, 0);	//text should be unique. 
+		id = getAttributeValueAtNthTag("user_id", nList, 0);		//id should be unique. 
+
 		if(commandStr == null) {
 			return XmlParseResult.INVALID_DATA;
 		}

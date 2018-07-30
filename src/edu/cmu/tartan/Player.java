@@ -370,7 +370,7 @@ public class Player implements Comparable, Serializable {
      */
     public void terminate() throws TerminateGameException {
         gameInterface.println("You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
-        throw new TerminateGameException("Teminate Game");
+        throw new TerminateGameException("Terminate Game");
     }
 
     /**

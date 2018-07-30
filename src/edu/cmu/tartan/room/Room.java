@@ -73,6 +73,10 @@ public class Room implements Comparable, Serializable {
     public Room() {
         this(DEFAULT_DESC, DEFAULT_SHORT_DESC);
     }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     /**
      * Create a room with default descriptions
