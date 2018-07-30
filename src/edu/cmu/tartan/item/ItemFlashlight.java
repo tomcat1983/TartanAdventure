@@ -20,9 +20,9 @@ public class ItemFlashlight extends Item implements Holdable, Installable, Lumin
      * @param sd long description
      * @param a aliases
      */
-    public ItemFlashlight(String s, String sd, String[] a) {
+    public ItemFlashlight(String s, String sd, String[] a, String userId) {
 
-        super(s, sd, a);
+        super(s, sd, a, userId);
         setValue(5);
     }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.item.Item;
@@ -57,7 +58,7 @@ public class PlayerExecutionEngine {
         Item container = null;
         if(player.currentRoom().hasItem(item)) {
             if(item instanceof Holdable) {
-				gameInterface.println(GamePlayMessage.TAKEN);
+				gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.TAKEN);
 
                 player.currentRoom().remove(item);
                 player.pickup(item);
@@ -65,12 +66,12 @@ public class PlayerExecutionEngine {
                 return true;
             }
             else {
-                gameInterface.println("You cannot pick up this item.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You cannot pick up this item.");
                 return false;
             }
         }
         else if((container = containerForItem(item)) != null) {
-        	gameInterface.println(GamePlayMessage.TAKEN);
+        	gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.TAKEN);
             ((Hostable)container).uninstall(item);
             player.pickup(item);
             Holdable h = (Holdable) item;
@@ -78,11 +79,11 @@ public class PlayerExecutionEngine {
             return true;
         }
         else if(player.hasItem(item)) {
-            gameInterface.println("You already have that item in your inventory.");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You already have that item in your inventory.");
             return false;
         }
         else {
-			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
 			return false;
         }    	
     }
@@ -108,12 +109,12 @@ public class PlayerExecutionEngine {
                 return true;
             }
             else {
-                gameInterface.println("You cannot break this item.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You cannot break this item.");
                 return false;
             }
         }
         else {
-			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
 			return false;
         }
     }
@@ -126,12 +127,12 @@ public class PlayerExecutionEngine {
             }
             else {
             	// unreachabl, every item have a Inspectable.
-                gameInterface.println("You cannot inspect this item.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You cannot inspect this item.");
                 return false;
             }
         }
         else {
-			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
 			return false;
         }
     }
@@ -140,20 +141,20 @@ public class PlayerExecutionEngine {
     	boolean result = true;
     	if(player.hasItem(item)) {
             if(item instanceof Holdable) {
-                gameInterface.println("Dropped.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "Dropped.");
                 player.drop(item);
-                gameInterface.println("You Dropped '" +item.description() + "' costing you "
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You Dropped '" +item.description() + "' costing you "
                         + item.value() + " points.");
                 player.currentRoom().putItem(item);
                 result = true;
             }
             else {
-                gameInterface.println("You cannot drop this item.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You cannot drop this item.");
                 result = false;
             }
         }
         else {
-            gameInterface.println("You don't have that item to drop.");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You don't have that item to drop.");
             result = false;
         }
         if(player.currentRoom() instanceof RoomRequiredItem) {
@@ -167,19 +168,19 @@ public class PlayerExecutionEngine {
     private boolean actionThrow(@NonNull Item item) {
         if(player.hasItem(item)) {
             if(item instanceof Chuckable) {
-                gameInterface.println("Thrown.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "Thrown.");
                 ((Chuckable)item).chuck();
                 player.drop(item);
                 player.currentRoom().putItem(item);
                 return true;
             }
             else {
-                gameInterface.println("You cannot throw this item.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You cannot throw this item.");
                 return false;
             }
         }
         else {
-            gameInterface.println("You don't have that item to throw.");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You don't have that item to throw.");
             return false;
         }    	
     }
@@ -194,12 +195,12 @@ public class PlayerExecutionEngine {
                 return true;
             }
             else {
-                gameInterface.println("I don't know how to do that.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "I don't know how to do that.");
                 return false;
             }
         }
         else {
-			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
 			return false;
         }
     }
@@ -207,17 +208,17 @@ public class PlayerExecutionEngine {
     private boolean actionEnable(@NonNull Item item) {
         if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
             if(item instanceof Startable) {
-                gameInterface.println("Done.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "Done.");
                 ((Startable)item).start();
                 return true;
             }
             else {
-                gameInterface.println("I don't know how to do that.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "I don't know how to do that.");
                 return false;
             }
         }
         else {
-			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
 			return false;
         }	
     }
@@ -239,12 +240,12 @@ public class PlayerExecutionEngine {
                 return true;
             }
             else {
-                gameInterface.println("Nothing happens.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "Nothing happens.");
                 return false;
             }
         }
         else {
-			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
 			return false;
         }    	
     }
@@ -254,7 +255,7 @@ public class PlayerExecutionEngine {
             RoomExcavatable curr = (RoomExcavatable) player.currentRoom();
             return curr.dig();
         } else {
-            gameInterface.println("You are not allowed to dig here");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You are not allowed to dig here");
             return false;
         }
     }
@@ -275,16 +276,16 @@ public class PlayerExecutionEngine {
             }
             else {
                 if(item instanceof Holdable) {
-                    gameInterface.println("As you  shove the " + item + " down your throat, you begin to choke.");
+                    gameInterface.println(player.getUserName(), MessageType.PRIVATE, "As you  shove the " + item + " down your throat, you begin to choke.");
                     player.terminate();
                 }
                 else {
-                    gameInterface.println("That cannot be consumed.");
+                    gameInterface.println(player.getUserName(), MessageType.PRIVATE, "That cannot be consumed.");
                 }
                 return false;
             }
         } else {
-        	gameInterface.println("I don't see that here.");
+        	gameInterface.println(player.getUserName(), MessageType.PRIVATE, "I don't see that here.");
         }
         return false;
     }
@@ -301,12 +302,12 @@ public class PlayerExecutionEngine {
                 return true;
             }
             else {
-                gameInterface.println("You cannot open ");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You cannot open ");
                 return false;
             }
         }
         else {
-			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
 			return false;
         }    	
     }
@@ -321,17 +322,17 @@ public class PlayerExecutionEngine {
                     return true;
                 }
                 else {
-                    gameInterface.println("There isn't anything to blow up here.");
+                    gameInterface.println(player.getUserName(), MessageType.PRIVATE, "There isn't anything to blow up here.");
                     return false;
                 }
             }
             else {
-                gameInterface.println("That item is not an explosive.");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "That item is not an explosive.");
                 return false;
             }
         }
         else {
-            gameInterface.println("You do not have that item in your inventory.");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You do not have that item in your inventory.");
             return false;
         }    	
     }
@@ -339,7 +340,7 @@ public class PlayerExecutionEngine {
     private boolean hasDirectObject(@NonNull Action action, @NonNull ActionExecutionUnit actionExecutionUnit) throws TerminateGameException {
     	Item item = actionExecutionUnit.directObject();
         if(item==null) {
-        	gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+        	gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
         	return false;
         }
     	
@@ -369,7 +370,7 @@ public class PlayerExecutionEngine {
             case ACTION_EXPLODE: 
             	return actionExplode(item);
             default :
-            	gameInterface.println("I don't know about " + action);
+            	gameInterface.println(player.getUserName(), MessageType.PRIVATE, "I don't know about " + action);
             	return false;
         }
     }
@@ -377,27 +378,27 @@ public class PlayerExecutionEngine {
     private boolean actionPut(@NonNull Item itemToPut, Item itemToBePutInto) {
     	
         if(!player.hasItem(itemToPut)) {
-            gameInterface.println("You don't have that object in your inventory.");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You don't have that object in your inventory.");
             return false;
         }
         else if(itemToBePutInto == null) {
-            gameInterface.println("You must supply an indirect object.");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You must supply an indirect object.");
             return false;
         }
         else if(!player.currentRoom().hasItem(itemToBePutInto)) {
-            gameInterface.println("That object doesn't exist in this room.");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "That object doesn't exist in this room.");
             return false;
         }
         else if(itemToBePutInto instanceof ItemMagicBox && !(itemToPut instanceof Valuable)) {
-            gameInterface.println("This item has no value--putting it in this " + itemToBePutInto + " will not score you any points.");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "This item has no value--putting it in this " + itemToBePutInto + " will not score you any points.");
             return false;
         }
         else if(!(itemToBePutInto instanceof Hostable) || !(itemToPut instanceof Installable)) {
-            gameInterface.println("You cannot put a " + itemToPut + " into this " + itemToBePutInto);
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You cannot put a " + itemToPut + " into this " + itemToBePutInto);
             return false;
         }
         else {
-	        gameInterface.println("Try to put...");
+	        gameInterface.println(player.getUserName(), MessageType.PRIVATE, "Try to put...");
 	        player.drop(itemToPut);
 	        if(player.putItemInItem(itemToPut, itemToBePutInto)) {
 		        if(itemToPut instanceof ItemCPU && itemToBePutInto instanceof ItemComputer) {
@@ -407,29 +408,29 @@ public class PlayerExecutionEngine {
 	        } else {
 	        	player.grabItem(itemToPut);
 	        }
-        	gameInterface.println("You cann't put the " + itemToPut);
+        	gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You cann't put the " + itemToPut);
         	return false;
         }
     }
     
     private boolean actionTake(@NonNull Item contents,@NonNull Item container) {
     	if(!player.currentRoom().hasItem(container)) {
-			gameInterface.println(GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
+			gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
 			return false;
         }
         else if(!(container instanceof Hostable)) {
-            gameInterface.println("You can't have an item inside that.");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You can't have an item inside that.");
             return false;
         }
         else {
             if(((Hostable)container).installedItem() == contents) {
                 ((Hostable)container).uninstall(contents);
                 player.pickup(contents);
-				gameInterface.println(GamePlayMessage.TAKEN);
+				gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.TAKEN);
 				return true;
             }
             else {
-                gameInterface.println("That item is not inside this " + container);
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "That item is not inside this " + container);
                 return false;
             }
         }
@@ -445,7 +446,7 @@ public class PlayerExecutionEngine {
         	case ACTION_TAKE:
         		return actionTake(directItem, indirectItem);
         	default :
-        		 gameInterface.println("There is not indirect object action");
+        		 gameInterface.println(player.getUserName(), MessageType.PRIVATE, "There is not indirect object action");
         		 return false;
         }
     }
@@ -461,11 +462,11 @@ public class PlayerExecutionEngine {
 	        case ACTION_VIEW_ITEMS:
 	            List<Item> items = player.getCollectedItems();
 	            if (items.isEmpty()) {
-	                gameInterface.println("You don't have any items.");
+	                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You don't have any items.");
 	            }
 	            else {
 	                for(Item item : player.getCollectedItems()) {
-	                    gameInterface.println("You have a " + item.description() + ".");
+	                    gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You have a " + item.description() + ".");
 	                }
 	            }
 	            return true;
@@ -474,7 +475,7 @@ public class PlayerExecutionEngine {
 	            return true;
 	        default:
 	        	// unreachable
-	        	gameInterface.println("There is not no object action");
+	        	gameInterface.println(player.getUserName(), MessageType.PRIVATE, "There is not no object action");
 	        	return false;
     	}
     }
@@ -484,14 +485,14 @@ public class PlayerExecutionEngine {
 	        case ACTION_PASS: 
 	            // intentionally blank
 	            break;	        
-	        case ACTION_ERROR: 
-	            gameInterface.println("I don't understand that.");
+	        case ACTION_ERROR:
+	            gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_UNDERSTAND);
 	            break;
-	        case ACTION_UNKNOWN: 
-	            gameInterface.println("I don't understand that.");
+	        case ACTION_UNKNOWN:
+	            gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_UNDERSTAND);
 	            break;
 	        default:
-	        	gameInterface.println("It's unknown action");
+	        	gameInterface.println(player.getUserName(), MessageType.PRIVATE, "It's unknown action");
 	        	return false;
         }
         return true;
@@ -524,7 +525,7 @@ public class PlayerExecutionEngine {
             	return unknownObject(action);
             default:
             	// unreachable
-                gameInterface.println("I don't understand that");
+                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "I don't understand that");
                 return false;
         }
     }

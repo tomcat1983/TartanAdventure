@@ -11,8 +11,8 @@ public class ItemCPU extends Item implements Holdable, Installable  {
      * @param sd long description
      * @param a aliases
      */
-	public ItemCPU(String s, String sd, String[] a) {
-        super(s, sd, a);
+	public ItemCPU(String s, String sd, String[] a, String userId) {
+        super(s, sd, a, userId);
         setValue(100);
     }
 }

@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Shakeable;
 
 /**
@@ -18,8 +19,8 @@ public class ItemVendingMachine extends Item implements Shakeable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemVendingMachine(String d, String sd, String[] a) {
-        super(d, sd, a);
+    public ItemVendingMachine(String d, String sd, String[] a, String userId) {
+        super(d, sd, a, userId);
         this.count = 0;
         setValue(15);
     }
@@ -35,13 +36,13 @@ public class ItemVendingMachine extends Item implements Shakeable {
     public void shake() {
         switch (this.count) {
             case 0:
-                gameInterface.println("You shake the vending machine, and your favorite treat inches its way off the tray.");
+                gameInterface.println(userId, MessageType.PRIVATE, "You shake the vending machine, and your favorite treat inches its way off the tray.");
                 break;
             case 1:
-            	gameInterface.println("The treat begins to bend toward the will of gravity.");
+            	gameInterface.println(userId, MessageType.PRIVATE, "The treat begins to bend toward the will of gravity.");
                 break;
             case 2:
-            	gameInterface.println("Just as the candy falls, the machine also falls over and crushes you.");
+            	gameInterface.println(userId, MessageType.PRIVATE, "Just as the candy falls, the machine also falls over and crushes you.");
                 break;
             default:
                 break;

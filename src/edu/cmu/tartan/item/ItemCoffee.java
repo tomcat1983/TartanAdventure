@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Edible;
 
 /**
@@ -18,14 +19,14 @@ public class ItemCoffee extends Item implements Edible {
      * @param sd long description
      * @param a aliases
      */
-    public ItemCoffee(String s, String sd, String[] a) {
-        super(s, sd, a);
+    public ItemCoffee(String s, String sd, String[] a, String userId) {
+        super(s, sd, a, userId);
         setValue(1);
     }
 
     @Override
     public void eat() {
-        gameInterface.println("You grimace at the taste of black coffee, and put down the mug.");
+        gameInterface.println(userId, MessageType.PRIVATE, "You grimace at the taste of black coffee, and put down the mug.");
     }
 
 }

@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Edible;
 import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Installable;
@@ -22,9 +23,9 @@ public class ItemFood extends Item implements Edible, Holdable, Meltable, Instal
      * @param sd long description
      * @param a aliases
      */
-    public ItemFood(String s, String sd, String[] a) {
+    public ItemFood(String s, String sd, String[] a, String userId) {
 
-        super(s, sd, a);
+        super(s, sd, a, userId);
         setValue(3);
     }
 
@@ -33,7 +34,7 @@ public class ItemFood extends Item implements Edible, Holdable, Meltable, Instal
      */
     @Override
     public void eat() {
-    	gameInterface.println("Yummy");
+    	gameInterface.println(userId, MessageType.PRIVATE, "Yummy");
     }
 
     /**

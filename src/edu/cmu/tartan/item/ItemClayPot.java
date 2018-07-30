@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Destroyable;
 import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Hostable;
@@ -24,8 +25,8 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
      * @param sd long description
      * @param a aliases
      */
-    public ItemClayPot(String s, String sd, String[] a) {
-        super(s, sd, a);
+    public ItemClayPot(String s, String sd, String[] a, String userId) {
+        super(s, sd, a, userId);
         this.installedItem = null;
         setValue(3);
     }
@@ -44,7 +45,7 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
      */
     @Override
     public void destroy() {
-        gameInterface.println(destroyMessage);
+        gameInterface.println(userId, MessageType.PRIVATE, destroyMessage);
     }
 
     /**

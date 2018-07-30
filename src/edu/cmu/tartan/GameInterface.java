@@ -67,7 +67,7 @@ public class GameInterface {
 	}
 
 	public enum MessageType {
-		PRIVATE, PUBLIC, WIN
+		PRIVATE, PUBLIC, WIN, LOSE
 	}
 
 	// For game message

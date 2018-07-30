@@ -1,5 +1,6 @@
 package edu.cmu.tartan.room;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.action.Action;
 
 import java.util.ArrayList;
@@ -66,23 +67,23 @@ public class RoomElevator extends Room {
      */
 	public void call(int index) {
 		if(this.restrictedFloors.contains(index)) {
-			gameInterface.println("You push the button, but nothing happens. Perhaps this floor is off-limits.");
+			gameInterface.println(getPlayer().getUserName(), MessageType.PRIVATE, "You push the button, but nothing happens. Perhaps this floor is off-limits.");
 			return;
 		}
 		else if(index == currentFloor) {
-			gameInterface.println("The elevator is already on this floor -- the doors are open.");
+			gameInterface.println(getPlayer().getUserName(), MessageType.PRIVATE, "The elevator is already on this floor -- the doors are open.");
 			return;
 		}
 		for(int i=0; i < 3; i++) {
-			gameInterface.println("...");
+			gameInterface.println(getPlayer().getUserName(), MessageType.PRIVATE, "...");
 			try {
 				Thread.sleep(EV_MOVE_TIME);
 			} catch(Exception e1) {
 				gameLogger.severe("Exception: " + e1.getMessage());
 			}
 		}
-		gameInterface.println("Ding");
-		gameInterface.println("The doors open");
+		gameInterface.println(getPlayer().getUserName(), MessageType.PRIVATE, "Ding");
+		gameInterface.println(getPlayer().getUserName(), MessageType.PRIVATE, "The doors open");
 		setFloor(index);
 	}
 
