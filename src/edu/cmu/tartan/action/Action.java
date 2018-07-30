@@ -19,6 +19,7 @@ public enum Action {
     ACTION_DIE(new String[]{"terminate"}, Type.TYPE_HASNOOBJECT),
 
     // Directional actions; for movement
+    ACTION_GO(new String[]{"go","travel","move"}, Type.TYPE_DIRECTIONAL),
     ACTION_GO_EAST(new String[]{"east", "e"}, Type.TYPE_DIRECTIONAL),
     ACTION_GO_WEST(new String[]{"west", "w"}, Type.TYPE_DIRECTIONAL),
     ACTION_GO_SOUTH(new String[]{"south", "s"}, Type.TYPE_DIRECTIONAL),
@@ -57,7 +58,7 @@ public enum Action {
 
     /**
      * Create an new action
-     * @param aliases THe set of alias fo rthe action
+     * @param aliases THe set of alias for the action
      * @param type the type of action
      */
     Action(String[] aliases, Type type) {

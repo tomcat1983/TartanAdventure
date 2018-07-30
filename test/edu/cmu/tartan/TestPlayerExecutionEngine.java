@@ -651,6 +651,8 @@ class TestPlayerExecutionEngine {
 		ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
 		RoomRequiredItem room2 = new RoomRequiredItem("You are in the room that required food", "Required",
 	            "pit", "Warning you need key", mbox);
+		room2.setSafeDirection(Action.ACTION_GO_EAST);
+		room2.setLoseMessage("You Lose");
 		player = new Player(room2, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);	
 		player.grabItem(mbox);

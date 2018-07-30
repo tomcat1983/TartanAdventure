@@ -402,7 +402,7 @@ public class PlayerExecutionEngine {
 	        } else {
 	        	player.grabItem(itemToPut);
 	        }
-        	gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You cann't put the " + itemToPut);
+        	gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You cann't put the " + itemToPut + ".");
         	return false;
         }
     }

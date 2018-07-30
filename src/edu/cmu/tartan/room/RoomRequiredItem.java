@@ -25,11 +25,6 @@ public class RoomRequiredItem extends Room {
 	String warningDescription;
 	String warningShortDescription;
 
-
-	public RoomRequiredItem(String d, String dd, Item requiredItem) {
-		this(d, dd, null, null, requiredItem);
-	}
-
     /**
      * Create a new room the requires an item
      * @param d
@@ -105,8 +100,8 @@ public class RoomRequiredItem extends Room {
 		return this.requiredItem;
 	}
 
-	public void setSafeDirection(Action direction) {
-		this.safeDirections.add(direction);
+	public boolean setSafeDirection(Action direction) {
+		return safeDirections.add(direction);
 	}
 
 	@Override
