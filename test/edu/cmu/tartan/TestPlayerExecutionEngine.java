@@ -338,14 +338,14 @@ class TestPlayerExecutionEngine {
 		// Dig
     	Action action = interpreter.interpretString("dig shovel", actionExecutionUnit);
     	try {
-			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
-	    	
+			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));	    	
 	    	RoomExcavatable romm2 = new RoomExcavatable("Shovel","digdig","^~~~^");
 	    	player = new Player(romm2, Player.DEFAULT_USER_NAME);
 	    	player.grabItem(shovel);
 	    	playerExecutionEngine = new PlayerExecutionEngine(player);
 	    	action = interpreter.interpretString("dig shovel", actionExecutionUnit);
-	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));	
+	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
 		}

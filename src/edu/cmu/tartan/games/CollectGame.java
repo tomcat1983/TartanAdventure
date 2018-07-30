@@ -50,6 +50,7 @@ public class CollectGame extends GameConfiguration {
         startItems.add(Item.getInstance("gold", context.getUserId()));
         // destroy item
         startItems.add(Item.getInstance("pot", context.getUserId()));
+        startItems.add(Item.getInstance("food", context.getUserId()));
         startItems.add(Item.getInstance("microwave", context.getUserId()));
         startItems.add(Item.getInstance(StringForItems.CPU, context.getUserId()));
         startItems.add(Item.getInstance(StringForItems.COMPUTER, context.getUserId()));
