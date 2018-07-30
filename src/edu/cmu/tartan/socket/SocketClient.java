@@ -18,7 +18,12 @@ import edu.cmu.tartan.manager.ResponseMessage;
 import edu.cmu.tartan.manager.SocketMessage;
 import edu.cmu.tartan.xml.XmlParser;
 import edu.cmu.tartan.xml.XmlParserType;
+import edu.cmu.tartan.xml.XmlResponseAddUser;
 import edu.cmu.tartan.xml.XmlResponseClient;
+import edu.cmu.tartan.xml.XmlResponseCommand;
+import edu.cmu.tartan.xml.XmlResponseGameEnd;
+import edu.cmu.tartan.xml.XmlResponseGameStart;
+import edu.cmu.tartan.xml.XmlResponseLogin;
 import edu.cmu.tartan.xml.XmlResultString;
 
 public class SocketClient implements Runnable {
@@ -70,19 +75,20 @@ public class SocketClient implements Runnable {
 						|| message.equals("quit")) break;
 				
 				receiveMessage(message);
- 
             }
  
             stopSocket();
  
         } catch (UnknownHostException e) {
  
-        	gameLogger.severe("Server not found: " + e.getMessage());
+        	gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"Server not found : " + e.getMessage()));
         	return false;
  
         } catch (IOException e) {
  
-        	gameLogger.severe("IOException : " + e.getMessage());
+        	gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"IOException : " + e.getMessage()));
         	return false;
         }
 
@@ -107,8 +113,8 @@ public class SocketClient implements Runnable {
 	public boolean receiveMessage(String message) {
 		XmlParser xmlParser;
 		String messageType = null;
-		String eventMessage = null;
 		XmlResponseClient xr = null;
+		
 		try {
 			xmlParser = new XmlParser(XmlParserType.CLIENT);
 			xmlParser.parseXmlFromString(message);
@@ -116,22 +122,52 @@ public class SocketClient implements Runnable {
 			xr = (XmlResponseClient) xmlParser.getXmlResponse();
 			
 		} catch (ParserConfigurationException e) {
-			gameLogger.severe("ParserConfigurationException");
+			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"ParserConfigurationException : " + e.getMessage()));
 			return false;
 		}
 		
-		eventMessage = xr.getEventMsg();
+		gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+				"Received message type : " + messageType));
 		
-		
-		if ("EVENT_MESSAGE".equals(messageType)) {
-			
-			queue.produce(new SocketMessage(Thread.currentThread().getName(), eventMessage));
-			return true;
+		switch(messageType) {
+			case("REQ_LOGIN"):
+				sendByResponseMessage(xr.getResultStr(), null);
+				break;
+			case("ADD_USER"):
+				sendByResponseMessage(xr.getResultStr(), null);
+				break;
+			case("REQ_GAME_START"):
+				sendByResponseMessage(xr.getResultStr(), null);
+				break;
+			case("REQ_GAME_END"):
+				break;
+			case("UPLOAD_MAP_DESIGN"):
+				sendByResponseMessage(xr.getResultStr(), null);
+				break;
+			case("EVENT_MESSAGE"):
+				sendByQueue(xr.getEventMsg());
+				break;
+			default:
+				break;
 		}
 		
-		String returnValue = "false";
-		if(XmlResultString.OK == xr.getResultStr()) {
-			returnValue = "true";
+		
+		return true;
+	}
+	
+	public boolean sendByQueue(String message) {
+		boolean returnValue = false;
+		returnValue = queue.produce(new SocketMessage(Thread.currentThread().getName(), message));
+		return returnValue;
+	}
+	
+	public boolean sendByResponseMessage(XmlResultString result, String message) {
+		
+		String returnValue = "FAIL";
+		
+		if(XmlResultString.OK == result) {
+			returnValue = "SUCCESS";
 		}
 		
 		try {
@@ -140,14 +176,19 @@ public class SocketClient implements Runnable {
 				responseMessage.notify();
 			}
 		} catch (IllegalMonitorStateException e) {
-			gameLogger.severe("IllegalMonitorStateException : " + e.getMessage());
+			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"IllegalMonitorStateException : " + e.getMessage()));
 			return false;
 		}
 		return true;
 	}
 	
 	public boolean sendMessage(String message) {
-		if (!socket.isConnected()) return false;
+		if (socket == null || !socket.isConnected()) {
+			gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"Socket is not connected to the server yet."));
+			return false;
+		}
 		try {
 			OutputStream output = socket.getOutputStream();
 			PrintWriter writer = new PrintWriter(output, true);
@@ -155,19 +196,25 @@ public class SocketClient implements Runnable {
 			writer.println(message);
 			return true;
 		} catch (IOException e) {
-			gameLogger.severe("Server IOException: " + e.getMessage());
+			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"IOException : " + e.getMessage()));
 		}
 		return false;
 	}
 	
 	public boolean stopSocket() {
+		
+		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+				"Close a socket"));
+		
 		boolean returnValue = false;
 		isLoop = false;
 		
 		try {
 			socket.close();
 		} catch (IOException e) {
-			gameLogger.severe("Server IOException: " + e.getMessage());
+			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"IOException : " + e.getMessage()));
 		}
 		return returnValue;
 	}

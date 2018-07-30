@@ -26,7 +26,6 @@ public class SocketServer implements Runnable, ISocketHandler {
 
 	private int serverPort = 10015;
 	private int socketCounter = 0;
-	private int maxSocket = MAX_USER_CONNECTION;
 
 	private boolean isLoop = true;
 	private boolean isPlaying = false;
@@ -62,7 +61,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 			while (isLoop) {
 				Socket socket = serverSocket.accept();
 
-				if (socketCounter > maxSocket || isPlaying) {
+				if (socketCounter > MAX_USER_CONNECTION || isPlaying) {
 					sendMessage(socket, "I’m sorry. The game server is busy. Please retry to connect later.");
 					socket.close();
 				}
@@ -86,12 +85,16 @@ public class SocketServer implements Runnable, ISocketHandler {
 			}
 
 		} catch (IOException e) {
-			gameLogger.info("Server IOException: " + e.getMessage());
+			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"IOException : " + e.getMessage()));
 		}
 	}
 
 	@Override
 	public boolean stopSocket() {
+		
+		gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+				"Close a server socket"));
 
 		boolean returnValue = false;
 		isLoop = false;
@@ -101,7 +104,8 @@ public class SocketServer implements Runnable, ISocketHandler {
 				serverSocket.close();
 			returnValue = true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException: " + e.getMessage());
+			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"IOException : " + e.getMessage()));
 		}
 		socketCounter = 0;
 
@@ -117,7 +121,8 @@ public class SocketServer implements Runnable, ISocketHandler {
 
 			return true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException: " + e.getMessage());
+			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"IOException : " + e.getMessage()));
 		}
 		return false;
 	}
@@ -187,7 +192,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 			case REGISTER_FAIL:
 				break;
 			case START_GAME_SUCCESS:
-				startGame(true, userId);
+				setIsPlaying(true);
 				break;
 			case END_GAME_SUCCESS:
 				endGame(true, userId, threadName);
@@ -207,11 +212,11 @@ public class SocketServer implements Runnable, ISocketHandler {
 		if (isSuccess) {
 			returnValue = addClient(userId, threadName);
 		}
+		
+		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+				"Added a client to a map : " + returnValue));
+		
 		return returnValue;
-	}
-
-	public void startGame(boolean isSuccess, String userId) {
-		isPlaying = true;
 	}
 
 	public boolean endGame(boolean isSuccess, String userId, String threadName) {
@@ -224,6 +229,8 @@ public class SocketServer implements Runnable, ISocketHandler {
 				returnValue = removeClientFromList(threadName);
 			}
 		}
+		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+				"Removed a client to a map : " + returnValue));
 
 		return returnValue;
 	}
