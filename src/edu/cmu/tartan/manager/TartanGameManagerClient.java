@@ -2,6 +2,7 @@ package edu.cmu.tartan.manager;
 
 import java.util.logging.Logger;
 
+import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.account.AccountManager;
 import edu.cmu.tartan.account.ReturnType;
 import edu.cmu.tartan.socket.SocketClient;
@@ -207,7 +208,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
             message = socketMessage.getMessage();
             
             if (message != null && !message.isEmpty()) {
-            	//TODO Send to CLI
+            	// TDODO : using a gameInerface
             	
             }
         }
