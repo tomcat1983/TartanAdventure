@@ -1,12 +1,17 @@
 package edu.cmu.tartan.client;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.LocalGame;
 import edu.cmu.tartan.Player;
+import edu.cmu.tartan.manager.IQueueHandler;
+import edu.cmu.tartan.manager.MessageQueue;
+import edu.cmu.tartan.manager.ResponseMessage;
+import edu.cmu.tartan.manager.TartanGameManagerClient;
 import edu.cmu.tartan.socket.SocketClient;
-import network.NetworkInterface;
+import edu.cmu.tartan.xml.XmlLoginRole;
 
 public class Client {
 
@@ -26,14 +31,9 @@ public class Client {
 	private ClientInterface clientInterface;
 
 	/**
-	 * Socket to server
+	 * Client game manager
 	 */
-	SocketClient socket;
-
-	/**
-	 * Socket thread
-	 */
-	Thread socketClientThread;
+	TartanGameManagerClient gameManager;
 
 	/**
 	 * User ID
@@ -113,36 +113,35 @@ public class Client {
 	}
 
 	private boolean connectServer(int timeout) {
-		socket = new SocketClient(null, null);
-		socketClientThread = new Thread(socket);
-		socketClientThread.start();
+		IQueueHandler messageQueue = new MessageQueue();
+		ResponseMessage responseMessage = new ResponseMessage("");
 
-		return socket.waitToConnection(timeout);
-	}
+		SocketClient socketClient = new SocketClient(responseMessage, messageQueue);
+		Thread socketClienThread = new Thread(socketClient);
+		socketClienThread.start();
 
-	private boolean disconnectServer() {
-		return socket.stopSocket();
-	}
+		gameManager = new TartanGameManagerClient(socketClient, responseMessage, messageQueue);
+		Thread gameManagerThread = new Thread(gameManager);
+		gameManagerThread.start();
 
-	private boolean sendMessage(String message) {
-		return socket.sendMessage(message);
+		return true;
 	}
 
 	private boolean login(boolean isDesigner) {
-		String id;
+		String id = null;
 
 		do {
 			String[] loginInfo = clientInterface.getLoginInfo();
-			NetworkInterface.PacketType packetType = NetworkInterface.PacketType.LOGIN;
-			if (isDesigner)
-				packetType = NetworkInterface.PacketType.DESIGNER;
-
 			id = loginInfo[0];
-			String[] data = { loginInfo[1] };
-			String loginPacket = NetworkInterface.makePacket(packetType, id, data);
 
-			sendMessage(loginPacket);
-		} while (false); //TODO: need listener;
+			XmlLoginRole role = XmlLoginRole.PLAYER;
+			if (isDesigner)
+				role = XmlLoginRole.PLAYER;
+
+			if (gameManager.login("", loginInfo[0], loginInfo[1], role))
+				break;
+
+		} while (true); //TODO: need listener;
 
 		userId = id;
 
@@ -154,10 +153,10 @@ public class Client {
 
 		do {
 			id = clientInterface.getUserIdForRegister();
-			if (id.equals("")) //TODO: validate id
-				clientInterface.printInvalidIdMessageForRegister();
-			else
+			if (gameManager.validateUserId(id))
 				break;
+			else
+				clientInterface.printInvalidIdMessageForRegister();
 		} while(true);
 
 		return id;
@@ -170,10 +169,10 @@ public class Client {
 		do {
 			do {
 				pw = clientInterface.getUserPwForRegister();
-				if (pw.equals("")) //TODO: validate pw
-					clientInterface.printInvalidPwMessageForRegister();
-				else
+				if (gameManager.validateUserPw(pw))
 					break;
+				else
+					clientInterface.printInvalidPwMessageForRegister();
 			} while(true);
 
 			confirmPw = clientInterface.getUserMatchPwForRegister();
@@ -194,12 +193,7 @@ public class Client {
 			id = getUserIdForRegister();
 			pw = getUserPwForRegister();
 
-			NetworkInterface.PacketType packetType = NetworkInterface.PacketType.REGISTER;
-			String[] data = { pw };
-
-			String registerPacket = NetworkInterface.makePacket(packetType, id, data);
-
-			if (sendMessage(registerPacket)) //TODO: check register result
+			if (gameManager.register(id, pw))
 				break;
 			else
 				clientInterface.printFailMessageForRegister();
@@ -222,29 +216,26 @@ public class Client {
 				running = false;
 			}
 			else if (isDesigner) {
-				if (command.equals("")) { //TODO: map file check
-					clientInterface.printNoMap();
-				} else {
-					NetworkInterface.PacketType packetType = NetworkInterface.PacketType.MAP;
-					String[] data = { command };
-					String loginPacket = NetworkInterface.makePacket(packetType, userId, data);
+				File file = new File(command);
 
+				if (file.exists()) {
 					clientInterface.printValidateMessageForMapUpload();
 
-					if (sendMessage(loginPacket)) //TODO: map check
+					if (gameManager.uploadMap(command))
 						clientInterface.printValidateSucceessMessageForMapUpload();
 					else
 						clientInterface.printValidateFailMessageForMapUpload();
 				}
-			}
-			else {
-				NetworkInterface.PacketType packetType = NetworkInterface.PacketType.COMMAND;
-				String[] data = { command };
-				String loginPacket = NetworkInterface.makePacket(packetType, userId, data);
-
-				sendMessage(loginPacket);
+				else
+				{
+					clientInterface.printNoMap();
+				}
+			} else {
+				gameManager.sendMessage(command);
 			}
 		} while (running);
+
+		gameManager.endGame("", userId);
 
 		return true;
 	}
@@ -261,7 +252,6 @@ public class Client {
 				login(isDesigner);
 				clientInterface.printWelcomMessage(isDesigner);
 				runNetworkCommander(isDesigner);
-				disconnectServer();
 				break;
 			case REGISTER:
 				register();

@@ -1,10 +1,11 @@
 package edu.cmu.tartan.client;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.File;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.test.Commander;
@@ -22,7 +23,7 @@ class TestClient {
 	void testRunClient() {
 		String fileUri = System.getProperty("user.dir") + File.separator + "config.properties";
 		new Config(fileUri);
-		
+
 		Client client = new Client();
 		client.start();
 	}
@@ -72,12 +73,14 @@ class TestClient {
 		commander.apply();
 	}
 
+	@Disabled
 	@Test
 	void testWhenSelectNetworkGameMode() {
 		commander.add("2");
 		commander.apply();
 	}
 
+	@Disabled
 	@Test
 	void testWhenSelectDesignerMode() {
 		commander.add("99");
