@@ -285,6 +285,14 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			}
 		}
 		
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = null;
+		
+		if (returnValue) {
+			xmlMessage = xw.makeXmlForGameEnd("EXIT");
+			returnValue = sendToAll(xmlMessage);
+		}
+		
 		return returnValue;
 	}
 

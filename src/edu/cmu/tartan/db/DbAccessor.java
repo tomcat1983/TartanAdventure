@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
+import edu.cmu.tartan.config.Config;
+
 public class DbAccessor {
 
 	/**
@@ -18,19 +20,16 @@ public class DbAccessor {
 	protected static final Logger gameLogger = Logger.getGlobal();
 
 	private String url;
-//	private String dbLocation = "/Users/zhyuny/Downloads/sqlite/db/";
 	private String dbLocation = "./";
-	private String dbName;
+	private String dbName = "TartanAdventure.db";
 
-	public DbAccessor(String dbName) {
-
-		this.dbName = dbName;
+	public DbAccessor() {
+		if (Config.getDbName() != null) dbName = Config.getDbName();
 		url = "jdbc:sqlite:" + dbLocation + dbName;
-
 	}
 
 	/**
-	 * Connect to the test.db database
+	 * Connect to the database
 	 *
 	 * @return the Connection object
 	 */
@@ -52,7 +51,7 @@ public class DbAccessor {
 	public boolean createNewDatabase() {
 
 		File file = new File(dbLocation + dbName);
-
+		
 		if (file.isFile()) {
 			gameLogger.info("Database already exists");
 			return false;
@@ -103,7 +102,7 @@ public class DbAccessor {
 	 */
 	public boolean insert(String userId, String userPw, String userType) {
 		
-		String sql = "INSERT INTO T_USER_INFO(user_id,user_pw, user_type) VALUES(?,?,?)";
+		String sql = "INSERT INTO T_USER_INFO(user_id, user_pw, user_type) VALUES(?,?,?)";
 
 		boolean returnValue = false;
 
