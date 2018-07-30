@@ -11,18 +11,12 @@ import org.w3c.dom.NodeList;
 
 public abstract class XmlResponse {
 	
-	String responseXml; 
 	protected XmlMessageType msgType;
 	protected Logger gameLogger = Logger.getGlobal();
 
 	
 	//every child have different response 
 	public abstract XmlParseResult doYourJob(Document doc);
-	
-	
-	public String getResponseXml() {
-		return responseXml;
-	}
 	
 	public XmlMessageType getMsgType() {
 		return msgType;
