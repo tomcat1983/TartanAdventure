@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message type="HEART_BEAT" sender="client" receiver="server">
+	<common_info userid="takhh" /> <!-- heart beat message from client every 1 min -->
+</message>

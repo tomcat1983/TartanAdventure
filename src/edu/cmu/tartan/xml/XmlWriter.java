@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
 
 public class XmlWriter {
 
-	protected static Logger gameLogger = Logger.getGlobal();
+	protected static final Logger gameLogger = Logger.getGlobal();
 
 	DocumentBuilderFactory dbFactory;
 	DocumentBuilder dBuilder;
@@ -123,8 +123,10 @@ public class XmlWriter {
 		}
 	}
 
-	public static void overWriteFile(String destFileName, String sourceFileName) throws IOException {
+	public static boolean overWriteFile(String destFileName, String sourceFileName) {
 
+		boolean result = true; 
+		
 		File source = new File(sourceFileName);
 		File dest = new File(destFileName);
 
@@ -140,9 +142,16 @@ public class XmlWriter {
 			close(is);
 			close(os);
 		}
+		catch (IOException e) {
+			gameLogger.severe("IOException");
+			result = false;
+		}
 		catch (Exception e) {
 			gameLogger.severe("Exception occur when overWriteFile from " + sourceFileName + " to " + destFileName);
+			result = false;
 		}
+		
+		return result; 
 	}
 
 	public static void close(Closeable c) {

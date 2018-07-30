@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message type="REQ_GAME_END" sender="client" receiver="server">
+	<common_info user_isd="gameEndId" /> <!-- serever doesn't need to answer, client will exit game.  -->
+</message>

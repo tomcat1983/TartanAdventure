@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message type="REQ_GAME_START" sender="client" receiver="server">
+	<common_info usear_id="takhh" />	
+</message>

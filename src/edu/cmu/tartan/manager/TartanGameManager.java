@@ -11,6 +11,7 @@ import edu.cmu.tartan.socket.CommandResult;
 import edu.cmu.tartan.socket.ISocketHandler;
 import edu.cmu.tartan.xml.XmlLoginRole;
 import edu.cmu.tartan.xml.XmlNgReason;
+import edu.cmu.tartan.xml.XmlParseResult;
 import edu.cmu.tartan.xml.XmlParser;
 import edu.cmu.tartan.xml.XmlResponse;
 import edu.cmu.tartan.xml.XmlResponseAddUser;
@@ -18,6 +19,7 @@ import edu.cmu.tartan.xml.XmlResponseCommand;
 import edu.cmu.tartan.xml.XmlResponseGameEnd;
 import edu.cmu.tartan.xml.XmlResponseGameStart;
 import edu.cmu.tartan.xml.XmlResponseLogin;
+import edu.cmu.tartan.xml.XmlResponseUploadMap;
 import edu.cmu.tartan.xml.XmlResultString;
 import edu.cmu.tartan.xml.XmlWriterServer;
 
@@ -74,19 +76,56 @@ public class TartanGameManager implements Runnable, IUserCommand{
         }
 	}
 	
+	/**
+	 * Send a message to all client
+	 * Called by a game interface 
+	 * @param userId	The user ID who sending the message 
+	 * @param message	The game message 
+	 * @return
+	 */
 	public boolean sendToAll(String userId, String message) {
 		
 		boolean returnValue = false;
 		String eventMessage = String.format("[%S] %S", userId, message);
 		
 		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = xw.makeXmlForEventMessage(userId, message);
+		String xmlMessage = xw.makeXmlForEventMessage(userId, eventMessage);
 		
 		returnValue = socket.sendToAll(xmlMessage);
 		
 		return returnValue;
 	}
 	
+	/**
+	 * Send a message to all client but me
+	 * Called by a game interface
+	 * @param userId	The user ID who sending the message 
+	 * @param message	The game message 
+	 * @return
+	 */
+	public boolean sendToOters(String userId, String message) {
+		
+		boolean returnValue = false;
+		String eventMessage = String.format("[%S] %S", userId, message);
+		
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = xw.makeXmlForEventMessage(userId, eventMessage);
+		
+		for(String key : tartanGames.keySet()) {
+			if(!userId.equals(key)) {
+				returnValue = sendToClient(key, xmlMessage);
+			}
+		}
+		
+		return returnValue;
+	}
+	
+	/**
+	 * Send a message to one client
+	 * @param userId
+	 * @param message
+	 * @return
+	 */
 	public boolean sendToClient(String userId, String message) {
 		boolean returnValue = false;
 		
@@ -97,7 +136,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	
 	/**
 	 * Achieve a goal of the game
-	 * @param userId	a game user ID
+	 * @param userId	The user ID who won a game
 	 * @return	
 	 */
 	public boolean achievedGoal(String userId) {
@@ -109,14 +148,21 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		xmlMessage = xw.makeXmlForGameEnd(userId, "WIN");
 		returnValue = sendToClient(userId, xmlMessage);
 		
+		for(String key : tartanGames.keySet()) {
+			if(!userId.equals(key)) {
+				xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE");
+				returnValue = sendToClient(key, xmlMessage);
+			}
+		}
+		
 //		xmlMessage = xw.makeXmlForGameEnd("LOSE");
 		return returnValue;
 	}
 	
 	/**
 	 * Game message notify to one user  
-	 * @param userId	a game user ID
-	 * @param message	a game message
+	 * @param userId	The game user ID
+	 * @param message	The game message
 	 * @return
 	 */
 	@Override
@@ -164,12 +210,18 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	}
 			
 	public void processMessage(String threadName, String message) {
+		
+		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+				"Received message from a server socket"));
 
 		String messageType = null;
 		
 		xmlParser.parseXmlFromString(message);
 		messageType = xmlParser.getMessageType();
 		XmlResponse xr = xmlParser.getXmlResponse();
+		
+		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+				"message type : " + messageType));
 		
 		switch(messageType) {
 			case("REQ_LOGIN"):
@@ -186,7 +238,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 				break;
 			case("UPLOAD_MAP_DESIGN"):
 				// Map is auto saved
-				//TODO Send the result to client				
+				uploadMap(((XmlResponseUploadMap)xr).getUserId());
 				break;
 			case("SEND_COMMAND"):
 				sendCommand(((XmlResponseCommand)xr).getId(), ((XmlResponseCommand)xr).getCmd());
@@ -311,7 +363,8 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		String xmlMessage = null;
 		
 		if (returnValue) {
-			xmlMessage = xw.makeXmlForGameEnd(userId, "EXIT");
+			String eventMessage = String.format("[%S] %S", userId, "Exit game");
+			xmlMessage = xw.makeXmlForEventMessage(userId, eventMessage);
 			returnValue = socket.sendToAll(xmlMessage);
 		}
 		
@@ -319,14 +372,20 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	}
 
 	@Override
-	public boolean uploadMap(String mapFile) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean uploadMap(String userId) {
+		boolean returnValue = false;
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = xw.makeXmlForGameUpload(XmlResultString.OK, XmlNgReason.OK);
+		returnValue = sendToClient(userId, xmlMessage);
+		
+		return returnValue;
 	}
 	
 	public boolean sendCommand(String userId, String command) {
 		
 		boolean returnValue = false;
+		// TDDO How to send
+		
 		
 		return returnValue;
 	}

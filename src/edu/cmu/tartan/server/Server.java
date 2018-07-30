@@ -4,6 +4,7 @@ import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.manager.IQueueHandler;
 import edu.cmu.tartan.manager.MessageQueue;
 import edu.cmu.tartan.manager.TartanGameManager;
+import edu.cmu.tartan.socket.DesignerSocketServer;
 import edu.cmu.tartan.socket.ISocketHandler;
 import edu.cmu.tartan.socket.SocketServer;
 
@@ -32,9 +33,14 @@ public class Server {
 		Thread socketServerThread = new Thread((Runnable)socketServer);
 		socketServerThread.start();
 
+		ISocketHandler designerSocketServer = new DesignerSocketServer(messageQueue);
+		Thread designerSocketServerThread = new Thread((Runnable)designerSocketServer);
+		designerSocketServerThread.start();
+		
 		TartanGameManager tartanGameManager = new TartanGameManager(socketServer, messageQueue);
 		Thread gameManagerThread = new Thread(tartanGameManager);
 		gameManagerThread.start();
+		
 
 		boolean running = true;
 
