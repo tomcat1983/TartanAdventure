@@ -8,14 +8,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import edu.cmu.tartan.account.AccountManager;
 import edu.cmu.tartan.socket.CommandResult;
 import edu.cmu.tartan.socket.ISocketHandler;
-import edu.cmu.tartan.xml.XmlLoginRole;
-import edu.cmu.tartan.xml.XmlParser;
-import edu.cmu.tartan.xml.XmlResponse;
-import edu.cmu.tartan.xml.XmlResponseAddUser;
-import edu.cmu.tartan.xml.XmlResponseCommand;
-import edu.cmu.tartan.xml.XmlResponseGameEnd;
-import edu.cmu.tartan.xml.XmlResponseGameStart;
-import edu.cmu.tartan.xml.XmlResponseLogin;
+import edu.cmu.tartan.xml.*;
 
 public class TartanGameManager implements Runnable, IUserCommand{
 	
@@ -71,12 +64,22 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 	}
 	
-	public boolean sendToAll(String userId, String message) {
+	public boolean sendToAll(String message) {
 		
 		boolean returnValue = false;
 		
-		returnValue = socket.sendToAll(userId, message);
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = xw.makeXmlForEventMessage(message);
 		
+		returnValue = socket.sendToAll(xmlMessage);
+		
+		return returnValue;
+	}
+	
+	public boolean sendToClient(String userId, String message) {
+		boolean returnValue = false;
+		
+		returnValue = socket.sendToClient(userId, message);
 		return returnValue;
 	}
 	
@@ -174,7 +177,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	}
 
 	@Override
-	public boolean login(String name, String userId, String userPw, XmlLoginRole role) {
+	public boolean login(String threadName, String userId, String userPw, XmlLoginRole role) {
 		boolean returnValue = false;
 		returnValue = accountManager.loginUser(userId, userPw, role.name());
 		
@@ -182,12 +185,20 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			returnValue = registerNewUser(userId);
 		}
 		
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = null;
+		
 		if (returnValue) {
 			loginUserCounter++;
-			socket.updateClientState(userId, CommandResult.LOGIN_SUCCESS, name);
+			socket.updateSocketState(userId, CommandResult.LOGIN_SUCCESS, threadName);
+			xmlMessage = xw.makeXmlForLogin(XmlResultString.OK, XmlNgReason.OK);
 		} else {
-			socket.updateClientState(userId, CommandResult.LOGIN_FAIL, name);
+			socket.updateSocketState(userId, CommandResult.LOGIN_FAIL, threadName);
+			xmlMessage = xw.makeXmlForLogin(XmlResultString.NG, XmlNgReason.INVALID_INFO);
 		}
+		
+		returnValue = sendToClient(userId, xmlMessage);
+		
 		return returnValue;
 	}
 
@@ -196,7 +207,17 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		boolean returnValue = false;
 		returnValue = accountManager.registerUser(userId, userPw, "0");
 		
-		// TODO Send the result to client
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = null;
+		
+		if (returnValue) {
+			xmlMessage = xw.makeXmlForAddUser(XmlResultString.OK, XmlNgReason.OK);
+		} else {
+			xmlMessage = xw.makeXmlForAddUser(XmlResultString.NG, XmlNgReason.INVALID_INFO);
+		}
+		
+		returnValue = sendToClient(userId, xmlMessage);
+		
 		return returnValue;
 	}
 
@@ -231,10 +252,17 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			}
 		}
 		
-//		((SocketServer)socket).setIsPlaying(returnValue);
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = null;
+		
 		if (returnValue) {
-			socket.updateClientState(userId, CommandResult.START_GAME_SUCCESS, null);
+			socket.updateSocketState(userId, CommandResult.START_GAME_SUCCESS, null);
+			xmlMessage = xw.makeXmlForAddUser(XmlResultString.OK, XmlNgReason.OK);
+		} else {
+			xmlMessage = xw.makeXmlForAddUser(XmlResultString.NG, XmlNgReason.INVALID_INFO);
 		}
+		
+		returnValue = sendToAll(xmlMessage);
 		
 		return returnValue;
 	}
@@ -248,11 +276,11 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			if(userId.equals(key)) {
 				returnValue = tartanGames.get(key).controlGame("exit");
 				tartanGames.remove(key);
-				socket.updateClientState(userId, CommandResult.END_GAME_SUCCESS, threadName);
+				socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
 			}
 			loginUserCounter--;
 			if (loginUserCounter < 1) {
-				socket.updateClientState(userId, CommandResult.END_GAME_ALL_USER, threadName);
+				socket.updateSocketState(userId, CommandResult.END_GAME_ALL_USER, threadName);
 				
 			}
 		}

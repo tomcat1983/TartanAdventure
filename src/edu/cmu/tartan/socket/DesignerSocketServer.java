@@ -114,13 +114,14 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	}
 	
 	@Override
-	public boolean sendToAll(String userId, String message) {
+	public boolean sendToAll(String message) {
 		boolean returnValue = false;
+		/*
 		for (String clientId : clientThreadMap.keySet()) {
 			if (!userId.equals(clientId)) {
 				returnValue = clientThreadMap.get(clientId).sendMessage(message);
 			}
-		}
+		}*/
 		
 		return returnValue;
 	}
@@ -154,7 +155,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	}
 	
 	@Override
-	public void updateClientState(String userId, CommandResult result, String threadName) {
+	public void updateSocketState(String userId, CommandResult result, String threadName) {
 		switch (result) {
 		case LOGIN_SUCCESS:
 			break;

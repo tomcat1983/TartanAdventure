@@ -49,25 +49,31 @@ public class GameInterface {
 
 	// For game message
 	public void print(String message) {
-		System.out.print(message);
+		if (tartanManager == null)
+			System.out.print(message);
+		else
+			tartanManager.sendToAll(message);
 	}
 
 	public void println(String message) {
-		print(message + "\n");
+		if (tartanManager == null)
+			print(message + "\n");
+		else
+			tartanManager.sendToAll(message);
 	}
 
 	public void print(String userId, String message) {
 		if (tartanManager == null)
 			print(message);
 		else
-			tartanManager.sendToAll(userId, message);
+			tartanManager.sendToClient(userId, message);
 	}
 
 	public void println(String userId, String message) {
 		if (tartanManager == null)
 			print(message + "\n");
 		else
-			tartanManager.sendToAll(userId, message + "\n");
+			tartanManager.sendToClient(userId, message + "\n");
 	}
 
 	public String getCommand() {
