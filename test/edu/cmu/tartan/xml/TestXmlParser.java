@@ -438,8 +438,35 @@ public class TestXmlParser {
 	@Test
 	public void testWritingUploadMapOK() throws ParserConfigurationException {
 		
+		XmlResultString xrs = XmlResultString.OK;
+		XmlNgReason xnr = XmlNgReason.OK;
+		
 		XmlWriterServer xw = new XmlWriterServer(); 
-		xw.makeXmlForGameUpload(XmlParseResult.SUCCESS, XmlNgReason.OK);
+		String xmlUri = xw.makeXmlForGameUpload(xrs, xnr);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(xmlUri);
+		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
+		
+		assertTrue(xrs.equals(xr.getResultStr()));
+		assertTrue(xnr.equals(xr.getNgReason()));
+	}
+	
+	@Test
+	public void testWritingUploadMapNG() throws ParserConfigurationException {
+		
+		XmlResultString xrs = XmlResultString.NG;
+		XmlNgReason xnr = XmlNgReason.INVALID_INFO;
+		
+		XmlWriterServer xw = new XmlWriterServer(); 
+		String xmlUri = xw.makeXmlForGameUpload(xrs, xnr);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(xmlUri);
+		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
+		
+		assertTrue(xrs.equals(xr.getResultStr()));
+		assertTrue(xnr.equals(xr.getNgReason()));
 	}
 	
 	

@@ -102,7 +102,7 @@ public class XmlWriterServer extends XmlWriter {
 		return xmlString; 
 	}
 	
-	public String makeXmlForGameUpload(XmlParseResult parseResult, XmlNgReason reason) {
+	public String makeXmlForGameUpload(XmlResultString parseResult, XmlNgReason reason) {
 		String xmlString = null;
 		
 		try {
