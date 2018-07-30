@@ -19,8 +19,8 @@ public class ItemDeskLight extends Item implements Holdable, Luminous {
      * @param sd long description
      * @param a aliases
      */
-    public ItemDeskLight(String s, String sd, String[] a) {
-        super(s, sd, a);
+    public ItemDeskLight(String s, String sd, String[] a, String userId) {
+        super(s, sd, a, userId);
         setValue(10);
     }
 }

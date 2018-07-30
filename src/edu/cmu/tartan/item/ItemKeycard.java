@@ -19,9 +19,9 @@ public class ItemKeycard extends Item implements Holdable, Installable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemKeycard(String s, String sd, String[] a) {
+    public ItemKeycard(String s, String sd, String[] a, String userId) {
 
-        super(s, sd, a);
+        super(s, sd, a, userId);
         setValue(30);
     }
 }

@@ -21,9 +21,9 @@ public class ItemLock extends Item implements Hostable, Openable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemLock(String s, String sd, String[] a) {
+    public ItemLock(String s, String sd, String[] a, String userId) {
 
-        super(s, sd, a);
+        super(s, sd, a, userId);
         setValue(100);
     }
 
@@ -74,7 +74,7 @@ public class ItemLock extends Item implements Hostable, Openable {
      */
     @Override
     public Boolean open() {
-        if (this.relatedRoom instanceof RoomLockable) {
+        if (installedItem instanceof ItemKey && this.relatedRoom instanceof RoomLockable) {
             ((RoomLockable) this.relatedRoom).unlock(this.installedItem);
             return true;
         }

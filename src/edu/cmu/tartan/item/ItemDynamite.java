@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Explodable;
 import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.room.RoomObscured;
@@ -23,8 +24,8 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemDynamite(String s, String sd, String[] a) {
-        super(s, sd, a);
+    public ItemDynamite(String s, String sd, String[] a, String userId) {
+        super(s, sd, a, userId);
         this.exploded = false;
         setValue(25);
     }
@@ -39,12 +40,12 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
         if (!this.exploded) {
             if (this.relatedRoom instanceof RoomObscured) {
                 ((RoomObscured) this.relatedRoom).setObscured(false);
-                gameInterface.println(((RoomObscured) this.relatedRoom).unobscureMessage());
+                gameInterface.println(userId, MessageType.PRIVATE, ((RoomObscured) this.relatedRoom).unobscureMessage());
             }
             this.exploded = true;
             this.detailDescription = "pile of smithereens";
         } else {
-        	gameInterface.println("The dynamite has already been detonated.");
+        	gameInterface.println(userId, MessageType.PRIVATE, "The dynamite has already been detonated.");
         }
         return exploded;
     }

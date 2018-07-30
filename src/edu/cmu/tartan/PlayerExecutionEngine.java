@@ -484,11 +484,11 @@ public class PlayerExecutionEngine {
 	        case ACTION_PASS: 
 	            // intentionally blank
 	            break;	        
-	        case ACTION_ERROR: 
-	            gameInterface.println("I don't understand that.");
+	        case ACTION_ERROR:
+	            gameInterface.println(GamePlayMessage.I_DO_NOT_UNDERSTAND);
 	            break;
-	        case ACTION_UNKNOWN: 
-	            gameInterface.println("I don't understand that.");
+	        case ACTION_UNKNOWN:
+	            gameInterface.println(GamePlayMessage.I_DO_NOT_UNDERSTAND);
 	            break;
 	        default:
 	        	gameInterface.println("It's unknown action");

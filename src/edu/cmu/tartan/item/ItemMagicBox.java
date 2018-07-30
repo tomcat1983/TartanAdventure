@@ -18,9 +18,9 @@ public class ItemMagicBox extends Item implements Hostable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemMagicBox(String s, String sd, String[] a) {
+    public ItemMagicBox(String s, String sd, String[] a, String userId) {
 
-        super(s, sd, a);
+        super(s, sd, a, userId);
         setValue(7);
     }
 

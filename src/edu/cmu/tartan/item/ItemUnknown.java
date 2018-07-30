@@ -10,9 +10,9 @@ package edu.cmu.tartan.item;
  */
 public class ItemUnknown extends Item {
 
-    public ItemUnknown(String s, String sd, String[] a) {
+    public ItemUnknown(String s, String sd, String[] a, String userId) {
 
-        super(s, sd, a);
+        super(s, sd, a, userId);
         setValue(0);
     }
 }

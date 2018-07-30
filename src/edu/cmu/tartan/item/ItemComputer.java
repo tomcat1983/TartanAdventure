@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Hostable;
 
 /**
@@ -18,8 +19,8 @@ public class ItemComputer extends Item implements Hostable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemComputer(String s, String sd, String[] a) {
-        super(s, sd, a);
+    public ItemComputer(String s, String sd, String[] a, String userId) {
+        super(s, sd, a, userId);
         setValue(50);
     }
     /**
@@ -30,7 +31,7 @@ public class ItemComputer extends Item implements Hostable {
     	if (!(item instanceof ItemCPU)) return false;
     	if(installedItem==null) {
     		installedItem = item;
-    		gameInterface.println("Computer isn't working. Need more item. To be continued...");
+    		gameInterface.println(userId, MessageType.PRIVATE, "Computer isn't working. Need more item. To be continued...");
     		return true;
     	}
     	return false;
