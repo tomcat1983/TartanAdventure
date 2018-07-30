@@ -42,7 +42,11 @@ public class TestXmlParser {
 	String gameXmlInvalidGoalCntMatchFileName;
 	String gameXmlInvalidRoomCntMatchFileName;
 	String gameStartXmlFileName;
+	String gameStartInvalidXmlFileName;
 	String gameEndXmlFileName;
+	String gameEndInvalidXmlFileName;
+	String sendCommandInvalidXmlFileName;
+	String hbInvalidXmlFileName;
 
 	
     @BeforeEach
@@ -58,6 +62,10 @@ public class TestXmlParser {
     	gameXmlInvalidRoomCntMatchFileName = "test/edu/cmu/tartan/xml/GameXmlInvalidRoomCntMatch.xml";
     	gameStartXmlFileName = "test/edu/cmu/tartan/xml/RequestGameStart.xml";
     	gameEndXmlFileName = "test/edu/cmu/tartan/xml/RequestGameEnd.xml";
+    	gameStartInvalidXmlFileName = "test/edu/cmu/tartan/xml/RequestGameStartInvalid.xml";
+    	gameEndInvalidXmlFileName = "test/edu/cmu/tartan/xml/RequestGameEndInvalid.xml";
+    	sendCommandInvalidXmlFileName = "test/edu/cmu/tartan/xml/SendCommandInvalid.xml";
+    	hbInvalidXmlFileName = "test/edu/cmu/tartan/xml/HeartbeatInvalid.xml";
 
     }
 	
@@ -401,37 +409,86 @@ public class TestXmlParser {
 		assertTrue(pw.equals("awefaweg14ro4aw3"));
 	}
 	
-	@Disabled("Describe how to make login result XML")
 	@Test
 	public void testWritingLoginResultOK() throws ParserConfigurationException {
 		
+		XmlResultString xrs = XmlResultString.OK;
+		XmlNgReason xnr = XmlNgReason.OK;
+		
 		XmlWriterServer xw = new XmlWriterServer(); 
-		xw.makeXmlForLogin(XmlResultString.OK, XmlNgReason.OK);
+		String xmlStr = xw.makeXmlForLogin(xrs, xnr);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(xmlStr);
+		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
+		assertTrue(xr.getResultStr().equals(xrs));
+		assertTrue(xr.getNgReason().equals(xnr));
 	}
 	
-	@Disabled("Describe how to make login result XML")
 	@Test
 	public void testWritingLoginResultFail() throws ParserConfigurationException {
 		
+		XmlResultString xrs = XmlResultString.NG;
+		XmlNgReason xnr = XmlNgReason.SERVER_BUSY;
+		
 		XmlWriterServer xw = new XmlWriterServer(); 
-		xw.makeXmlForLogin(XmlResultString.NG, XmlNgReason.SERVER_BUSY);
+		String xmlStr = xw.makeXmlForLogin(xrs, xnr);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(xmlStr);
+		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
+		assertTrue(xr.getResultStr().equals(xrs));
+		assertTrue(xr.getNgReason().equals(xnr));
 	}
 	
-	@Disabled("Describe how to make game upload XML")
 	@Test
 	public void testWritingUploadMapOK() throws ParserConfigurationException {
 		
+		XmlResultString xrs = XmlResultString.OK;
+		XmlNgReason xnr = XmlNgReason.OK;
+		
 		XmlWriterServer xw = new XmlWriterServer(); 
-		xw.makeXmlForGameUpload(XmlParseResult.SUCCESS, XmlNgReason.OK);
+		String xmlUri = xw.makeXmlForGameUpload(xrs, xnr);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(xmlUri);
+		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
+		
+		assertTrue(xrs.equals(xr.getResultStr()));
+		assertTrue(xnr.equals(xr.getNgReason()));
+	}
+	
+	@Test
+	public void testWritingUploadMapNG() throws ParserConfigurationException {
+		
+		XmlResultString xrs = XmlResultString.NG;
+		XmlNgReason xnr = XmlNgReason.INVALID_INFO;
+		
+		XmlWriterServer xw = new XmlWriterServer(); 
+		String xmlUri = xw.makeXmlForGameUpload(xrs, xnr);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(xmlUri);
+		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
+		
+		assertTrue(xrs.equals(xr.getResultStr()));
+		assertTrue(xnr.equals(xr.getNgReason()));
 	}
 	
 	
-	@Disabled("Describe how to make EventMessage")
 	@Test
 	public void testWritingEventMessage() throws ParserConfigurationException {
 		
+		String eventMsg = "hello client\n this is message from server";
+		String eventId = "eventid";
 		XmlWriterServer xw = new XmlWriterServer(); 
-		xw.makeXmlForEventMessage("userid", "hello client\n this is message from server");
+		String xmlStr = xw.makeXmlForEventMessage(eventId, eventMsg);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(xmlStr);
+		XmlResponseClient xr = (XmlResponseClient)xp.getXmlResponse();
+		assertTrue(eventId.equals(xr.getId()));
+		assertTrue(eventMsg.equals(xr.getEventMsg()));
 	}
 	
 	
@@ -486,13 +543,52 @@ public class TestXmlParser {
 		assertTrue(id.equals("gameEndId"));
 	}
 	
+	@Test
+	public void testParsingSendCommandInvalid() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		XmlParseResult xpr = parseXml.parseXmlFromString(readAllBytes(sendCommandInvalidXmlFileName));
+		assertTrue(xpr.equals(XmlParseResult.INVALID_DATA));
+	}
 	
 	@Test
-	public void testGameDescription() throws ParserConfigurationException {
-		//<goal index="0" type="collect" object="diamond-shovel" />
+	public void testParsingHeartBeatInvalid() throws ParserConfigurationException {
+		
 		XmlParser parseXml = new XmlParser();
-		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
-		System.out.println(cGame.makeGameDescription());
+		XmlParseResult xpr = parseXml.parseXmlFromString(readAllBytes(hbInvalidXmlFileName));
+		assertTrue(xpr.equals(XmlParseResult.INVALID_DATA));
+	}
+	
+	@Test
+	public void testParsingGameStartInvalid() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		XmlParseResult xpr = parseXml.parseXmlFromString(readAllBytes(gameStartInvalidXmlFileName));
+		assertTrue(xpr.equals(XmlParseResult.INVALID_DATA));
+	}
+	
+	@Test
+	public void testParsingGameEndInvalid() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		XmlParseResult xpr = parseXml.parseXmlFromString(readAllBytes(gameEndInvalidXmlFileName));
+		assertTrue(xpr.equals(XmlParseResult.INVALID_DATA));
+	}
+	
+	@Test
+	public void testWritingAddUserResponseOK() throws ParserConfigurationException {
+		
+		XmlResultString addResult = XmlResultString.OK;
+		XmlNgReason reason = XmlNgReason.OK;
+		String xmlUri;
+
+		XmlWriterServer xw = new XmlWriterServer();
+		xmlUri = xw.makeXmlForAddUser(addResult, reason);
+		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
+		parseXml.parseXmlFromString(xmlUri);
+		XmlResponseClient xr = (XmlResponseClient) parseXml.getXmlResponse();
+		assertTrue(addResult.equals(xr.getResultStr()));
+		assertTrue(reason.equals(xr.getNgReason()));
 	}
 	
 	

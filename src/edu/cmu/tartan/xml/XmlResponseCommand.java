@@ -39,7 +39,7 @@ public class XmlResponseCommand extends XmlResponse {
 		commandStr = getAttributeValueAtNthTag("text", nList, 0);	//text should be unique. 
 		id = getAttributeValueAtNthTag("user_id", nList, 0);		//id should be unique. 
 
-		if(commandStr == null) {
+		if(commandStr == null || id == null ) {
 			return XmlParseResult.INVALID_DATA;
 		}
 		
