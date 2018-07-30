@@ -1,14 +1,21 @@
 package edu.cmu.tartan.account;
 
 import edu.cmu.tartan.db.DbAccessor;
+import edu.cmu.tartan.xml.XmlLoginRole;
 
 public class AccountManager implements IAccountHandler {
 	
 	DbAccessor dbAccessor;
-	String dbName = "TartanAdventure.db";
 
 	public AccountManager() {
-		dbAccessor = new DbAccessor(dbName);
+		dbAccessor = new DbAccessor();
+		initialize();
+	}
+	
+	private void initialize() {
+		dbAccessor.createNewDatabase();
+		dbAccessor.createNewTable();
+		dbAccessor.insert("designer", "abcd1234", XmlLoginRole.DESIGNER.name());
 	}
 
 	@Override
