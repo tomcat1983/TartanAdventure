@@ -1,23 +1,32 @@
 package edu.cmu.tartan;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.eclipse.jdt.annotation.NonNull;
+
 import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.action.Type;
-import edu.cmu.tartan.games.*;
+import edu.cmu.tartan.games.CollectGame;
+import edu.cmu.tartan.games.DarkRoomGame;
+import edu.cmu.tartan.games.DemoGame;
+import edu.cmu.tartan.games.ExploreGame;
+import edu.cmu.tartan.games.InvalidGameException;
+import edu.cmu.tartan.games.LockRoomGame;
+import edu.cmu.tartan.games.ObscuredRoomGame;
+import edu.cmu.tartan.games.PointsGame;
+import edu.cmu.tartan.games.RideElevatorGame;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.xml.GameMode;
 import edu.cmu.tartan.xml.XmlParser;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import org.eclipse.jdt.annotation.NonNull;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * The main class for game logic. Many if not all decisions about game play are made
@@ -39,7 +48,7 @@ public abstract class Game {
 	 * Game interface for game message
 	 */
 	protected static final GameInterface gameInterface = GameInterface.getInterface();
- 
+
 	/**
 	 * Game context for load and save
 	 */
@@ -74,11 +83,11 @@ public abstract class Game {
         }
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, sb.toString());
     }
-    
+
     protected GameConfiguration gameFromXML(GameMode mode) {
 		XmlParser parseXml;
 		try {
-			parseXml = new XmlParser(); 
+			parseXml = new XmlParser();
 			return parseXml.loadGameMapXml(mode, context.getUserId());
 		} catch (ParserConfigurationException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
@@ -90,9 +99,9 @@ public abstract class Game {
 
     private ArrayList<GameConfiguration> loadGameMenu() {
     	// Need to load about real game from XML(new game feature)
-    	
+
     	ArrayList<GameConfiguration> menu = new ArrayList<>();
-    	
+
         // These are the currently supported games.
         menu.add(new CollectGame());
         menu.add(new PointsGame());
@@ -110,7 +119,7 @@ public abstract class Game {
         }
     	return menu;
     }
-    
+
     private boolean loadGame(String input, ArrayList<GameConfiguration> menu) {
     	int select = 0;
     	try {
@@ -135,23 +144,23 @@ public abstract class Game {
         catch(Exception e) {
         	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Invalid selection.");
         }
-    	
+
     	return false;
     }
-    
+
     /**
      * Configure the game.
      */
     public boolean configureGame() {
     	ArrayList<GameConfiguration> menu = loadGameMenu();
-    	
+
         if(!menu.isEmpty()) {
         	boolean result = false;
             while(!result) {
                 printMenu(menu);
                 gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
-                String input = gameInterface.getCommand();
-                result = loadGame(input, menu); 
+                String input = gameInterface.getCommand(context.getUserId());
+                result = loadGame(input, menu);
             }
         }
         // Once the game has been configured, it is time to play!
@@ -161,7 +170,7 @@ public abstract class Game {
         this.playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());
         return true;
     }
-    
+
     private boolean processGameCommand(String input) throws TerminateGameException {
     	if (this instanceof LocalGame && input.compareTo("quit") == 0) {
     		return handleQuit();
@@ -189,7 +198,7 @@ public abstract class Game {
                 return true;
             }
         }
-    	return false; 
+    	return false;
     }
 
     /**
@@ -205,7 +214,7 @@ public abstract class Game {
             while(true) {
             	gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
 
-                input = gameInterface.getCommand();
+                input = gameInterface.getCommand(context.getUserId());
                 if(processGameCommand(input)) {
                 	break;
                 }
@@ -216,7 +225,7 @@ public abstract class Game {
         	gameLogger.severe("I don't understand that \n\nException: \n" + e);
         	gameLogger.severe(e.getMessage());
             start();
-        } 
+        }
         gameInterface.println(context.getUserId(), MessageType.LOSE, "Game Over");
     }
 
@@ -259,15 +268,15 @@ public abstract class Game {
 
     private void status() {
     	Player player = context.getPlayer();
-    	
+
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "The current game is '" + context.getGameName() + "': " + context.getGameDescription());
 
 		if(context.getGoals().size() == 1)
 			gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- There is a goal to achive");
 		else
 			gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- There are " + context.getGoals().size() + " goals to achive");
-        
-        
+
+
         for (int i=0; i < context.getGoals().size(); i++) {
             gameInterface.println(context.getUserId(), MessageType.PRIVATE, (i+1)+ " "+ context.getGoals().get(i).describe() + " - status: " + context.getGoals().get(i).getStatus());
         }
@@ -303,7 +312,7 @@ public abstract class Game {
     }
 
     private void appendString(Action action, StringBuilder builder) {
-        for (String string : action.getAliases()) builder.append("'" + string + "' ");    	
+        for (String string : action.getAliases()) builder.append("'" + string + "' ");
     }
     /**
      * Display help menu
@@ -355,7 +364,7 @@ public abstract class Game {
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Game: " + context.getGameDescription());
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "To get help type 'help' ... let's begin\n");
     }
-    
+
     public boolean handleSave() {
     	if(this instanceof ServerGame) {
     		gameInterface.print(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.SAVE_CANNOT_10_6);
@@ -368,9 +377,9 @@ public abstract class Game {
     	} else {
     		gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.SAVE_FAILURE_2_3);
     		return false;
-    	}    	
+    	}
     }
-    
+
     public boolean handleQuit() {
         for (GameGoal g: context.getGoals()) {
         	gameInterface.println(context.getUserId(), MessageType.PRIVATE, g.getStatus());
@@ -378,12 +387,12 @@ public abstract class Game {
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.WILL_YOU_SAVE_2_1);
         gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
 
-        String input = gameInterface.getCommand();
+        String input = gameInterface.getCommand(context.getUserId());
         if("yes".equalsIgnoreCase(input)) {
         	return handleSave();
         } else {
         	gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.REJECT_SAVE_2_4);
         	return true;
-        }    	
+        }
     }
 }

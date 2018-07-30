@@ -63,7 +63,9 @@
         <artifactId>pitest-maven</artifactId>
         <version>1.4.0</version>
         <configuration>
-          <avoidCallsTo>
+	  <avoidCallsTo>
+	    <avoidCallsTo>java.util.logging</avoidCallsTo>
+            <avoidCallsTo>org.junit.jupiter</avoidCallsTo>
             <avoidCallsTo>edu.cmu.tartan.GameInterface.print</avoidCallsTo>
             <avoidCallsTo>edu.cmu.tartan.GameInterface.println</avoidCallsTo>
           </avoidCallsTo>
