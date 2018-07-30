@@ -58,7 +58,7 @@ public class CustomizingGame extends GameConfiguration {
 			gameGoal.setPlayer(player);
 			context.addGoal(gameGoal);
 		}
-
+		context.setRooms(rooms);
 		context.setGameDescription(makeGameDescription());
 
 

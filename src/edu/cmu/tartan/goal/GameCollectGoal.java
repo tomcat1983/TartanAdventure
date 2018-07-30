@@ -32,6 +32,10 @@ public class GameCollectGoal implements GameGoal {
         this(items, null);
     }
     
+    public ArrayList<String> getItemList() {
+    	return itemsList; 
+    }
+    
     @Override
     public Boolean isAchieved() {
         int newCount=0;

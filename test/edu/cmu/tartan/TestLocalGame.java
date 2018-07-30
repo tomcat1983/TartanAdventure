@@ -36,6 +36,7 @@ public class TestLocalGame {
 		commander.add("north");
 		commander.add("pickup key");
 		commander.add("south");
+		commander.add("put key in lock");
 		commander.add("open lock");
 		commander.add("west");
 		commander.add("west");

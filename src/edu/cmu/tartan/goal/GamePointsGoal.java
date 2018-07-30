@@ -26,6 +26,10 @@ public class GamePointsGoal implements GameGoal {
         this(g, null);
     }
     
+    public Integer getWinningScore() {
+    	return winningScore;
+    }
+    
     /**
      * Describe this goal
      * @return

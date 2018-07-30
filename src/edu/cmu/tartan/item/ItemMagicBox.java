@@ -29,8 +29,10 @@ public class ItemMagicBox extends Item implements Hostable {
      * @param i the item to install
      */
     @Override
-    public void install(Item i) {
+    public boolean install(Item i) {
         // items fall into black hole
+    	i.setVisible(false);
+    	return true;
     }
 
     /**

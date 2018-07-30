@@ -32,8 +32,14 @@ public class ItemLock extends Item implements Hostable, Openable {
      * @param i the item to install
      */
     @Override
-    public void install(Item i) {
-        this.installedItem = i;
+    public boolean install(Item i) {
+    	if (!(i instanceof ItemKey)) return false;
+        
+    	if(installedItem==null) {
+        	installedItem = i;
+        	return true;
+        }
+        return false;
     }
 
     /**

@@ -70,8 +70,12 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
      * @param i the item to install
      */
     @Override
-    public void install(Item i) {
-        this.installedItem = i;
+    public boolean install(Item i) {
+    	if(installedItem==null) {
+            installedItem = i;
+            return true;
+    	}
+    	return false;
     }
 
     /**

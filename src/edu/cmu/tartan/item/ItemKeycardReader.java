@@ -30,8 +30,8 @@ public class ItemKeycardReader extends Item implements Hostable {
      * Install a keycard
      * @param item the keycard to install in the reader
      */
-    public void install(Item item) {
-        if (!(item instanceof ItemKeycard)) return;
+    public boolean install(Item item) {
+        if (!(item instanceof ItemKeycard)) return false;
         installedItem = item;
 
         for (int i = 0; i < 3; i++) {
@@ -40,12 +40,14 @@ public class ItemKeycardReader extends Item implements Hostable {
                 Thread.sleep(1000);
             } catch (Exception e1) {
             	gameLogger.severe(e1.getMessage());
+            	return false;
             }
         }
         if (installMessage != null) {
         	gameInterface.println(installMessage);
         }
         relatedItem.setVisible(true);
+        return true;
     }
 
     /**
