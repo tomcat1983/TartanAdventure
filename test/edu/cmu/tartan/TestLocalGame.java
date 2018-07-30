@@ -1,12 +1,10 @@
 package edu.cmu.tartan;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import edu.cmu.tartan.client.Client;
 import edu.cmu.tartan.test.Commander;
 
 public class TestLocalGame {
@@ -16,16 +14,18 @@ public class TestLocalGame {
 	void testMakeCommander() {
 		commander = new Commander();
 	}
-	
+
 	@AfterEach
 	void testRunLocalGame() {
 		game = new LocalGame(Player.DEFAULT_USER_NAME);
 		game.configureGame();
-		game.start();	
+		game.start();
 	}
 
+	@Disabled
 	@Test
 	void testStartXMLLocalGame() {
+		System.out.println("testStartXMLLocalGame");
 		commander.add("9");
 		commander.add("help");
 		commander.add("east");
