@@ -19,15 +19,13 @@ public class AccountManager implements IAccountHandler {
 	}
 
 	@Override
-	public boolean loginUser(String userId, String userPw, String userType) {
-		String returnValue = dbAccessor.getPassword(userId);
+	public boolean loginUser(String userId, String userPw, String userRole) {
+		String userPwInDB = dbAccessor.getPassword(userId);
+		String userRoleInDB = dbAccessor.getUserRole(userId);
 		
-		if (userPw.equals(returnValue)) {
+		if (userPw.equals(userPwInDB) && userRole.equals(userRoleInDB)) {
 			return true;
 		}
-		
-		// TODO : User Type compare
-		
 		return false;
 	}
 

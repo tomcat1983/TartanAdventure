@@ -10,9 +10,16 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.manager.IQueueHandler;
 import edu.cmu.tartan.manager.ResponseMessage;
-import edu.cmu.tartan.config.Config;
+import edu.cmu.tartan.manager.SocketMessage;
+import edu.cmu.tartan.xml.XmlParser;
+import edu.cmu.tartan.xml.XmlParserType;
+import edu.cmu.tartan.xml.XmlResponseClient;
+import edu.cmu.tartan.xml.XmlResultString;
 
 public class SocketClient implements Runnable {
 
@@ -98,17 +105,45 @@ public class SocketClient implements Runnable {
 	}
 	
 	public boolean receiveMessage(String message) {
-		//TODO parse a message
+		XmlParser xmlParser;
+		String messageType = null;
+		String eventMessage = null;
+		XmlResponseClient xr = null;
+		try {
+			xmlParser = new XmlParser(XmlParserType.CLIENT);
+			xmlParser.parseXmlFromString(message);
+			messageType = xmlParser.getMessageType();
+			xr = (XmlResponseClient) xmlParser.getXmlResponse();
+			
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe("ParserConfigurationException");
+			return false;
+		}
+		
+		eventMessage = xr.getEventMsg();
+		
+		
+		if ("EVENT_MESSAGE".equals(messageType)) {
+			
+			queue.produce(new SocketMessage(Thread.currentThread().getName(), eventMessage));
+			return true;
+		}
+		
+		String returnValue = "false";
+		if(XmlResultString.OK == xr.getResultStr()) {
+			returnValue = "true";
+		}
 		
 		try {
 			synchronized (responseMessage) {
-				responseMessage.setMessage(message);
+				responseMessage.setMessage(returnValue);
 				responseMessage.notify();
 			}
 		} catch (IllegalMonitorStateException e) {
 			gameLogger.severe("IllegalMonitorStateException : " + e.getMessage());
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	public boolean sendMessage(String message) {

@@ -5,6 +5,9 @@ import java.util.logging.Logger;
 import edu.cmu.tartan.account.AccountManager;
 import edu.cmu.tartan.account.ReturnType;
 import edu.cmu.tartan.socket.SocketClient;
+import edu.cmu.tartan.xml.XmlLoginRole;
+import edu.cmu.tartan.xml.XmlMessageType;
+import edu.cmu.tartan.xml.XmlWriterClient;
 
 
 public class TartanGameManagerClient implements Runnable, IUserCommand{
@@ -31,18 +34,28 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		accountManager = new AccountManager();
 	}
 	
-	public boolean sendMessage(String userId, String message) {
+	public boolean sendMessage(String message) {
 		// TODO Make a message for TCP communication
 		socket.sendMessage(message);
 		return false;
 	}
 	
 	@Override
-	public boolean login(String userId, String userPw) {
-		sendMessage(userId, userPw);
+	public boolean login(String threadName, String userId, String userPw, XmlLoginRole role) {
+		
+		String message = null;
+		
+		XmlWriterClient xw = new XmlWriterClient(); 
+		message = xw.makeXmlForLogin(userId, userPw, role);
+		
+		sendMessage(message);
+		
 		waitResponseMessage();
 		
 		if ("true".equals((responseMessage).getMessage())) {
+			this.userId = userId;
+			this.userPw = userPw;
+			
 			return true;
 		}
 		return false;
@@ -50,7 +63,20 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	
 	@Override
 	public boolean register(String userId, String userPw) {
+		
+		String message = null;
+		
+		XmlWriterClient xw = new XmlWriterClient(); 
+		message = xw.makeXmlForAddUser(userId, userPw);
+		
+		sendMessage(message);
+		
 		waitResponseMessage();
+		
+		if ("true".equals((responseMessage).getMessage())) {
+			return true;
+		}
+		
 		return false;
 	}
 	
@@ -75,20 +101,40 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	}
 	
 	@Override
-	public boolean startGame(String message) {
+	public boolean startGame(String userId) {
+		
+		String message = null;
+		
+		XmlWriterClient xw = new XmlWriterClient(); 
+		message = xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_START, userId);
+		
+		sendMessage(message);
+		
 		waitResponseMessage();
+		
+		if ("true".equals((responseMessage).getMessage())) {
+			return true;
+		}
+		
 		return false;
 	}
 	
 	@Override
-	public boolean endGame(String message) {
+	public boolean endGame(String threadName, String userId) {
 		
-		// TODO Send To server
+		String message = null;
 		
+		XmlWriterClient xw = new XmlWriterClient(); 
+		message = xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_END, userId);
+		
+		sendMessage(message);
+		
+		
+		// TODO Sequence of an end game
 		socket.stopSocket();
 		
 		isLoop = false;
-		messageQueue.produce(new SocketMessage(Thread.currentThread().getName(), message));
+		messageQueue.produce(new SocketMessage(Thread.currentThread().getName(), userId));
 		int returnValue = messageQueue.clearQueue();
 		
 		if (returnValue == 0) {
@@ -98,20 +144,39 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	}
 	
 	@Override
-	public boolean updateGameState(String message) {
+	public boolean updateGameState(String userId, String command) {
+		
+		String message = null;
+		
+		XmlWriterClient xw = new XmlWriterClient(); 
+		message = xw.makeXmlForCommand(userId, command);
+		
+		sendMessage(message);
+		
 		waitResponseMessage();
+		
+		if ("true".equals((responseMessage).getMessage())) {
+			return true;
+		}
 		return false;
 	}
 	
 	@Override
 	public boolean uploadMap(String mapFile) {
-		readMapFile(mapFile);
+		
+		String message = null;
+		
+		XmlWriterClient xw = new XmlWriterClient(); 
+		message = xw.makeXmlForUploadMap(mapFile);
+		
+		sendMessage(message);
+		
 		waitResponseMessage();
+		
+		if ("true".equals((responseMessage).getMessage())) {
+			return true;
+		}
 		return false;
-	}
-	
-	private String readMapFile(String mapFileName) {
-		return null;
 	}
 	
 	public void waitResponseMessage() {
@@ -146,9 +211,5 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
             	
             }
         }
-		
 	}
-
-	
-
 }
