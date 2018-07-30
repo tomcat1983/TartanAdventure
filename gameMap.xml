@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><message receiver="server" sender="designer" type="UPLOAD_MAP_DESIGN">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><message receiver="server" sender="designer2" type="UPLOAD_MAP_DESIGN">
 	<room_info room_cnt="14">
 		<room east="1" index="0" type="normal"/>	<!-- index 0 is start room -->
 		<room east="6" index="1" item_list="shovel-document" north="2" type="normal" west="0"/>

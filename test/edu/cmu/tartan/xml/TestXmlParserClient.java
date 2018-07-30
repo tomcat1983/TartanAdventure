@@ -185,7 +185,7 @@ public class TestXmlParserClient {
 		
 		final String ID_STR = "startId";
 
-		XmlWriterClient xw = new XmlWriterClient(); 
+		XmlWriterClient xw = new XmlWriterClient();
 		String xmlStr = xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_START, ID_STR);
 		
 		XmlParser xp = new XmlParser(XmlParserType.SERVER);
