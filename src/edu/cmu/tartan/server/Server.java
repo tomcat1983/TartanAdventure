@@ -37,7 +37,7 @@ public class Server {
 		Thread designerSocketServerThread = new Thread((Runnable)designerSocketServer);
 		designerSocketServerThread.start();
 		
-		TartanGameManager tartanGameManager = new TartanGameManager(socketServer, messageQueue);
+		TartanGameManager tartanGameManager = new TartanGameManager(socketServer, designerSocketServer, messageQueue);
 		Thread gameManagerThread = new Thread(tartanGameManager);
 		gameManagerThread.start();
 		

@@ -48,7 +48,8 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 			writer.println(message);
 			return true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException: " + e.getMessage());
+			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"IOException : " + e.getMessage()));
 		}
 		return false;
 	}
@@ -62,7 +63,7 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 			InputStream input = clientSocket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
-			String message = "";
+			String message = null;
 
 			while (isLoop) {
 				
@@ -85,7 +86,8 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 			stopSocket();
 
 		} catch (IOException e) {
-			gameLogger.warning("IOException: " + e.getMessage());
+			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"IOException : " + e.getMessage()));
 		}
 	}
 	
@@ -103,6 +105,10 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 		this.isLogin = isLogin;
 	}
 	
+	public String getThreadName() {
+		return threadName;
+	}
+	
 	public boolean stopSocket() {
 		boolean returnValue = false;
 		isLoop = false;
@@ -111,7 +117,8 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 			clientSocket.close();
 			returnValue = true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException: " + e.getMessage());
+			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"IOException : " + e.getMessage()));
 		}
 		
 		gameLogger.info("Closing designer connection");

@@ -179,6 +179,9 @@ public class SocketClient implements Runnable {
 	}
 	
 	public boolean sendMessage(String message) {
+		
+		gameLogger.info(message);
+		
 		if (socket == null || !socket.isConnected()) {
 			gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
 					"Socket is not connected to the server yet."));

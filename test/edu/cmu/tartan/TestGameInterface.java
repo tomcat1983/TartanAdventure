@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import edu.cmu.tartan.manager.IQueueHandler;
 import edu.cmu.tartan.manager.MessageQueue;
 import edu.cmu.tartan.manager.TartanGameManager;
+import edu.cmu.tartan.socket.DesignerSocketServer;
 import edu.cmu.tartan.socket.ISocketHandler;
 import edu.cmu.tartan.socket.SocketServer;
 import edu.cmu.tartan.test.Commander;
@@ -75,7 +76,8 @@ public class TestGameInterface {
 
 		IQueueHandler messageQueue = new MessageQueue();
 		ISocketHandler socketServer = new SocketServer(messageQueue);
-		TartanGameManager manager = new TartanGameManager(socketServer, messageQueue);
+		ISocketHandler designerSocketServer = new DesignerSocketServer(messageQueue);
+		TartanGameManager manager = new TartanGameManager(socketServer, designerSocketServer, messageQueue);
 
 		gameInterface.setGameManager(manager);
 

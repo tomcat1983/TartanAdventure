@@ -9,13 +9,21 @@ public class AccountManager implements IAccountHandler {
 
 	public AccountManager() {
 		dbAccessor = new DbAccessor();
-		initialize();
+	}
+	
+	public AccountManager(String mode) {
+		dbAccessor = new DbAccessor();
+		if ("server".equals(mode)) {
+			initialize();
+		}
 	}
 	
 	private void initialize() {
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
-		dbAccessor.insert("designer", "abcd1234", XmlLoginRole.DESIGNER.name());
+		if (dbAccessor.hasUserId("designer") == 0) {
+			dbAccessor.insert("designer", "abcd1234", XmlLoginRole.DESIGNER.name());
+		}
 	}
 
 	@Override

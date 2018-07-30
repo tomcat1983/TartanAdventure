@@ -11,7 +11,6 @@ import edu.cmu.tartan.socket.CommandResult;
 import edu.cmu.tartan.socket.ISocketHandler;
 import edu.cmu.tartan.xml.XmlLoginRole;
 import edu.cmu.tartan.xml.XmlNgReason;
-import edu.cmu.tartan.xml.XmlParseResult;
 import edu.cmu.tartan.xml.XmlParser;
 import edu.cmu.tartan.xml.XmlResponse;
 import edu.cmu.tartan.xml.XmlResponseAddUser;
@@ -31,6 +30,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	protected static final Logger gameLogger = Logger.getGlobal();
 	
 	private ISocketHandler socket;
+	private ISocketHandler designerSocket;
 	private IQueueHandler queue;
 	private AccountManager accountManager;
 	private XmlParser xmlParser;
@@ -40,10 +40,11 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	private boolean isLoop = true;
 	private int loginUserCounter = 0;
 	
-	public TartanGameManager (ISocketHandler socket, IQueueHandler queue) {
+	public TartanGameManager (ISocketHandler socket, ISocketHandler designerSocket, IQueueHandler queue) {
 		this.socket = socket;
+		this.designerSocket = designerSocket;
 		this.queue = queue;
-		accountManager = new AccountManager();
+		accountManager = new AccountManager("server");
 		try {
 			xmlParser = new XmlParser();
 		} catch (ParserConfigurationException e) {
@@ -259,13 +260,20 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		XmlWriterServer xw = new XmlWriterServer();
 		String xmlMessage = null;
+		ISocketHandler serverSocket;
+		
+		if (XmlLoginRole.PLAYER == role) {
+			serverSocket = socket;
+		} else {
+			serverSocket = designerSocket;
+		}
 		
 		if (returnValue) {
 			loginUserCounter++;
-			socket.updateSocketState(userId, CommandResult.LOGIN_SUCCESS, threadName);
+			serverSocket.updateSocketState(userId, CommandResult.LOGIN_SUCCESS, threadName);
 			xmlMessage = xw.makeXmlForLogin(XmlResultString.OK, XmlNgReason.OK);
 		} else {
-			socket.updateSocketState(userId, CommandResult.LOGIN_FAIL, threadName);
+			serverSocket.updateSocketState(userId, CommandResult.LOGIN_FAIL, threadName);
 			xmlMessage = xw.makeXmlForLogin(XmlResultString.NG, XmlNgReason.INVALID_INFO);
 		}
 		
@@ -376,7 +384,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		boolean returnValue = false;
 		XmlWriterServer xw = new XmlWriterServer();
 		String xmlMessage = xw.makeXmlForGameUpload(XmlResultString.OK, XmlNgReason.OK);
-		returnValue = sendToClient(userId, xmlMessage);
+		returnValue = designerSocket.sendToClient(userId, xmlMessage);
 		
 		return returnValue;
 	}
