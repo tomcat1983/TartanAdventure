@@ -1,5 +1,6 @@
 package edu.cmu.tartan;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
@@ -137,7 +138,7 @@ public class Player implements Comparable, Serializable {
 
         Item dropped = drop(item);
         if (dropped == null) {
-        	gameInterface.println("You don't have this item to drop");
+        	gameInterface.println(userName, MessageType.PRIVATE, "You don't have this item to drop");
             return false;
         }
         this.currentRoom.putItem(dropped);
@@ -203,7 +204,7 @@ public class Player implements Comparable, Serializable {
     	if(message != null) {
             if(delay != 0) {
                 for(int i=0; i < 3; i++) {
-                    gameInterface.println("...");
+                    gameInterface.println(userName, MessageType.PRIVATE, "...");
                     try{
                         Thread.sleep(delay);
                     }
@@ -212,7 +213,7 @@ public class Player implements Comparable, Serializable {
                     }
                 }
             }
-            gameInterface.println(message);
+            gameInterface.println(userName, MessageType.PRIVATE, message);
         }
     }
     /**
@@ -233,14 +234,15 @@ public class Player implements Comparable, Serializable {
         if(nextRoom instanceof RoomRequiredItem) {
             RoomRequiredItem r = (RoomRequiredItem)nextRoom;
             if(r.diesOnEntry()) {
-                gameInterface.println(r.loseMessage());
+                gameInterface.println(userName, MessageType.PRIVATE, r.loseMessage());
                 terminate();
             }
         }
 
         this.currentRoom = nextRoom;
         saveRoom(currentRoom);
-        gameInterface.println(this.currentRoom.description());
+        gameInterface.println(userName, MessageType.PUBLIC, "You are in " + currentRoom.shortDescription());
+        gameInterface.println(userName, MessageType.PRIVATE, this.currentRoom.description());
     }
 
     /**
@@ -262,14 +264,14 @@ public class Player implements Comparable, Serializable {
 
     private void roomRequiredItemCheck(RoomRequiredItem room, Action action) throws TerminateGameException  {
     	if(room.shouldLoseForAction(action)) {
-            gameInterface.println(room.loseMessage());
+            gameInterface.println(userName, MessageType.PRIVATE, room.loseMessage());
             terminate();
         }
     }
     
     private void roomRequiredLuminousItem(RoomDark room) throws TerminateGameException {
     	if(room.isDark() && !hasLuminousItem()) {
-            gameInterface.println(room.deathMessage());
+            gameInterface.println(userName, MessageType.PRIVATE, room.deathMessage());
             terminate();
         }
     }
@@ -279,17 +281,17 @@ public class Player implements Comparable, Serializable {
             RoomLockable lockedRoom = (RoomLockable)nextRoom;
             if(lockedRoom.isLocked()) {
                 if(lockedRoom.causesDeath()) {
-                    gameInterface.println(lockedRoom.deathMessage());
+                    gameInterface.println(userName, MessageType.PRIVATE, lockedRoom.deathMessage());
                     terminate();
                 }
-                gameInterface.println("This door is locked.");
+                gameInterface.println(userName, MessageType.PRIVATE, "This door is locked.");
                 return true;
             }
         }
         else if(nextRoom instanceof RoomObscured) {
             RoomObscured obscuredRoom = (RoomObscured)nextRoom;
             if(obscuredRoom.isObscured()) {
-                gameInterface.println("You can't move that way.");
+                gameInterface.println(userName, MessageType.PRIVATE, "You can't move that way.");
                 return true;
             }
         }
@@ -321,7 +323,7 @@ public class Player implements Comparable, Serializable {
             return true;
         }
         else {
-            gameInterface.println("You can't move that way.");
+            gameInterface.println(userName, MessageType.PRIVATE, "You can't move that way.");
             return false;
         }
     }
@@ -346,7 +348,7 @@ public class Player implements Comparable, Serializable {
      * Print information about the room
      */
     public boolean lookAround() {
-        gameInterface.println(this.currentRoom.toString());
+        gameInterface.println(userName, MessageType.PRIVATE, currentRoom.toString());
         return true;
     }
 
@@ -364,7 +366,7 @@ public class Player implements Comparable, Serializable {
      * @param s the newly scored points.
      */
     public void score(int s) {
-        gameInterface.println("You scored " + s + " points.");
+        gameInterface.println(userName, MessageType.PUBLIC, "You scored " + s + " points.");
         score += s;
     }
 
@@ -372,7 +374,7 @@ public class Player implements Comparable, Serializable {
      * Terminate this player.
      */
     public void terminate() throws TerminateGameException {
-        gameInterface.println("You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
+        gameInterface.println(userName, MessageType.LOSE, "You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
         throw new TerminateGameException("Terminate Game");
     }
 

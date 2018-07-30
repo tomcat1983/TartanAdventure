@@ -7,6 +7,7 @@ public final class GamePlayMessage {
 	}
 	
 	public static final String I_DO_NOT_SEE_THAT_HERE = "I don't see that here.\n";
+	public static final String I_DO_NOT_UNDERSTAND = "I don't understand that.\n";
 	public static final String TAKEN = "Taken";
 	// Scene common 2
 	public static final String WILL_YOU_SAVE_2_1 = "Will you save the current state?(yes/no)\n";

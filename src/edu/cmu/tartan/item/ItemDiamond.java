@@ -19,9 +19,9 @@ public class ItemDiamond extends Item implements Holdable, Installable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemDiamond(String s, String sd, String[] a) {
+    public ItemDiamond(String s, String sd, String[] a, String userId) {
 
-        super(s, sd, a);
+        super(s, sd, a, userId);
         setValue(1000);
     }
 }

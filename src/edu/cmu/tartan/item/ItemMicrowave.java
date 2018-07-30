@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Meltable;
 import edu.cmu.tartan.properties.Startable;
@@ -23,8 +24,8 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemMicrowave(String s, String sd, String[] a) {
-        super(s, sd, a);
+    public ItemMicrowave(String s, String sd, String[] a, String userId) {
+        super(s, sd, a, userId);
         this.installedItem = null;
         setValue(5);
     }
@@ -37,20 +38,20 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
     public Boolean start() {
 
         for (int i = 0; i < 3; i++) {
-            gameInterface.println("...");
+            gameInterface.println(userId, MessageType.PRIVATE, "...");
             try {
                 Thread.sleep(MIC_OP_TIME);
             } catch (Exception e1) {
             	gameLogger.severe(e1.getMessage());
             }
         }
-        gameInterface.println("Beep beep beep");
+        gameInterface.println(userId, MessageType.PRIVATE, "Beep beep beep");
 
         // Only meltable things can be microwaved
         if (installedItem instanceof Meltable) {
             Item item = ((Meltable) installedItem).meltItem();
             if(item!=null) {
-	            gameInterface.println("You melted the " + this.installedItem.detailDescription() + ", and it revealed a " + item.detailDescription() + "!");
+	            gameInterface.println(userId, MessageType.PRIVATE, "You melted the " + this.installedItem.detailDescription() + ", and it revealed a " + item.detailDescription() + "!");
 	            this.installedItem = item;
 	            return true;
             }

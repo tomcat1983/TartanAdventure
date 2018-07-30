@@ -1,5 +1,6 @@
 package edu.cmu.tartan.room;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.item.Item;
 
 /**
@@ -84,12 +85,12 @@ public class RoomLockable extends Room {
 	public boolean unlock(Item key) {
 		if(this.key.compareTo(key) == 0) {
 			this.locked = false;
-			gameInterface.println(this.unlockMessage);
+			gameInterface.println(getPlayer().getUserName(), MessageType.PRIVATE, this.unlockMessage);
 			return true;
 		}
 		else { 
 			if(!causesDeath()) {
-				gameInterface.println("This key doesn't seem to fit");
+				gameInterface.println(getPlayer().getUserName(), MessageType.PRIVATE, "This key doesn't seem to fit");
 			}
 			return false;
 		}
