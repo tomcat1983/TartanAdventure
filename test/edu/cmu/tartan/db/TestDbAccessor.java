@@ -88,7 +88,7 @@ public class TestDbAccessor {
 		boolean returnValue = dbAccessor.insert(userId, userPw, userType);
 
 		// Then
-		assertNotEquals(true, returnValue);
+		assertEquals(true, returnValue);
 		
 	}
 
