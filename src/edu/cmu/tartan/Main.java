@@ -27,23 +27,26 @@ public class Main {
 			fileUri = System.getProperty("user.dir") + File.separator + fileUri;
 		}
 
-		new Config(fileUri);
+		Config config = new Config(fileUri);
+		if (config.readPropertyFile()) {
+			Config.RunningMode mode = Config.getMode();
 
-		Config.RunningMode mode = Config.getMode();
-
-		switch (mode) {
-		case SERVER:
-			Server server = new Server();
-			server.start();
-			break;
-		case CLIENT:
-			Client client = new Client();
-			client.start();
-			break;
-		case UNKNOWN:
-		default:
-			gameLogger.severe("Unknown mode");
-			break;
+			switch (mode) {
+			case SERVER:
+				Server server = new Server();
+				server.start();
+				break;
+			case CLIENT:
+				Client client = new Client();
+				client.start();
+				break;
+			case UNKNOWN:
+			default:
+				gameLogger.severe("Unknown mode");
+				break;
+			}
+		} else {
+			gameLogger.severe("Properties file doesn't exist. : " + fileUri);
 		}
 	}
 }
