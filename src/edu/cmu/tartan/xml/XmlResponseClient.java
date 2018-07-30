@@ -11,12 +11,22 @@ public class XmlResponseClient extends XmlResponse {
 	private static final String RESULT_STR = "result";
 
 	private String eventMsg; 
-	
+	private String id; 
+	private String gameResult; 
+
 	
 	public XmlResponseClient(XmlMessageType msgType) {
 		this.msgType = msgType;
 	}
 	
+	public String getId() { 
+		return id; 
+	}
+	
+	public String getGameResult() { 
+		return gameResult; 
+	}
+		
 	public XmlResultString getResultStr() {
 		return resultStr;
 	}
@@ -43,31 +53,54 @@ public class XmlResponseClient extends XmlResponse {
 			return parsingResultForAddUser(doc);		
 		}
 		else if(msgType.equals(XmlMessageType.REQ_GAME_START)) {
-			return parsingResultForGameStart(doc);		
+			return parsingResultForReqGameStart(doc);		
 		}
 		else if(msgType.equals(XmlMessageType.EVENT_MESSAGE)) {
 			return parsingResultForEventMessage(doc);		
+		}
+		else if(msgType.equals(XmlMessageType.GAME_END)) {
+			return parsingResultForGameEnd(doc);		
 		}
 		
 		return XmlParseResult.UNKNOWN_MESSAGE; 
 		
 	}
 
-	private XmlParseResult parsingResultForEventMessage(Document doc) {
-		
-		NodeList nList;
-		
-		//	<display text="Hello Client! \n This is a message from server." />
-		nList = getNodeListOfGivenTag("display", doc);
-		eventMsg = getAttributeValueAtNthTag("text", nList, 0);	//text should be unique
+	private XmlParseResult parsingResultForGameEnd(Document doc) {
 
-		if(eventMsg == null )
+		//<common_info user_id="userId" />
+		//<game_result result="win" /> 
+		NodeList nList = getNodeListOfGivenTag("common_info", doc);
+		id = getAttributeValueAtNthTag("user_id", nList, 0);	//id should be unique
+		
+		nList = getNodeListOfGivenTag("game_result", doc);
+		gameResult = getAttributeValueAtNthTag(RESULT_STR, nList, 0);	//result should be unique
+
+		if(id == null || gameResult == null )
 			return XmlParseResult.INVALID_DATA;
 		else 
 			return XmlParseResult.SUCCESS;		
 	}
 
-	private XmlParseResult parsingResultForGameStart(Document doc) {
+	private XmlParseResult parsingResultForEventMessage(Document doc) {
+		
+		NodeList nList;
+		
+		//	<common_info user_id="userId" />
+		//	<display text="Hello Client! \n This is a message from server." />
+		nList = getNodeListOfGivenTag("common_info", doc);
+		id = getAttributeValueAtNthTag("user_id", nList, 0);	//id should be unique
+		
+		nList = getNodeListOfGivenTag("display", doc);
+		eventMsg = getAttributeValueAtNthTag("text", nList, 0);	//text should be unique
+
+		if(id == null || eventMsg == null )
+			return XmlParseResult.INVALID_DATA;
+		else 
+			return XmlParseResult.SUCCESS;		
+	}
+
+	private XmlParseResult parsingResultForReqGameStart(Document doc) {
 		NodeList nList;
 		
 		//<game_start result="OK" ng_reason="OK" />

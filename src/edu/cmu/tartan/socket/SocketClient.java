@@ -45,8 +45,7 @@ public class SocketClient implements Runnable {
 
 	@Override
 	public void run() {
-		if (connectToServer())
-			gameLogger.info("Connected");
+		connectToServer();
 	}
 	
 	public boolean connectToServer() {
@@ -55,6 +54,7 @@ public class SocketClient implements Runnable {
 		
 		try {
 			socket = new Socket(serverIp, serverPort);
+			gameLogger.info("Connected to server");
 			 
 			InputStream input = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -147,6 +147,7 @@ public class SocketClient implements Runnable {
 	}
 	
 	public boolean sendMessage(String message) {
+		if (!socket.isConnected()) return false;
 		try {
 			OutputStream output = socket.getOutputStream();
 			PrintWriter writer = new PrintWriter(output, true);

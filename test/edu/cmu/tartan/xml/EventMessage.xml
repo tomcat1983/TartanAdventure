@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <message type="EVENT_MESSAGE" sender="server" receiver="client">
+	<common_info user_id="userId" />
 	<display text="Hello Client! \n This is a message from server." />
 </message>

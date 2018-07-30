@@ -189,11 +189,14 @@ public class Player implements Comparable, Serializable {
         return this.items;
     }
 
-    public void putItemInItem(Item direct, Item indirect) {
-        ((Hostable)indirect).install(direct);
-        if(indirect instanceof ItemMagicBox && direct instanceof Valuable) {
-            score((Valuable)direct);
+    public boolean putItemInItem(Item direct, Item indirect) {
+        boolean ret = ((Hostable)indirect).install(direct);
+        if(ret) {
+        	if(indirect instanceof ItemMagicBox && direct instanceof Valuable) {
+        		score((Valuable)direct);
+        	}
         }
+        return ret;
     }
 
     private void requestDelay(String message, int delay) {

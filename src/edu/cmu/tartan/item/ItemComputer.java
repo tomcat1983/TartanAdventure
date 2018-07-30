@@ -26,8 +26,14 @@ public class ItemComputer extends Item implements Hostable {
      * Install an item in the microwave
      * @param i the item to install
      */
-    public void install(Item i) {
-        this.installedItem = i;
+    public boolean install(Item item) {
+    	if (!(item instanceof ItemCPU)) return false;
+    	if(installedItem==null) {
+    		installedItem = item;
+    		gameInterface.println("Computer isn't working. Need more item. To be continued...");
+    		return true;
+    	}
+    	return false;
     }
 
     public boolean uninstall(Item i) {

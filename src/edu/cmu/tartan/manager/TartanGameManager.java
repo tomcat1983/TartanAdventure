@@ -5,21 +5,10 @@ import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import edu.cmu.tartan.ServerGame;
 import edu.cmu.tartan.account.AccountManager;
 import edu.cmu.tartan.socket.CommandResult;
 import edu.cmu.tartan.socket.ISocketHandler;
-import edu.cmu.tartan.xml.XmlLoginRole;
-import edu.cmu.tartan.xml.XmlNgReason;
-import edu.cmu.tartan.xml.XmlParser;
-import edu.cmu.tartan.xml.XmlResponse;
-import edu.cmu.tartan.xml.XmlResponseAddUser;
-import edu.cmu.tartan.xml.XmlResponseCommand;
-import edu.cmu.tartan.xml.XmlResponseGameEnd;
-import edu.cmu.tartan.xml.XmlResponseGameStart;
-import edu.cmu.tartan.xml.XmlResponseLogin;
-import edu.cmu.tartan.xml.XmlResultString;
-import edu.cmu.tartan.xml.XmlWriterServer;
+import edu.cmu.tartan.xml.*;
 
 public class TartanGameManager implements Runnable, IUserCommand{
 	
@@ -33,7 +22,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	private AccountManager accountManager;
 	private XmlParser xmlParser;
 	
-	private HashMap<String, ServerGame> tartanGames;
+	private HashMap<String, IGameControlMessage> tartanGames;
 	
 	private boolean isLoop = true;
 	private int loginUserCounter = 0;
@@ -48,7 +37,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			gameLogger.warning("ParserConfigurationException : " + e.getMessage());
 		}
 		
-		tartanGames = new HashMap<String, ServerGame>();
+		tartanGames = new HashMap<String, IGameControlMessage>();
 	}
 
 	@Override
@@ -72,15 +61,15 @@ public class TartanGameManager implements Runnable, IUserCommand{
             	processMessage(threadName, message);
             }
         }
+		
 	}
 	
-	public boolean sendToAll(String userId, String message) {
+	public boolean sendToAll(String message) {
 		
 		boolean returnValue = false;
-		String eventMessage = String.format("[%S] %S", userId, message);
 		
 		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = xw.makeXmlForEventMessage(eventMessage);
+		String xmlMessage = xw.makeXmlForEventMessage("TODO for Jang S", message);
 		
 		returnValue = socket.sendToAll(xmlMessage);
 		
@@ -101,16 +90,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	 * @return	
 	 */
 	public boolean achievedGoal(String userId) {
-		
-		boolean returnValue = false;
-		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = null;
-		
-		xmlMessage = xw.makeXmlForGameEnd("WIN");
-		returnValue = sendToClient(userId, xmlMessage);
-		
-//		xmlMessage = xw.makeXmlForGameEnd("LOSE");
-		return returnValue;
+		return false;
 	}
 	
 	/**
@@ -156,8 +136,8 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	
 	public boolean registerNewUser(String userId) {
 		if (!tartanGames.containsKey(userId)) {
-			ServerGame tartanGame = null;
-			tartanGames.put(userId, tartanGame);
+			IGameControlMessage gameControlMessage = null;
+			tartanGames.put(userId, gameControlMessage);
 			return true;
 		}
 		return false;
@@ -256,35 +236,33 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	@Override
 	public boolean startGame(String userId) {
 		
-		XmlWriterServer xw;
-		String xmlMessage = null;
-		
 		if (loginUserCounter < 2) {
 			// TODO Send the result to client
-			xw = new XmlWriterServer();
-			xmlMessage = xw.makeXmlForEventMessage("No other player in this room. \n" + 
-					"Please wait until another player logs in and retry after few minutes.");
-			sendToClient(userId, xmlMessage);
-			
-			xmlMessage = xw.makeXmlForGameStart(XmlResultString.NG, XmlNgReason.NO_PLAYERS);
-			sendToClient(userId, xmlMessage);
 			return false;
 		}
 		
-		for (String key : tartanGames.keySet()) {
-			
-			tartanGames.get(key).start();
-		}
-		
-		xw = new XmlWriterServer();
-		xmlMessage = null;
-		
 		boolean returnValue = false;
 		
-		socket.updateSocketState(userId, CommandResult.START_GAME_SUCCESS, null);
-		xmlMessage = xw.makeXmlForGameStart(XmlResultString.OK, XmlNgReason.OK);
+		for (String key : tartanGames.keySet()) {
+			
+			// TODO How to start game?
+			returnValue = tartanGames.get(key).controlGame("start");
+			if (!returnValue) {
+				break;
+			}
+		}
 		
-		returnValue = socket.sendToAll(xmlMessage);
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = null;
+		
+		if (returnValue) {
+			socket.updateSocketState(userId, CommandResult.START_GAME_SUCCESS, null);
+			xmlMessage = xw.makeXmlForAddUser(XmlResultString.OK, XmlNgReason.OK);
+		} else {
+			xmlMessage = xw.makeXmlForAddUser(XmlResultString.NG, XmlNgReason.INVALID_INFO);
+		}
+		
+		returnValue = sendToAll(xmlMessage);
 		
 		return returnValue;
 	}
@@ -307,14 +285,6 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			}
 		}
 		
-		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = null;
-		
-		if (returnValue) {
-			xmlMessage = xw.makeXmlForGameEnd("EXIT");
-			returnValue = socket.sendToAll(xmlMessage);
-		}
-		
 		return returnValue;
 	}
 
@@ -328,6 +298,13 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		boolean returnValue = false;
 		
+		for (String key : tartanGames.keySet()) {
+			if (userId.equals(key)) {
+				returnValue = tartanGames.get(key).controlGame(command);
+			}
+		}
 		return returnValue;
 	}
+
+	
 }

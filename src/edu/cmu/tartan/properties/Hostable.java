@@ -15,8 +15,9 @@ public interface Hostable {
 	/**
 	 * Install a item into this hostable item
 	 * @param item the item to install
+	 * @return if you success return true, install failed return false.
 	 */
-	void install(Item item);
+	boolean install(Item item);
 
 	/**
 	 * Remove an installed item

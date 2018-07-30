@@ -431,7 +431,7 @@ public class TestXmlParser {
 	public void testWritingEventMessage() throws ParserConfigurationException {
 		
 		XmlWriterServer xw = new XmlWriterServer(); 
-		xw.makeXmlForEventMessage("hello client\n this is message from server");
+		xw.makeXmlForEventMessage("userid", "hello client\n this is message from server");
 	}
 	
 	

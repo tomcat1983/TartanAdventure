@@ -1,8 +1,7 @@
 package edu.cmu.tartan;
 
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import edu.cmu.tartan.manager.TartanGameManager;
@@ -24,15 +23,25 @@ public class GameInterface {
      */
 	private static TartanGameManager tartanManager;
 
-	final static PipedOutputStream pipedOut = new PipedOutputStream();
-	final static PipedInputStream pipedIn = new PipedInputStream();
+	/**
+	 * Command List
+	 */
+	List<String> commandList = new ArrayList<>();
+
+	/**
+	 * Check command list empty
+	 */
+	boolean wait = false;
 
 	public GameInterface() {
         scanner = new Scanner(System.in, "UTF-8");
-        try {
-        	pipedOut.connect(pipedIn);
-        } catch (IOException e) {
-        }
+        init();
+	}
+
+	private synchronized void init() {
+		tartanManager = null;
+		commandList.clear();
+		wait = false;
 	}
 
 	public static GameInterface getInterface() {
@@ -45,7 +54,6 @@ public class GameInterface {
 
 	public boolean setGameManager(TartanGameManager manager) {
 		tartanManager = manager;
-		scanner = new Scanner(pipedIn, "UTF-8");
 
 		return true;
 	}
@@ -95,16 +103,31 @@ public class GameInterface {
 			tartanManager.achievedGoal(userId);
 	}
 
-	public String getCommand() {
-		return scanner.nextLine();
+	public synchronized String getCommand() {
+		if (tartanManager == null) {
+			return scanner.nextLine();
+		} else {
+			if (commandList.isEmpty()) {
+				wait = true;
+
+				try {
+					commandList.wait();
+				} catch (Exception e) {
+				}
+			}
+
+			String command = commandList.get(0);
+			commandList.remove(0);
+			return command;
+		}
 	}
 
-	public boolean putCommand(String command) {
-		try {
-			pipedOut.write(command.getBytes());
-		} catch (IOException e) {
-		}
+	public synchronized boolean putCommand(String command) {
+		boolean result = commandList.add(command);
 
-		return true;
+		if (wait)
+			commandList.notify();
+
+		return result;
 	}
 }

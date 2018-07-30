@@ -62,8 +62,12 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
      * Install an item in the microwave
      * @param i the item to install
      */
-    public void install(Item i) {
-        this.installedItem = i;
+    public boolean install(Item i) {
+    	if(installedItem==null) {
+    		installedItem = i;
+    		return true;
+    	}
+    	return false;
     }
 
     public boolean uninstall(Item i) {

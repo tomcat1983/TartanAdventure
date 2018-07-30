@@ -78,8 +78,4 @@ public class Config {
 
 		return port;
 	}
-	
-	public static String getDbName() {
-		return properties.getProperty("tartan.db.name");
-	}
 }
