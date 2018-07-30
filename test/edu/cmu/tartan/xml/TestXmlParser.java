@@ -3,7 +3,6 @@ package edu.cmu.tartan.xml;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 
@@ -165,15 +164,6 @@ public class TestXmlParser {
 		XmlParser parseXml = new XmlParser();
 		parseXml.parseXmlFromFile(validXmlFileName);
 		assertTrue(parseXml.getValueByTagAndAttribute("message", "user_id") == null);
-	}
-	
-	@Test
-	public void testPrintNodeFromFile() throws ParserConfigurationException {
-		
-		XmlParserSpy parseXmlSpy = new XmlParserSpy();
-		parseXmlSpy.parseXmlFromFile(validXmlFileName);
-		parseXmlSpy.printNodeInfo(parseXmlSpy.getNodeList().item(0));
-		assertTrue(parseXmlSpy.isPrintNodeCalled);
 	}
 	
 	@Test
@@ -642,11 +632,6 @@ class XmlParserSpy extends XmlParser {
 			isExceptionCatched = true; 
 		
 		return xmlParseResult; 
-	}
-	
-	protected void printNodeInfo(Node node) {
-		super.printNodeInfo(node);
-		isPrintNodeCalled = true; 
 	}
 	
 }

@@ -1,6 +1,7 @@
 package edu.cmu.tartan.client;
 
 import edu.cmu.tartan.GameInterface;
+import edu.cmu.tartan.Player;
 
 public class ClientInterface {
 
@@ -41,7 +42,7 @@ public class ClientInterface {
 			gameInterface.println("Choose the mode");
 			gameInterface.print("> ");
 
-			String command = gameInterface.getCommand();
+			String command = gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 
 			switch (command) {
 			case "exit":
@@ -99,7 +100,7 @@ public class ClientInterface {
 			gameInterface.println("Please select the game play mode.");
 			gameInterface.print("> ");
 
-			String command = gameInterface.getCommand();
+			String command = gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 
 			if (command.equals("continue")) {
 				localCommand = LocalModeCommand.CONTINUE;
@@ -141,7 +142,7 @@ public class ClientInterface {
 			gameInterface.println("Please select the menu");
 			gameInterface.print("> ");
 
-			String command = gameInterface.getCommand();
+			String command = gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 
 			if (command.equals("login")) {
 				networkCommand = NetworkModeCommand.LOGIN;
@@ -163,12 +164,12 @@ public class ClientInterface {
 		gameInterface.println("Please enter your ID :");
 		gameInterface.print("> ");
 
-		loginInfo[0] = gameInterface.getCommand();
+		loginInfo[0] = gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 
 		gameInterface.println("Please enter your Password :");
 		gameInterface.print("> ");
 
-		loginInfo[1] = gameInterface.getCommand();
+		loginInfo[1] = gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 
 		return loginInfo;
 	}
@@ -196,7 +197,7 @@ public class ClientInterface {
 		gameInterface.println("/Rule of ID/");
 		gameInterface.print("> ");
 
-		return gameInterface.getCommand();
+		return gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 	}
 
 	public boolean printInvalidIdMessageForRegister() {
@@ -213,7 +214,7 @@ public class ClientInterface {
 		gameInterface.println("/Rule for password/");
 		gameInterface.print("> ");
 
-		return gameInterface.getCommand();
+		return gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 	}
 
 	public boolean printInvalidPwMessageForRegister() {
@@ -229,7 +230,7 @@ public class ClientInterface {
 		gameInterface.println("Re-enter the password to confirm.");
 		gameInterface.print("> ");
 
-		return gameInterface.getCommand();
+		return gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 	}
 
 	public boolean printUnmatchPwMessageForRegister() {
@@ -261,7 +262,7 @@ public class ClientInterface {
 			gameInterface.println("");
 			gameInterface.print("> ");
 
-			command = gameInterface.getCommand();
+			command = gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 		} while (command.equals(""));
 
 		return command;

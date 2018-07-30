@@ -11,6 +11,7 @@ public class XmlWriterClient extends XmlWriter {
 	private static final String PARSER_EXCEPTION = "ParserConfigurationException";
 	private static final String SERVER_STR = "server";
 	private static final String CLIENT_STR = "client";
+	private static final String USER_ID_STR = "user_id";
 	
 	public String makeXmlForLogin(String id, String pw, XmlLoginRole role) {
 		String xmlString = null;
@@ -62,7 +63,7 @@ public class XmlWriterClient extends XmlWriter {
 			//	<common_info user_id="takhh" /> <!-- heart beat message from client every 1 min -->
 			startWritingXml(XmlMessageType.HEART_BEAT, CLIENT_STR, SERVER_STR); 			
 			addChildElement("common_info");
-			setAttributeToElement("user_id", id);
+			setAttributeToElement(USER_ID_STR, id);
 			
 			xmlString = convertDocumentToString();
 			
@@ -84,7 +85,7 @@ public class XmlWriterClient extends XmlWriter {
 				//<common_info user_id="takhh" />	
 				startWritingXml(msgType, CLIENT_STR, SERVER_STR); 			
 				addChildElement("common_info");
-				setAttributeToElement("user_id", id);
+				setAttributeToElement(USER_ID_STR, id);
 				
 				xmlString = convertDocumentToString();
 				
@@ -105,7 +106,7 @@ public class XmlWriterClient extends XmlWriter {
 			//<command user_id="takakak" text="go south" />
 			startWritingXml(XmlMessageType.SEND_COMMAND, CLIENT_STR, SERVER_STR); 			
 			addChildElement("command");
-			setAttributeToElement("user_id", id);
+			setAttributeToElement(USER_ID_STR, id);
 			setAttributeToElement("text", commandStr);
 			
 			xmlString = convertDocumentToString();
