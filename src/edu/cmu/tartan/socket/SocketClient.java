@@ -18,12 +18,7 @@ import edu.cmu.tartan.manager.ResponseMessage;
 import edu.cmu.tartan.manager.SocketMessage;
 import edu.cmu.tartan.xml.XmlParser;
 import edu.cmu.tartan.xml.XmlParserType;
-import edu.cmu.tartan.xml.XmlResponseAddUser;
 import edu.cmu.tartan.xml.XmlResponseClient;
-import edu.cmu.tartan.xml.XmlResponseCommand;
-import edu.cmu.tartan.xml.XmlResponseGameEnd;
-import edu.cmu.tartan.xml.XmlResponseGameStart;
-import edu.cmu.tartan.xml.XmlResponseLogin;
 import edu.cmu.tartan.xml.XmlResultString;
 
 public class SocketClient implements Runnable {
