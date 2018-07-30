@@ -124,6 +124,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	@Override
 	public boolean sendToClient(String userId, String message) {
 		boolean returnValue = false;
+
 		if (clientThreadMap.containsKey(userId)) {
 			returnValue = clientThreadMap.get(userId).sendMessage(message);
 		}
@@ -131,12 +132,11 @@ public class SocketServer implements Runnable, ISocketHandler {
 	}
 	
 	@Override
-	public boolean sendToAll(String userId, String message) {
+	public boolean sendToAll(String message) {
 		boolean returnValue = false;
-		for (String clientId : clientThreadMap.keySet()) {
-			if (!userId.equals(clientId)) {
-				returnValue = clientThreadMap.get(clientId).sendMessage(message);
-			}
+		
+		for (String userId : clientThreadMap.keySet()) {
+			returnValue = clientThreadMap.get(userId).sendMessage(message);
 		}
 		
 		return returnValue;
@@ -173,7 +173,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	}
 	
 	@Override
-	public void updateClientState(String userId, CommandResult result, String threadName) {
+	public void updateSocketState(String userId, CommandResult result, String threadName) {
 		
 		switch (result) {
 			case LOGIN_SUCCESS:
