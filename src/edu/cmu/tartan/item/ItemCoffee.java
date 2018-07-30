@@ -1,7 +1,6 @@
 package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Edible;
-import edu.cmu.tartan.properties.Valuable;
 
 /**
  * This class for coffee cup, which can be eaten.
@@ -11,7 +10,7 @@ import edu.cmu.tartan.properties.Valuable;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class ItemCoffee extends Item implements Edible, Valuable {
+public class ItemCoffee extends Item implements Edible {
 
     /**
      * Constructor
@@ -20,7 +19,6 @@ public class ItemCoffee extends Item implements Edible, Valuable {
      * @param a aliases
      */
     public ItemCoffee(String s, String sd, String[] a) {
-
         super(s, sd, a);
         setValue(1);
     }

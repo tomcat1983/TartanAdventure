@@ -35,10 +35,15 @@ public class RoomExcavatable extends Room {
      */
 	public boolean dig() {
 		if(this.getPlayer().hasItem(Item.getInstance("shovel", this.getPlayer().getUserName()))) {
-			gameInterface.println(digMessage);
-			this.wasDugUp = true;
-			this.getItems().addAll(this.revealableItems);
-			return true;
+			if(!wasDugUp) {
+				gameInterface.println(digMessage);
+				this.wasDugUp = true;
+				this.getItems().addAll(this.revealableItems);
+				return true;
+			} else {
+				gameInterface.println("You're already dig.");
+				return false;
+			}
 		}
 		else {
 			gameInterface.println("You do not have an item you can use to dig.");

@@ -23,13 +23,15 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 	private IQueueHandler queue;
 	
 	private boolean isLogin = false;
-	private String designerId = "";
 	private boolean isLoop = true;
+	private String designerId = "";
+	private String threadName;
 	
 
-	public DesignerClientThread(Socket clientSocket, IQueueHandler queue) {
+	public DesignerClientThread(Socket clientSocket, IQueueHandler queue, String threadName) {
 		this.clientSocket = clientSocket;
 		this.queue = queue;
+		this.threadName = threadName;
 	}
 
 	@Override
@@ -75,7 +77,7 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 					getUserIdFromXml(message);
 				}
 				
-				socketMessage = new SocketMessage(Thread.currentThread().getName(), message);
+				socketMessage = new SocketMessage(threadName, message);
 
 				queue.produce(socketMessage);
 			}

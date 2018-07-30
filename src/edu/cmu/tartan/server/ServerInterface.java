@@ -10,7 +10,7 @@ public class ServerInterface {
 	private GameInterface gameInterface = GameInterface.getInterface();
 
 	public enum Command {
-		UNDECIDED, QUIT
+		UNDECIDED, EXIT
 	}
 
 	public ServerInterface() {
@@ -25,8 +25,8 @@ public class ServerInterface {
 
 			String command = gameInterface.getCommand();
 
-			if (command.equals("quit")) {
-				serverCommand = Command.QUIT;
+			if (command.equals("exit")) {
+				serverCommand = Command.EXIT;
 			}
 		} while(serverCommand == Command.UNDECIDED);
 

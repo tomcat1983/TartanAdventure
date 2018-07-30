@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 
 import edu.cmu.tartan.account.AccountManager;
+import edu.cmu.tartan.socket.CommandResult;
 import edu.cmu.tartan.socket.ISocketHandler;
-import edu.cmu.tartan.socket.SocketServer;
-import edu.cmu.tartan.xml.XmlParser;
+import edu.cmu.tartan.xml.*;
 
 public class TartanGameManager implements Runnable, IUserCommand{
 	
@@ -18,7 +18,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	protected static final Logger gameLogger = Logger.getGlobal();
 	
 	private ISocketHandler socket;
-	private IQueueHandler messageQueue;
+	private IQueueHandler queue;
 	private AccountManager accountManager;
 	private XmlParser xmlParser;
 	
@@ -27,9 +27,9 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	private boolean isLoop = true;
 	private int loginUserCounter = 0;
 	
-	public TartanGameManager (ISocketHandler socket, IQueueHandler messageQueue) {
+	public TartanGameManager (ISocketHandler socket, IQueueHandler queue) {
 		this.socket = socket;
-		this.messageQueue = messageQueue;
+		this.queue = queue;
 		accountManager = new AccountManager();
 		try {
 			xmlParser = new XmlParser();
@@ -53,23 +53,33 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 
         while(isLoop){
-            socketMessage = messageQueue.consume();
+            socketMessage = queue.consume();
             threadName = socketMessage.getThreadName();
             message = socketMessage.getMessage();
             
             if (message != null && !message.isEmpty()) {
-            	processMessage(message);
+            	processMessage(threadName, message);
             }
         }
 		
 	}
 	
-	public boolean sendToAll(String userId, String message) {
+	public boolean sendToAll(String message) {
 		
 		boolean returnValue = false;
 		
-		returnValue = socket.sendToAll(userId, message);
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = xw.makeXmlForEventMessage(message);
 		
+		returnValue = socket.sendToAll(xmlMessage);
+		
+		return returnValue;
+	}
+	
+	public boolean sendToClient(String userId, String message) {
+		boolean returnValue = false;
+		
+		returnValue = socket.sendToClient(userId, message);
 		return returnValue;
 	}
 	
@@ -89,7 +99,8 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	 * @param message	a game message
 	 * @return
 	 */
-	public boolean updateGameState(String userId, String message) {
+	@Override
+	public boolean updateGameState(String userId, String command) {
 		return false;
 	}
 	
@@ -102,14 +113,24 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		return false;
 	}
 	
-	
 	/**
-	 * Exit game
+	 * Help message
 	 * @param userId	a game user ID
 	 * @param message	a game message
 	 * @return
 	 */
-	public boolean updateGameExit(String userId, String message) {
+	public boolean updateHelpMessage(String userId, String message) {
+		return false;
+	}
+	
+	
+	/**
+	 * Exit message
+	 * @param userId	a game user ID
+	 * @param message	a game message
+	 * @return
+	 */
+	public boolean updateExitMessage(String userId, String message) {
 		return false;
 	}
 	
@@ -122,34 +143,62 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		return false;
 	}
 			
-	public void processMessage(String message) {
-		//gameLogger.info("RCV : " + message);
+	public void processMessage(String threadName, String message) {
+
 		String messageType = null;
 		
 		xmlParser.parseXmlFromString(message);
 		messageType = xmlParser.getMessageType();
+		XmlResponse xr = xmlParser.getXmlResponse();
 		
 		switch(messageType) {
 			case("REQ_LOGIN"):
-				//login(xmlParser.getUserId(), xmlParser.getUserPw, xmlParser.getUserType);
+				login(threadName, ((XmlResponseLogin) xr).getId(), ((XmlResponseLogin) xr).getPw(), ((XmlResponseLogin) xr).getRole());
 				break;
 			case("ADD_USER"):
+				register(((XmlResponseAddUser) xr).getId(), ((XmlResponseAddUser) xr).getPw());
+				break;
+			case("REQ_GAME_START"):
+				startGame(((XmlResponseGameStart) xr).getId());
+				break;
+			case("REQ_GAME_END"):
+				endGame(threadName, ((XmlResponseGameEnd)xr).getId());
+				break;
+			case("UPLOAD_MAP_DESIGN"):
+				// Map is auto saved
+				//TODO Send the result to client				
+				break;
+			case("SEND_COMMAND"):
+				sendCommand(((XmlResponseCommand)xr).getId(), ((XmlResponseCommand)xr).getCmd());
+				break;
+			default:
 				break;
 		}
 	}
 
 	@Override
-	public boolean login(String userId, String userPw) {
+	public boolean login(String threadName, String userId, String userPw, XmlLoginRole role) {
 		boolean returnValue = false;
-		returnValue = accountManager.loginUser(userId, userPw, "0");
+		returnValue = accountManager.loginUser(userId, userPw, role.name());
 		
 		if (returnValue) {
 			returnValue = registerNewUser(userId);
 		}
 		
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = null;
+		
 		if (returnValue) {
 			loginUserCounter++;
+			socket.updateSocketState(userId, CommandResult.LOGIN_SUCCESS, threadName);
+			xmlMessage = xw.makeXmlForLogin(XmlResultString.OK, XmlNgReason.OK);
+		} else {
+			socket.updateSocketState(userId, CommandResult.LOGIN_FAIL, threadName);
+			xmlMessage = xw.makeXmlForLogin(XmlResultString.NG, XmlNgReason.INVALID_INFO);
 		}
+		
+		returnValue = sendToClient(userId, xmlMessage);
+		
 		return returnValue;
 	}
 
@@ -157,44 +206,69 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	public boolean register(String userId, String userPw) {
 		boolean returnValue = false;
 		returnValue = accountManager.registerUser(userId, userPw, "0");
+		
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = null;
+		
+		if (returnValue) {
+			xmlMessage = xw.makeXmlForAddUser(XmlResultString.OK, XmlNgReason.OK);
+		} else {
+			xmlMessage = xw.makeXmlForAddUser(XmlResultString.NG, XmlNgReason.INVALID_INFO);
+		}
+		
+		returnValue = sendToClient(userId, xmlMessage);
+		
 		return returnValue;
 	}
 
 	@Deprecated
 	@Override
 	public boolean validateUserId(String userId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Deprecated
 	@Override
 	public boolean validateUserPw(String userPw) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean startGame(String message) {
+	public boolean startGame(String userId) {
 		
-		if (loginUserCounter < 2) return false;
+		if (loginUserCounter < 2) {
+			// TODO Send the result to client
+			return false;
+		}
 		
 		boolean returnValue = false;
 		
 		for (String key : tartanGames.keySet()) {
+			
+			// TODO How to start game?
 			returnValue = tartanGames.get(key).controlGame("start");
 			if (!returnValue) {
 				break;
 			}
 		}
 		
-		((SocketServer)socket).setIsPlaying(returnValue);
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = null;
+		
+		if (returnValue) {
+			socket.updateSocketState(userId, CommandResult.START_GAME_SUCCESS, null);
+			xmlMessage = xw.makeXmlForAddUser(XmlResultString.OK, XmlNgReason.OK);
+		} else {
+			xmlMessage = xw.makeXmlForAddUser(XmlResultString.NG, XmlNgReason.INVALID_INFO);
+		}
+		
+		returnValue = sendToAll(xmlMessage);
 		
 		return returnValue;
 	}
 
 	@Override
-	public boolean endGame(String userId) {
+	public boolean endGame(String threadName, String userId) {
 		
 		boolean returnValue = false;
 		
@@ -202,10 +276,11 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			if(userId.equals(key)) {
 				returnValue = tartanGames.get(key).controlGame("exit");
 				tartanGames.remove(key);
+				socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
 			}
 			loginUserCounter--;
 			if (loginUserCounter < 1) {
-				((SocketServer)socket).setIsPlaying(false);
+				socket.updateSocketState(userId, CommandResult.END_GAME_ALL_USER, threadName);
 				
 			}
 		}
@@ -217,6 +292,18 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	public boolean uploadMap(String mapFile) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public boolean sendCommand(String userId, String command) {
+		
+		boolean returnValue = false;
+		
+		for (String key : tartanGames.keySet()) {
+			if (userId.equals(key)) {
+				returnValue = tartanGames.get(key).controlGame(command);
+			}
+		}
+		return returnValue;
 	}
 
 	

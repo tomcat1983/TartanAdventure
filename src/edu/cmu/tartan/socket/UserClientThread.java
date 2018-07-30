@@ -23,13 +23,15 @@ public class UserClientThread implements Runnable, ISocketMessage {
 	private IQueueHandler queue;
 	
 	private boolean isLogin = false;
-	private String userId = "";
 	private boolean isLoop = true;
+	private String userId = "";
+	private String threadName = "";
 	
 
-	public UserClientThread(Socket clientSocket, IQueueHandler queue) {
+	public UserClientThread(Socket clientSocket, IQueueHandler queue, String threadName) {
 		this.clientSocket = clientSocket;
 		this.queue = queue;
+		this.threadName = threadName;
 	}
 
 	@Override
@@ -75,7 +77,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 					getUserIdFromXml(message);
 				}
 				
-				socketMessage = new SocketMessage(Thread.currentThread().getName(), message);
+				socketMessage = new SocketMessage(threadName, message);
 
 				queue.produce(socketMessage);
 			}
@@ -101,6 +103,10 @@ public class UserClientThread implements Runnable, ISocketMessage {
 		this.isLogin = isLogin;
 	}
 	
+	public String getThreadName() {
+		return threadName;
+	}
+	
 	public boolean stopSocket() {
 		boolean returnValue = false;
 		isLoop = false;
@@ -116,4 +122,5 @@ public class UserClientThread implements Runnable, ISocketMessage {
 		
 		return returnValue;
 	}
+	
 }

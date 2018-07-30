@@ -29,8 +29,6 @@ public class Config {
 
 	public Config (String fileName) {
 		this.fileName = fileName;
-
-		readPropertyFile();
 	}
 
 	public boolean readPropertyFile() {

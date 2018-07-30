@@ -246,7 +246,9 @@ class TestPlayerExecutionEngine {
 	    	ItemFood food = (ItemFood) Item.getInstance("food", Player.DEFAULT_USER_NAME);
 	    	food.setMeltItem(mbox);
 	    	micro.install(food);
-	    	
+	    	//player.grabItem(food);
+	    	//action = interpreter.interpretString("put food in microwave", actionExecutionUnit);
+	    	//assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	    	action = interpreter.interpretString("enable microwave", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 		} catch (TerminateGameException e) {
@@ -336,14 +338,14 @@ class TestPlayerExecutionEngine {
 		// Dig
     	Action action = interpreter.interpretString("dig shovel", actionExecutionUnit);
     	try {
-			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
-	    	
+			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));	    	
 	    	RoomExcavatable romm2 = new RoomExcavatable("Shovel","digdig","^~~~^");
 	    	player = new Player(romm2, Player.DEFAULT_USER_NAME);
 	    	player.grabItem(shovel);
 	    	playerExecutionEngine = new PlayerExecutionEngine(player);
 	    	action = interpreter.interpretString("dig shovel", actionExecutionUnit);
-	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));	
+	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
 		}
@@ -536,7 +538,7 @@ class TestPlayerExecutionEngine {
     	ItemShovel shovel = (ItemShovel) Item.getInstance("shovel", Player.DEFAULT_USER_NAME);
     	player.grabItem(shovel);
     	Action action = interpreter.interpretString("eat shovel", actionExecutionUnit);
-    	assertThrows(TerminateGameException.class,() -> {
+    	Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);	
     	});
 	}
@@ -545,7 +547,7 @@ class TestPlayerExecutionEngine {
 	public void testItShouldThrowTerminateGameExceptionWhenUserInputTerminate() {
 		// terminate
     	Action action = interpreter.interpretString("terminate", actionExecutionUnit);
-    	assertThrows(TerminateGameException.class,() -> {
+    	Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
 	}
@@ -557,7 +559,7 @@ class TestPlayerExecutionEngine {
 		room1.putItem(vm);
 		// Shake
     	Action action = interpreter.interpretString("shake machine", actionExecutionUnit);
-    	assertThrows(TerminateGameException.class,() -> {
+    	Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
@@ -572,8 +574,7 @@ class TestPlayerExecutionEngine {
 		room1.setAdjacentRoom(Action.ACTION_GO_WEST, end);
 		//player.grabItem(flashlight);
 		
-		
-    	assertThrows(TerminateGameException.class,() -> {
+		Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		Action action = interpreter.interpretString("west", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		action = interpreter.interpretString("east", actionExecutionUnit);
@@ -582,6 +583,7 @@ class TestPlayerExecutionEngine {
     		action = interpreter.interpretString("west", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
+		assertEquals("Terminate Game", exception.getMessage());
 	}
 
 	@Test
@@ -594,10 +596,11 @@ class TestPlayerExecutionEngine {
 		room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2);
 		((RoomRequiredItem)room2).setPlayerDiesOnEntry(true);
 		
-    	assertThrows(TerminateGameException.class,() -> {
+		Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		Action action = interpreter.interpretString("west", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
+		assertEquals("Terminate Game", exception.getMessage());
 	}
 
 	@Test
@@ -609,12 +612,13 @@ class TestPlayerExecutionEngine {
 		playerExecutionEngine = new PlayerExecutionEngine(player);	
 		player.grabItem(mbox);
 		
-    	assertThrows(TerminateGameException.class,() -> {
+		Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		Action action = interpreter.interpretString("drop pit", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		((RoomRequiredItem)room2).setPlayerDiesOnItemDiscard(true);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
+		assertEquals("Terminate Game", exception.getMessage());
 	}
 	
 	@Test
@@ -625,10 +629,11 @@ class TestPlayerExecutionEngine {
 		player = new Player(room2, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);	
 		
-    	assertThrows(TerminateGameException.class,() -> {
+		Throwable exception = assertThrows(TerminateGameException.class,() -> {
     		Action action = interpreter.interpretString("east", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
+		assertEquals("Terminate Game", exception.getMessage());
 	}
 
 	@Test
@@ -637,9 +642,11 @@ class TestPlayerExecutionEngine {
 		player = new Player(room2, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);
 		
-		assertThrows(TerminateGameException.class,() -> {
+		Throwable exception = assertThrows(TerminateGameException.class,() -> {
 			Action action = interpreter.interpretString("west", actionExecutionUnit);
 			playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
+		
+		assertEquals("Terminate Game", exception.getMessage());
 	}
 }

@@ -42,8 +42,8 @@ public class Server {
 			ServerInterface.Command command = serverInterface.getCommand();
 
 			switch (command) {
-			case QUIT:
-				tartanGameManager.endGame("quit");
+			case EXIT:
+				tartanGameManager.endGame("threadName","quit");
 				gameManagerThread.interrupt();
 				socketServer.stopSocket();
 				running = false;

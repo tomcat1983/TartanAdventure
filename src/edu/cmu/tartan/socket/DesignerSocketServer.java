@@ -60,8 +60,8 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 				gameLogger.info("New client connected");
 				socketCounter++;
 				
-				DesignerClientThread clientHandler = new DesignerClientThread(socket, messageQueue);
 				String threadName = String.format("Designer %d", socketCounter);
+				DesignerClientThread clientHandler = new DesignerClientThread(socket, messageQueue, threadName);
 				Thread thread = new Thread(clientHandler, threadName);
 				thread.start();
 				
@@ -114,19 +114,20 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	}
 	
 	@Override
-	public boolean sendToAll(String userId, String message) {
+	public boolean sendToAll(String message) {
 		boolean returnValue = false;
+		/*
 		for (String clientId : clientThreadMap.keySet()) {
 			if (!userId.equals(clientId)) {
 				returnValue = clientThreadMap.get(clientId).sendMessage(message);
 			}
-		}
+		}*/
 		
 		return returnValue;
 	}
 
 	@Override
-	public boolean addClient(String userId) {
+	public boolean addClient(String userId, String threadName) {
 		for(DesignerClientThread clientThread : clientThreadList) {
 			if (userId.equals(clientThread.getUserId())) {
 				clientThreadMap.put(userId, clientThread);
@@ -154,7 +155,14 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	}
 	
 	@Override
-	public void updateClientState(String userId, String message) {
-		
+	public void updateSocketState(String userId, CommandResult result, String threadName) {
+		switch (result) {
+		case LOGIN_SUCCESS:
+			break;
+		case LOGIN_FAIL:
+			break;
+		default:
+			break;
+		}
 	}
 }
