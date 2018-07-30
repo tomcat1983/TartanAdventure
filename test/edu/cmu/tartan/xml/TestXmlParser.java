@@ -43,6 +43,7 @@ public class TestXmlParser {
 	String gameXmlInvalidRoomCntMatchFileName;
 	String gameStartXmlFileName;
 	String gameEndXmlFileName;
+	String sendCommandInvalidXmlFileName;
 
 	
     @BeforeEach
@@ -58,6 +59,7 @@ public class TestXmlParser {
     	gameXmlInvalidRoomCntMatchFileName = "test/edu/cmu/tartan/xml/GameXmlInvalidRoomCntMatch.xml";
     	gameStartXmlFileName = "test/edu/cmu/tartan/xml/RequestGameStart.xml";
     	gameEndXmlFileName = "test/edu/cmu/tartan/xml/RequestGameEnd.xml";
+    	sendCommandInvalidXmlFileName = "test/edu/cmu/tartan/xml/SendCommandInvalid.xml";
 
     }
 	
@@ -401,23 +403,38 @@ public class TestXmlParser {
 		assertTrue(pw.equals("awefaweg14ro4aw3"));
 	}
 	
-	@Disabled("Describe how to make login result XML")
 	@Test
 	public void testWritingLoginResultOK() throws ParserConfigurationException {
 		
+		XmlResultString xrs = XmlResultString.OK;
+		XmlNgReason xnr = XmlNgReason.OK;
+		
 		XmlWriterServer xw = new XmlWriterServer(); 
-		xw.makeXmlForLogin(XmlResultString.OK, XmlNgReason.OK);
+		String xmlStr = xw.makeXmlForLogin(xrs, xnr);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(xmlStr);
+		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
+		assertTrue(xr.getResultStr().equals(xrs));
+		assertTrue(xr.getNgReason().equals(xnr));
 	}
 	
-	@Disabled("Describe how to make login result XML")
 	@Test
 	public void testWritingLoginResultFail() throws ParserConfigurationException {
 		
+		XmlResultString xrs = XmlResultString.NG;
+		XmlNgReason xnr = XmlNgReason.SERVER_BUSY;
+		
 		XmlWriterServer xw = new XmlWriterServer(); 
-		xw.makeXmlForLogin(XmlResultString.NG, XmlNgReason.SERVER_BUSY);
+		String xmlStr = xw.makeXmlForLogin(xrs, xnr);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(xmlStr);
+		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
+		assertTrue(xr.getResultStr().equals(xrs));
+		assertTrue(xr.getNgReason().equals(xnr));
 	}
 	
-	@Disabled("Describe how to make game upload XML")
 	@Test
 	public void testWritingUploadMapOK() throws ParserConfigurationException {
 		
@@ -426,12 +443,19 @@ public class TestXmlParser {
 	}
 	
 	
-	@Disabled("Describe how to make EventMessage")
 	@Test
 	public void testWritingEventMessage() throws ParserConfigurationException {
 		
+		String eventMsg = "hello client\n this is message from server";
+		String eventId = "eventid";
 		XmlWriterServer xw = new XmlWriterServer(); 
-		xw.makeXmlForEventMessage("userid", "hello client\n this is message from server");
+		String xmlStr = xw.makeXmlForEventMessage(eventId, eventMsg);
+		
+		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
+		xp.parseXmlFromString(xmlStr);
+		XmlResponseClient xr = (XmlResponseClient)xp.getXmlResponse();
+		assertTrue(eventId.equals(xr.getId()));
+		assertTrue(eventMsg.equals(xr.getEventMsg()));
 	}
 	
 	
@@ -486,6 +510,13 @@ public class TestXmlParser {
 		assertTrue(id.equals("gameEndId"));
 	}
 	
+	@Test
+	public void testParsingSendCommandInvalid() throws ParserConfigurationException {
+		
+		XmlParser parseXml = new XmlParser();
+		XmlParseResult xpr = parseXml.parseXmlFromString(readAllBytes(sendCommandInvalidXmlFileName));
+		assertTrue(xpr.equals(XmlParseResult.INVALID_DATA));
+	}
 	
 	@Test
 	public void testGameDescription() throws ParserConfigurationException {
