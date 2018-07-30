@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import edu.cmu.tartan.manager.IQueueHandler;
+import edu.cmu.tartan.manager.MessageQueue;
+import edu.cmu.tartan.manager.TartanGameManager;
+import edu.cmu.tartan.socket.ISocketHandler;
+import edu.cmu.tartan.socket.SocketServer;
 import edu.cmu.tartan.test.Commander;
 
 public class TestGameInterface {
@@ -62,5 +67,22 @@ public class TestGameInterface {
 
 		gameInterface.print("Message");
 		gameInterface.println("PrintLine");
+	}
+
+	@Test
+	public void testSetGameManager() {
+		System.out.println("testSetGameManager");
+
+		IQueueHandler messageQueue = new MessageQueue();
+		ISocketHandler socketServer = new SocketServer(messageQueue);
+		TartanGameManager manager = new TartanGameManager(socketServer, messageQueue);
+
+		gameInterface.setGameManager(manager);
+
+		gameInterface.putCommand("testCommand");
+
+		String command = gameInterface.getCommand();
+
+		assertTrue(command.equals("testCommand"));
 	}
 }
