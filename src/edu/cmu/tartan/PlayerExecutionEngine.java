@@ -10,7 +10,6 @@ import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemCPU;
 import edu.cmu.tartan.item.ItemComputer;
-import edu.cmu.tartan.item.ItemMagicBox;
 import edu.cmu.tartan.properties.Chuckable;
 import edu.cmu.tartan.properties.Destroyable;
 import edu.cmu.tartan.properties.Edible;
@@ -23,7 +22,6 @@ import edu.cmu.tartan.properties.Openable;
 import edu.cmu.tartan.properties.Pushable;
 import edu.cmu.tartan.properties.Shakeable;
 import edu.cmu.tartan.properties.Startable;
-import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.RoomElevator;
 import edu.cmu.tartan.room.RoomExcavatable;
 import edu.cmu.tartan.room.RoomRequiredItem;
@@ -387,10 +385,6 @@ public class PlayerExecutionEngine {
         }
         else if(!player.currentRoom().hasItem(itemToBePutInto)) {
             gameInterface.println(player.getUserName(), MessageType.PRIVATE, "That object doesn't exist in this room.");
-            return false;
-        }
-        else if(itemToBePutInto instanceof ItemMagicBox && !(itemToPut instanceof Valuable)) {
-            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "This item has no value--putting it in this " + itemToBePutInto + " will not score you any points.");
             return false;
         }
         else if(!(itemToBePutInto instanceof Hostable) || !(itemToPut instanceof Installable)) {
