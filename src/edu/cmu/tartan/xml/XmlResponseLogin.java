@@ -42,7 +42,7 @@ public class XmlResponseLogin extends XmlResponse {
 		nList = getNodeListOfGivenTag("login_info", doc);
 		idStr = getAttributeValueAtNthTag("id", nList, 0);	//id should be unique. 
 		pwStr = getAttributeValueAtNthTag("pw", nList, 0);	//pw should be unique. encrypted.  
-		role = XmlLoginRole.valueOf(getAttributeValueAtNthTag("role", nList, 0));	//role should be unique. 
+		role = XmlLoginRole.valueOf(getAttributeValueAtNthTag("role", nList, 0).toUpperCase());	//role should be unique. 
 		
 		if(idStr == null || pwStr == null || role == null) {
 			return XmlParseResult.INVALID_DATA;
