@@ -351,7 +351,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	public boolean uploadMap(String userId) {
 		boolean returnValue = false;
 		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = xw.makeXmlForGameUpload(XmlParseResult.SUCCESS, XmlNgReason.OK);
+		String xmlMessage = xw.makeXmlForGameUpload(XmlResultString.OK, XmlNgReason.OK);
 		returnValue = sendToClient(userId, xmlMessage);
 		
 		return returnValue;
