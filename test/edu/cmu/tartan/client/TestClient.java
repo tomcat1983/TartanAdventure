@@ -7,10 +7,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.test.Commander;
 
 class TestClient {
+
+	/**
+	 * Game interface for game message and log
+	 */
+	private GameInterface gameInterface = GameInterface.getInterface();
 
 	Commander commander = null;
 
@@ -33,7 +39,7 @@ class TestClient {
 		commander.add("help");
 		commander.add("1");
 		commander.add("new");
-		commander.add("1");
+		commander.add("9");
 		commander.add("quit");
 		commander.add("no");
 		commander.add("exit");
@@ -45,7 +51,7 @@ class TestClient {
 		commander.add("55");
 		commander.add("1");
 		commander.add("new");
-		commander.add("1");
+		commander.add("9");
 		commander.add("quit");
 		commander.add("no");
 		commander.add("exit");
@@ -56,7 +62,7 @@ class TestClient {
 	void testWhenSelectLocalGameAndNewGame() {
 		commander.add("1");
 		commander.add("new");
-		commander.add("1");
+		commander.add("9");
 		commander.add("quit");
 		commander.add("no");
 		commander.add("exit");
@@ -73,10 +79,11 @@ class TestClient {
 		commander.apply();
 	}
 
-	@Disabled
 	@Test
 	void testWhenSelectNetworkGameMode() {
 		commander.add("2");
+		commander.add("quit");
+		commander.add("exit");
 		commander.apply();
 	}
 
