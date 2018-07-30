@@ -63,9 +63,10 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
     protected Item relatedItem; 
 
     private String inspectMessage;
-
-	private static Map<String, Map<String, Item>>itemMapbyUser;
+    
+    private static Map<String, Map<String, Item>>itemMapbyUser;
 	private static Map<String, Item>itemMap;
+	protected String userId;
     /**
      * Create a new item
      * @param description short description
@@ -129,6 +130,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
      * @return the newly instantiated item
      */
     public static Item getInstance(String itemName, String userId) {
+    	this.userId = userId;
     	if (itemMapbyUser == null) {
     		itemMapbyUser = new HashMap<>();
         	itemMap = new HashMap<>();

@@ -13,7 +13,9 @@ import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemBrick;
 import edu.cmu.tartan.item.ItemButton;
+import edu.cmu.tartan.item.ItemCPU;
 import edu.cmu.tartan.item.ItemClayPot;
+import edu.cmu.tartan.item.ItemComputer;
 import edu.cmu.tartan.item.ItemDocument;
 import edu.cmu.tartan.item.ItemDynamite;
 import edu.cmu.tartan.item.ItemFlashlight;
@@ -25,6 +27,7 @@ import edu.cmu.tartan.item.ItemMicrowave;
 import edu.cmu.tartan.item.ItemSafe;
 import edu.cmu.tartan.item.ItemShovel;
 import edu.cmu.tartan.item.ItemVendingMachine;
+import edu.cmu.tartan.item.StringForItems;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomDark;
 import edu.cmu.tartan.room.RoomElevator;
@@ -208,6 +211,7 @@ class TestPlayerExecutionEngine {
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionShake() {
 		ItemVendingMachine vm = (ItemVendingMachine) Item.getInstance("machine", Player.DEFAULT_USER_NAME);
+		vm.setCount(0);		
 		room1.putItem(vm);
 		ItemKey key = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
     	player.grabItem(key);
@@ -528,6 +532,45 @@ class TestPlayerExecutionEngine {
 
 	    	action = interpreter.interpretString("remove any from pit", actionExecutionUnit);
 	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+		} catch (TerminateGameException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	void testWhenexecuteActionCallWithInDirectObjectWithComputerAndCPU() {
+    	try {
+    		ItemComputer com = (ItemComputer)Item.getInstance(StringForItems.COMPUTER, Player.DEFAULT_USER_NAME);
+    		ItemCPU cpu = (ItemCPU)Item.getInstance(StringForItems.CPU, Player.DEFAULT_USER_NAME);
+    		player.grabItem(cpu);
+    		room1.putItem(com);
+    		Action action = interpreter.interpretString("put cpu in computer", actionExecutionUnit);
+			assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+			action = interpreter.interpretString("remove cpu from computer", actionExecutionUnit);
+			assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));			
+		} catch (TerminateGameException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	void testWhenexecuteActionCallWithInDirectObjectWithPutNoHostableAndNoInstall() {
+    	try {
+    		ItemComputer com = (ItemComputer)Item.getInstance(StringForItems.COMPUTER, Player.DEFAULT_USER_NAME);
+    		ItemCPU cpu = (ItemCPU)Item.getInstance(StringForItems.CPU, Player.DEFAULT_USER_NAME);
+    		ItemShovel shovel = (ItemShovel) Item.getInstance("shovel", Player.DEFAULT_USER_NAME);
+    		ItemVendingMachine vm = (ItemVendingMachine) Item.getInstance("machine", Player.DEFAULT_USER_NAME);
+        	player.grabItem(shovel);
+    		player.grabItem(cpu);
+    		room1.putItem(com);
+    		room1.putItem(vm);
+
+    		Action action = interpreter.interpretString("put shovel in computer", actionExecutionUnit);
+			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+			
+			action = interpreter.interpretString("put cpu in machine", actionExecutionUnit);
+			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
 		}

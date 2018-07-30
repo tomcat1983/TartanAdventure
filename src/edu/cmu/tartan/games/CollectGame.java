@@ -6,6 +6,7 @@ import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GameCollectGoal;
 import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.item.ItemFood;
 import edu.cmu.tartan.item.StringForItems;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomLockable;
@@ -60,6 +61,9 @@ public class CollectGame extends GameConfiguration {
         start.setAdjacentRoom(Action.ACTION_GO_WEST, end);
         start.putItems(startItems);
 
+        
+        ItemFood food = (ItemFood)Item.getInstance("food", context.getUserId());
+        food.setMeltItem(Item.getInstance("diamond", context.getUserId()));
         // Now we configure the goal based on picking up items
         ArrayList<String> goalItems = new ArrayList<>();
         goalItems.add("brick");
