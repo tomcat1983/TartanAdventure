@@ -19,8 +19,8 @@ public class ItemGold extends Item implements Installable, Holdable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemGold(String s, String sd, String[] a) {
-        super(s, sd, a);
+    public ItemGold(String s, String sd, String[] a, String userId) {
+        super(s, sd, a, userId);
         setValue(500);
     }
 }

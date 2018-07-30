@@ -19,9 +19,9 @@ public class ItemKey extends Item implements Holdable, Installable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemKey(String s, String sd, String[] a) {
+    public ItemKey(String s, String sd, String[] a, String userId) {
 
-        super(s, sd, a);
+        super(s, sd, a, userId);
         setValue(40);
     }
 }

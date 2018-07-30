@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Openable;
 
@@ -21,8 +22,8 @@ public class ItemSafe extends Item implements Hostable, Openable {
     // The safe's pin, which controls entry
     private Integer pin = null;
 
-    public ItemSafe(String d, String sd, String[] a) {
-        super(d, sd, a);
+    public ItemSafe(String d, String sd, String[] a, String userId) {
+        super(d, sd, a, userId);
         installedItem = null;
         pin = null;
         setValue(750);
@@ -81,17 +82,17 @@ public class ItemSafe extends Item implements Hostable, Openable {
     @Override
     public Boolean open() {
         Scanner s = new Scanner(System.in);
-        gameInterface.println("Enter the four-digit PIN number.");
+        gameInterface.println(userId, MessageType.PRIVATE, "Enter the four-digit PIN number.");
         Integer p = Integer.parseInt(s.nextLine());
         if (p.intValue() == this.pin.intValue()) {
         	if (this.installedItem != null) {
         		this.installedItem.setVisible(true);
-        		gameInterface.println("The safe door swings open.");
-        		gameInterface.println("You have revealed a '" + this.installedItem.detailDescription() + "'.");
+        		gameInterface.println(userId, MessageType.PRIVATE, "The safe door swings open.");
+        		gameInterface.println(userId, MessageType.PRIVATE, "You have revealed a '" + this.installedItem.detailDescription() + "'.");
             }
             return true;
         } else {
-        	gameInterface.println("Incorrect PIN.");
+        	gameInterface.println(userId, MessageType.PRIVATE, "Incorrect PIN.");
         }
         return false;
     }

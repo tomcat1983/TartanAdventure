@@ -1,5 +1,6 @@
 package edu.cmu.tartan;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.action.Type;
@@ -71,7 +72,7 @@ public abstract class Game {
         for (int i = 0; i < menu.size(); i++) {
             sb.append( (i+1) + ":  " + menu.get(i).getName() + "\n");
         }
-        gameInterface.println(sb.toString());
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, sb.toString());
     }
     
     protected GameConfiguration gameFromXML(GameMode mode) {
@@ -122,17 +123,17 @@ public abstract class Game {
                     context.setGameName(gameConfig.getName());
                     return gameConfig.configure(context);
             	} else {
-            		gameInterface.println("Invaild selection");
+            		gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Invaild selection");
             		return false;
             	}
             }
         }
         catch (InvalidGameException ige) {
-        	gameInterface.println("Game improperly configured, please try again.");
+        	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Game improperly configured, please try again.");
             return false;
         }
         catch(Exception e) {
-        	gameInterface.println("Invalid selection.");
+        	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Invalid selection.");
         }
     	
     	return false;
@@ -148,7 +149,7 @@ public abstract class Game {
         	boolean result = false;
             while(!result) {
                 printMenu(menu);
-                gameInterface.print("> ");
+                gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
                 String input = gameInterface.getCommand();
                 result = loadGame(input, menu); 
             }
@@ -162,7 +163,7 @@ public abstract class Game {
     }
     
     private boolean processGameCommand(String input) throws TerminateGameException {
-    	if (input.compareTo("quit") == 0) {
+    	if (this instanceof LocalGame && input.compareTo("quit") == 0) {
     		return handleQuit();
         }
         else if (input.compareTo("look") == 0) {
@@ -174,7 +175,7 @@ public abstract class Game {
         else if (input.compareTo("status") == 0) {
             status();
         }
-        else if(input.compareTo("save") == 0 ) {
+        else if(this instanceof LocalGame && input.compareTo("save") == 0 ) {
         	handleSave();
         }
         else {
@@ -195,14 +196,14 @@ public abstract class Game {
      * Start the Game.
      */
     public void start() {
-    	gameInterface.print("Enjoy your game!");
+    	gameInterface.print(context.getUserId(), MessageType.PRIVATE, "Enjoy your game!");
 
         // Orient the player
         context.getPlayer().lookAround();
         try {
             String input = null;
             while(true) {
-            	gameInterface.print("> ");
+            	gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
 
                 input = gameInterface.getCommand();
                 if(processGameCommand(input)) {
@@ -216,7 +217,7 @@ public abstract class Game {
         	gameLogger.severe(e.getMessage());
             start();
         } 
-        gameInterface.println("Game Over");
+        gameInterface.println(context.getUserId(), MessageType.LOSE, "Game Over");
     }
 
     /**
@@ -224,20 +225,20 @@ public abstract class Game {
      */
     private void winGame() {
 
-    	gameInterface.println("Congrats!");
+    	gameInterface.println(context.getUserId(), MessageType.WIN, "Congrats!");
 
-    	gameInterface.println("You've won the '" + context.getGameName() + "' game!\n" );
-    	gameInterface.println("- Final score: " + context.getPlayer().getScore());
-    	gameInterface.println("- Final inventory: ");
+    	gameInterface.println(context.getUserId(), MessageType.WIN, "You've won the '" + context.getGameName() + "' game!\n" );
+    	gameInterface.println(context.getUserId(), MessageType.WIN, "- Final score: " + context.getPlayer().getScore());
+    	gameInterface.println(context.getUserId(), MessageType.WIN, "- Final inventory: ");
         if (context.getPlayer().getCollectedItems().isEmpty()) {
-        	gameInterface.println("You don't have any items.");
+        	gameInterface.println(context.getUserId(), MessageType.WIN, "You don't have any items.");
         }
         else {
             for (Item i : context.getPlayer().getCollectedItems()) {
-                gameInterface.println(i.toString() + " ");
+                gameInterface.println(context.getUserId(), MessageType.WIN, i.toString() + " ");
             }
         }
-        gameInterface.println("\n");
+        gameInterface.println(context.getUserId(), MessageType.WIN, "\n");
     }
 
     /**
@@ -259,44 +260,44 @@ public abstract class Game {
     private void status() {
     	Player player = context.getPlayer();
     	
-        gameInterface.println("The current game is '" + context.getGameName() + "': " + context.getGameDescription());
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "The current game is '" + context.getGameName() + "': " + context.getGameDescription());
 
 		if(context.getGoals().size() == 1)
-			gameInterface.println("- There is a goal to achive");
+			gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- There is a goal to achive");
 		else
-			gameInterface.println("- There are " + context.getGoals().size() + " goals to achive");
+			gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- There are " + context.getGoals().size() + " goals to achive");
         
         
         for (int i=0; i < context.getGoals().size(); i++) {
-            gameInterface.println((i+1)+ " "+ context.getGoals().get(i).describe() + " - status: " + context.getGoals().get(i).getStatus());
+            gameInterface.println(context.getUserId(), MessageType.PRIVATE, (i+1)+ " "+ context.getGoals().get(i).describe() + " - status: " + context.getGoals().get(i).getStatus());
         }
-        gameInterface.println("\n");
-        gameInterface.println("- Current room:  " + player.currentRoom() + "\n");
-        gameInterface.println("- Items in current room: ");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- Current room:  " + player.currentRoom() + "\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- Items in current room: ");
         for (Item i : player.currentRoom().getItems()) {
-            gameInterface.println("   * " + i.toString() + " ");
+            gameInterface.println(context.getUserId(), MessageType.PRIVATE, "   * " + i.toString() + " ");
         }
-        gameInterface.println("\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "\n");
 
-        gameInterface.println("- Current score: " + player.getScore());
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- Current score: " + player.getScore());
 
-        gameInterface.println("- Current inventory: ");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- Current inventory: ");
         if (player.getCollectedItems().isEmpty()) {
-            gameInterface.println("   You don't have any items.");
+            gameInterface.println(context.getUserId(), MessageType.PRIVATE, "   You don't have any items.");
         } else {
             for (Item i : player.getCollectedItems()) {
-                gameInterface.println("   * " + i.toString() + " ");
+                gameInterface.println(context.getUserId(), MessageType.PRIVATE, "   * " + i.toString() + " ");
             }
         }
-        gameInterface.println("\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "\n");
 
-        gameInterface.println("- Rooms visited: ");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- Rooms visited: ");
         List<Room> rooms = player.getRoomsVisited();
         if (rooms.isEmpty()) {
-            gameInterface.println("You have not been to any rooms.");
+            gameInterface.println(context.getUserId(), MessageType.PRIVATE, "You have not been to any rooms.");
         } else {
             for (Room r : rooms) {
-                gameInterface.println("  * " +r.description() + " ");
+                gameInterface.println(context.getUserId(), MessageType.PRIVATE, "  * " +r.description() + " ");
             }
         }
     }
@@ -309,12 +310,12 @@ public abstract class Game {
      */
     private void help() {
         // Credit to emacs Dunnet by Ron Schnell
-        gameInterface.println("Welcome to TartanAdventure RPG Help." +
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Welcome to TartanAdventure RPG Help." +
                 "Here is some useful information (read carefully because there are one\n" +
                 "or more clues in here):\n");
 
-        gameInterface.println("- To view your current items: type \"inventory\"\n");
-        gameInterface.println("- You have a number of actions available:\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- To view your current items: type \"inventory\"\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- You have a number of actions available:\n");
 
         StringBuilder directions = new StringBuilder("Direction: go [");
         StringBuilder dirobj = new StringBuilder("Manipulate object directly: [");
@@ -337,51 +338,51 @@ public abstract class Game {
         indirobj.append("]");
         misc.append("]");
 
-        gameInterface.println("- "+ directions.toString() + "\n");
-        gameInterface.println("- " + dirobj.toString() + "\n");
-        gameInterface.println("- " + indirobj.toString() + "\n");
-        gameInterface.println("- " +misc.toString() + "\n");
-        gameInterface.println("- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
-        gameInterface.println("- You can quit by typing \"quit\"\n");
-        gameInterface.println("- Good luck!\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- "+ directions.toString() + "\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- " + dirobj.toString() + "\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- " + indirobj.toString() + "\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- " +misc.toString() + "\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- You can quit by typing \"quit\"\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- Good luck!\n");
     }
 
     /**
      * Show the game introduction
      */
     public void showIntro() {
-        gameInterface.println("Welcome to Tartan Adventure (1.0), by Tartan Inc..");
-        gameInterface.println("Game: " + context.getGameDescription());
-        gameInterface.println("To get help type 'help' ... let's begin\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Welcome to Tartan Adventure (1.0), by Tartan Inc..");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Game: " + context.getGameDescription());
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "To get help type 'help' ... let's begin\n");
     }
     
     public boolean handleSave() {
     	if(this instanceof ServerGame) {
-    		gameInterface.print(GamePlayMessage.SAVE_CANNOT_10_6);
+    		gameInterface.print(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.SAVE_CANNOT_10_6);
     		return false;
     	}
     	if(this instanceof LocalGame) {
     		((LocalGame)this).save(context.getUserId());
-    		gameInterface.print(GamePlayMessage.SAVE_SUCCESSFUL_10_4);
+    		gameInterface.print(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.SAVE_SUCCESSFUL_10_4);
     		return true;
     	} else {
-    		gameInterface.println(GamePlayMessage.SAVE_FAILURE_2_3);
+    		gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.SAVE_FAILURE_2_3);
     		return false;
     	}    	
     }
     
     public boolean handleQuit() {
         for (GameGoal g: context.getGoals()) {
-        	gameInterface.println(g.getStatus());
+        	gameInterface.println(context.getUserId(), MessageType.PRIVATE, g.getStatus());
         }
-        gameInterface.println(GamePlayMessage.WILL_YOU_SAVE_2_1);
-        gameInterface.print("> ");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.WILL_YOU_SAVE_2_1);
+        gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
 
         String input = gameInterface.getCommand();
         if("yes".equalsIgnoreCase(input)) {
         	return handleSave();
         } else {
-        	gameInterface.println(GamePlayMessage.REJECT_SAVE_2_4);
+        	gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.REJECT_SAVE_2_4);
         	return true;
         }    	
     }

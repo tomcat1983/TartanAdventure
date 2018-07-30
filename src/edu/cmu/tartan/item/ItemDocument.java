@@ -19,9 +19,9 @@ public class ItemDocument extends Item implements Holdable, Installable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemDocument(String s, String sd, String[] a) {
+    public ItemDocument(String s, String sd, String[] a, String userId) {
 
-        super(s, sd, a);
+        super(s, sd, a, userId);
         setValue(50);
     }
 }

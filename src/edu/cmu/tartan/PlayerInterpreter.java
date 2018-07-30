@@ -1,5 +1,6 @@
 package edu.cmu.tartan;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.item.Item;
@@ -36,7 +37,7 @@ public class PlayerInterpreter {
             return action;
         }
         else {
-        	gameInterface.println("You must supply a direct object.");
+        	gameInterface.println(actionExecutionUnit.getUserId(), MessageType.PRIVATE, "You must supply a direct object.");
             return Action.ACTION_PASS;
         }
     }
@@ -57,7 +58,7 @@ public class PlayerInterpreter {
                         return action;
                     }
                     else {
-                    	gameInterface.println("You must supply an indirect object.");
+                    	gameInterface.println(actionExecutionUnit.getUserId(), MessageType.PRIVATE, "You must supply an indirect object.");
                         return Action.ACTION_ERROR;
                     }
                 }
@@ -68,7 +69,7 @@ public class PlayerInterpreter {
             return Action.ACTION_ERROR;
         }
         else {
-        	gameInterface.println("You must supply a direct object.");
+        	gameInterface.println(actionExecutionUnit.getUserId(), MessageType.PRIVATE, "You must supply a direct object.");
             return Action.ACTION_ERROR;
         }    	
     }
@@ -88,7 +89,7 @@ public class PlayerInterpreter {
 	        case TYPE_UNKNOWN:
 	            return Action.ACTION_ERROR;
 	        default:
-	        	gameInterface.println("Unknown type");
+	        	gameInterface.println(actionExecutionUnit.getUserId(), MessageType.PRIVATE, "Unknown type");
 	            break;
         }
         return Action.ACTION_PASS;

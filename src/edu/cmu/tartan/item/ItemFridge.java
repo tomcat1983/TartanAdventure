@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Pushable;
 import edu.cmu.tartan.room.RoomObscured;
 
@@ -21,8 +22,8 @@ public class ItemFridge extends Item implements Pushable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemFridge(String s, String sd, String[] a) {
-        super(s, sd, a);
+    public ItemFridge(String s, String sd, String[] a, String userId) {
+        super(s, sd, a, userId);
         this.wasPushed = false;
         setValue(1);
     }
@@ -35,7 +36,7 @@ public class ItemFridge extends Item implements Pushable {
         if (!this.wasPushed) {
             if (this.relatedRoom instanceof RoomObscured) {
                 ((RoomObscured) this.relatedRoom).setObscured(false);
-                gameInterface.println(((RoomObscured) this.relatedRoom).unobscureMessage());
+                gameInterface.println(userId, MessageType.PRIVATE, ((RoomObscured) this.relatedRoom).unobscureMessage());
             }
             this.wasPushed = true;
         }

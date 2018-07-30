@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Pushable;
 
 /**
@@ -14,8 +15,8 @@ public class ItemButton extends Item implements Pushable {
 
 	protected String pushMessage;
 
-    public ItemButton(String s, String sd, String[] a) {
-        super(s, sd, a);
+    public ItemButton(String s, String sd, String[] a, String userId) {
+        super(s, sd, a, userId);
         this.pushMessage = "Pushed.";
         setValue(2);
     }
@@ -25,7 +26,7 @@ public class ItemButton extends Item implements Pushable {
      */
     @Override
     public void push() {
-    	gameInterface.println(this.pushMessage);
+    	gameInterface.println(userId, MessageType.PRIVATE, this.pushMessage);
     }
 
     /**

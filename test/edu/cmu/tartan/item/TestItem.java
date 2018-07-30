@@ -12,13 +12,13 @@ import java.io.ObjectOutputStream;
 
 import org.junit.jupiter.api.Test;
 
+import edu.cmu.tartan.Player;
+
 class TestItem {
 
 	@Test
 	void testCanSerializeItem() {
-		
-		Item itemShovel = new ItemShovel("shovel", "metal shovel", new String[]{"shovel"});
-
+		ItemShovel itemShovel = (ItemShovel) Item.getInstance("shovel", Player.DEFAULT_USER_NAME);
 		try {
 			FileOutputStream fos = new FileOutputStream("Item.serial");
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
@@ -39,6 +39,5 @@ class TestItem {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
-	}
-	      
+	}	      
 }

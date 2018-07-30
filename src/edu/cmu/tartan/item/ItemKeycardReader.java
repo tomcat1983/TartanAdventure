@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Hostable;
 
 /**
@@ -20,8 +21,8 @@ public class ItemKeycardReader extends Item implements Hostable {
      * @param sd long description
      * @param a aliases
      */
-    public ItemKeycardReader(String s, String sd, String[] a) {
-        super(s, sd, a);
+    public ItemKeycardReader(String s, String sd, String[] a, String userId) {
+        super(s, sd, a, userId);
         this.installMessage = null;
         setValue(25);
     }
@@ -35,7 +36,7 @@ public class ItemKeycardReader extends Item implements Hostable {
         installedItem = item;
 
         for (int i = 0; i < 3; i++) {
-            gameInterface.println("...");
+            gameInterface.println(userId, MessageType.PRIVATE,"...");
             try {
                 Thread.sleep(1000);
             } catch (Exception e1) {
@@ -44,7 +45,7 @@ public class ItemKeycardReader extends Item implements Hostable {
             }
         }
         if (installMessage != null) {
-        	gameInterface.println(installMessage);
+        	gameInterface.println(userId, MessageType.PRIVATE, installMessage);
         }
         relatedItem.setVisible(true);
         return true;
