@@ -1,7 +1,6 @@
 package edu.cmu.tartan.db;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.File;
 
@@ -131,7 +130,7 @@ public class TestDbAccessor {
 	}
 	
 	@Test
-	public void testMoreThanZeroWhenCheckTheUserId() {
+	public void testShouldReturnOneWhenCheckTheUserId() {
 
 		// Given
 		File file = new File(url);
@@ -147,7 +146,7 @@ public class TestDbAccessor {
 		int returnValue = dbAccessor.hasUserId(userId);
 		
 		// Then
-		assertNotEquals(0, returnValue);
+		assertEquals(1, returnValue);
 	}
 
 }

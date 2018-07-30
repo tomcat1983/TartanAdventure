@@ -89,18 +89,19 @@ public class SocketClient implements Runnable {
 	}
 	
 	public boolean waitToConnection(int timeout) {
-		while (timeout > 0 && socket == null) {
+		while (timeout > 0 && socket == null && !socket.isConnected()) {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException exception) {
 				gameLogger.info("Exception :" + exception.getMessage());
+				Thread.currentThread().interrupt();
 				break;
 			}
 			
 			timeout -= 10;
 		}
 		
-		return (socket != null);
+		return (socket != null && socket.isConnected());
 	}
 	
 	public boolean receiveMessage(String message) {
@@ -119,7 +120,7 @@ public class SocketClient implements Runnable {
 			return false;
 		}
 		
-		gameLogger.warning("Received message type : " + messageType);
+		gameLogger.info("Received message type : " + messageType);
 		
 		switch(messageType) {
 			case("REQ_LOGIN"):
@@ -142,7 +143,6 @@ public class SocketClient implements Runnable {
 			default:
 				break;
 		}
-		
 		
 		return true;
 	}

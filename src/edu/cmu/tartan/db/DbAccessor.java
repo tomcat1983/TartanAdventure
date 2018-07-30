@@ -191,8 +191,9 @@ public class DbAccessor {
 	
 	public int hasUserId(String userId) {
 		
-		String sql = "SELECT COUNT(*) FROM T_USER_INFO WHERE user_id=?";
+		String sql = "SELECT COUNT(user_id) FROM T_USER_INFO WHERE user_id=?";
 
+		int returnValue = 0;
 		
 		try (Connection conn = DriverManager.getConnection(url);
 				Statement stmt = conn.createStatement();
@@ -202,13 +203,13 @@ public class DbAccessor {
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				return rs.getRow();
+				returnValue = Integer.parseInt(rs.getString("COUNT(user_id)"));
 			}
 		} catch (SQLException e) {
 			gameLogger.warning("SQLException : " + e.getMessage());
 		}
 
-		return 0;
+		return returnValue;
 	}
 
 }

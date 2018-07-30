@@ -21,7 +21,7 @@ public class AccountManager implements IAccountHandler {
 	private void initialize() {
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
-		if (dbAccessor.hasUserId("designer") == 0) {
+		if (dbAccessor.hasUserId("designer") == 1) {
 			dbAccessor.insert("designer", "abcd1234", XmlLoginRole.DESIGNER.name());
 		}
 	}

@@ -1,8 +1,6 @@
 package edu.cmu.tartan.socket;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -62,7 +60,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 				Socket socket = serverSocket.accept();
 
 				if (socketCounter > MAX_USER_CONNECTION || isPlaying) {
-					sendMessage(socket, "I’m sorry. The game server is busy. Please retry to connect later.");
+//					sendMessage(socket, "I’m sorry. The game server is busy. Please retry to connect later.");
 					socket.close();
 				}
 
@@ -109,6 +107,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 		return returnValue;
 	}
 
+	/*
 	private boolean sendMessage(Socket clientSocket, String message) {
 		try {
 			OutputStream output = clientSocket.getOutputStream();
@@ -122,7 +121,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 		}
 		return false;
 	}
-	
+	*/
 	@Override
 	public boolean sendToClientByThreadName(String threadName, String message) {
 		boolean returnValue = false;
