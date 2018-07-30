@@ -38,7 +38,7 @@ public class TestGameInterface {
 		commander.add("TestCommand");
 		commander.apply();
 
-		String command = gameInterface.getCommand();
+		String command = gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 
 		assertTrue(command.equals("TestCommand"));
 	}
@@ -56,7 +56,7 @@ public class TestGameInterface {
 
 		gameInterface.resetInterface();
 
-		String command = gameInterface.getCommand();
+		String command = gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 
 		assertTrue(command.equals("SecondTestCommand"));
 	}
@@ -79,9 +79,9 @@ public class TestGameInterface {
 
 		gameInterface.setGameManager(manager);
 
-		gameInterface.putCommand("testCommand");
+		gameInterface.putCommand(Player.DEFAULT_USER_NAME, "testCommand");
 
-		String command = gameInterface.getCommand();
+		String command = gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 
 		assertTrue(command.equals("testCommand"));
 	}

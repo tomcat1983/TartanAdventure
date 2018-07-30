@@ -1,7 +1,10 @@
 package edu.cmu.tartan;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import edu.cmu.tartan.manager.TartanGameManager;
@@ -26,22 +29,25 @@ public class GameInterface {
 	/**
 	 * Command List
 	 */
-	List<String> commandList = new ArrayList<>();
+	List<String> commandList1 = new ArrayList<>();
+
+	private static Map<String, LinkedList<String>> commandMap = new HashMap<>();
+	private static Map<String, Boolean> waitMap = new HashMap<>();
 
 	/**
 	 * Check command list empty
 	 */
-	boolean wait = false;
+	boolean wait1 = false;
 
 	public GameInterface() {
         scanner = new Scanner(System.in, "UTF-8");
         init();
 	}
 
-	private synchronized void init() {
+	private void init() {
 		tartanManager = null;
-		commandList.clear();
-		wait = false;
+		commandList1.clear();
+		wait1 = false;
 	}
 
 	public static GameInterface getInterface() {
@@ -103,30 +109,57 @@ public class GameInterface {
 			tartanManager.achievedGoal(userId);
 	}
 
-	public synchronized String getCommand() {
+	public String getCommand(String userId) {
 		if (tartanManager == null) {
 			return scanner.nextLine();
 		} else {
-			if (commandList.isEmpty()) {
-				wait = true;
+			LinkedList<String> commandList = commandMap.get(userId);
+			if (commandList == null) {
+				System.err.println("new1!!!!!!!!!!!!!!1");
+				commandList = new LinkedList<>();
+				commandMap.put(userId, commandList);
+
+				synchronized(waitMap) {
+					waitMap.put(userId, false);
+				}
+			}
+
+
+			while (commandList.isEmpty()) {
+				synchronized(waitMap) {
+					waitMap.replace(userId, false, true);
+				}
 
 				try {
 					commandList.wait();
 				} catch (Exception e) {
 				}
 			}
-
-			String command = commandList.get(0);
-			commandList.remove(0);
+			String command = commandList.poll();
+System.err.println("Pop!!!!!!!!!!!!!!!!!!!!!!!!!!!" + command);
 			return command;
 		}
 	}
 
-	public synchronized boolean putCommand(String command) {
-		boolean result = commandList.add(command);
+	public boolean putCommand(String userId, String command) {
+		LinkedList<String> commandQueue = commandMap.get(userId);
+		if (commandQueue == null) {
+			System.err.println("new!!!!!!!!!!!!!!!!!!!!!!1");
+			commandQueue = new LinkedList<>();
+			commandMap.put(userId, commandQueue);
+			synchronized(waitMap) {
+				waitMap.put(userId, false);
+			}
+		}
 
-		if (wait)
-			commandList.notify();
+		boolean result = commandQueue.offer(command);
+System.err.println("Put!!!!!!!!!!!!!!!" + command);
+		synchronized(waitMap) {
+			if (waitMap.get(userId)) {
+				commandQueue.notifyAll();
+				waitMap.replace(userId, true, false);
+			}
+		}
 
 		return result;
 	}

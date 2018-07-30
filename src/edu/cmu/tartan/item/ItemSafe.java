@@ -4,8 +4,6 @@ import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Openable;
 
-import java.util.Scanner;
-
 /**
  * This class for a safe, which can hold something and be opened.
  * <p>
@@ -71,7 +69,8 @@ public class ItemSafe extends Item implements Hostable, Openable {
      * Fetch the installed item
      * @return the installed item
      */
-    public Item installedItem() {
+    @Override
+	public Item installedItem() {
         return installedItem;
     }
 
@@ -81,9 +80,8 @@ public class ItemSafe extends Item implements Hostable, Openable {
      */
     @Override
     public Boolean open() {
-        Scanner s = new Scanner(System.in);
         gameInterface.println(userId, MessageType.PRIVATE, "Enter the four-digit PIN number.");
-        Integer p = Integer.parseInt(s.nextLine());
+        Integer p = Integer.parseInt(gameInterface.getCommand(userId));
         if (p.intValue() == this.pin.intValue()) {
         	if (this.installedItem != null) {
         		this.installedItem.setVisible(true);
@@ -96,7 +94,7 @@ public class ItemSafe extends Item implements Hostable, Openable {
         }
         return false;
     }
-    
+
     @Override
 	public int hashCode() {
 		final int prime = 31;
@@ -113,14 +111,14 @@ public class ItemSafe extends Item implements Hostable, Openable {
 		} else if (this == obj) {
 			return true;
 		}
-		
+
 		ItemSafe other = (ItemSafe) obj;
 		if (pin == null) {
 			if (other.pin != null)
 				return false;
 		} else if (!pin.equals(other.pin)) {
 			return false;
-		}		
+		}
 		return true;
 	}
 }

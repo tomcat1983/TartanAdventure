@@ -3,7 +3,7 @@ language: java
 script:
   # other script steps might be done before running the actual analysis
   - if [ -n "$PITest" ]; then
-      mvn org.pitest:pitest-maven:mutationCoverage;
+      mvn org.pitest:pitest-maven:mutationCoverage -DtimeoutConst=60;
       if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ -n $FTP_SITE ]; then
         find ./target/pit-reports -type f -exec curl -u $FTP_USER:$FTP_PW --ftp-create-dirs -T {} ftp://$FTP_SITE/sdet/$TRAVIS_BRANCH/{} \;;
       fi

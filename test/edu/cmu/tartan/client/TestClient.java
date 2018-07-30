@@ -33,7 +33,7 @@ class TestClient {
 		commander.add("help");
 		commander.add("1");
 		commander.add("new");
-		commander.add("1");
+		commander.add("9");
 		commander.add("quit");
 		commander.add("no");
 		commander.add("exit");
@@ -45,7 +45,7 @@ class TestClient {
 		commander.add("55");
 		commander.add("1");
 		commander.add("new");
-		commander.add("1");
+		commander.add("9");
 		commander.add("quit");
 		commander.add("no");
 		commander.add("exit");
@@ -56,7 +56,7 @@ class TestClient {
 	void testWhenSelectLocalGameAndNewGame() {
 		commander.add("1");
 		commander.add("new");
-		commander.add("1");
+		commander.add("9");
 		commander.add("quit");
 		commander.add("no");
 		commander.add("exit");
