@@ -12,6 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.games.CustomizingGame;
 import edu.cmu.tartan.manager.IGameControlMessage;
 import edu.cmu.tartan.xml.GameMode;
@@ -53,7 +54,7 @@ public class LocalGame extends Game implements IGameControlMessage {
 				CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(GameMode.LOCAL, userId);
 				
 				if(cGame!=null && readGameData()) {
-					gameInterface.println(GamePlayMessage.GANE_IS_STARTED_10_1);
+					gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.GANE_IS_STARTED_10_1);
 					// 1. loading Player(with Items) and GameContext(without room?)
 					start();
 				} else {

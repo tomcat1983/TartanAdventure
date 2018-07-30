@@ -2,6 +2,7 @@ package edu.cmu.tartan;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.games.InvalidGameException;
 import edu.cmu.tartan.manager.IGameControlMessage;
 import edu.cmu.tartan.manager.TartanGameManager;
@@ -33,7 +34,7 @@ public class ServerGame extends Game implements IGameControlMessage {
 					return false;
 				}
 			} catch (InvalidGameException e) {
-				gameInterface.println("Game improperly configured, please try again.");
+				gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Game improperly configured, please try again.");
 	            return false;
 			}
         }
