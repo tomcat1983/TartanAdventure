@@ -130,8 +130,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
      * @return the newly instantiated item
      */
     public static Item getInstance(String itemName, String userId) {
-    	this.userId = userId;
-    	if (itemMapbyUser == null) {
+    	if(itemMapbyUser == null) {
     		itemMapbyUser = new HashMap<>();
         	itemMap = new HashMap<>();
         }
