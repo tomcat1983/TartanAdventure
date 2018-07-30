@@ -22,7 +22,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	protected static final Logger gameLogger = Logger.getGlobal();
 
 	static final int MAX_USER_CONNECTION = 5;
-	static final int MAX_DESIGNER_CONNECTION = 5;
+	static final int MAX_DESIGNER_CONNECTION = 1;
 
 	private int serverPort = 10015;
 	private int socketCounter = 0;
@@ -198,7 +198,6 @@ public class SocketServer implements Runnable, ISocketHandler {
 			default:
 				break;
 		}
-
 	}
 
 	public boolean login(boolean isSuccess, String userId, String threadName) {

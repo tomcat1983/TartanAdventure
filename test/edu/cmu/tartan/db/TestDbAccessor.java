@@ -1,6 +1,5 @@
 package edu.cmu.tartan.db;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
@@ -14,13 +13,12 @@ public class TestDbAccessor {
 	String userId = "gildong";
 	String userPw = "1234";
 	String userType = "0";
-//	String url = "/Users/zhyuny/Downloads/sqlite/db/TartanAdventure.db";
 	String url = "TartanAdventure.db";
 	
 
 	@BeforeEach
 	public void beforeTest() {
-		dbAccessor = new DbAccessor(url);
+		dbAccessor = new DbAccessor();
 	}
 
 //	@Disabled
