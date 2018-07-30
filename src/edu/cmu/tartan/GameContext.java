@@ -2,8 +2,10 @@ package edu.cmu.tartan;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import edu.cmu.tartan.goal.GameGoal;
+import edu.cmu.tartan.room.Room;
 
 public class GameContext implements Comparable, Serializable {
     /**
@@ -14,6 +16,10 @@ public class GameContext implements Comparable, Serializable {
      * The set of goals for a game
      */
     private ArrayList<GameGoal> goals = new ArrayList<>();
+    /**
+     * The set of rooms for a game(for validation only) 
+     */
+    private ArrayList<Room> rooms = new ArrayList<>();
 	/**
      * The player for the game
      */
@@ -27,7 +33,8 @@ public class GameContext implements Comparable, Serializable {
      * The userId is user name with local game. But if game is network mode, user name set userId.
      */
     private String userId;
-    
+	protected Logger gameLogger = Logger.getGlobal();
+
     public GameContext(String userId) {
     	this.userId = userId;
     }
@@ -37,6 +44,15 @@ public class GameContext implements Comparable, Serializable {
 	public ArrayList<GameGoal> getGoals() {
 		return goals;
 	}
+	
+	public ArrayList<Room> getRooms() {
+		return rooms;
+	}
+	
+	public void setRooms(ArrayList<Room> rooms) {
+		this.rooms = rooms;
+	}
+	
 	/**
 	 * @param goals the goals to set
 	 */
@@ -96,18 +112,25 @@ public class GameContext implements Comparable, Serializable {
 	}
 
 	/**
-     * Ensure that the game parameters are all set
-     * @return true if valid, false otherwise
-     */
-    public boolean validate() {
-        
-        if(gameName == null || gameDescription == null)
-        	return false; 
-        
-        GameValidate validater = new GameValidate(this);
-        
-        return true; 
-    }
+	 * Ensure that the game parameters are all set
+	 * @return true if valid, false otherwise
+	 */
+	public boolean validate() {
+
+		ArrayList<MapConfig> configErrors = new ArrayList<>();
+
+		if(gameName == null || gameDescription == null)
+			return false; 
+
+		GameValidate validater = new GameValidate(this);
+		configErrors = validater.check(); 
+		
+		for (MapConfig mapConfig : configErrors) {
+			gameLogger.info(mapConfig.name());
+		}
+		
+		return configErrors.isEmpty();
+	}
     
     @Override
 	public int hashCode() {

@@ -2,6 +2,8 @@ package edu.cmu.tartan.goal;
 
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.room.Room;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +36,11 @@ public class GameExploreGoal implements GameGoal {
         this(places, null);
     }
 
+    
+    public List<String> getItinerary() {
+    	return itinerary; 
+    }
+    
     /**
      * Describe the goal.
      * @return a description of the goal.
