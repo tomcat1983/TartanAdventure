@@ -212,8 +212,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			
 	public void processMessage(String threadName, String message) {
 		
-		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-				"Received message from a server socket"));
+		gameLogger.info("Received message from a server socket");
 
 		String messageType = null;
 		
@@ -221,15 +220,14 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		messageType = xmlParser.getMessageType();
 		XmlResponse xr = xmlParser.getXmlResponse();
 		
-		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-				"message type : " + messageType));
+		gameLogger.info("message type : " + messageType);
 		
 		switch(messageType) {
 			case("REQ_LOGIN"):
 				login(threadName, ((XmlResponseLogin) xr).getId(), ((XmlResponseLogin) xr).getPw(), ((XmlResponseLogin) xr).getRole());
 				break;
 			case("ADD_USER"):
-				register(((XmlResponseAddUser) xr).getId(), ((XmlResponseAddUser) xr).getPw());
+				register(threadName, ((XmlResponseAddUser) xr).getId(), ((XmlResponseAddUser) xr).getPw());
 				break;
 			case("REQ_GAME_START"):
 				startGame(((XmlResponseGameStart) xr).getId());
@@ -283,9 +281,9 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	}
 
 	@Override
-	public boolean register(String userId, String userPw) {
+	public boolean register(String threadName, String userId, String userPw) {
 		boolean returnValue = false;
-		returnValue = accountManager.registerUser(userId, userPw, "0");
+		returnValue = accountManager.registerUser(userId, userPw, XmlLoginRole.PLAYER.name());
 		
 		XmlWriterServer xw = new XmlWriterServer();
 		String xmlMessage = null;
@@ -296,7 +294,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			xmlMessage = xw.makeXmlForAddUser(XmlResultString.NG, XmlNgReason.INVALID_INFO);
 		}
 		
-		returnValue = sendToClient(userId, xmlMessage);
+		returnValue = socket.sendToClientByThreadName(threadName, xmlMessage);
 		
 		return returnValue;
 	}

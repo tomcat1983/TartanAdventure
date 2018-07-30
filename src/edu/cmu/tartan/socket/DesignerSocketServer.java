@@ -67,16 +67,14 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 			}
 
 		} catch (IOException e) {
-			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"IOException : " + e.getMessage()));
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 	}
 
 	@Override
 	public boolean stopSocket() {
 		
-		gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-				"Close a server designer socket"));
+		gameLogger.warning("Close a server designer socket");
 
 		boolean returnValue = false;
 		isLoop = false;
@@ -86,8 +84,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 				serverSocket.close();
 			returnValue = true;
 		} catch (IOException e) {
-			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"IOException : " + e.getMessage()));
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 		socketCounter = 0;
 		
@@ -103,8 +100,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 			
 			return true;
 		} catch (IOException e) {
-			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"IOException : " + e.getMessage()));
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 		return false;
 	}
@@ -184,10 +180,16 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 			returnValue = addClient(userId, threadName);
 		}
 		
-		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-				"Added a client to a map : " + returnValue));
+		gameLogger.info("Added a client to a map : " + returnValue);
 		
 		return returnValue;
+	}
+
+	@Deprecated
+	@Override
+	public boolean sendToClientByThreadName(String threadName, String message) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 }

@@ -68,7 +68,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	}
 
 	@Override
-	public boolean register(String userId, String userPw) {
+	public boolean register(String threadName, String userId, String userPw) {
 
 		String message = null;
 
@@ -88,6 +88,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 	@Override
 	public boolean validateUserId(String userId) {
+		gameLogger.info("validUserId : " + userId );
 		ReturnType returnValue = accountManager.validateId(userId);
 		if (ReturnType.SUCCESS == returnValue) {
 			this.userId = userId;

@@ -85,16 +85,14 @@ public class SocketServer implements Runnable, ISocketHandler {
 			}
 
 		} catch (IOException e) {
-			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"IOException : " + e.getMessage()));
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 	}
 
 	@Override
 	public boolean stopSocket() {
 		
-		gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-				"Close a server socket"));
+		gameLogger.warning("Close a server socket");
 
 		boolean returnValue = false;
 		isLoop = false;
@@ -104,8 +102,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 				serverSocket.close();
 			returnValue = true;
 		} catch (IOException e) {
-			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"IOException : " + e.getMessage()));
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 		socketCounter = 0;
 
@@ -121,10 +118,23 @@ public class SocketServer implements Runnable, ISocketHandler {
 
 			return true;
 		} catch (IOException e) {
-			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"IOException : " + e.getMessage()));
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean sendToClientByThreadName(String threadName, String message) {
+		boolean returnValue = false;
+
+		for(UserClientThread client : clientThreadList) {
+			if (threadName.equals(client.getThreadName())) {
+				returnValue = client.sendMessage(message);
+				break;
+			}
+		}
+		
+		return returnValue;
 	}
 
 	@Override
@@ -213,8 +223,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 			returnValue = addClient(userId, threadName);
 		}
 		
-		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-				"Added a client to a map : " + returnValue));
+		gameLogger.info("Added a client to a map : " + returnValue);
 		
 		return returnValue;
 	}
@@ -229,8 +238,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 				returnValue = removeClientFromList(threadName);
 			}
 		}
-		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-				"Removed a client to a map : " + returnValue));
+		gameLogger.info("Removed a client to a map : " + returnValue);
 
 		return returnValue;
 	}

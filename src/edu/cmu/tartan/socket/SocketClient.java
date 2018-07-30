@@ -76,14 +76,12 @@ public class SocketClient implements Runnable {
  
         } catch (UnknownHostException e) {
  
-        	gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"Server not found : " + e.getMessage()));
+        	gameLogger.warning("Server not found : " + e.getMessage());
         	return false;
  
         } catch (IOException e) {
  
-        	gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"IOException : " + e.getMessage()));
+        	gameLogger.warning("IOException : " + e.getMessage());
         	return false;
         }
 
@@ -117,13 +115,11 @@ public class SocketClient implements Runnable {
 			xr = (XmlResponseClient) xmlParser.getXmlResponse();
 			
 		} catch (ParserConfigurationException e) {
-			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"ParserConfigurationException : " + e.getMessage()));
+			gameLogger.warning("ParserConfigurationException : " + e.getMessage());
 			return false;
 		}
 		
-		gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-				"Received message type : " + messageType));
+		gameLogger.warning("Received message type : " + messageType);
 		
 		switch(messageType) {
 			case("REQ_LOGIN"):
@@ -171,8 +167,7 @@ public class SocketClient implements Runnable {
 				responseMessage.notify();
 			}
 		} catch (IllegalMonitorStateException e) {
-			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"IllegalMonitorStateException : " + e.getMessage()));
+			gameLogger.warning("IllegalMonitorStateException : " + e.getMessage());
 			return false;
 		}
 		return true;
@@ -180,11 +175,8 @@ public class SocketClient implements Runnable {
 	
 	public boolean sendMessage(String message) {
 		
-		gameLogger.info(message);
-		
 		if (socket == null || !socket.isConnected()) {
-			gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"Socket is not connected to the server yet."));
+			gameLogger.info("Socket is not connected to the server yet.");
 			return false;
 		}
 		try {
@@ -194,16 +186,14 @@ public class SocketClient implements Runnable {
 			writer.println(message);
 			return true;
 		} catch (IOException e) {
-			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"IOException : " + e.getMessage()));
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 		return false;
 	}
 	
 	public boolean stopSocket() {
 		
-		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-				"Close a socket"));
+		gameLogger.info("Close a socket");
 		
 		boolean returnValue = false;
 		isLoop = false;
@@ -211,8 +201,7 @@ public class SocketClient implements Runnable {
 		try {
 			socket.close();
 		} catch (IOException e) {
-			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
-					"IOException : " + e.getMessage()));
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 		return returnValue;
 	}

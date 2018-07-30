@@ -193,7 +193,7 @@ public class Client {
 			id = getUserIdForRegister();
 			pw = getUserPwForRegister();
 
-			if (gameManager.register(id, pw))
+			if (gameManager.register("threadName", id, pw))
 				break;
 			else
 				clientInterface.printFailMessageForRegister();
