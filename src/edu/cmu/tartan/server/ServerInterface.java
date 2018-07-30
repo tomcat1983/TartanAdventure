@@ -1,6 +1,7 @@
 package edu.cmu.tartan.server;
 
 import edu.cmu.tartan.GameInterface;
+import edu.cmu.tartan.Player;
 
 public class ServerInterface {
 
@@ -23,7 +24,7 @@ public class ServerInterface {
 			gameInterface.println("");
 			gameInterface.print("> ");
 
-			String command = gameInterface.getCommand();
+			String command = gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 
 			if (command.equals("exit")) {
 				serverCommand = Command.EXIT;
