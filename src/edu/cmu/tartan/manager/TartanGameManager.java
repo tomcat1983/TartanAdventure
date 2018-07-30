@@ -80,7 +80,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		String eventMessage = String.format("[%S] %S", userId, message);
 		
 		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = xw.makeXmlForEventMessage(userId, message);
+		String xmlMessage = xw.makeXmlForEventMessage(userId, eventMessage);
 		
 		returnValue = socket.sendToAll(xmlMessage);
 		
@@ -311,7 +311,8 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		String xmlMessage = null;
 		
 		if (returnValue) {
-			xmlMessage = xw.makeXmlForGameEnd(userId, "EXIT");
+			String eventMessage = String.format("[%S] %S", userId, "Exit game");
+			xmlMessage = xw.makeXmlForEventMessage(userId, eventMessage);
 			returnValue = socket.sendToAll(xmlMessage);
 		}
 		

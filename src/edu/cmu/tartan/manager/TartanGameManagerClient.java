@@ -14,6 +14,11 @@ import edu.cmu.tartan.xml.XmlWriterClient;
 public class TartanGameManagerClient implements Runnable, IUserCommand{
 	
 	/**
+	 * Game interface for game message
+	 */
+	protected static final GameInterface gameInterface = GameInterface.getInterface();
+	
+	/**
 	 * Game logger for game log
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
@@ -147,19 +152,16 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	@Override
 	public boolean updateGameState(String userId, String command) {
 		
+		boolean returnValue = false;
+		
 		String message = null;
 		
 		XmlWriterClient xw = new XmlWriterClient(); 
 		message = xw.makeXmlForCommand(userId, command);
 		
-		sendMessage(message);
+		returnValue = sendMessage(message);
 		
-		waitResponseMessage();
-		
-		if ("true".equals((responseMessage).getMessage())) {
-			return true;
-		}
-		return false;
+		return returnValue;
 	}
 	
 	@Override
@@ -200,15 +202,13 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	public void dequeue() {
 		SocketMessage socketMessage = null;
 		String message = null;
-		String threadName = null;
 
         while(isLoop){
         	socketMessage = messageQueue.consume();
-            threadName = socketMessage.getThreadName();
             message = socketMessage.getMessage();
             
             if (message != null && !message.isEmpty()) {
-            	// TDODO : using a gameInerface
+            	gameInterface.println(message);
             	
             }
         }
