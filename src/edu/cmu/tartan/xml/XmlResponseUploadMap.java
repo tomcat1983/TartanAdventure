@@ -162,7 +162,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 		
 		if(currentRoom instanceof RoomRequiredItem) {
 			String requiredItem = ((RoomRequiredItem)currentRoom).requiredItem().toString(); 
-			sb.append("that require " + requiredItem); 
+			sb.append(" that require " + requiredItem); 
 			// don't display direction for hidden room
 			String warningStr = "You need " + requiredItem; 
 			((RoomRequiredItem)currentRoom).setWarningDescription(warningStr+" long");
