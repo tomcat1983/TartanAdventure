@@ -274,16 +274,23 @@ public class TestXmlParser {
 	@Test
 	public void testRoom5IsLockedWhenNotUsingProperKey() throws ParserConfigurationException {
 		
-		//<room index="1" type="normal" north="2" west="0" east="6" item_list="shovel:5-document:3" />
+		//<room index="1" type="normal" north="2" west="0" east="6" item_list="shovel-document" />
 		//<room index="3" type="normal" south="2" />
-		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
+		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3" />
 		XmlParser parseXml = new XmlParser();
 		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		RoomLockable roomLock = (RoomLockable) cGame.getRoomIndex(4); 
 		Room roomDontHaveKey = cGame.getRoomIndex(1); 
+		
+		Player player = new Player(roomLock, Player.DEFAULT_USER_NAME);
+		roomLock.setPlayer(player);
+
+		
 		List<Item> items = roomDontHaveKey.getItems();
 		for (Item item : items) {
+			System.out.println("roomDontHaveKey : " + item.toString());
 			roomLock.unlock(item);
+			System.out.println("roomDontHaveKey isLocked: " + roomLock.isLocked());
 		}
 		assertTrue(roomLock.isLocked());
 	}
@@ -291,16 +298,22 @@ public class TestXmlParser {
 	@Test
 	public void testRoom5IsUnlockedWhenUsingProperKey() throws ParserConfigurationException {
 		
-		//<room index="1" type="normal" north="2" west="0" east="6" item_list="shovel:5-document:3" />
+		//<room index="1" type="normal" north="2" west="0" east="6" item_list="shovel-document" />
 		//<room index="3" type="normal" south="2" />
-		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3:3" />
+		//<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3" />
 		XmlParser parseXml = new XmlParser();
 		CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(Player.DEFAULT_USER_NAME);
 		RoomLockable roomLock = (RoomLockable) cGame.getRoomIndex(4); 
+		
+		Player player = new Player(roomLock, Player.DEFAULT_USER_NAME);
+		roomLock.setPlayer(player);
+		
 		Room roomHaveKey = cGame.getRoomIndex(3); 
 		List<Item> items = roomHaveKey.getItems();
 		for (Item item : items) {
+			System.out.println("roomHaveKey : " + item.toString());
 			roomLock.unlock(item);
+			System.out.println("roomHaveKey isLocked: " + roomLock.isLocked());
 		}
 		assertFalse(roomLock.isLocked());
 	}
