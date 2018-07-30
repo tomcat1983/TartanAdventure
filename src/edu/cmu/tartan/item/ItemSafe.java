@@ -58,8 +58,12 @@ public class ItemSafe extends Item implements Hostable, Openable {
      * @param i the item to install
      */
     @Override
-    public void install(Item item) {
-        installedItem = item;
+    public boolean install(Item item) {
+    	if(installedItem==null) {
+            installedItem = item;
+    		return true;
+    	}
+    	return false;
     }
 
     /**

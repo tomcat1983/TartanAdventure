@@ -397,14 +397,18 @@ public class PlayerExecutionEngine {
             return false;
         }
         else {
-            gameInterface.println("Done.");
-            player.drop(itemToPut);
-            player.putItemInItem(itemToPut, itemToBePutInto);
-            if(itemToPut instanceof ItemCPU && itemToBePutInto instanceof ItemComputer) {
-            	gameInterface.println("Computer isn't working. Need more item. To be continued...");
-            	player.score(itemToPut.value() + itemToBePutInto.value());
-            }
-            return true;
+	        gameInterface.println("Try to put...");
+	        player.drop(itemToPut);
+	        if(player.putItemInItem(itemToPut, itemToBePutInto)) {
+		        if(itemToPut instanceof ItemCPU && itemToBePutInto instanceof ItemComputer) {
+		        	player.score(itemToPut.value() + itemToBePutInto.value());
+		        }
+		        return true;
+	        } else {
+	        	player.grabItem(itemToPut);
+	        }
+        	gameInterface.println("You cann't put the " + itemToPut);
+        	return false;
         }
     }
     
