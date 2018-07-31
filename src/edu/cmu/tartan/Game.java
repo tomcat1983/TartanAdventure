@@ -15,7 +15,6 @@ import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.action.Type;
 import edu.cmu.tartan.games.CollectGame;
 import edu.cmu.tartan.games.DarkRoomGame;
-import edu.cmu.tartan.games.DemoGame;
 import edu.cmu.tartan.games.ExploreGame;
 import edu.cmu.tartan.games.InvalidGameException;
 import edu.cmu.tartan.games.LockRoomGame;
@@ -110,7 +109,6 @@ public abstract class Game {
         menu.add(new LockRoomGame());
         menu.add(new RideElevatorGame());
         menu.add(new ObscuredRoomGame());
-        menu.add(new DemoGame());
 
         // XML loading game
         GameConfiguration loaclGame = gameFromXML(GameMode.LOCAL);

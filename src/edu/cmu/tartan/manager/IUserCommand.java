@@ -6,7 +6,7 @@ public interface IUserCommand {
 	
 	public boolean login(String threadName, String userId, String userPw, XmlLoginRole role);
 	
-	public boolean register(String userId, String userPw);
+	public boolean register(String threadName, String userId, String userPw);
 	
 	public boolean validateUserId(String userId);
 	

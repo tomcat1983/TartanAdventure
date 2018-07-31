@@ -22,19 +22,17 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	static final int MAX_DESIGNER_CONNECTION = 1;
 	
 	private int serverPort = 10016;
-	
 	private int socketCounter = 0;
-	
 	private boolean isLoop = true;
 	
 	private List<DesignerClientThread> clientThreadList = new ArrayList<DesignerClientThread>();
 	private HashMap<String, DesignerClientThread> clientThreadMap = new HashMap<>();
 	
 	private ServerSocket serverSocket;
-	private IQueueHandler messageQueue;
+	private IQueueHandler queue;
 
-	public DesignerSocketServer(IQueueHandler messageQueue) {
-		this.messageQueue = messageQueue;
+	public DesignerSocketServer(IQueueHandler queue) {
+		this.queue = queue;
 		serverSocket = null;
 	}
 	
@@ -61,7 +59,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 				socketCounter++;
 				
 				String threadName = String.format("Designer %d", socketCounter);
-				DesignerClientThread clientHandler = new DesignerClientThread(socket, messageQueue, threadName);
+				DesignerClientThread clientHandler = new DesignerClientThread(socket, queue, threadName);
 				Thread thread = new Thread(clientHandler, threadName);
 				thread.start();
 				
@@ -69,21 +67,24 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 			}
 
 		} catch (IOException e) {
-			gameLogger.warning("IOException: " + e.getMessage());
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 	}
 
 	@Override
 	public boolean stopSocket() {
 		
+		gameLogger.warning("Close a server designer socket");
+
 		boolean returnValue = false;
 		isLoop = false;
 		
 		try {
-			serverSocket.close();
+			if (serverSocket != null)
+				serverSocket.close();
 			returnValue = true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException: " + e.getMessage());
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 		socketCounter = 0;
 		
@@ -99,7 +100,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 			
 			return true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException: " + e.getMessage());
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 		return false;
 	}
@@ -116,21 +117,19 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	@Override
 	public boolean sendToAll(String message) {
 		boolean returnValue = false;
-		/*
-		for (String clientId : clientThreadMap.keySet()) {
-			if (!userId.equals(clientId)) {
-				returnValue = clientThreadMap.get(clientId).sendMessage(message);
-			}
-		}*/
-		
+
+		for (String userId : clientThreadMap.keySet()) {
+			returnValue = clientThreadMap.get(userId).sendMessage(message);
+		}
+
 		return returnValue;
 	}
 
 	@Override
 	public boolean addClient(String userId, String threadName) {
-		for(DesignerClientThread clientThread : clientThreadList) {
-			if (userId.equals(clientThread.getUserId())) {
-				clientThreadMap.put(userId, clientThread);
+		for(DesignerClientThread client : clientThreadList) {
+			if (threadName.equals(client.getThreadName())) {
+				clientThreadMap.put(userId, client);
 			}
 		}
 		return clientThreadMap.containsKey(userId);
@@ -139,15 +138,16 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	@Override
 	public boolean removeClient(String userId) {
 		if (clientThreadMap.containsKey(userId)) {
+			clientThreadList.remove(clientThreadMap.get(userId));
 			clientThreadMap.remove(userId);
 		}
 		return !clientThreadMap.containsKey(userId);
 	}
 	
-	public boolean removeClientFromList(String userId) {
-		for(DesignerClientThread clientThread : clientThreadList) {
-			if (userId.equals(clientThread.getUserId())) {
-				return clientThreadList.remove(clientThread);
+	public boolean removeClientFromList(String threadName) {
+		for(DesignerClientThread client : clientThreadList) {
+			if (threadName.equals(client.getThreadName())) {
+				return clientThreadList.remove(client);
 			}
 		}
 		socketCounter--;
@@ -157,12 +157,39 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	@Override
 	public void updateSocketState(String userId, CommandResult result, String threadName) {
 		switch (result) {
-		case LOGIN_SUCCESS:
-			break;
-		case LOGIN_FAIL:
-			break;
-		default:
-			break;
+			case LOGIN_SUCCESS:
+				login(true, userId, threadName);
+				break;
+			case LOGIN_FAIL:
+				login(false, userId, threadName);
+				break;
+			case UPLOAD_SUCCESS:
+				break;
+			case UPLOAD_FAIL:
+				break;
+			default:
+				break;
 		}
 	}
+
+	public boolean login(boolean isSuccess, String userId, String threadName) {
+
+		boolean returnValue = false;
+
+		if (isSuccess) {
+			returnValue = addClient(userId, threadName);
+		}
+		
+		gameLogger.info("Added a client to a map : " + returnValue);
+		
+		return returnValue;
+	}
+
+	@Deprecated
+	@Override
+	public boolean sendToClientByThreadName(String threadName, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 }
