@@ -214,15 +214,19 @@ public class SocketClient implements Runnable {
 
 	public boolean stopSocket() {
 
-		gameLogger.info("Close a socket");
+		gameLogger.info("Close a client socket");
+		
 		boolean returnValue = false;
 		isLoop = false;
 
 		try {
-			if (socket != null)
-				socket.close();
+			Thread.sleep(1000);
+			if (socket != null) socket.close();
 		} catch (IOException e) {
 			gameLogger.warning("IOException : " + e.getMessage());
+		} catch (InterruptedException e) {
+			gameLogger.warning("InterruptedException");
+			Thread.currentThread().interrupt();
 		}
 		return returnValue;
 	}
