@@ -173,7 +173,9 @@ public class SocketClient implements Runnable {
 	}
 
 	public boolean sendMessage(String message) {
-
+		
+		gameLogger.info("Send to Server : " + message);
+		
 		if (socket == null || !socket.isConnected()) {
 			gameLogger.info("Socket is not connected to the server yet.");
 			return false;

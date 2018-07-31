@@ -73,9 +73,9 @@ public class UserClientThread implements Runnable, ISocketMessage {
 						|| message.equals("quit")
 						|| message.equals("exit")) break;
 				
-				if (isLogin) {
-					getUserIdFromXml(message);
-				}
+//				if (isLogin) {
+//					getUserIdFromXml(message);
+//				}
 				
 				socketMessage = new SocketMessage(threadName, message);
 
