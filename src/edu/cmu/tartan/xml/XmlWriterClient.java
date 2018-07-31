@@ -1,6 +1,7 @@
 package edu.cmu.tartan.xml;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -137,7 +138,7 @@ public class XmlWriterClient extends XmlWriter {
 	
 	private String readAllBytes(String filePath) throws IOException{
 	    String content = "";
-        content = new String (Files.readAllBytes( Paths.get(filePath)));
+        content = new String (Files.readAllBytes( Paths.get(filePath)), StandardCharsets.UTF_8);
 	    
 	    return content;
 	}
