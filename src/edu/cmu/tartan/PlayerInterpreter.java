@@ -16,10 +16,14 @@ import org.eclipse.jdt.annotation.NonNull;
 public class PlayerInterpreter {
 	private static final int DIRECTIONAL_COMMAND_LENGTH = 2;
 	private static final int INDIRECT_ACTIO_LENGTH = 4;
+	private static final int DIRECT_OBJ_COMMAND_LENGTH = 2;
 	
 	private static final String INDIRECT_OP_PUT = "put";
 	private static final String INDIRECT_OP_INSTALL = "install";
 	private static final String INDIRECT_OP_REMOVE = "remove";
+	
+	private static final String INDIRECT_IN = "in";
+	private static final String INDIRECT_FROM = "from";
 	
 	/**
 	 * Game interface for game message and log
@@ -39,7 +43,7 @@ public class PlayerInterpreter {
     }
     
     private Action getDirectObject(Action action, String[] string, ActionExecutionUnit actionExecutionUnit) {
-    	if(string.length > 1) {
+    	if(DIRECT_OBJ_COMMAND_LENGTH == string.length) {
             String d = string[1];
             // item is the direct object of the action
             actionExecutionUnit.setDirectObject(Item.getInstance(d, actionExecutionUnit.getUserId()));
@@ -54,33 +58,20 @@ public class PlayerInterpreter {
     private Action getIndirectObject(Action action, String[] string, ActionExecutionUnit actionExecutionUnit) {
         if(INDIRECT_ACTIO_LENGTH==string.length && (INDIRECT_OP_PUT.equals(string[0]) || INDIRECT_OP_INSTALL.equals(string[0]) || INDIRECT_OP_REMOVE.equals(string[0]))) {
             String d = string[1];
+            String preposition = string[2];
+        	String io = string[3];
+
             Item item = Item.getInstance(d, actionExecutionUnit.getUserId());
-            // item is the direct object of the action
-            actionExecutionUnit.setDirectObject(item);
-            if(string.length > 2) {
-                String in = string[2];
-                if(in.equals("in") || in.equals("from")) {
-                    if(string.length > 3) {
-                        String io = string[3];
-                        Item indob = Item.getInstance(io, actionExecutionUnit.getUserId());
-                        actionExecutionUnit.setIndirectObject(indob);
-                        return action;
-                    }
-                    else {
-                    	gameInterface.println(actionExecutionUnit.getUserId(), MessageType.PRIVATE, "You must supply an indirect object.");
-                        return Action.ACTION_ERROR;
-                    }
-                }
-                else {
-                    return Action.ACTION_PASS;
-                }
+            Item indob = Item.getInstance(io, actionExecutionUnit.getUserId());
+            
+            if(item!=null && indob!=null && (INDIRECT_IN.equals(preposition) || INDIRECT_FROM.equals(preposition))) {
+            	actionExecutionUnit.setDirectObject(item);
+            	actionExecutionUnit.setIndirectObject(indob);
+            	return action;
             }
-            return Action.ACTION_ERROR;
         }
-        else {
-        	gameInterface.println(actionExecutionUnit.getUserId(), MessageType.PRIVATE, "You must supply a direct object.");
-            return Action.ACTION_ERROR;
-        }    	
+        gameInterface.println(actionExecutionUnit.getUserId(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_UNDERSTAND);
+        return Action.ACTION_PASS;
     }
     
     private Action getDirectional(String[] string, ActionExecutionUnit actionExecutionUnit) {

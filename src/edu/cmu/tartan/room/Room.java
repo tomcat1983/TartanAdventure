@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.LinkedList;
 
@@ -161,7 +162,11 @@ public class Room implements Comparable, Serializable {
      * @param other the other room
      * @return true if the rooms are connected; false otherwise
      */
-    public boolean isAdjacentToRoom(@NonNull Room other) {
+    public boolean isAdjacentToRoom(@Nullable Room other) {
+    	if(other==null) {
+    		return false;
+    	}
+    	
         for (Room room : adjacentRooms.values()) {
             if (other.compareTo(room) == 0) {
                 return true;
