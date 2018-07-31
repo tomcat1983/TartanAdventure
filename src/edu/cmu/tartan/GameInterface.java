@@ -125,7 +125,7 @@ public class GameInterface {
 		LinkedList<String> commandQueue = getCommandQueue(userId);
 
 		while (commandQueue.isEmpty()) {
-			synchronized(waitMap) {
+			synchronized(commandQueue) {
 				waitMap.replace(userId, false, true);
 
 				try {
@@ -144,7 +144,7 @@ public class GameInterface {
 
 		boolean result = commandQueue.offer(command);
 
-		synchronized(waitMap) {
+		synchronized(commandQueue) {
 			if (waitMap.get(userId)) {
 				commandQueue.notifyAll();
 				waitMap.replace(userId, true, false);
