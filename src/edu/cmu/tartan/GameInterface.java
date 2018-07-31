@@ -16,9 +16,9 @@ public class GameInterface {
 	protected static final Logger gameLogger = Logger.getGlobal();
 
 	/**
-	 * User ID for None
+	 * User ID for LOCAL_USER
 	 */
-	public static final String USER_ID_NONE = "";
+	public static final String USER_ID_LOCAL_USER = "LOCAL_USER";
 
 	/**
 	 * Static variable for singleton
@@ -73,11 +73,11 @@ public class GameInterface {
 
 	// For game message
 	public void print(String message) {
-		print(USER_ID_NONE, MessageType.SYSTEM, message);
+		print(USER_ID_LOCAL_USER, MessageType.SYSTEM, message);
 	}
 
 	public void println(String message) {
-		print(USER_ID_NONE, MessageType.SYSTEM, message + "\n");
+		print(USER_ID_LOCAL_USER, MessageType.SYSTEM, message + "\n");
 	}
 
 	public void print(String userId, MessageType type, String message) {
@@ -118,7 +118,7 @@ public class GameInterface {
 	}
 
 	public String getCommand(String userId) {
-		if (tartanManager == null || userId == USER_ID_NONE) {
+		if (tartanManager == null || userId == USER_ID_LOCAL_USER) {
 			putCommand(userId, scanner.nextLine());
 		}
 

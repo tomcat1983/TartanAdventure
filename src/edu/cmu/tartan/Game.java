@@ -13,14 +13,8 @@ import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.action.Type;
-import edu.cmu.tartan.games.CollectGame;
-import edu.cmu.tartan.games.DarkRoomGame;
-import edu.cmu.tartan.games.ExploreGame;
+import edu.cmu.tartan.games.CustomizingGame;
 import edu.cmu.tartan.games.InvalidGameException;
-import edu.cmu.tartan.games.LockRoomGame;
-import edu.cmu.tartan.games.ObscuredRoomGame;
-import edu.cmu.tartan.games.PointsGame;
-import edu.cmu.tartan.games.RideElevatorGame;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
@@ -96,80 +90,38 @@ public abstract class Game {
 
     }
 
-    private ArrayList<GameConfiguration> loadGameMenu() {
-    	// Need to load about real game from XML(new game feature)
-
-    	ArrayList<GameConfiguration> menu = new ArrayList<>();
-
-        // These are the currently supported games.
-        menu.add(new CollectGame());
-        menu.add(new PointsGame());
-        menu.add(new ExploreGame());
-        menu.add(new DarkRoomGame());
-        menu.add(new LockRoomGame());
-        menu.add(new RideElevatorGame());
-        menu.add(new ObscuredRoomGame());
-
-        // XML loading game
-        GameConfiguration loaclGame = gameFromXML(GameMode.LOCAL);
-        if(loaclGame!=null) {
-            menu.add(loaclGame);
-        }
-    	return menu;
-    }
-
-    private boolean loadGame(String input, ArrayList<GameConfiguration> menu) {
-    	int select = 0;
-    	try {
-            if (input.equalsIgnoreCase("help")) {
-                help();
-            } else {
-            	select = Integer.parseInt(input) - 1;
-            	if(select > 0 || menu.size() >= select) {
-                    GameConfiguration gameConfig = menu.get(select);
-                    context.setGameName(gameConfig.getName());
-                    return gameConfig.configure(context);
-            	} else {
-            		gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Invaild selection");
-            		return false;
-            	}
-            }
-        }
-        catch (InvalidGameException ige) {
-        	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Game improperly configured, please try again.");
-            return false;
-        }
-        catch(Exception e) {
-        	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Invalid selection.");
-        }
-
-    	return false;
-    }
-
     /**
      * Configure the game.
      */
-    public boolean configureGame() {
-    	ArrayList<GameConfiguration> menu = loadGameMenu();
-
-        if(!menu.isEmpty()) {
-        	boolean result = false;
-            while(!result) {
-                printMenu(menu);
-                gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
-                String input = gameInterface.getCommand(context.getUserId());
-                result = loadGame(input, menu);
-            }
-        }
+    public boolean configureGame(GameMode mode) {
+    	XmlParser parseXml;
+		try {
+			parseXml = new XmlParser();
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe("Xml Parser Failure \n" + e);
+	       	gameLogger.severe(e.getMessage());
+	       	return false;
+		} 
+		
+		CustomizingGame customGame = (CustomizingGame) parseXml.loadGameMapXml(mode, context.getUserId());		
+        context.setGameName(customGame.getName());
+        
+        try {
+			customGame.configure(context);
+		} catch (InvalidGameException e) {
+			gameLogger.severe("Game loading failure. Exception: \n" + e);
+	       	gameLogger.severe(e.getMessage());
+	       	return false;
+		}
         // Once the game has been configured, it is time to play!
         showIntro();
         // Configure the game, add the goals and exe
         context.setPlayerGameGoal();
-        this.playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());
+        playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());
         return true;
     }
 
-    private boolean processGameCommand(String input) throws TerminateGameException {
+    private boolean processGameCommand(@NonNull String input) throws TerminateGameException {
     	if (this instanceof LocalGame && input.compareTo("quit") == 0) {
     		return handleQuit();
         }

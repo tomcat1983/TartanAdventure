@@ -27,8 +27,8 @@ public class GameContext implements Comparable, Serializable {
 	/**
      * The name and description of the active game
      */
-    private String gameName = "";
-    private String gameDescription = "";
+    private String gameName;
+    private String gameDescription;
     /**
      * The userId is user name with local game. But if game is network mode, user name set userId.
      */
