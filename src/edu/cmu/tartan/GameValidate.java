@@ -257,7 +257,6 @@ public class GameValidate  {
 				foundedItemCnt += getGoalItemPerRoom(goalItem, room);
 			}
 		}
-
 		return (goalItemCnt == foundedItemCnt);
 	}
 	
@@ -304,6 +303,12 @@ public class GameValidate  {
 			ArrayList<Item> items = room.getItems();
 			for (Item item : items) {
 				sum += item.value();
+				
+				if(item instanceof Meltable) { 
+					Item melted = ((Meltable) item).meltItem();
+					if(melted != null)
+						sum += melted.value(); 
+				}
 			}
 		}
 

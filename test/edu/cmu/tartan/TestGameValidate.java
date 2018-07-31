@@ -8,6 +8,10 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import edu.cmu.tartan.goal.GameCollectGoal;
+import edu.cmu.tartan.goal.GameExploreGoal;
+import edu.cmu.tartan.goal.GameGoal;
+import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemFood;
 import edu.cmu.tartan.room.Room;
@@ -22,6 +26,7 @@ class TestGameValidate {
 	GameContext gc;
 	private ArrayList<Room> rooms = new ArrayList<>();
 	private ArrayList<Room> noRoom = new ArrayList<>();
+
 	private static final String USER_ID = "Default";
 	private static final String ROOM1 = "ROOM1";
 	private static final String ROOM2 = "ROOM2";
@@ -41,6 +46,14 @@ class TestGameValidate {
 	Item lock = Item.getInstance("lock", USER_ID);
 
 	List<MapConfig> errorList;
+	
+	private ArrayList<String> goalItems  = new ArrayList<>();
+	private List<String> goalPlaces  = new ArrayList<>();
+	private Player player;
+	
+	GameCollectGoal collectGoal;
+	GameExploreGoal exploreGoal;
+	GamePointsGoal pointGoal;
 	
 	@BeforeEach
 	void setUp() {
@@ -64,10 +77,10 @@ class TestGameValidate {
 		room1Normal.putItem(requiredItemGold);
 		room1Normal.putItem(food);
 		room1Normal.putItem(lock);
-		room1Normal.putItem(key);
-		
+		room1Normal.putItem(key);	
 		room5Obscure.setObscuringItem(obscuringItem);
 		
+		rooms.clear();
 		rooms.add(room1Normal);
 		rooms.add(room2Dark);
 		rooms.add(room3Require);
@@ -75,6 +88,21 @@ class TestGameValidate {
 		rooms.add(room5Obscure);
 		rooms.add(room6Obscure);
 		rooms.add(room7Lock);
+		
+		goalItems.clear();
+		goalItems.add(requiredItemDia.toString());
+		goalItems.add(requiredItemGold.toString());
+		player = new Player(room1Normal, USER_ID);
+		
+		goalPlaces.clear();
+		goalPlaces.add(ROOM3);
+		goalPlaces.add(ROOM4);
+		goalPlaces.add(ROOM5);
+
+		collectGoal = new GameCollectGoal(goalItems, player);
+		exploreGoal = new GameExploreGoal(goalPlaces, player);
+		pointGoal = new GamePointsGoal(Integer.valueOf(1000), player);
+		
 	}
 	
 	@Test
@@ -100,6 +128,16 @@ class TestGameValidate {
 		GameValidate gv = new GameValidate(gc);
 		errorList = gv.check();
 		assertTrue(errorList.contains(MapConfig.NO_LUMINOUS));
+	}
+	
+	@Test
+	void testNoDarkRoom() {
+		rooms.remove(1);
+		rooms.get(0).remove(luminousItem);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertFalse(errorList.contains(MapConfig.NO_LUMINOUS));
 	}
 	
 	@Test
@@ -129,6 +167,17 @@ class TestGameValidate {
 	}
 	
 	@Test
+	void testNoRequireRoom() {
+		rooms.remove(3);
+		rooms.remove(2);
+		rooms.get(0).remove(requiredItemGold);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertFalse(errorList.contains(MapConfig.NO_REQUIRED_ITEM));
+	}
+	
+	@Test
 	void testHaveObscuringItem() {
 		gc.setRooms(rooms);
 		GameValidate gv = new GameValidate(gc);
@@ -144,6 +193,16 @@ class TestGameValidate {
 		GameValidate gv = new GameValidate(gc);
 		errorList = gv.check();
 		assertTrue(errorList.contains(MapConfig.NO_OBSTACLE));
+	}
+	
+	@Test
+	void testNoObscureRoom() {
+		rooms.remove(5);
+		rooms.remove(4);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertFalse(errorList.contains(MapConfig.NO_OBSTACLE));
 	}
 	
 	@Test
@@ -178,6 +237,122 @@ class TestGameValidate {
 		GameValidate gv = new GameValidate(gc);
 		errorList = gv.check();
 		assertTrue(errorList.contains(MapConfig.NO_KEY));
+	}
+	
+	@Test
+	void testNoLockRoomDontNeedLock() {
+		rooms.remove(6);
+		rooms.get(0).remove(lock);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertFalse(errorList.contains(MapConfig.NO_LOCK));
+	}
+	
+	@Test
+	void testNoLockRoomDontNeedKey() {
+		rooms.remove(6);
+		rooms.get(0).remove(key);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertFalse(errorList.contains(MapConfig.NO_KEY));
+	}
+	
+	@Test
+	void testNoGoal() {
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertTrue(errorList.contains(MapConfig.NO_GOAL));
+	}
+	
+	@Test
+	void testDupCollectGoal() {
+		gc.addGoal(collectGoal);
+		gc.addGoal(collectGoal);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertTrue(errorList.contains(MapConfig.DUP_GOAL));
+	}
+	
+	@Test
+	void testDupExploreGoal() {
+		gc.addGoal(exploreGoal);
+		gc.addGoal(exploreGoal);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertTrue(errorList.contains(MapConfig.DUP_GOAL));
+	}
+	
+	@Test
+	void testDupPointsGoal() {
+		gc.addGoal(pointGoal);
+		gc.addGoal(pointGoal);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertTrue(errorList.contains(MapConfig.DUP_GOAL));
+	}
+	
+	@Test
+	void testCollectGoalHaveItem() {
+		gc.addGoal(collectGoal);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertFalse(errorList.contains(MapConfig.NO_GOAL_ITEM));
+	}
+	
+	@Test
+	void testCollectGoalDontHaveItem() {
+		gc.addGoal(collectGoal);
+		rooms.get(0).remove(requiredItemGold);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertTrue(errorList.contains(MapConfig.NO_GOAL_ITEM));
+	}
+	
+	@Test
+	void testExploreGoalHaveRoom() {
+		gc.addGoal(exploreGoal);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertFalse(errorList.contains(MapConfig.NO_GOAL_ROOM));
+	}
+	
+	@Test
+	void testExploreGoalDontHaveRoom() {
+		gc.addGoal(exploreGoal);
+		rooms.remove(4);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertTrue(errorList.contains(MapConfig.NO_GOAL_ROOM));
+	}
+	
+	@Test
+	void testPointsGoalHaveEnoughPoint() {
+		gc.addGoal(pointGoal);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertFalse(errorList.contains(MapConfig.CANT_ACHIVE_POINT));
+	}
+	
+	@Test
+	void testPointsGoalNotEnoughPoint() {
+		gc.addGoal(pointGoal);
+		rooms.get(0).remove(food);
+		rooms.get(0).remove(requiredItemGold);
+		gc.setRooms(rooms);
+		GameValidate gv = new GameValidate(gc);
+		errorList = gv.check();
+		assertTrue(errorList.contains(MapConfig.CANT_ACHIVE_POINT));
 	}
 	
 	
