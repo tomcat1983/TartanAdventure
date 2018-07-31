@@ -38,6 +38,8 @@ public class Server {
 		designerSocketServerThread.start();
 		
 		TartanGameManager tartanGameManager = new TartanGameManager(socketServer, designerSocketServer, messageQueue);
+		gameInterface.setGameManager(tartanGameManager);
+		
 		Thread gameManagerThread = new Thread(tartanGameManager);
 		gameManagerThread.start();
 		

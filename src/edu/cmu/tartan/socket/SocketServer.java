@@ -60,7 +60,6 @@ public class SocketServer implements Runnable, ISocketHandler {
 				Socket socket = serverSocket.accept();
 
 				if (socketCounter > MAX_USER_CONNECTION || isPlaying) {
-//					sendMessage(socket, "I’m sorry. The game server is busy. Please retry to connect later.");
 					socket.close();
 				}
 
@@ -107,21 +106,6 @@ public class SocketServer implements Runnable, ISocketHandler {
 		return returnValue;
 	}
 
-	/*
-	private boolean sendMessage(Socket clientSocket, String message) {
-		try {
-			OutputStream output = clientSocket.getOutputStream();
-			PrintWriter writer = new PrintWriter(output, true);
-
-			writer.println(message);
-
-			return true;
-		} catch (IOException e) {
-			gameLogger.warning("IOException : " + e.getMessage());
-		}
-		return false;
-	}
-	*/
 	@Override
 	public boolean sendToClientByThreadName(String threadName, String message) {
 		boolean returnValue = false;
