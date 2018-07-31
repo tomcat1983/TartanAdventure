@@ -36,11 +36,12 @@ public class Server {
 		ISocketHandler designerSocketServer = new DesignerSocketServer(messageQueue);
 		Thread designerSocketServerThread = new Thread((Runnable)designerSocketServer);
 		designerSocketServerThread.start();
-		
+
 		TartanGameManager tartanGameManager = new TartanGameManager(socketServer, messageQueue);
+		gameInterface.setGameManager(tartanGameManager);
+
 		Thread gameManagerThread = new Thread(tartanGameManager);
 		gameManagerThread.start();
-		
 
 		boolean running = true;
 
