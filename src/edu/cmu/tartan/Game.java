@@ -182,7 +182,7 @@ public abstract class Game {
         else if (input.compareTo("status") == 0) {
             status();
         }
-        else if(this instanceof LocalGame && input.compareTo("save") == 0 ) {
+        else if(input.compareTo("save") == 0 ) {
         	handleSave();
         }
         else {
@@ -328,7 +328,8 @@ public abstract class Game {
 
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- To view your current items: type \"inventory\"\n");
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- You have a number of actions available:\n");
-
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- To save your current game status: type \"save\"\n* ‘save’ is only possible in local game mode.");
+        		
         StringBuilder directions = new StringBuilder("Direction: [");
         StringBuilder movement = new StringBuilder("Movement with fixed direction:[");
         StringBuilder dirobj = new StringBuilder("Manipulate object directly: [");
@@ -387,15 +388,18 @@ public abstract class Game {
         for (GameGoal g: context.getGoals()) {
         	gameInterface.println(context.getUserId(), MessageType.PRIVATE, g.getStatus());
         }
-        gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.WILL_YOU_SAVE_2_1);
-        gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
-
-        String input = gameInterface.getCommand(context.getUserId());
-        if("yes".equalsIgnoreCase(input)) {
-        	return handleSave();
-        } else {
-        	gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.REJECT_SAVE_2_4);
-        	return true;
+        if(this instanceof LocalGame) {
+	        gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.WILL_YOU_SAVE_2_1);
+	        gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
+	
+	        String input = gameInterface.getCommand(context.getUserId());
+	        if("yes".equalsIgnoreCase(input)) {
+	        	return handleSave();
+	        } else {
+	        	gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.REJECT_SAVE_2_4);
+	        	return true;
+	        }
         }
+        return true;
     }
 }
