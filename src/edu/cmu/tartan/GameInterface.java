@@ -10,6 +10,11 @@ import edu.cmu.tartan.manager.TartanGameManager;
 public class GameInterface {
 
 	/**
+	 * User ID for None
+	 */
+	public static final String USER_ID_NONE = "";
+
+	/**
 	 * Static variable for singleton
 	 */
 	private static GameInterface instance = null;
@@ -36,11 +41,6 @@ public class GameInterface {
 
 	public GameInterface() {
         scanner = new Scanner(System.in, "UTF-8");
-        init();
-	}
-
-	private void init() {
-		tartanManager = null;
 	}
 
 	public static GameInterface getInterface() {
@@ -57,77 +57,81 @@ public class GameInterface {
 		return true;
 	}
 
-	public void initialize() {
-		instance = new GameInterface();
-	}
-
 	public void resetInterface() {
 		scanner = new Scanner(System.in, "UTF-8");
 	}
 
 	public enum MessageType {
-		PRIVATE, PUBLIC, WIN, LOSE
+		SYSTEM, PRIVATE, PUBLIC, OTHER, WIN, LOSE
 	}
 
 	// For game message
 	public void print(String message) {
-		System.out.print(message);
+		print(USER_ID_NONE, MessageType.SYSTEM, message);
 	}
 
 	public void println(String message) {
-		print(message + "\n");
+		print(USER_ID_NONE, MessageType.SYSTEM, message + "\n");
 	}
 
 	public void print(String userId, MessageType type, String message) {
-		if (tartanManager == null)
-			print(message);
-		else if (type == MessageType.PRIVATE)
+		if (tartanManager == null && type != MessageType.OTHER)
+			type = MessageType.SYSTEM;
+
+		switch (type) {
+		case SYSTEM:
+			System.out.print(message);
+			break;
+		case PRIVATE:
 			tartanManager.sendToClient(userId, message);
-		else if (type == MessageType.PUBLIC)
+			break;
+		case PUBLIC:
 			tartanManager.sendToAll(userId, message);
-		else
+			break;
+		case OTHER:
+			tartanManager.sendToOters(userId, message);
+			break;
+		case WIN:
 			tartanManager.achievedGoal(userId);
+			break;
+		case LOSE:
+			tartanManager.sendToClient(userId, message);
+			break;
+		default:
+			break;
+		}
 	}
 
 	public void println(String userId, MessageType type, String message) {
-		message = message + "\n";
-
-		if (tartanManager == null)
-			print(message);
-		else if (type == MessageType.PRIVATE)
-			tartanManager.sendToClient(userId, message);
-		else if (type == MessageType.PUBLIC)
-			tartanManager.sendToAll(userId, message);
-		else
-			tartanManager.achievedGoal(userId);
+		print (userId, type, message + "\n");
 	}
 
 	public String getCommand(String userId) {
-		if (tartanManager == null) {
-			return scanner.nextLine();
-		} else {
-			LinkedList<String> commandList = commandMap.get(userId);
-			if (commandList == null) {
-				commandList = new LinkedList<>();
-				commandMap.put(userId, commandList);
-				synchronized(waitMap) {
-					waitMap.put(userId, false);
-				}
-			}
-
-			while (commandList.isEmpty()) {
-				synchronized(waitMap) {
-					waitMap.replace(userId, false, true);
-				}
-
-				try {
-					commandList.wait();
-				} catch (Exception e) {
-				}
-			}
-
-			return commandList.poll();
+		if (tartanManager == null || userId == USER_ID_NONE) {
+			putCommand(userId, scanner.nextLine());
 		}
+
+		LinkedList<String> commandList = commandMap.get(userId);
+		if (commandList == null) {
+			commandList = new LinkedList<>();
+			commandMap.put(userId, commandList);
+			synchronized(waitMap) {
+				waitMap.put(userId, false);
+			}
+		}
+
+		while (commandList.isEmpty()) {
+			synchronized(waitMap) {
+				waitMap.replace(userId, false, true);
+			}
+
+			try {
+				commandList.wait();
+			} catch (Exception e) {
+			}
+		}
+
+		return commandList.poll();
 	}
 
 	public boolean putCommand(String userId, String command) {

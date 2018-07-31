@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.LocalGame;
-import edu.cmu.tartan.Player;
 import edu.cmu.tartan.manager.IQueueHandler;
 import edu.cmu.tartan.manager.MessageQueue;
 import edu.cmu.tartan.manager.ResponseMessage;
@@ -96,15 +95,15 @@ public class Client {
 
 	private boolean continueGame() {
 		gameInterface.println("TBD");
-		LocalGame localGame = new LocalGame(Player.DEFAULT_USER_NAME);
-		if(localGame.loadAndStart(Player.DEFAULT_USER_NAME)) {
+		LocalGame localGame = new LocalGame(GameInterface.USER_ID_NONE);
+		if(localGame.loadAndStart(GameInterface.USER_ID_NONE)) {
 
 		}
 		return true;
 	}
 
 	private boolean newGame() {
-		LocalGame localGame = new LocalGame(Player.DEFAULT_USER_NAME);
+		LocalGame localGame = new LocalGame(GameInterface.USER_ID_NONE);
 		if(localGame.configureGame()) {
 			localGame.start();
 		}

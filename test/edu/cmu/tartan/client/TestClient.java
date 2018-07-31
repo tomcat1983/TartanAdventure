@@ -31,11 +31,6 @@ class TestClient {
 	@Test
 	void testWhenInputHelp() {
 		commander.add("help");
-		commander.add("1");
-		commander.add("new");
-		commander.add("9");
-		commander.add("quit");
-		commander.add("no");
 		commander.add("exit");
 		commander.apply();
 	}
@@ -43,11 +38,6 @@ class TestClient {
 	@Test
 	void testWhenInputInvalidRunningMode() {
 		commander.add("55");
-		commander.add("1");
-		commander.add("new");
-		commander.add("9");
-		commander.add("quit");
-		commander.add("no");
 		commander.add("exit");
 		commander.apply();
 	}
@@ -56,7 +46,7 @@ class TestClient {
 	void testWhenSelectLocalGameAndNewGame() {
 		commander.add("1");
 		commander.add("new");
-		commander.add("9");
+		commander.add("8");
 		commander.add("quit");
 		commander.add("no");
 		commander.add("exit");
