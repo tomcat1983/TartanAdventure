@@ -229,7 +229,7 @@ public class GameValidate  {
 		for (Room room : rooms) {
 			ArrayList<Item> items = room.getItems();
 			for (Item item : items) {
-				if(item instanceof ItemKey || item instanceof ItemKeycard)
+				if(item instanceof ItemKey)
 					return true; 
 			}
 		}
@@ -240,7 +240,7 @@ public class GameValidate  {
 		for (Room room : rooms) {
 			ArrayList<Item> items = room.getItems();
 			for (Item item : items) {
-				if(item instanceof ItemLock || item instanceof ItemKeycardReader)
+				if(item instanceof ItemLock)
 					return true; 
 			}
 		}
