@@ -23,7 +23,7 @@ public class ServerInterface {
 			gameInterface.println("");
 			gameInterface.print("> ");
 
-			String command = gameInterface.getCommand(GameInterface.USER_ID_NONE);
+			String command = gameInterface.getCommand(GameInterface.USER_ID_LOCAL_USER);
 
 			if (command.equals("exit")) {
 				serverCommand = Command.EXIT;

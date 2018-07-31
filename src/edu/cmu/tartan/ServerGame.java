@@ -2,8 +2,6 @@ package edu.cmu.tartan;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import edu.cmu.tartan.GameInterface.MessageType;
-import edu.cmu.tartan.games.InvalidGameException;
 import edu.cmu.tartan.xml.GameMode;
 
 public class ServerGame extends Game {
@@ -13,16 +11,6 @@ public class ServerGame extends Game {
 	}
 	
 	public boolean loadNetworkGame() {
-		GameConfiguration xmlGame = gameFromXML(GameMode.NETWORK);
-        if(xmlGame!=null) {
-        	context.setGameName(xmlGame.getName());
-        	try {
-				return xmlGame.configure(context);
-			} catch (InvalidGameException e) {
-				gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Game improperly configured, please try again.");
-	            return false;
-			}
-        }
-		return true;
+		return configureGame(GameMode.NETWORK);
 	}
 }
