@@ -1,5 +1,6 @@
 package edu.cmu.tartan;
 
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -33,17 +34,22 @@ public class GameInterface {
     /**
      * Tartan Game manager for server.
      */
-	private static TartanGameManager tartanManager;
+	private TartanGameManager tartanManager;
 
 	/**
 	 * Command list map
 	 */
-	private static Map<String, LinkedList<String>> commandMap = new HashMap<>();
+	private Map<String, LinkedList<String>> commandMap = new HashMap<>();
 
 	/**
 	 * Wait map
 	 */
-	private static Map<String, Boolean> waitMap = new HashMap<>();
+	private Map<String, Boolean> waitMap = new HashMap<>();
+
+	/**
+	 * Output stream
+	 */
+	private PrintStream systemOut = System.out;
 
 	public GameInterface() {
         scanner = new Scanner(System.in, "UTF-8");
@@ -57,10 +63,14 @@ public class GameInterface {
 		return instance;
 	}
 
-	public static boolean setGameManager(TartanGameManager manager) {
+	public boolean setGameManager(TartanGameManager manager) {
 		tartanManager = manager;
 
 		return true;
+	}
+
+	public void setSystemOut(PrintStream printStream) {
+		systemOut = printStream;
 	}
 
 	public void resetInterface() {
@@ -91,7 +101,7 @@ public class GameInterface {
 
 		switch (type) {
 		case SYSTEM:
-			System.out.print(message);
+			systemOut.print(message);
 			break;
 		case PRIVATE:
 			tartanManager.sendToClient(userId, message);
