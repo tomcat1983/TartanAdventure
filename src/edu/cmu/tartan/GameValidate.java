@@ -48,7 +48,7 @@ public class GameValidate  {
 		this.rooms = gameContext.getRooms();
 	}
 
-	public ArrayList<MapConfig> check() {
+	public List<MapConfig> check() {
 
 		if(rooms.isEmpty()) {
 			configErrors.add(MapConfig.NO_ROOM);

@@ -3,11 +3,11 @@ package edu.cmu.tartan;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import edu.cmu.tartan.goal.GameCollectGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemFood;
 import edu.cmu.tartan.room.Room;
@@ -40,7 +40,7 @@ class TestGameValidate {
 	Item key = Item.getInstance("key", USER_ID);
 	Item lock = Item.getInstance("lock", USER_ID);
 
-	ArrayList<MapConfig> errorList;
+	List<MapConfig> errorList;
 	
 	@BeforeEach
 	void setUp() {
