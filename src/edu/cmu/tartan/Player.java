@@ -112,7 +112,10 @@ public class Player implements Comparable, Serializable {
      */
     public Item drop(Item item) {
         if(this.items.remove(item)) {
-            this.score -= item.value();
+        	int s = item.value();
+            this.score -= s;
+            gameInterface.println(userName, MessageType.PRIVATE, "You lost " + s + " points.");
+        	gameInterface.println(userName, MessageType.OTHER, userName + " lost " + s + " points.");
             return item;
         }
         else {
@@ -368,15 +371,17 @@ public class Player implements Comparable, Serializable {
      * @param s the newly scored points.
      */
     public void score(int s) {
-        gameInterface.println(userName, MessageType.PUBLIC, "You scored " + s + " points.");
-        score += s;
+    	gameInterface.println(userName, MessageType.PRIVATE, "You scored " + s + " points.");
+    	gameInterface.println(userName, MessageType.OTHER, userName + " scored " + s + " points.");
+    	score += s;
     }
 
     /**
      * Terminate this player.
      */
     public void terminate() throws TerminateGameException {
-        gameInterface.println(userName, MessageType.LOSE, "You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
+    	gameInterface.println(userName, MessageType.OTHER, userName +" have scored " + this.score + " out of  " + possiblePoints + " possible points.");
+        gameInterface.println(userName, MessageType.PRIVATE, "You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
         throw new TerminateGameException("Terminate Game");
     }
 

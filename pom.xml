@@ -64,8 +64,10 @@
         <version>1.4.0</version>
         <configuration>
           <avoidCallsTo>
-            <avoidCallsTo>edu.cmu.tartan.GameInterface.print</avoidCallsTo>
-            <avoidCallsTo>edu.cmu.tartan.GameInterface.println</avoidCallsTo>
+            <avoidCallsTo>edu.cmu.tartan.GameInterface</avoidCallsTo>
+            <avoidCallsTo>edu.cmu.tartan.client.ClientInterface</avoidCallsTo>
+            <avoidCallsTo>edu.cmu.tartan.server.ServerInterface</avoidCallsTo>
+            <avoidCallsTo>java.util.logging</avoidCallsTo>
           </avoidCallsTo>
         </configuration>
         <dependencies>
@@ -80,6 +82,13 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>1.2.0</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
