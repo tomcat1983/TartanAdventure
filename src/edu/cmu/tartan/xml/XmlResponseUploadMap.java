@@ -1,11 +1,7 @@
 package edu.cmu.tartan.xml;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.eclipse.jdt.annotation.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -18,7 +14,6 @@ import edu.cmu.tartan.goal.GameExploreGoal;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.item.ItemLock;
 import edu.cmu.tartan.properties.Meltable;
 import edu.cmu.tartan.properties.Pushable;
 import edu.cmu.tartan.room.Room;
@@ -70,11 +65,10 @@ public class XmlResponseUploadMap extends XmlResponse {
 			String mapXml = XmlWriter.convertDocumentToString(doc);
 			XmlWriter.saveXmlStringToFile("userMap.xml", mapXml);
 			
-			try {
-				XmlWriter.overWriteFile("gameMap.xml", "userMap.xml");
-			} catch (IOException e) {
+			
+			if(!XmlWriter.overWriteFile("gameMap.xml", "userMap.xml"))
 				gameLogger.severe("IOException occur when copying userMap.xml to gameMap.xml");
-			}		
+			
 		}
 		
 		return xmlParseResult;
@@ -213,7 +207,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 		if(adjacentRooms == null)
 			return null; 
 		
-		String directionAlias[] = actionGoDirection.getAliases();
+		String[] directionAlias = actionGoDirection.getAliases();
 		
 		if(adjacentRooms instanceof RoomObscured) {
 			
@@ -264,7 +258,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 
 		Item lock = Item.getInstance(lockName, userId);
         Item key = Item.getInstance(keyName, userId);
-		((ItemLock) lock).install(key);
+		
 		lock.setRelatedRoom(currentRoom);
 		lockLocatedRoom.putItem(lock);
 		keyLocatedRoom.putItem(key);

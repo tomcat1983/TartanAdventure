@@ -136,36 +136,66 @@ public class TestXmlParserClient {
 	}
 	
 	
-	@Disabled("Describe how to make login XML")
 	@Test
-	public void testWritingXmlLogin() {
+	public void testWritingXmlLogin() throws ParserConfigurationException {
+		
+		final String ID_STR = "loginUserId";
+		final String PW_STR = "loginUserPw";
+		XmlLoginRole xlr = XmlLoginRole.PLAYER;
 		
 		XmlWriterClient xw = new XmlWriterClient(); 
-		xw.makeXmlForLogin("tak", "abcdefg", XmlLoginRole.PLAYER);
-	}
-	
-	@Disabled("Describe how to make add user XML")
-	@Test
-	public void testWritingXmlForAddUser() {
+		String xmlStr = xw.makeXmlForLogin(ID_STR, PW_STR, xlr);
 		
-		XmlWriterClient xw = new XmlWriterClient(); 
-		xw.makeXmlForAddUser("tak", "abcdefg");
+		XmlParser xp = new XmlParser(XmlParserType.SERVER);
+		xp.parseXmlFromString(xmlStr);
+		
+		XmlResponseLogin xr = (XmlResponseLogin) xp.getXmlResponse();
+		assertTrue(xr.getId().equals(ID_STR));
+		assertTrue(xr.getPw().equals(PW_STR));
+		assertTrue(xr.getRole().equals(xlr));
 	}
 	
-	@Disabled("Describe how to make upload Map XML")
+	@Test
+	public void testWritingXmlForAddUser() throws ParserConfigurationException {
+		
+		final String ID_STR = "addUserId";
+		final String PW_STR = "addUserPw";
+
+		XmlWriterClient xw = new XmlWriterClient(); 
+		String xmlStr = xw.makeXmlForAddUser(ID_STR, PW_STR);
+
+		XmlParser xp = new XmlParser(XmlParserType.SERVER);
+		xp.parseXmlFromString(xmlStr);
+		
+		XmlResponseAddUser xr = (XmlResponseAddUser) xp.getXmlResponse();
+		assertTrue(xr.getId().equals(ID_STR));
+		assertTrue(xr.getPw().equals(PW_STR));
+	}
+	
 	@Test
 	public void testWritingXmlForUploadMap() {
 		
+		final String MAP_STR = "userMap.xml";
+
 		XmlWriterClient xw = new XmlWriterClient(); 
-		xw.makeXmlForUploadMap("userMap.xml"); 
+		String xmlStr = xw.makeXmlForUploadMap(MAP_STR);
+		String fileRead = readAllBytes(MAP_STR);
+		assertTrue(xmlStr.equals(fileRead));
 	}
 	
-	@Disabled("Describe how to make game start packet")
 	@Test
-	public void testWritingXmlForGameStart() {
+	public void testWritingXmlForGameStart() throws ParserConfigurationException {
 		
-		XmlWriterClient xw = new XmlWriterClient(); 
-		xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_START, "startId");
+		final String ID_STR = "startId";
+
+		XmlWriterClient xw = new XmlWriterClient();
+		String xmlStr = xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_START, ID_STR);
+		
+		XmlParser xp = new XmlParser(XmlParserType.SERVER);
+		xp.parseXmlFromString(xmlStr);
+		
+		XmlResponseGameStart xr = (XmlResponseGameStart) xp.getXmlResponse();
+		assertTrue(xr.getId().equals(ID_STR));
 	}
 	
 	@Test
