@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.manager.IQueueHandler;
 
 public class DesignerSocketServer implements Runnable, ISocketHandler {
@@ -43,6 +44,8 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 
 	@Override
 	public void startSocket() {
+		
+		serverPort = Config.getDesignerPort();
 
 		try {
 			serverSocket = new ServerSocket(serverPort);

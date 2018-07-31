@@ -70,11 +70,20 @@ public class Config {
 		return properties.getProperty("tartan.server.ip");
 	}
 
-	public static int getServerPort() {
+	public static int getUserPort() {
 		int port = DEFAULT_PORT;
 
-		if (properties.containsKey("tartan.server.port"))
-			port = Integer.parseInt(properties.getProperty("tartan.server.port"));
+		if (properties.containsKey("tartan.server.user.port"))
+			port = Integer.parseInt(properties.getProperty("tartan.server.user.port"));
+
+		return port;
+	}
+	
+	public static int getDesignerPort() {
+		int port = DEFAULT_PORT;
+
+		if (properties.containsKey("tartan.server.designer.port"))
+			port = Integer.parseInt(properties.getProperty("tartan.server.designer.port"));
 
 		return port;
 	}

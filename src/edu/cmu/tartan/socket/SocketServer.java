@@ -47,7 +47,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	@Override
 	public void startSocket() {
 
-		serverPort = Config.getServerPort();
+		serverPort = Config.getUserPort();
 
 		try {
 			serverSocket = new ServerSocket(serverPort);
