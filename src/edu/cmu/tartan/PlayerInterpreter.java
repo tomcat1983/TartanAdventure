@@ -6,8 +6,6 @@ import edu.cmu.tartan.action.ActionExecutionUnit;
 import edu.cmu.tartan.action.Type;
 import edu.cmu.tartan.item.Item;
 
-import java.util.Arrays;
-
 import org.eclipse.jdt.annotation.NonNull;
 
 /**
