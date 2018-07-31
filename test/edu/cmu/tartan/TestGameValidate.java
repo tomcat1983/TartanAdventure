@@ -8,6 +8,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import edu.cmu.tartan.games.CustomizingGame;
+import edu.cmu.tartan.games.InvalidGameException;
 import edu.cmu.tartan.goal.GameCollectGoal;
 import edu.cmu.tartan.goal.GameExploreGoal;
 import edu.cmu.tartan.goal.GamePointsGoal;
@@ -353,6 +355,21 @@ class TestGameValidate {
 		errorList = gv.check();
 		assertTrue(errorList.contains(MapConfig.CANT_ACHIVE_POINT));
 	}
+	
+	
+	@Test
+	public void testThrowInvalidGameException() throws InvalidGameException {
+		
+		CustomizingGame cGame = new CustomizingGame();
+		for (Room room : rooms) {
+			cGame.addRoom(room);
+		}
+		gc.setRooms(rooms);
+		assertThrows(InvalidGameException.class,()->{
+			cGame.configure(gc);
+		});
+	}
+	
 	
 	
 	@SuppressWarnings("unused")
