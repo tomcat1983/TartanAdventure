@@ -49,6 +49,9 @@ public class GameValidate  {
 
 		if(rooms.isEmpty()) {
 			configErrors.add(MapConfig.NO_ROOM);
+			
+			printErrorList();
+			
 			return configErrors; 
 		}
 		
@@ -64,6 +67,9 @@ public class GameValidate  {
 		
 		if(goals.isEmpty()) {
 			configErrors.add(MapConfig.NO_GOAL);
+
+			printErrorList();
+
 			return configErrors; 
 		}
 		
@@ -76,6 +82,8 @@ public class GameValidate  {
 		exploreGoalCheck();
 
 		pointGoalCheck();
+		
+		printErrorList();
 		
 		return configErrors;
 	}
@@ -99,6 +107,9 @@ public class GameValidate  {
 	}
 
 	private void dupGoalCheck() {
+		System.out.println("dupGoalCheck>"+
+				gameCollectGoalCnt + ","
+				);
 		if(gameCollectGoalCnt > 1 || gameExploreGoalCnt > 1 || gamePointGoalCnt > 1)
 			configErrors.add(MapConfig.DUP_GOAL);
 	}
@@ -315,5 +326,16 @@ public class GameValidate  {
 		return sum;
 	}
 	
+	@SuppressWarnings("unused")
+	private void printErrorList() { 
+		
+		if(configErrors.isEmpty())
+			System.out.println("No Error");
+		else {
+			for (MapConfig mapConfig : configErrors) {
+				System.out.println(mapConfig.name());
+			}
+		}
+	}
 		
 }

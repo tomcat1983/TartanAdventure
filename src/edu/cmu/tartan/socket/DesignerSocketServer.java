@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.manager.IQueueHandler;
 
 public class DesignerSocketServer implements Runnable, ISocketHandler {
@@ -43,6 +44,8 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 
 	@Override
 	public void startSocket() {
+		
+		serverPort = Config.getDesignerPort();
 
 		try {
 			serverSocket = new ServerSocket(serverPort);
@@ -185,11 +188,18 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 		return returnValue;
 	}
 
-	@Deprecated
 	@Override
 	public boolean sendToClientByThreadName(String threadName, String message) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean returnValue = false;
+
+		for(DesignerClientThread client : clientThreadList) {
+			if (threadName.equals(client.getThreadName())) {
+				returnValue = client.sendMessage(message);
+				break;
+			}
+		}
+		
+		return returnValue;
 	}
 	
 }

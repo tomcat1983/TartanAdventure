@@ -10,6 +10,7 @@ import edu.cmu.tartan.manager.MessageQueue;
 import edu.cmu.tartan.manager.ResponseMessage;
 import edu.cmu.tartan.manager.TartanGameManagerClient;
 import edu.cmu.tartan.socket.SocketClient;
+import edu.cmu.tartan.xml.GameMode;
 import edu.cmu.tartan.xml.XmlLoginRole;
 
 public class Client {
@@ -95,27 +96,27 @@ public class Client {
 
 	private boolean continueGame() {
 		gameInterface.println("TBD");
-		LocalGame localGame = new LocalGame(GameInterface.USER_ID_NONE);
-		if(localGame.loadAndStart(GameInterface.USER_ID_NONE)) {
+		LocalGame localGame = new LocalGame(GameInterface.USER_ID_LOCAL_USER);
+		if(localGame.loadAndStart(GameInterface.USER_ID_LOCAL_USER)) {
 
 		}
 		return true;
 	}
 
 	private boolean newGame() {
-		LocalGame localGame = new LocalGame(GameInterface.USER_ID_NONE);
-		if(localGame.configureGame()) {
+		LocalGame localGame = new LocalGame(GameInterface.USER_ID_LOCAL_USER);
+		if(localGame.configureGame(GameMode.LOCAL)) {
 			localGame.start();
 		}
 
 		return true;
 	}
 
-	private boolean connectServer(int timeout) {
+	private boolean connectServer(int timeout, boolean isDesigner) {
 		IQueueHandler messageQueue = new MessageQueue();
 		ResponseMessage responseMessage = new ResponseMessage("");
 
-		SocketClient socketClient = new SocketClient(responseMessage, messageQueue);
+		SocketClient socketClient = new SocketClient(responseMessage, messageQueue, isDesigner);
 		Thread socketClientThread = new Thread(socketClient);
 		socketClientThread.start();
 
@@ -134,7 +135,7 @@ public class Client {
 
 		XmlLoginRole role = XmlLoginRole.PLAYER;
 		if (isDesigner)
-			role = XmlLoginRole.PLAYER;
+			role = XmlLoginRole.DESIGNER;
 
 		if (gameManager.login("", loginInfo[0], loginInfo[1], role)) {
 			userId = id;
@@ -235,7 +236,7 @@ public class Client {
 	}
 
 	private boolean runNetworkMode(boolean isDesigner) {
-		connectServer(1000);
+		connectServer(1000, isDesigner);
 
 		if (gameManager.waitForConnection()) {
 			boolean runNetwork = true;

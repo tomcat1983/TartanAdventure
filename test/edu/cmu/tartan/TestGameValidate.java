@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import edu.cmu.tartan.goal.GameCollectGoal;
 import edu.cmu.tartan.goal.GameExploreGoal;
-import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemFood;
