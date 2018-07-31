@@ -28,9 +28,6 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	private ResponseMessage responseMessage;
 	private AccountManager accountManager;
 
-	private String userId = null;
-	private String userPw = null;
-
 	private boolean isLoop = true;
 
 	public TartanGameManagerClient(SocketClient socket, ResponseMessage responseMessage, IQueueHandler messageQueue) {
@@ -41,7 +38,6 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	}
 
 	public boolean sendMessage(String message) {
-		// TODO Make a message for TCP communication
 		socket.sendMessage(message);
 		return false;
 	}
@@ -59,16 +55,13 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		waitResponseMessage();
 
 		if ("SUCCESS".equals((responseMessage).getMessage())) {
-			this.userId = userId;
-			this.userPw = userPw;
-
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean register(String userId, String userPw) {
+	public boolean register(String threadName, String userId, String userPw) {
 
 		String message = null;
 
@@ -88,9 +81,9 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 	@Override
 	public boolean validateUserId(String userId) {
+		gameLogger.info("validUserId : " + userId );
 		ReturnType returnValue = accountManager.validateId(userId);
 		if (ReturnType.SUCCESS == returnValue) {
-			this.userId = userId;
 			return true;
 		}
 		return false;
@@ -100,7 +93,6 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	public boolean validateUserPw(String userPw) {
 		ReturnType returnValue = accountManager.validatePassword(userPw);
 		if (ReturnType.SUCCESS == returnValue) {
-			this.userPw = userPw;
 			return true;
 		}
 		return false;
@@ -141,12 +133,9 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 		isLoop = false;
 		messageQueue.produce(new SocketMessage(Thread.currentThread().getName(), userId));
-		int returnValue = messageQueue.clearQueue();
+//		int returnValue = messageQueue.clearQueue();
 
-		if (returnValue == 0) {
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 	@Override
@@ -180,6 +169,14 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Wait for socket connection
+	 * @return
+	 */
+	public boolean waitForConnection() {
+		return socket.waitToConnection(1000);
 	}
 
 	public void waitResponseMessage() {

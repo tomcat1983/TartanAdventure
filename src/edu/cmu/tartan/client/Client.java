@@ -186,7 +186,7 @@ public class Client {
 		String id = getUserIdForRegister();
 		String pw = getUserPwForRegister();
 
-		if (gameManager.register(id, pw)) {
+		if (gameManager.register("threadName", id, pw)) {
 			clientInterface.printSuccessMessageForRegister();
 			return true;
 		}

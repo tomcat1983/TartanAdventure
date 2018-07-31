@@ -128,5 +128,25 @@ public class TestDbAccessor {
 		// Then
 		assertEquals(true, returnValue);
 	}
+	
+	@Test
+	public void testShouldReturnOneWhenCheckTheUserId() {
+
+		// Given
+		File file = new File(url);
+		if (file.exists()) {
+			file.delete();
+		}
+		dbAccessor.createNewDatabase();
+		dbAccessor.createNewTable();
+		
+		dbAccessor.insert(userId, userPw, userType);
+
+		// When
+		int returnValue = dbAccessor.hasUserId(userId);
+		
+		// Then
+		assertEquals(1, returnValue);
+	}
 
 }

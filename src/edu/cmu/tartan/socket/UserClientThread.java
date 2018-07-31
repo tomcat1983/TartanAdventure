@@ -48,7 +48,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 			writer.println(message);
 			return true;
 		} catch (IOException e) {
-			 gameLogger.warning("IOException: " + e.getMessage());
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 		return false;
 	}
@@ -85,7 +85,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 			stopSocket();
 
 		} catch (IOException e) {
-			gameLogger.warning("IOException: " + e.getMessage());
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 	}
 	
@@ -115,7 +115,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 			clientSocket.close();
 			returnValue = true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException: " + e.getMessage());
+			gameLogger.warning("IOException : " + e.getMessage());
 		}
 		
 		gameLogger.info("Closing user connection");
