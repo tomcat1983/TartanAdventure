@@ -236,7 +236,7 @@ public class TestMain {
 		commander.destory();
 
 		// No message
-		assertEquals(null, commander.getResultNextLine());
+		assertEquals("Fail to read setting file. Can't run!!", commander.getResultNextLine());
 	}
 
 	@Test
@@ -258,6 +258,6 @@ public class TestMain {
 		commander.destory();
 
 		// No message
-		assertEquals(null, commander.getResultNextLine());
+		assertEquals("Fail to read setting file. Can't run!!", commander.getResultNextLine());
 	}
 }
