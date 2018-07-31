@@ -71,7 +71,6 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		String message = null;
 		String threadName = null;
 		
-
         while(isLoop){
             socketMessage = queue.consume();
             threadName = socketMessage.getThreadName();
@@ -120,7 +119,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		for(String key : tartanGames.keySet()) {
 			if(!userId.equals(key)) {
-				returnValue = sendToClient(key, xmlMessage);
+				returnValue = socket.sendToClient(key, xmlMessage);
 			}
 		}
 		
@@ -136,7 +135,10 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	public boolean sendToClient(String userId, String message) {
 		boolean returnValue = false;
 		
-		returnValue = socket.sendToClient(userId, message);
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = xw.makeXmlForEventMessage(userId, message);
+		
+		returnValue = socket.sendToClient(userId, xmlMessage);
 		return returnValue;
 	}
 	
@@ -153,12 +155,12 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		String xmlMessage = null;
 		
 		xmlMessage = xw.makeXmlForGameEnd(userId, "WIN");
-		returnValue = sendToClient(userId, xmlMessage);
+		returnValue = socket.sendToClient(userId, xmlMessage);
 		
 		for(String key : tartanGames.keySet()) {
 			if(!userId.equals(key)) {
 				xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE");
-				returnValue = sendToClient(key, xmlMessage);
+				returnValue = socket.sendToClient(key, xmlMessage);
 			}
 		}
 		
@@ -284,7 +286,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			xmlMessage = xw.makeXmlForLogin(XmlResultString.NG, XmlNgReason.INVALID_INFO);
 		}
 		
-		returnValue = sendToClient(userId, xmlMessage);
+		returnValue = socket.sendToClient(userId, xmlMessage);
 		
 		return returnValue;
 	}
@@ -329,29 +331,27 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		if (loginUserCounter < 2) {
 			// TODO Send the result to client
 			xw = new XmlWriterServer();
-			xmlMessage = xw.makeXmlForEventMessage(userId, "No other player in this room. \n" + 
-					"Please wait until another player logs in and retry after few minutes.");
-			sendToClient(userId, xmlMessage);
 			
 			xmlMessage = xw.makeXmlForGameStart(XmlResultString.NG, XmlNgReason.NO_PLAYERS);
-			sendToClient(userId, xmlMessage);
+			socket.sendToClient(userId, xmlMessage);
 			return false;
 		}
-		
-		for (String key : tartanGames.keySet()) {
-			
-			tartanGames.get(key).start();
-		}
-		
-		xw = new XmlWriterServer();
-		xmlMessage = null;
 		
 		boolean returnValue = false;
 		
 		socket.updateSocketState(userId, CommandResult.START_GAME_SUCCESS, null);
+		
+		xw = new XmlWriterServer();
 		xmlMessage = xw.makeXmlForGameStart(XmlResultString.OK, XmlNgReason.OK);
 		
-		returnValue = socket.sendToAll(xmlMessage);
+		returnValue = socket.sendToClient(userId, xmlMessage);
+		
+		// TODO Make a thread
+		for (String key : tartanGames.keySet()) {
+			
+			tartanGames.get(key).loadNetworkGame();
+			tartanGames.get(key).start();
+		}
 		
 		return returnValue;
 	}
@@ -363,7 +363,6 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		for (String key : tartanGames.keySet()) {
 			if(userId.equals(key)) {
-//				returnValue = tartanGames.get(key).controlGame("exit");
 				gameInterface.putCommand(userId, "quit");
 				tartanGames.remove(key);
 				socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
