@@ -11,7 +11,7 @@ package edu.cmu.tartan.action;
 public enum Action {
 
     // Actions that do not rely on an object
-    ACTION_LOOK(new String[]{"lookAround", "l"}, Type.TYPE_HASNOOBJECT),
+    ACTION_LOOK(new String[]{"lookaround", "l"}, Type.TYPE_HASNOOBJECT),
 
     ACTION_JUMP(new String[]{"jump"}, Type.TYPE_HASNOOBJECT),
     ACTION_CLIMB(new String[]{"climb"}, Type.TYPE_HASNOOBJECT),

@@ -478,18 +478,17 @@ public class PlayerExecutionEngine {
         switch(action) {
 	        case ACTION_PASS: 
 	            // intentionally blank
-	            break;	        
+	            return false;	        
 	        case ACTION_ERROR:
 	            gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_UNDERSTAND);
-	            break;
+	            return false;
 	        case ACTION_UNKNOWN:
 	            gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_UNDERSTAND);
-	            break;
+	            return false;
 	        default:
 	        	gameInterface.println(player.getUserName(), MessageType.PRIVATE, "It's unknown action");
 	        	return false;
         }
-        return true;
     }
 
     /**
