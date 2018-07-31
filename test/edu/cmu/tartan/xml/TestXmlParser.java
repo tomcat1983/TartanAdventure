@@ -547,6 +547,39 @@ public class TestXmlParser {
 	}
 	
 	@Test
+	public void testWritingGameStartResponseOK() throws ParserConfigurationException {
+		XmlResultString xrs = XmlResultString.OK;
+		XmlNgReason xnr = XmlNgReason.OK;
+		
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlStr = xw.makeXmlForGameStart(xrs, xnr);
+		
+		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
+		parseXml.parseXmlFromString(xmlStr);
+		XmlResponseClient xr = (XmlResponseClient)parseXml.getXmlResponse();
+		
+		assertTrue(xr.getResultStr().equals(xrs));
+		assertTrue(xr.getNgReason().equals(xnr));
+	}
+	
+	@Test
+	public void testWritingGameStartResponseNG() throws ParserConfigurationException {
+		XmlResultString xrs = XmlResultString.NG;
+		XmlNgReason xnr = XmlNgReason.NO_PLAYERS;
+		
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlStr = xw.makeXmlForGameStart(xrs, xnr);
+		
+		XmlParser parseXml = new XmlParser(XmlParserType.CLIENT);
+		parseXml.parseXmlFromString(xmlStr);
+		XmlResponseClient xr = (XmlResponseClient)parseXml.getXmlResponse();
+		
+		assertTrue(xr.getResultStr().equals(xrs));
+		assertTrue(xr.getNgReason().equals(xnr));
+	}
+	
+	
+	@Test
 	public void testParsingSendCommandInvalid() throws ParserConfigurationException {
 		
 		XmlParser parseXml = new XmlParser();

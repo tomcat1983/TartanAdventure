@@ -1,5 +1,6 @@
 package edu.cmu.tartan.xml;
 
+import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,8 +9,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.logging.Logger;
 
 import javax.xml.XMLConstants;
@@ -116,10 +119,19 @@ public class XmlWriter {
 
 	public static void saveXmlStringToFile(String fileName, String xmlString) {
 
-		try (PrintWriter out = new PrintWriter(fileName)) {
-			out.print(xmlString);
+		try (Writer out = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(fileName), "UTF8"))) {
+			
+			out.append(xmlString);
+			out.flush();
 		} catch (FileNotFoundException e) {
 			gameLogger.severe("FileNotFoundException");
+		} catch (UnsupportedEncodingException e1) {
+			gameLogger.severe("UnsupportedEncodingException");
+
+		} catch (IOException e1) {
+			gameLogger.severe("IOException");
+
 		}
 	}
 

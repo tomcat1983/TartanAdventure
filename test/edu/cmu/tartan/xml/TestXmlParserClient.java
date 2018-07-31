@@ -172,12 +172,15 @@ public class TestXmlParserClient {
 		assertTrue(xr.getPw().equals(PW_STR));
 	}
 	
-	@Disabled("Describe how to make upload Map XML")
 	@Test
 	public void testWritingXmlForUploadMap() {
 		
+		final String MAP_STR = "userMap.xml";
+
 		XmlWriterClient xw = new XmlWriterClient(); 
-		xw.makeXmlForUploadMap("userMap.xml"); 
+		String xmlStr = xw.makeXmlForUploadMap(MAP_STR);
+		String fileRead = readAllBytes(MAP_STR);
+		assertTrue(xmlStr.equals(fileRead));
 	}
 	
 	@Test
@@ -185,7 +188,7 @@ public class TestXmlParserClient {
 		
 		final String ID_STR = "startId";
 
-		XmlWriterClient xw = new XmlWriterClient(); 
+		XmlWriterClient xw = new XmlWriterClient();
 		String xmlStr = xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_START, ID_STR);
 		
 		XmlParser xp = new XmlParser(XmlParserType.SERVER);
