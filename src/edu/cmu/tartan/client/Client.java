@@ -198,6 +198,7 @@ public class Client {
 
 	private boolean runNetworkCommander(boolean isDesigner) {
 		boolean running = true;
+		boolean gameStarted = false;
 
 		do {
 			String command = clientInterface.getNetworkCommand();
@@ -222,7 +223,13 @@ public class Client {
 				}
 			}
 			else if (command.equals("start")){
-				gameManager.startGame(userId);
+				if (gameManager.startGame(userId))
+					gameStarted = true;
+				else
+					clientInterface.printCannotStartMessage();
+			}
+			else if (gameStarted) {
+				gameManager.updateGameState(userId, command);
 			}
 		} while (running);
 
