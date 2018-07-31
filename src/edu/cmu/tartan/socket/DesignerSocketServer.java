@@ -188,11 +188,18 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 		return returnValue;
 	}
 
-	@Deprecated
 	@Override
 	public boolean sendToClientByThreadName(String threadName, String message) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean returnValue = false;
+
+		for(DesignerClientThread client : clientThreadList) {
+			if (threadName.equals(client.getThreadName())) {
+				returnValue = client.sendMessage(message);
+				break;
+			}
+		}
+		
+		return returnValue;
 	}
 	
 }

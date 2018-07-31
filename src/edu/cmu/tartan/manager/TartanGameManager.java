@@ -284,6 +284,8 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		} else {
 			serverSocket.updateSocketState(userId, CommandResult.LOGIN_FAIL, threadName);
 			xmlMessage = xw.makeXmlForLogin(XmlResultString.NG, XmlNgReason.INVALID_INFO);
+			serverSocket.sendToClientByThreadName(threadName, xmlMessage);
+			return returnValue;
 		}
 		
 		returnValue = serverSocket.sendToClient(userId, xmlMessage);
