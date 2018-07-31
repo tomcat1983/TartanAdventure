@@ -105,8 +105,9 @@ public class DbAccessor {
 		String sql = "INSERT INTO T_USER_INFO(user_id, user_pw, user_type) VALUES(?,?,?)";
 
 		boolean returnValue = false;
-
-		try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		
+		try (Connection conn = DriverManager.getConnection(url);
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, userId);
 			pstmt.setString(2, userPw);
 			pstmt.setString(3, userType);
@@ -185,6 +186,29 @@ public class DbAccessor {
 			gameLogger.warning("SQLException : " + e.getMessage());
 		}
 		
+		return returnValue;
+	}
+	
+	public int hasUserId(String userId) {
+		
+		String sql = "SELECT COUNT(user_id) FROM T_USER_INFO WHERE user_id=?";
+
+		int returnValue = 0;
+		
+		try (Connection conn = DriverManager.getConnection(url);
+				Statement stmt = conn.createStatement();
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			
+			pstmt.setString(1,  userId);
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				returnValue = Integer.parseInt(rs.getString("COUNT(user_id)"));
+			}
+		} catch (SQLException e) {
+			gameLogger.warning("SQLException : " + e.getMessage());
+		}
+
 		return returnValue;
 	}
 
