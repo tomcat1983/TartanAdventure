@@ -323,7 +323,7 @@ public class PlayerExecutionEngine {
             }
         }
         else {
-            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You do not have that item in your inventory.");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "That item is not in the room");
             return false;
         }    	
     }
