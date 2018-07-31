@@ -89,7 +89,7 @@ public class SocketClient implements Runnable {
 	}
 
 	public boolean waitToConnection(int timeout) {
-		while (timeout > 0 && socket == null && !socket.isConnected()) {
+		while (timeout > 0 && socket == null) {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException exception) {
