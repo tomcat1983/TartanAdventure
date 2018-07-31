@@ -168,15 +168,32 @@ public class GameValidate  {
 
 		for (Item rItem : requiredItems) {
 			for (Room room : rooms) {
-				ArrayList<Item> items = room.getItems();
-				for (Item item : items) {
-					if(item.equals(rItem))
-						foundedItemCnt++; 
-				}
+				
+				foundedItemCnt += getRequiredItemPerRoom(rItem, room);
+				
+
 			}
 		}
 
 		return (requiredItemCnt == foundedItemCnt);
+	}
+
+	private int getRequiredItemPerRoom(Item rItem, Room room) {
+		
+		int foundedItemCnt = 0;
+		
+		ArrayList<Item> items = room.getItems();
+		for (Item item : items) {
+			if(item.equals(rItem))
+				foundedItemCnt++; 
+			
+			if(item instanceof Meltable) { 
+				Item melted = ((Meltable) item).meltItem();
+				if(melted.equals(rItem))
+					foundedItemCnt++; 
+			}
+		}
+		return foundedItemCnt;
 	}
 
 	private boolean isThereKeyItem() {
@@ -208,22 +225,31 @@ public class GameValidate  {
 
 		for (String goalItem : goalItems) {
 			for (Room room : rooms) {
-				ArrayList<Item> items = room.getItems();
-				for (Item item : items) {
-		
-					if(item.toString().equals(goalItem))
-						foundedItemCnt++; 
-					
-					if(item instanceof Meltable) { 
-						Item melted = ((Meltable) item).meltItem();
-						if(melted.toString().equals(goalItem))
-							foundedItemCnt++; 
-					}
-				}
+				foundedItemCnt += getGoalItemPerRoom(goalItem, room);
 			}
 		}
 
 		return (goalItemCnt == foundedItemCnt);
+	}
+	
+	private int getGoalItemPerRoom(String goalItem, Room room) {
+		
+		int foundedItemCnt = 0; 
+
+		ArrayList<Item> items = room.getItems();
+		for (Item item : items) {
+
+			if(item.toString().equals(goalItem))
+				foundedItemCnt++; 
+			
+			if(item instanceof Meltable) { 
+				Item melted = ((Meltable) item).meltItem();
+				if(melted.toString().equals(goalItem))
+					foundedItemCnt++; 
+			}
+		}
+		
+		return foundedItemCnt; 
 	}
 	
 	private boolean isThereRoomToVisit() {
