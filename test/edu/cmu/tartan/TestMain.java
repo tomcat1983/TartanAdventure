@@ -11,6 +11,11 @@ import edu.cmu.tartan.test.Commander;
 public class TestMain {
 
 	/**
+	 * Game interface for game message
+	 */
+	protected GameInterface gameInterface = GameInterface.getInterface();
+
+	/**
 	 * Commander for user input
 	 */
 	private Commander commander;
@@ -28,6 +33,8 @@ public class TestMain {
 	@AfterEach
 	void testRunClient() {
 		Main.main(args);
+
+		gameInterface.setGameManager(null);
 	}
 
 	@Test

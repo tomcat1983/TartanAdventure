@@ -28,7 +28,6 @@ public class TestGameInterface {
 
 	@BeforeEach
 	void testMakeCommanderAndGameInterfaceInitialize() {
-		gameInterface.initialize();
 		gameInterface = GameInterface.getInterface();
 		commander = new Commander();
 	}
@@ -89,5 +88,7 @@ public class TestGameInterface {
 		String command = gameInterface.getCommand(Player.DEFAULT_USER_NAME);
 
 		assertTrue(command.equals("testCommand"));
+
+		gameInterface.setGameManager(null);
 	}
 }
