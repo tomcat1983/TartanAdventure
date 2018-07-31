@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import edu.cmu.tartan.client.Client;
 import edu.cmu.tartan.test.Commander;
+import edu.cmu.tartan.xml.GameMode;
 
 public class TestLocalGame {
 	Commander commander = null;
@@ -20,7 +21,7 @@ public class TestLocalGame {
 	@AfterEach
 	void testRunLocalGame() {
 		game = new LocalGame(Player.DEFAULT_USER_NAME);
-		game.configureGame();
+		game.configureGame(GameMode.LOCAL);
 		game.start();	
 	}
 

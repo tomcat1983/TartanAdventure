@@ -10,6 +10,7 @@ import edu.cmu.tartan.manager.MessageQueue;
 import edu.cmu.tartan.manager.ResponseMessage;
 import edu.cmu.tartan.manager.TartanGameManagerClient;
 import edu.cmu.tartan.socket.SocketClient;
+import edu.cmu.tartan.xml.GameMode;
 import edu.cmu.tartan.xml.XmlLoginRole;
 
 public class Client {
@@ -95,16 +96,16 @@ public class Client {
 
 	private boolean continueGame() {
 		gameInterface.println("TBD");
-		LocalGame localGame = new LocalGame(GameInterface.USER_ID_NONE);
-		if(localGame.loadAndStart(GameInterface.USER_ID_NONE)) {
+		LocalGame localGame = new LocalGame(GameInterface.USER_ID_LOCAL_USER);
+		if(localGame.loadAndStart(GameInterface.USER_ID_LOCAL_USER)) {
 
 		}
 		return true;
 	}
 
 	private boolean newGame() {
-		LocalGame localGame = new LocalGame(GameInterface.USER_ID_NONE);
-		if(localGame.configureGame()) {
+		LocalGame localGame = new LocalGame(GameInterface.USER_ID_LOCAL_USER);
+		if(localGame.configureGame(GameMode.LOCAL)) {
 			localGame.start();
 		}
 

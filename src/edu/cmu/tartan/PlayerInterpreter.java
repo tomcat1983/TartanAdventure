@@ -33,7 +33,7 @@ public class PlayerInterpreter {
      * @param string input string.
      * @return an Action corresponding to the input.
      */
-    public Action interpretString(String string, ActionExecutionUnit actionExecutionUnit) {
+    public Action interpretString(@NonNull String string, @NonNull ActionExecutionUnit actionExecutionUnit) {
         if(string.equals("")) {
             return Action.ACTION_PASS;
         }

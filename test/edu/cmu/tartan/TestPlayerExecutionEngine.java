@@ -80,6 +80,33 @@ class TestPlayerExecutionEngine {
 	}
 	
 	@Test
+	void testWhenexecuteActionAndPlayerInterpreterCallWithWithDirectObjectWithWrongAction() {
+		ItemKey keyItem = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
+    	room1.putItem(keyItem);
+ 
+		try {
+	    	Action action = interpreter.interpretString("pickup keyaaa", actionExecutionUnit);
+			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));	
+			
+	    	action = interpreter.interpretString("pickup key aaa", actionExecutionUnit);
+			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));	    	
+
+	    	action = interpreter.interpretString("pickupa key", actionExecutionUnit);
+			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));	    	
+
+			action = interpreter.interpretString("", actionExecutionUnit);
+			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));	    	
+
+			action = interpreter.interpretString(" ", actionExecutionUnit);
+			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+			
+		} catch (TerminateGameException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionAtDropItem() {
     	ItemKey key = (ItemKey) Item.getInstance("key", Player.DEFAULT_USER_NAME);
     	ItemButton button = (ItemButton) Item.getInstance("Button", Player.DEFAULT_USER_NAME);
@@ -485,6 +512,38 @@ class TestPlayerExecutionEngine {
 	}
 	
 	@Test
+	void testWhenexecuteActionCallWithMoveWithWrongDirection() {
+		RoomDark room2 = new RoomDark(TestRoomDark.DARK_ROOM_DESC1, TestRoomDark.DARK_ROOM_SHORT_DESC1, TestRoomDark.DARK_DESC, TestRoomDark.DARK_SHORT_DESC);
+		ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight", Player.DEFAULT_USER_NAME);
+		room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2);
+		player.grabItem(flashlight);
+		
+    	try {
+    		Action action = interpreter.interpretString("go go", actionExecutionUnit);
+			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+			action = interpreter.interpretString("go west go ", actionExecutionUnit);
+	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	    	
+	    	action = interpreter.interpretString("go wests", actionExecutionUnit);
+	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	    	    	
+	    	action = interpreter.interpretString("go west go deefsdf", actionExecutionUnit);
+	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+	    	action = interpreter.interpretString("travel west", actionExecutionUnit);
+	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+	    	action = interpreter.interpretString("move east", actionExecutionUnit);
+	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+		} catch (TerminateGameException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Test
 	void testWhenexecuteActionCallWithHasNoObject() {
 		Action action = interpreter.interpretString("lookAround", actionExecutionUnit);
     	try {
@@ -516,20 +575,25 @@ class TestPlayerExecutionEngine {
 	
 	@Test
 	void testWhenexecuteActionCallWithInDirectObject() {
-		Action action = interpreter.interpretString("put key in pit", actionExecutionUnit);
     	try {
+    		Action action = interpreter.interpretString("put key in pit", actionExecutionUnit);
 			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 
 	    	ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight", Player.DEFAULT_USER_NAME);
 			player.grabItem(flashlight);
+			ItemDocument document = (ItemDocument) Item.getInstance("document", Player.DEFAULT_USER_NAME);
+	        document.setInspectMessage("The document is encrypted with a cipher. The cryptographers at the CIA will need to decrypt it.");
 	    	
-	    	action = interpreter.interpretString("put flashlight in any", actionExecutionUnit);
+	    	action = interpreter.interpretString("put flashlight in anyva", actionExecutionUnit);
 	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 
 	    	action = interpreter.interpretString("put flashlight in pit", actionExecutionUnit);
 	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	    	
 	    	action = interpreter.interpretString("remove key from pit", actionExecutionUnit);
+	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	    	
+	    	action = interpreter.interpretString("remove key from document", actionExecutionUnit);
 	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 
 	    	action = interpreter.interpretString("remove any from pit", actionExecutionUnit);

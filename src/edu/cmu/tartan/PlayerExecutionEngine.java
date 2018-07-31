@@ -118,16 +118,8 @@ public class PlayerExecutionEngine {
     }
     
     private boolean actionInspect(@NonNull Item item) {
-    	if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
-            if(item instanceof Inspectable) {
-                item.inspect();
-                return true;
-            }
-            else {
-            	// unreachabl, every item have a Inspectable.
-                gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You cannot inspect this item.");
-                return false;
-            }
+    	if((player.currentRoom().hasItem(item) || player.hasItem(item)) && item instanceof Inspectable) {
+    		return item.inspect();
         }
         else {
 			gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_SEE_THAT_HERE);
@@ -498,7 +490,7 @@ public class PlayerExecutionEngine {
      * @return boolean if action handle to case return true, else return false. 
      * @throws TerminateGameException 
      */
-    public boolean executeAction(Action action, ActionExecutionUnit actionExecutionUnit) throws TerminateGameException {
+    public boolean executeAction(@NonNull Action action, ActionExecutionUnit actionExecutionUnit) throws TerminateGameException {
 
         switch(action.type()) {
             // Handle navigation
