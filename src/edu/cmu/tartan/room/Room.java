@@ -18,8 +18,6 @@ import java.util.logging.Logger;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.LinkedList;
-
 /**
  * The main class for a room. All room types must extend this class.
  * from this class.
