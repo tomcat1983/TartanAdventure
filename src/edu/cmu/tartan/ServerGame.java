@@ -17,11 +17,7 @@ public class ServerGame extends Game {
         if(xmlGame!=null) {
         	context.setGameName(xmlGame.getName());
         	try {
-				if(xmlGame.configure(context)) {
-					return true;
-				} else {
-					return false;
-				}
+				return xmlGame.configure(context);
 			} catch (InvalidGameException e) {
 				gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Game improperly configured, please try again.");
 	            return false;

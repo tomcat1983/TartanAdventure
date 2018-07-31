@@ -169,7 +169,7 @@ public abstract class Game {
         return true;
     }
 
-    private boolean processGameCommand(String input) throws TerminateGameException {
+    private boolean processGameCommand(@NonNull String input) throws TerminateGameException {
     	if (this instanceof LocalGame && input.compareTo("quit") == 0) {
     		return handleQuit();
         }
