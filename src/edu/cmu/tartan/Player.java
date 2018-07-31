@@ -249,7 +249,7 @@ public class Player implements Comparable, Serializable {
      * Save the newly visited room to the list of rooms visited.
      * @param room The room to save.
      */
-    private void saveRoom(Room room) {
+    protected void saveRoom(Room room) {
 
         roomsVisited.add(room);
     }
