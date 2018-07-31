@@ -220,8 +220,9 @@ public class Client {
 				{
 					clientInterface.printNoMap();
 				}
-			} else {
-				gameManager.sendMessage(command);
+			}
+			else if (command.equals("start")){
+				gameManager.startGame(userId);
 			}
 		} while (running);
 
