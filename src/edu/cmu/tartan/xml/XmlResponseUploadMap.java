@@ -14,7 +14,6 @@ import edu.cmu.tartan.goal.GameExploreGoal;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.item.ItemLock;
 import edu.cmu.tartan.properties.Meltable;
 import edu.cmu.tartan.properties.Pushable;
 import edu.cmu.tartan.room.Room;
@@ -259,7 +258,7 @@ public class XmlResponseUploadMap extends XmlResponse {
 
 		Item lock = Item.getInstance(lockName, userId);
         Item key = Item.getInstance(keyName, userId);
-		((ItemLock) lock).install(key);
+		
 		lock.setRelatedRoom(currentRoom);
 		lockLocatedRoom.putItem(lock);
 		keyLocatedRoom.putItem(key);
