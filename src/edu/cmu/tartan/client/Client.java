@@ -197,7 +197,6 @@ public class Client {
 
 	private boolean runNetworkCommander(boolean isDesigner) {
 		boolean running = true;
-		boolean gameStarted = false;
 
 		do {
 			String command = clientInterface.getNetworkCommand();
@@ -216,19 +215,19 @@ public class Client {
 					else
 						clientInterface.printValidateFailMessageForMapUpload();
 				}
-				else
-				{
+				else {
 					clientInterface.printNoMap();
 				}
 			}
-			else if (command.equals("start")){
-				if (gameManager.startGame(userId))
-					gameStarted = true;
-				else
-					clientInterface.printCannotStartMessage();
-			}
-			else if (gameStarted) {
-				gameManager.updateGameState(userId, command);
+			else {
+				if (command.equals("start")) {
+					if (!gameManager.startGame(userId)) {
+						clientInterface.printCannotStartMessage();
+					}
+				}
+				else {
+					gameManager.updateGameState(userId, command);
+				}
 			}
 		} while (running);
 
