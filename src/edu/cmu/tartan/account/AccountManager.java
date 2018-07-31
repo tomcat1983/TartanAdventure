@@ -1,9 +1,16 @@
 package edu.cmu.tartan.account;
 
+import java.util.logging.Logger;
+
 import edu.cmu.tartan.db.DbAccessor;
 import edu.cmu.tartan.xml.XmlLoginRole;
 
 public class AccountManager implements IAccountHandler {
+	
+	/**
+	 * Game logger for game log
+	 */
+	protected static final Logger gameLogger = Logger.getGlobal();
 	
 	DbAccessor dbAccessor;
 
@@ -21,7 +28,7 @@ public class AccountManager implements IAccountHandler {
 	private void initialize() {
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
-		if (dbAccessor.hasUserId("designer") == 1) {
+		if (dbAccessor.hasUserId("designer") == 0) {
 			dbAccessor.insert("designer", "abcd1234", XmlLoginRole.DESIGNER.name());
 		}
 	}
@@ -35,12 +42,15 @@ public class AccountManager implements IAccountHandler {
 
 	@Override
 	public boolean loginUser(String userId, String userPw, String userRole) {
+		
 		String userPwInDB = dbAccessor.getPassword(userId);
 		String userRoleInDB = dbAccessor.getUserRole(userId);
 		
 		if (userPw.equals(userPwInDB) && userRole.equals(userRoleInDB)) {
 			return true;
 		}
+		
+		gameLogger.info("Does not matched from DB info. User ID : " + userId);
 		return false;
 	}
 
