@@ -37,6 +37,7 @@ public class SocketClient implements Runnable {
 	private IQueueHandler queue;
 
 	private boolean isLoop;
+	private boolean quitFromCli = false;
 
 	public SocketClient(ResponseMessage responseMessage, IQueueHandler queue, boolean isDesigner) {
 		isLoop = true;
@@ -141,7 +142,13 @@ public class SocketClient implements Runnable {
 				sendByResponseMessage(xr.getResultStr(), null);
 				break;
 			case("GAME_END"):
-				sendByQueue("message");
+				if (quitFromCli) {
+					sendByResponseMessage(XmlResultString.OK, xr.getGameText());
+					quitFromCli = false;
+				} else {
+					sendByQueue(xr.getGameText());
+					sendByQueue("quit");
+				}
 				break;
 			case("UPLOAD_MAP_DESIGN"):
 				sendByResponseMessage(xr.getResultStr(), null);
@@ -171,7 +178,11 @@ public class SocketClient implements Runnable {
 
 		try {
 			synchronized (responseMessage) {
-				responseMessage.setMessage(returnValue);
+				if (message == null ) {
+					responseMessage.setMessage(returnValue);
+				} else {
+					responseMessage.setMessage(message);
+				}
 				responseMessage.notify();
 			}
 		} catch (IllegalMonitorStateException e) {
@@ -203,8 +214,8 @@ public class SocketClient implements Runnable {
 
 	public boolean stopSocket() {
 
-    gameLogger.info("Close a socket");
-				boolean returnValue = false;
+		gameLogger.info("Close a socket");
+		boolean returnValue = false;
 		isLoop = false;
 
 		try {
@@ -214,6 +225,10 @@ public class SocketClient implements Runnable {
 			gameLogger.warning("IOException : " + e.getMessage());
 		}
 		return returnValue;
+	}
+	
+	public void setQuitFromCli(boolean value) {
+		this.quitFromCli = value;
 	}
 
 }

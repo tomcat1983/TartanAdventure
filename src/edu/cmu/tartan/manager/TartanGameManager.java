@@ -91,10 +91,9 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	public boolean sendToAll(String userId, String message) {
 		
 		boolean returnValue = false;
-		String eventMessage = String.format("[%S] %S", userId, message);
 		
 		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = xw.makeXmlForEventMessage(userId, eventMessage);
+		String xmlMessage = xw.makeXmlForEventMessage(userId, message);
 		
 		returnValue = socket.sendToAll(xmlMessage);
 		
@@ -108,13 +107,12 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	 * @param message	The game message 
 	 * @return
 	 */
-	public boolean sendToOters(String userId, String message) {
+	public boolean sendToOthers(String userId, String message) {
 		
 		boolean returnValue = false;
-		String eventMessage = String.format("[%S] %S", userId, message);
 		
 		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = xw.makeXmlForEventMessage(userId, eventMessage);
+		String xmlMessage = xw.makeXmlForEventMessage(userId, message);
 		
 		for(String key : tartanGames.keySet()) {
 			if(!userId.equals(key)) {
@@ -151,9 +149,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		boolean returnValue = false;
 		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = null;
-		
-		xmlMessage = xw.makeXmlForGameEnd(userId, "WIN", "TODOTODO");
+		String xmlMessage = xw.makeXmlForGameEnd(userId, "WIN", message);
 		returnValue = socket.sendToClient(userId, xmlMessage);
 		
 		for(String key : tartanGames.keySet()) {
@@ -174,9 +170,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		boolean returnValue = false;
 		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = null;
-		
-		xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE", "");
+		String xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE", message);
 		returnValue = socket.sendToClient(userId, xmlMessage);
 		
 		return returnValue;
@@ -304,6 +298,10 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		returnValue = serverSocket.sendToClient(userId, xmlMessage);
 		
+		if (loginUserCounter > 1) {
+			sendToOthers(userId, userId + " paticipated in");
+		}
+		
 		return returnValue;
 	}
 
@@ -378,7 +376,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		boolean returnValue = false;
 		
 		if (tartanGames.containsKey(userId)) {
-			gameInterface.putCommand(userId, "terminated");
+			gameInterface.putCommand(userId, "terminate");
 			tartanGames.remove(userId);
 		}
 		
@@ -388,14 +386,14 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		String eventMessage = String.format("%s %s", userId, "exits the game");
 		String xmlMessage = xw.makeXmlForEventMessage(userId, eventMessage);
-		returnValue = sendToOters(userId, xmlMessage);
+		returnValue = sendToOthers(userId, xmlMessage);
 		
 		if (returnValue) {
-			socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
+//			socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
 		}
 		
 		if (loginUserCounter < 1) {
-			socket.updateSocketState(userId, CommandResult.END_GAME_ALL_USER, threadName);
+//			socket.updateSocketState(userId, CommandResult.END_GAME_ALL_USER, threadName);
 		}
 		
 		return returnValue;
