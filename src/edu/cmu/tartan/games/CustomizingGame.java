@@ -51,7 +51,7 @@ public class CustomizingGame extends GameConfiguration {
 	public boolean configure(GameContext context) throws InvalidGameException {
 
 		// Set the initial room
-		Player player = new Player(rooms.get(0), Player.DEFAULT_USER_NAME);
+		Player player = new Player(rooms.get(0), context.getUserId());
 		context.setPlayer(player);
 
 		for (GameGoal gameGoal : goals) {

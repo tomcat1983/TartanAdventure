@@ -315,8 +315,9 @@ public class PlayerExecutionEngine {
             if(item instanceof Explodable) {
                 if(player.currentRoom().isAdjacentToRoom(item.relatedRoom())) {
                     Explodable explode = (Explodable)item;
-                    explode.explode();
-                    player.score(explode.value());
+                    if(explode.explode()) {
+                        player.score(explode.value());                    	
+                    }
                     return true;
                 }
                 else {

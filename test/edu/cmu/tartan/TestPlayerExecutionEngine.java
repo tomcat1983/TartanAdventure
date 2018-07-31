@@ -449,6 +449,8 @@ class TestPlayerExecutionEngine {
 	    	room1.setAdjacentRoom(action, room2);
 	    	action = interpreter.interpretString("detonate dynamite", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	    	action = interpreter.interpretString("detonate dynamite", actionExecutionUnit);
+	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
 		}
