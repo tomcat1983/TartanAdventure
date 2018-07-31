@@ -152,9 +152,12 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		String xmlMessage = xw.makeXmlForGameEnd(userId, "WIN", message);
 		returnValue = socket.sendToClient(userId, xmlMessage);
 		
+		socket.sendToOthers(userId, userId + " lose the game");
+		
 		for(String key : tartanGames.keySet()) {
 			if(!userId.equals(key)) {
-				loseTheGame(key, key + " lose the game");
+//				loseTheGame(key, key + " lose the game");
+				gameInterface.putCommand(key, "terminate");
 			}
 		}
 
@@ -299,7 +302,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		returnValue = serverSocket.sendToClient(userId, xmlMessage);
 		
 		if (loginUserCounter > 1) {
-			sendToOthers(userId, userId + " paticipated in");
+			serverSocket.sendToOthers(userId, userId + " paticipated in");
 		}
 		
 		return returnValue;

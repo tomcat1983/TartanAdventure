@@ -140,6 +140,18 @@ public class SocketServer implements Runnable, ISocketHandler {
 
 		return returnValue;
 	}
+	
+	@Override
+	public boolean sendToOthers(String userId, String message) {
+		boolean returnValue = false;
+		
+		for(String key : clientThreadMap.keySet()) {
+			if(!userId.equals(key)) {
+				returnValue = clientThreadMap.get(key).sendMessage(message);
+			}
+		}
+		return returnValue;
+	}
 
 	@Override
 	public boolean addClient(String userId, String threadName) {
