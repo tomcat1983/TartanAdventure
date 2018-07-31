@@ -49,8 +49,11 @@ class TestGameValidate {
 		
 		Room room1Normal = new Room(ROOM1, ROOM1);
 		RoomDark room2Dark = new RoomDark(ROOM2, ROOM2, "dark", "dark", true);
-		RoomRequiredItem room3Require = new RoomRequiredItem(ROOM3, ROOM3, requiredItemGold);
-		RoomRequiredItem room4Require = new RoomRequiredItem(ROOM4, ROOM4, requiredItemDia);
+		RoomRequiredItem room3Require = new RoomRequiredItem(ROOM3, ROOM3, 
+				requiredItemGold.toString(), "Warning you need " +requiredItemGold.toString(), requiredItemGold);
+		RoomRequiredItem room4Require = new RoomRequiredItem(ROOM4, ROOM4, 
+				requiredItemDia.toString(), "Warning you need " +requiredItemDia.toString(), requiredItemDia);
+		
 		RoomObscured room5Obscure = new RoomObscured(ROOM5, ROOM5, obscuringItem);
 		RoomObscured room6Obscure = new RoomObscured(ROOM6, ROOM6, obscuringItem);
 		RoomLockable room7Lock = new RoomLockable(ROOM7, ROOM7, true, key);
