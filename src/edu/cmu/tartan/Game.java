@@ -156,7 +156,6 @@ public abstract class Game {
      */
     public void start() {
     	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Enjoy your game!");
-
         // Orient the player
         context.getPlayer().lookAround();
         try {
@@ -169,13 +168,13 @@ public abstract class Game {
                 }
             }
         } catch(TerminateGameException e) {
+        	gameInterface.println(context.getUserId(), MessageType.LOSE, "Game Over");
         	return;
         } catch(Exception e) {
         	gameLogger.severe("I don't understand that \n\nException: \n" + e);
         	gameLogger.severe(e.getMessage());
             start();
         }
-        gameInterface.println(context.getUserId(), MessageType.LOSE, "Game Over");
     }
 
     /**
@@ -185,18 +184,18 @@ public abstract class Game {
 
     	gameInterface.println(context.getUserId(), MessageType.WIN, "Congrats!");
 
-    	gameInterface.println(context.getUserId(), MessageType.WIN, "You've won the '" + context.getGameName() + "' game!\n" );
-    	gameInterface.println(context.getUserId(), MessageType.WIN, "- Final score: " + context.getPlayer().getScore());
-    	gameInterface.println(context.getUserId(), MessageType.WIN, "- Final inventory: ");
+    	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "You've won the '" + context.getGameName() + "' game!\n" );
+    	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- Final score: " + context.getPlayer().getScore());
+    	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- Final inventory: ");
         if (context.getPlayer().getCollectedItems().isEmpty()) {
-        	gameInterface.println(context.getUserId(), MessageType.WIN, "You don't have any items.");
+        	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "You don't have any items.");
         }
         else {
             for (Item i : context.getPlayer().getCollectedItems()) {
-                gameInterface.println(context.getUserId(), MessageType.WIN, i.toString() + " ");
+                gameInterface.println(context.getUserId(), MessageType.PRIVATE, i.toString() + " ");
             }
         }
-        gameInterface.println(context.getUserId(), MessageType.WIN, "\n");
+        gameInterface.println(context.getUserId(), MessageType.WIN, "You Win\n");
     }
 
     /**

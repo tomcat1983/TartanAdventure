@@ -1,7 +1,7 @@
 package edu.cmu.tartan.item;
 
 public final class StringForItems {
-	private StringForItems() {
+	StringForItems() {
 	    throw new IllegalStateException("Utility class");
 	}	
 	public static final String SHOVEL = "shovel";

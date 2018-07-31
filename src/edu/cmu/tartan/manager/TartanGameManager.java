@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 
 import edu.cmu.tartan.GameInterface;
-import edu.cmu.tartan.ServerGame;
 import edu.cmu.tartan.account.AccountManager;
 import edu.cmu.tartan.socket.CommandResult;
 import edu.cmu.tartan.socket.ISocketHandler;
@@ -154,12 +153,11 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		XmlWriterServer xw = new XmlWriterServer();
 		String xmlMessage = null;
 		
-		xmlMessage = xw.makeXmlForGameEnd(userId, "WIN");
+		xmlMessage = xw.makeXmlForGameEnd(userId, "WIN", "TODOTODO");
 		returnValue = socket.sendToClient(userId, xmlMessage);
 		
 		for(String key : tartanGames.keySet()) {
 			if(!userId.equals(key)) {
-				
 				loseTheGame(key, key + " lose the game");
 			}
 		}
@@ -178,16 +176,9 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		XmlWriterServer xw = new XmlWriterServer();
 		String xmlMessage = null;
 		
-		xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE");
+		xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE", "");
 		returnValue = socket.sendToClient(userId, xmlMessage);
 		
-		for(String key : tartanGames.keySet()) {
-			if(!userId.equals(key)) {
-				
-			}
-		}
-		
-//		xmlMessage = xw.makeXmlForGameEnd("LOSE");
 		return returnValue;
 	}
 	

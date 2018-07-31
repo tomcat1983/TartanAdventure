@@ -11,12 +11,12 @@ public class XmlWriterServer extends XmlWriter {
 	private static final String RESULT_STR = "result";
 	private static final String NG_REASON_STR = "ng_reason";
 	
-	public String makeXmlForGameEnd(String id, String gameResult) {
+	public String makeXmlForGameEnd(String id, String gameResult, String text) {
 		String xmlString = null;
 		
 		try {
 			//<common_info user_id="userId" />
-			//<game_result result="win" /> <!-- win | loose for each client, score of each player will be printed by EventMessage-->
+			//<game_result result="lose" text="you dead"/> 
 			startWritingXml(XmlMessageType.GAME_END, SERVER_STR, CLIENT_STR); 			
 			
 			addChildElement("common_info");
@@ -24,6 +24,7 @@ public class XmlWriterServer extends XmlWriter {
 			
 			addBrotherElement("game_result");
 			setAttributeToElement(RESULT_STR, gameResult);
+			setAttributeToElement("text", text);
 
 			xmlString = convertDocumentToString();
 			
