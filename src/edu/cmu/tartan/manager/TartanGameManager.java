@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.ServerGame;
 import edu.cmu.tartan.account.AccountManager;
 import edu.cmu.tartan.socket.CommandResult;
@@ -28,6 +29,11 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	 * Game logger for game log
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
+	
+	/**
+	 * Game interface for game message
+	 */
+	protected static final GameInterface gameInterface = GameInterface.getInterface();
 	
 	private ISocketHandler socket;
 	private ISocketHandler designerSocket;
@@ -203,7 +209,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	
 	public boolean registerNewUser(String userId) {
 		if (!tartanGames.containsKey(userId)) {
-			ServerGame tartanGame = null;
+			ServerGame tartanGame = new ServerGame(userId);
 			tartanGames.put(userId, tartanGame);
 			return true;
 		}
@@ -212,15 +218,18 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			
 	public void processMessage(String threadName, String message) {
 		
-		gameLogger.info("Received message from a server socket");
-
 		String messageType = null;
-		
+		gameLogger.info("Received message : " + message);
+		try {
+			xmlParser = new XmlParser();
+		} catch (ParserConfigurationException e) {
+			gameLogger.warning("ParserConfigurationException  : " + e.getMessage());
+		}
 		xmlParser.parseXmlFromString(message);
 		messageType = xmlParser.getMessageType();
 		XmlResponse xr = xmlParser.getXmlResponse();
 		
-		gameLogger.info("message type : " + messageType);
+		gameLogger.info("Received message type : " + messageType);
 		
 		switch(messageType) {
 			case("REQ_LOGIN"):
@@ -354,7 +363,8 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		for (String key : tartanGames.keySet()) {
 			if(userId.equals(key)) {
-				returnValue = tartanGames.get(key).controlGame("exit");
+//				returnValue = tartanGames.get(key).controlGame("exit");
+				gameInterface.putCommand(userId, "quit");
 				tartanGames.remove(key);
 				socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
 			}
@@ -390,9 +400,8 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	public boolean sendCommand(String userId, String command) {
 		
 		boolean returnValue = false;
-		// TDDO How to send
 		
-		
+		gameInterface.putCommand(userId, command);
 		return returnValue;
 	}
 }
