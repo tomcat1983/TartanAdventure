@@ -161,7 +161,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		XmlWriterClient xw = new XmlWriterClient();
 		message = xw.makeXmlForUploadMap(mapFile);
 
-		sendMessage(message);
+		sendMessage(message.replaceAll("\\n", ""));
 
 		waitResponseMessage();
 

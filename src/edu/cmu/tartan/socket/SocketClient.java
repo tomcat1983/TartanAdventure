@@ -29,7 +29,8 @@ public class SocketClient implements Runnable {
 	protected static final Logger gameLogger = Logger.getGlobal();
 
 	private String serverIp = "127.0.0.1";
-	int serverPort = 10015;
+	private int serverPort = 10015;
+	private boolean isDesigner = false;
 
 	private Socket socket = null;
 	private ResponseMessage responseMessage;
@@ -37,10 +38,11 @@ public class SocketClient implements Runnable {
 
 	private boolean isLoop;
 
-	public SocketClient(ResponseMessage responseMessage, IQueueHandler queue) {
+	public SocketClient(ResponseMessage responseMessage, IQueueHandler queue, boolean isDesigner) {
 		isLoop = true;
 		this.responseMessage = responseMessage;
 		this.queue = queue;
+		this.isDesigner = isDesigner;
 	}
 
 	@Override
@@ -50,7 +52,11 @@ public class SocketClient implements Runnable {
 
 	public boolean connectToServer() {
 		serverIp = Config.getServerIp();
-		serverPort = Config.getServerPort();
+		if (isDesigner) {
+			serverPort = Config.getDesignerPort();
+		} else {
+			serverPort = Config.getUserPort();
+		}
 
 		try {
 			socket = new Socket(serverIp, serverPort);

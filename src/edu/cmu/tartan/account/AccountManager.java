@@ -29,7 +29,7 @@ public class AccountManager implements IAccountHandler {
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
 		if (dbAccessor.hasUserId("designer") == 0) {
-			dbAccessor.insert("designer", "abcd1234", XmlLoginRole.DESIGNER.name());
+			dbAccessor.insert("designer", "abcD1234", XmlLoginRole.DESIGNER.name());
 		}
 	}
 

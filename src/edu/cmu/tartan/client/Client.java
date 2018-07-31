@@ -112,11 +112,11 @@ public class Client {
 		return true;
 	}
 
-	private boolean connectServer(int timeout) {
+	private boolean connectServer(int timeout, boolean isDesigner) {
 		IQueueHandler messageQueue = new MessageQueue();
 		ResponseMessage responseMessage = new ResponseMessage("");
 
-		SocketClient socketClient = new SocketClient(responseMessage, messageQueue);
+		SocketClient socketClient = new SocketClient(responseMessage, messageQueue, isDesigner);
 		Thread socketClientThread = new Thread(socketClient);
 		socketClientThread.start();
 
@@ -135,7 +135,7 @@ public class Client {
 
 		XmlLoginRole role = XmlLoginRole.PLAYER;
 		if (isDesigner)
-			role = XmlLoginRole.PLAYER;
+			role = XmlLoginRole.DESIGNER;
 
 		if (gameManager.login("", loginInfo[0], loginInfo[1], role)) {
 			userId = id;
@@ -236,7 +236,7 @@ public class Client {
 	}
 
 	private boolean runNetworkMode(boolean isDesigner) {
-		connectServer(1000);
+		connectServer(1000, isDesigner);
 
 		if (gameManager.waitForConnection()) {
 			boolean runNetwork = true;

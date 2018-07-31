@@ -41,7 +41,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	private AccountManager accountManager;
 	private XmlParser xmlParser;
 	
-	private HashMap<String, ServerGame> tartanGames;
+	private HashMap<String, TartanGameThread> tartanGames;
 	
 	private boolean isLoop = true;
 	private int loginUserCounter = 0;
@@ -57,7 +57,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			gameLogger.warning("ParserConfigurationException : " + e.getMessage());
 		}
 		
-		tartanGames = new HashMap<String, ServerGame>();
+		tartanGames = new HashMap<String, TartanGameThread>();
 	}
 
 	@Override
@@ -211,7 +211,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	
 	public boolean registerNewUser(String userId) {
 		if (!tartanGames.containsKey(userId)) {
-			ServerGame tartanGame = new ServerGame(userId);
+			TartanGameThread tartanGame = new TartanGameThread(userId);
 			tartanGames.put(userId, tartanGame);
 			return true;
 		}
@@ -263,7 +263,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		boolean returnValue = false;
 		returnValue = accountManager.loginUser(userId, userPw, role.name());
 		
-		if (returnValue) {
+		if (returnValue && XmlLoginRole.PLAYER == role) {
 			returnValue = registerNewUser(userId);
 		}
 		
@@ -278,15 +278,17 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		}
 		
 		if (returnValue) {
-			loginUserCounter++;
+			if (XmlLoginRole.PLAYER == role) loginUserCounter++;
 			serverSocket.updateSocketState(userId, CommandResult.LOGIN_SUCCESS, threadName);
 			xmlMessage = xw.makeXmlForLogin(XmlResultString.OK, XmlNgReason.OK);
 		} else {
 			serverSocket.updateSocketState(userId, CommandResult.LOGIN_FAIL, threadName);
 			xmlMessage = xw.makeXmlForLogin(XmlResultString.NG, XmlNgReason.INVALID_INFO);
+			serverSocket.sendToClientByThreadName(threadName, xmlMessage);
+			return returnValue;
 		}
 		
-		returnValue = socket.sendToClient(userId, xmlMessage);
+		returnValue = serverSocket.sendToClient(userId, xmlMessage);
 		
 		return returnValue;
 	}
@@ -328,7 +330,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		XmlWriterServer xw;
 		String xmlMessage = null;
 		
-		if (loginUserCounter < 2) {
+		if (loginUserCounter < 1) {
 			// TODO Send the result to client
 			xw = new XmlWriterServer();
 			
@@ -349,8 +351,8 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		// TODO Make a thread
 		for (String key : tartanGames.keySet()) {
 			
-			tartanGames.get(key).loadNetworkGame();
-			tartanGames.get(key).start();
+			Thread thread = new Thread(tartanGames.get(key));
+			thread.start();
 		}
 		
 		return returnValue;
