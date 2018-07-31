@@ -27,6 +27,8 @@ public class ServerInterface {
 
 			if (command.equals("exit")) {
 				serverCommand = Command.EXIT;
+			} else {
+				gameInterface.println("Invalid command : " + command);
 			}
 		} while(serverCommand == Command.UNDECIDED);
 
