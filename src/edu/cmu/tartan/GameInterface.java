@@ -4,10 +4,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import edu.cmu.tartan.manager.TartanGameManager;
 
 public class GameInterface {
+
+	/**
+	 * Game logger for game log
+	 */
+	protected static final Logger gameLogger = Logger.getGlobal();
 
 	/**
 	 * User ID for None
@@ -51,7 +57,7 @@ public class GameInterface {
 		return instance;
 	}
 
-	public boolean setGameManager(TartanGameManager manager) {
+	public static boolean setGameManager(TartanGameManager manager) {
 		tartanManager = manager;
 
 		return true;
@@ -75,8 +81,13 @@ public class GameInterface {
 	}
 
 	public void print(String userId, MessageType type, String message) {
-		if (tartanManager == null && type != MessageType.OTHER)
+		if (tartanManager == null) {
+			if (type == MessageType.OTHER) {
+				return;
+			}
+
 			type = MessageType.SYSTEM;
+		}
 
 		switch (type) {
 		case SYSTEM:
@@ -111,42 +122,29 @@ public class GameInterface {
 			putCommand(userId, scanner.nextLine());
 		}
 
-		LinkedList<String> commandList = commandMap.get(userId);
-		if (commandList == null) {
-			commandList = new LinkedList<>();
-			commandMap.put(userId, commandList);
-			synchronized(waitMap) {
-				waitMap.put(userId, false);
-			}
-		}
+		LinkedList<String> commandQueue = getCommandQueue(userId);
 
-		while (commandList.isEmpty()) {
-			synchronized(waitMap) {
+		while (commandQueue.isEmpty()) {
+			synchronized(commandQueue) {
 				waitMap.replace(userId, false, true);
-			}
 
-			try {
-				commandList.wait();
-			} catch (Exception e) {
+				try {
+					commandQueue.wait();
+				} catch (Exception e) {
+					gameLogger.info(e.getMessage());
+				}
 			}
 		}
 
-		return commandList.poll();
+		return commandQueue.poll();
 	}
 
 	public boolean putCommand(String userId, String command) {
-		LinkedList<String> commandQueue = commandMap.get(userId);
-		if (commandQueue == null) {
-			commandQueue = new LinkedList<>();
-			commandMap.put(userId, commandQueue);
-			synchronized(waitMap) {
-				waitMap.put(userId, false);
-			}
-		}
+		LinkedList<String> commandQueue = getCommandQueue(userId);
 
 		boolean result = commandQueue.offer(command);
 
-		synchronized(waitMap) {
+		synchronized(commandQueue) {
 			if (waitMap.get(userId)) {
 				commandQueue.notifyAll();
 				waitMap.replace(userId, true, false);
@@ -154,5 +152,17 @@ public class GameInterface {
 		}
 
 		return result;
+	}
+
+	private LinkedList<String> getCommandQueue(String userId) {
+		return commandMap.computeIfAbsent(userId, k -> {
+			LinkedList<String> list = new LinkedList<>();
+			commandMap.put(userId, list);
+			synchronized(waitMap) {
+				waitMap.put(userId, false);
+			}
+
+			return list;
+		});
 	}
 }
