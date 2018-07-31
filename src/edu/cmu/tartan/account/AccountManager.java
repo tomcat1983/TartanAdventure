@@ -75,7 +75,7 @@ public class AccountManager implements IAccountHandler {
 	}
 
 	public ReturnType validatePassword(String userPw) {
-		// 1. More than 8 characters
+		// 1. More than 8 characters && smaller than 16
 		if (userPw.length() < 8 || userPw.length() > 16) {
 			return ReturnType.INVALID_PW;
 		}
