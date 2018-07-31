@@ -220,8 +220,9 @@ public class Client {
 				{
 					clientInterface.printNoMap();
 				}
-			} else {
-				gameManager.sendMessage(command);
+			}
+			else if (command.equals("start")){
+				gameManager.startGame(userId);
 			}
 		} while (running);
 
@@ -229,7 +230,9 @@ public class Client {
 	}
 
 	private boolean runNetworkMode(boolean isDesigner) {
-		if (connectServer(1000)) {
+		connectServer(1000);
+
+		if (gameManager.waitForConnection()) {
 			boolean runNetwork = true;
 			boolean result = true;
 

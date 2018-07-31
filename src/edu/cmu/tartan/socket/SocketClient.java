@@ -75,12 +75,12 @@ public class SocketClient implements Runnable {
             stopSocket();
 
         } catch (UnknownHostException e) {
- 
+
         	gameLogger.warning("Server not found : " + e.getMessage());
         	return false;
 
         } catch (IOException e) {
- 
+
         	gameLogger.warning("IOException : " + e.getMessage());
         	return false;
         }
@@ -100,7 +100,7 @@ public class SocketClient implements Runnable {
 
 			timeout -= 10;
 		}
-		
+
 		return (socket != null && socket.isConnected());
 	}
 
@@ -119,7 +119,7 @@ public class SocketClient implements Runnable {
 			gameLogger.warning("ParserConfigurationException : " + e.getMessage());
 			return false;
 		}
-		
+
 		gameLogger.info("Received message type : " + messageType);
 
     switch(messageType) {
