@@ -268,6 +268,14 @@ public class ClientInterface {
 		return command;
 	}
 
+	public boolean printCannotStartMessage() {
+		gameInterface.println("");
+		gameInterface.println("No other player in this room.");
+		gameInterface.println("Please wait until another player logs in and retry after few minutes.");
+
+		return true;
+	}
+
 	public boolean printNoMap() {
 		gameInterface.println("There is no file which of the name is what you entered.");
 		gameInterface.println("Please check whether the file is in the folder which the game is saved or not.");
