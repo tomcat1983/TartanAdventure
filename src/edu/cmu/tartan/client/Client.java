@@ -230,7 +230,9 @@ public class Client {
 	}
 
 	private boolean runNetworkMode(boolean isDesigner) {
-		if (connectServer(1000)) {
+		connectServer(1000);
+
+		if (gameManager.waitForConnection()) {
 			boolean runNetwork = true;
 			boolean result = true;
 
