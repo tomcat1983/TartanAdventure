@@ -97,9 +97,18 @@ public class Room implements Comparable, Serializable {
      * @param a action required to get to this room
      * @param r the adjacent room
      */
-    public void setAdjacentRoom(@NonNull Action a,@NonNull Room r) {
-        setOneWayAdjacentRoom(a, r);
-        r.setOneWayAdjacentRoom(a.getOppositeDirection(), this);
+    public boolean setAdjacentRoom(@NonNull Action a,@NonNull Room r) {
+    	if(isAdjacentToRoom(r)) {
+    		return false;
+    	}
+        Room ret = setOneWayAdjacentRoom(a, r);
+        if(ret!=r) {
+        	ret = r.setOneWayAdjacentRoom(a.getOppositeDirection(), this);
+        	if(ret!=r) {
+        		return true;
+        	}
+        }
+        return false;
     }
 
     /**
@@ -107,8 +116,8 @@ public class Room implements Comparable, Serializable {
      * @param a action required to get to this room
      * @param r the adjacent room
      */
-    public void setOneWayAdjacentRoom(@NonNull Action a, @NonNull Room r) {
-        adjacentRooms.put(a, r);
+    public Room setOneWayAdjacentRoom(@NonNull Action a, @NonNull Room r) {
+        return adjacentRooms.put(a, r);
     }
 
     /**

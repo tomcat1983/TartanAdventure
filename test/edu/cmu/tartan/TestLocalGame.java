@@ -27,7 +27,6 @@ public class TestLocalGame {
 
 	@Test
 	void testStartXMLLocalGame() {
-		commander.add("8");
 		commander.add("help");
 		commander.add("go east");
 		commander.add("status");
