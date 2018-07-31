@@ -43,7 +43,6 @@ public class Server {
 		Thread gameManagerThread = new Thread(tartanGameManager);
 		gameManagerThread.start();
 
-
 		boolean running = true;
 
 		do {
