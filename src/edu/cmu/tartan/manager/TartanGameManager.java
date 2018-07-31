@@ -144,11 +144,11 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	
 	
 	/**
-	 * Achieve a goal of the game
+	 * Win the game
 	 * @param userId	The user ID who won a game
 	 * @return	
 	 */
-	public boolean achievedGoal(String userId) {
+	public boolean winTheGame(String userId, String message) {
 		
 		boolean returnValue = false;
 		XmlWriterServer xw = new XmlWriterServer();
@@ -159,8 +159,31 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		for(String key : tartanGames.keySet()) {
 			if(!userId.equals(key)) {
-				xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE");
-				returnValue = socket.sendToClient(key, xmlMessage);
+				
+				loseTheGame(key, key + " lose the game");
+			}
+		}
+
+		return returnValue;
+	}
+	
+	/**
+	 * Lose the game
+	 * @param userId	The user ID who won a game
+	 * @return	
+	 */
+	public boolean loseTheGame(String userId, String message) {
+		
+		boolean returnValue = false;
+		XmlWriterServer xw = new XmlWriterServer();
+		String xmlMessage = null;
+		
+		xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE");
+		returnValue = socket.sendToClient(userId, xmlMessage);
+		
+		for(String key : tartanGames.keySet()) {
+			if(!userId.equals(key)) {
+				
 			}
 		}
 		
@@ -363,26 +386,25 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		boolean returnValue = false;
 		
-		for (String key : tartanGames.keySet()) {
-			if(userId.equals(key)) {
-				gameInterface.putCommand(userId, "quit");
-				tartanGames.remove(key);
-				socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
-			}
-			loginUserCounter--;
-			if (loginUserCounter < 1) {
-				socket.updateSocketState(userId, CommandResult.END_GAME_ALL_USER, threadName);
-				
-			}
+		if (tartanGames.containsKey(userId)) {
+			gameInterface.putCommand(userId, "terminated");
+			tartanGames.remove(userId);
 		}
 		
+		loginUserCounter--;
+		
 		XmlWriterServer xw = new XmlWriterServer();
-		String xmlMessage = null;
+		
+		String eventMessage = String.format("%s %s", userId, "exits the game");
+		String xmlMessage = xw.makeXmlForEventMessage(userId, eventMessage);
+		returnValue = sendToOters(userId, xmlMessage);
 		
 		if (returnValue) {
-			String eventMessage = String.format("[%S] %S", userId, "Exit game");
-			xmlMessage = xw.makeXmlForEventMessage(userId, eventMessage);
-			returnValue = socket.sendToAll(xmlMessage);
+			socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
+		}
+		
+		if (loginUserCounter < 1) {
+			socket.updateSocketState(userId, CommandResult.END_GAME_ALL_USER, threadName);
 		}
 		
 		return returnValue;

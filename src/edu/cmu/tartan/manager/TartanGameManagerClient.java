@@ -50,10 +50,13 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 		String message = null;
 		
-		encryptPassword(userPw);
+		String encryptionPw = encryptPassword(userPw);
+		if (encryptionPw == null) {
+			return false;
+		}
 
 		XmlWriterClient xw = new XmlWriterClient();
-		message = xw.makeXmlForLogin(userId, userPw, role);
+		message = xw.makeXmlForLogin(userId, encryptionPw, role);
 
 		sendMessage(message);
 
@@ -69,9 +72,14 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	public boolean register(String threadName, String userId, String userPw) {
 
 		String message = null;
+		
+		String encryptionPw = encryptPassword(userPw);
+		if (encryptionPw == null) {
+			return false;
+		}
 
 		XmlWriterClient xw = new XmlWriterClient();
-		message = xw.makeXmlForAddUser(userId, userPw);
+		message = xw.makeXmlForAddUser(userId, encryptionPw);
 
 		sendMessage(message);
 
@@ -231,9 +239,9 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 			}
 			
 			encryptionPw = sb.toString();
-			System.out.println(encryptionPw);
 		}catch(NoSuchAlgorithmException e){
-			encryptionPw = null; 
+			gameLogger.warning("NoSuchAlgorithmException : " + e.getMessage());
+			encryptionPw = null;
 		}
 
 		return encryptionPw;

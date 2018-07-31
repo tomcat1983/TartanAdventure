@@ -140,7 +140,8 @@ public class SocketClient implements Runnable {
 			case("REQ_GAME_START"):
 				sendByResponseMessage(xr.getResultStr(), null);
 				break;
-			case("REQ_GAME_END"):
+			case("GAME_END"):
+				sendByQueue("message");
 				break;
 			case("UPLOAD_MAP_DESIGN"):
 				sendByResponseMessage(xr.getResultStr(), null);

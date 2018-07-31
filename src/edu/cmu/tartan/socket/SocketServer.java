@@ -154,6 +154,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	@Override
 	public boolean removeClient(String userId) {
 		if (clientThreadMap.containsKey(userId)) {
+			clientThreadMap.get(userId).stopSocket();
 			clientThreadList.remove(clientThreadMap.get(userId));
 			clientThreadMap.remove(userId);
 
@@ -164,6 +165,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	public boolean removeClientFromList(String threadName) {
 		for(UserClientThread client : clientThreadList) {
 			if (threadName.equals(client.getThreadName())) {
+				client.stopSocket();
 				return clientThreadList.remove(client);
 			}
 		}
