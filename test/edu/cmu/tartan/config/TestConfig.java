@@ -32,7 +32,7 @@ public class TestConfig {
 
 	@Test
 	public void testGetServerPort() {
-		int port = Config.getServerPort();
+		int port = Config.getUserPort();
 
 		assertEquals(10015, port);
 	}
