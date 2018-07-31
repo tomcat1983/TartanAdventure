@@ -475,20 +475,20 @@ public class PlayerExecutionEngine {
     	}
     }
     
-    private boolean unknownObject(Action action) {
+    private void unknownObject(Action action) {
         switch(action) {
 	        case ACTION_PASS: 
 	            // intentionally blank
-	            return false;	        
+	            break;	        
 	        case ACTION_ERROR:
 	            gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_UNDERSTAND);
-	            return false;
+	            break;
 	        case ACTION_UNKNOWN:
 	            gameInterface.println(player.getUserName(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_UNDERSTAND);
-	            return false;
+	            break;
 	        default:
 	        	gameInterface.println(player.getUserName(), MessageType.PRIVATE, "It's unknown action");
-	        	return false;
+	        	break;
         }
     }
 
@@ -516,7 +516,8 @@ public class PlayerExecutionEngine {
             case TYPE_HASNOOBJECT:
             	return hasNoObject(action);
             case TYPE_UNKNOWN: 
-            	return unknownObject(action);
+            	unknownObject(action);
+            	return false;
             default:
             	// unreachable
                 gameInterface.println(player.getUserName(), MessageType.PRIVATE, "I don't understand that");
