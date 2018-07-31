@@ -2,6 +2,7 @@ package edu.cmu.tartan;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.room.Room;
@@ -118,7 +119,7 @@ public class GameContext implements Comparable, Serializable {
 			return false; 
 
 		GameValidate validater = new GameValidate(this);
-		ArrayList<MapConfig> configErrors = validater.check(); 
+		List<MapConfig> configErrors = validater.check(); 
 				
 		return configErrors.isEmpty();
 	}
