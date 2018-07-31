@@ -12,11 +12,16 @@ public class XmlResponseClient extends XmlResponse {
 
 	private String eventMsg; 
 	private String id; 
-	private String gameResult; 
+	private String gameResult;
+	private String gameText; 
 
 	
 	public XmlResponseClient(XmlMessageType msgType) {
 		this.msgType = msgType;
+	}
+	
+	public String getGameText() { 
+		return gameText; 
 	}
 	
 	public String getId() { 
@@ -69,13 +74,14 @@ public class XmlResponseClient extends XmlResponse {
 	private XmlParseResult parsingResultForGameEnd(Document doc) {
 
 		//<common_info user_id="userId" />
-		//<game_result result="win" /> 
+		//<game_result result="win" text="cong"/> 
 		NodeList nList = getNodeListOfGivenTag("common_info", doc);
 		id = getAttributeValueAtNthTag("user_id", nList, 0);	//id should be unique
 		
 		nList = getNodeListOfGivenTag("game_result", doc);
 		gameResult = getAttributeValueAtNthTag(RESULT_STR, nList, 0);	//result should be unique
-
+		gameText = getAttributeValueAtNthTag("text", nList, 0);
+				
 		if(id == null || gameResult == null )
 			return XmlParseResult.INVALID_DATA;
 		else 

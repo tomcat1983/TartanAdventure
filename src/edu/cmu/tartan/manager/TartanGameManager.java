@@ -154,12 +154,12 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		XmlWriterServer xw = new XmlWriterServer();
 		String xmlMessage = null;
 		
-		xmlMessage = xw.makeXmlForGameEnd(userId, "WIN");
+		xmlMessage = xw.makeXmlForGameEnd(userId, "WIN", "TODOTODO");
 		returnValue = socket.sendToClient(userId, xmlMessage);
 		
 		for(String key : tartanGames.keySet()) {
 			if(!userId.equals(key)) {
-				xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE");
+				xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE", "TODOTODO");
 				returnValue = socket.sendToClient(key, xmlMessage);
 			}
 		}

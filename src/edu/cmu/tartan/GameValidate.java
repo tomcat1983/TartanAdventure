@@ -2,7 +2,6 @@ package edu.cmu.tartan;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import edu.cmu.tartan.goal.GameCollectGoal;
 import edu.cmu.tartan.goal.GameExploreGoal;
@@ -40,8 +39,6 @@ public class GameValidate  {
 	private int obscuredRoomCnt = 0; 
 	private int obstacleItemCnt = 0;
 	private int pointToAchive = 0;
-
-	protected Logger gameLogger = Logger.getGlobal();
 
 	public GameValidate(GameContext gameContext) {
 		this.goals = gameContext.getGoals();
@@ -260,7 +257,6 @@ public class GameValidate  {
 				foundedItemCnt += getGoalItemPerRoom(goalItem, room);
 			}
 		}
-
 		return (goalItemCnt == foundedItemCnt);
 	}
 	
@@ -307,11 +303,15 @@ public class GameValidate  {
 			ArrayList<Item> items = room.getItems();
 			for (Item item : items) {
 				sum += item.value();
+				
+				if(item instanceof Meltable) { 
+					Item melted = ((Meltable) item).meltItem();
+					if(melted != null)
+						sum += melted.value(); 
+				}
 			}
 		}
 
 		return sum;
 	}
-	
-		
 }
