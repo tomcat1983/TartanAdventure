@@ -1,5 +1,8 @@
 package edu.cmu.tartan.manager;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.GameInterface;
@@ -46,6 +49,8 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	public boolean login(String threadName, String userId, String userPw, XmlLoginRole role) {
 
 		String message = null;
+		
+		encryptPassword(userPw);
 
 		XmlWriterClient xw = new XmlWriterClient();
 		message = xw.makeXmlForLogin(userId, userPw, role);
@@ -209,5 +214,28 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
             }
         }
+	}
+	
+	public String encryptPassword(String userPw){
+
+		String encryptionPw = ""; 
+
+		try{
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256"); 
+
+			byte byteData[] = messageDigest.digest(userPw.getBytes(StandardCharsets.UTF_8));
+			
+			StringBuffer sb = new StringBuffer(); 
+			for(int i = 0 ; i < byteData.length ; i++){
+				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+			}
+			
+			encryptionPw = sb.toString();
+			System.out.println(encryptionPw);
+		}catch(NoSuchAlgorithmException e){
+			encryptionPw = null; 
+		}
+
+		return encryptionPw;
 	}
 }

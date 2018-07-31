@@ -210,9 +210,12 @@ public abstract class Game {
         try {
             String input = null;
             while(true) {
+            	System.out.println("Context : " + (context == null));
             	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "> ");
-
+System.out.println(gameInterface);
+System.out.println(context);
                 input = gameInterface.getCommand(context.getUserId());
+System.out.println(input);
                 if(processGameCommand(input)) {
                 	break;
                 }
