@@ -57,26 +57,13 @@ public class GameValidate  {
 		
 		roomTypeCheck(); 
 
-		if(isDarkRoomExist && !isThereLightItem()) {
-			configErrors.add(MapConfig.NO_LUMINOUS);
-		}
+		darkRoomCheck();
 		
-		if(isRequiredRoomExist) {
-			int requiredItemCnt = getRequiredItemCount();
-			if(!isThereRequiredItem(requiredItemCnt))
-				configErrors.add(MapConfig.NO_REQUIRED_ITEM);
-		}
+		requiredRoomCheck();
 		
-		if(isObscuredRoomExist && obscuredRoomCnt!=obstacleItemCnt) {
-			configErrors.add(MapConfig.NO_OBSTACLE);
-		}
+		obscuredRoomCheck();
 		
-		if(isLockedRoomExist) {
-			if(!isThereKeyItem())
-				configErrors.add(MapConfig.NO_KEY);
-			if(!isThereLockItem())
-				configErrors.add(MapConfig.NO_LOCK);
-		}
+		lockedRoomCheck();
 		
 		if(goals.isEmpty()) {
 			configErrors.add(MapConfig.NO_GOAL);
@@ -85,22 +72,67 @@ public class GameValidate  {
 		
 		goalTypeCheck();
 		
-		if(gameCollectGoalCnt > 1 || gameExploreGoalCnt > 1 || gamePointGoalCnt > 1)
-			configErrors.add(MapConfig.DUP_GOAL);
+		dupGoalCheck();
 
-		if(gameCollectGoalCnt == 1 && !isThereGoalItem())
-			configErrors.add(MapConfig.NO_GOAL_ITEM);
+		collectGoalCheck();
 
-		if(gameExploreGoalCnt == 1 && !isThereRoomToVisit())
-			configErrors.add(MapConfig.NO_GOAL_ROOM);
+		exploreGoalCheck();
 
+		pointGoalCheck();
+		
+		return configErrors;
+	}
+
+	private void pointGoalCheck() {
 		if(gamePointGoalCnt == 1) {
 			int pointCanEarn = calcPointsCanEarn();
 			if(pointCanEarn < pointToAchive)
 				configErrors.add(MapConfig.CANT_ACHIVE_POINT);
 		}
-		
-		return configErrors;
+	}
+
+	private void exploreGoalCheck() {
+		if(gameExploreGoalCnt == 1 && !isThereRoomToVisit())
+			configErrors.add(MapConfig.NO_GOAL_ROOM);
+	}
+
+	private void collectGoalCheck() {
+		if(gameCollectGoalCnt == 1 && !isThereGoalItem())
+			configErrors.add(MapConfig.NO_GOAL_ITEM);
+	}
+
+	private void dupGoalCheck() {
+		if(gameCollectGoalCnt > 1 || gameExploreGoalCnt > 1 || gamePointGoalCnt > 1)
+			configErrors.add(MapConfig.DUP_GOAL);
+	}
+
+	private void lockedRoomCheck() {
+		if(isLockedRoomExist) {
+			if(!isThereKeyItem())
+				configErrors.add(MapConfig.NO_KEY);
+			if(!isThereLockItem())
+				configErrors.add(MapConfig.NO_LOCK);
+		}
+	}
+
+	private void obscuredRoomCheck() {
+		if(isObscuredRoomExist && obscuredRoomCnt!=obstacleItemCnt) {
+			configErrors.add(MapConfig.NO_OBSTACLE);
+		}
+	}
+
+	private void requiredRoomCheck() {
+		if(isRequiredRoomExist) {
+			int requiredItemCnt = getRequiredItemCount();
+			if(!isThereRequiredItem(requiredItemCnt))
+				configErrors.add(MapConfig.NO_REQUIRED_ITEM);
+		}
+	}
+
+	private void darkRoomCheck() {
+		if(isDarkRoomExist && !isThereLightItem()) {
+			configErrors.add(MapConfig.NO_LUMINOUS);
+		}
 	}
 	
 	private void goalTypeCheck() {
