@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -267,9 +266,10 @@ public class TestXmlParserClient {
 		
 		final String RESULT = "win";
 		final String ID_STR = "gameEndId";
+		final String TEXT_STR = "cong";
 
 		XmlWriterServer xw = new XmlWriterServer(); 
-		String commandXml = xw.makeXmlForGameEnd(ID_STR, RESULT);
+		String commandXml = xw.makeXmlForGameEnd(ID_STR, RESULT, TEXT_STR);
 		
 		XmlParser xp = new XmlParser(XmlParserType.CLIENT);
 		xp.parseXmlFromString(commandXml);
@@ -277,6 +277,8 @@ public class TestXmlParserClient {
 		XmlResponseClient xr = (XmlResponseClient) xp.getXmlResponse();
 		assertTrue(xr.getGameResult().equals(RESULT));
 		assertTrue(xr.getId().equals(ID_STR));
+		assertTrue(xr.getGameText().equals(TEXT_STR));
+
 	}
 	
 	
