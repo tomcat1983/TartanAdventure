@@ -105,6 +105,8 @@ public class SocketClient implements Runnable {
 	}
 
 	public boolean receiveMessage(String message) {
+		
+		gameLogger.info("Received message : " + message);
 		XmlParser xmlParser;
 		String messageType = null;
 		XmlResponseClient xr = null;

@@ -182,7 +182,7 @@ public abstract class Game {
         else if (input.compareTo("status") == 0) {
             status();
         }
-        else if(this instanceof LocalGame && input.compareTo("save") == 0 ) {
+        else if(input.compareTo("save") == 0 ) {
         	handleSave();
         }
         else {
@@ -203,14 +203,14 @@ public abstract class Game {
      * Start the Game.
      */
     public void start() {
-    	gameInterface.print(context.getUserId(), MessageType.PRIVATE, "Enjoy your game!");
+    	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "Enjoy your game!");
 
         // Orient the player
         context.getPlayer().lookAround();
         try {
             String input = null;
             while(true) {
-            	gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
+            	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "> ");
 
                 input = gameInterface.getCommand(context.getUserId());
                 if(processGameCommand(input)) {
@@ -310,7 +310,12 @@ public abstract class Game {
     }
 
     private void appendString(Action action, StringBuilder builder) {
-        for (String string : action.getAliases()) builder.append("'" + string + "' ");
+        for (String string : action.getAliases()) {
+        	builder.append("'" + string + "' ");
+        	if("move".equals(string)) {
+        		builder.append("][");
+        	}
+        }
     }
     /**
      * Display help menu
@@ -323,32 +328,33 @@ public abstract class Game {
 
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- To view your current items: type \"inventory\"\n");
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- You have a number of actions available:\n");
-
-        StringBuilder directions = new StringBuilder("Direction: go [");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- To save your current game status: type \"save\"\n* ‘save’ is only possible in local game mode.");
+        		
+        StringBuilder directions = new StringBuilder("Direction: [");
+        StringBuilder movement = new StringBuilder("Movement with fixed direction:[");
         StringBuilder dirobj = new StringBuilder("Manipulate object directly: [");
         StringBuilder indirobj = new StringBuilder("Manipulate objects indirectly, e.g. Put cpu in computer: [");
-        StringBuilder misc = new StringBuilder("Misc. actions [");
-
+ 
         for( Action a : Action.values()) {
             if (a.type() == Type.TYPE_DIRECTIONAL) {
             	appendString(a, directions);
+            } else if(a.type() == Type.TYPE_HASNOOBJECT) {
+            	appendString(a, movement);
             } else if (a.type() == Type.TYPE_HASDIRECTOBJECT) {
-            	appendString(a, dirobj);
+                appendString(a, dirobj);
             } else if (a.type() == Type.TYPE_HASINDIRECTOBJECT) {
             	appendString(a, indirobj);
-            } else if (a.type() == Type.TYPE_UNKNOWN) {
-            	appendString(a, misc);
             }
         }
         directions.append("]");
+        movement.append("]");
         dirobj.append("]");
         indirobj.append("]");
-        misc.append("]");
-
+        
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- "+ directions.toString() + "\n");
+        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- " + movement.toString() + "\n");
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- " + dirobj.toString() + "\n");
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- " + indirobj.toString() + "\n");
-        gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- " +misc.toString() + "\n");
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- You can quit by typing \"quit\"\n");
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- Good luck!\n");
@@ -382,15 +388,18 @@ public abstract class Game {
         for (GameGoal g: context.getGoals()) {
         	gameInterface.println(context.getUserId(), MessageType.PRIVATE, g.getStatus());
         }
-        gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.WILL_YOU_SAVE_2_1);
-        gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
-
-        String input = gameInterface.getCommand(context.getUserId());
-        if("yes".equalsIgnoreCase(input)) {
-        	return handleSave();
-        } else {
-        	gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.REJECT_SAVE_2_4);
-        	return true;
+        if(this instanceof LocalGame) {
+	        gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.WILL_YOU_SAVE_2_1);
+	        gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
+	
+	        String input = gameInterface.getCommand(context.getUserId());
+	        if("yes".equalsIgnoreCase(input)) {
+	        	return handleSave();
+	        } else {
+	        	gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.REJECT_SAVE_2_4);
+	        	return true;
+	        }
         }
+        return true;
     }
 }

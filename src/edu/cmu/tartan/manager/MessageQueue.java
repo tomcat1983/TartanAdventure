@@ -25,9 +25,9 @@ public class MessageQueue implements IQueueHandler{
 	public boolean produce (SocketMessage message) {
 		try {
 			queue.put(message);
-			return queue.contains(message);
+//			return queue.contains(message);
+			return true;
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			gameLogger.severe("InterruptException : " + e.getMessage());
 			Thread.currentThread().interrupt();
 		}

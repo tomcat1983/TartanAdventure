@@ -22,7 +22,6 @@ public class UserClientThread implements Runnable, ISocketMessage {
 	private Socket clientSocket;
 	private IQueueHandler queue;
 	
-	private boolean isLogin = false;
 	private boolean isLoop = true;
 	private String userId = "";
 	private String threadName = "";
@@ -73,9 +72,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 						|| message.equals("quit")
 						|| message.equals("exit")) break;
 				
-//				if (isLogin) {
-//					getUserIdFromXml(message);
-//				}
+				gameLogger.info("[Server] Received message : " + message);
 				
 				socketMessage = new SocketMessage(threadName, message);
 
@@ -89,18 +86,8 @@ public class UserClientThread implements Runnable, ISocketMessage {
 		}
 	}
 	
-	private String getUserIdFromXml(String message) {
-		// TODO : Process message
-		String id = null;
-		return id;
-	}
-	
 	public String getUserId() {
 		return userId;
-	}
-	
-	public void setIsLogin(boolean isLogin) {
-		this.isLogin = isLogin;
 	}
 	
 	public String getThreadName() {
