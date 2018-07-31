@@ -49,7 +49,7 @@ public enum Action {
 
     // Indirect Object. Has one direct object and one indirect object, e.g. Put cpu in computer
     ACTION_PUT(new String[]{"put", "install"}, Type.TYPE_HASINDIRECTOBJECT),
-    ACTION_TAKE(new String[]{"remove"}, Type.TYPE_HASINDIRECTOBJECT),
+    ACTION_REMOVE(new String[]{"remove"}, Type.TYPE_HASINDIRECTOBJECT),
 
     // Misc
     ACTION_UNKNOWN(new String[]{}, Type.TYPE_UNKNOWN),

@@ -38,7 +38,7 @@ public class ItemKeycardReader extends Item implements Hostable {
         for (int i = 0; i < 3; i++) {
             gameInterface.println(userId, MessageType.PRIVATE,"...");
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (Exception e1) {
             	gameLogger.severe(e1.getMessage());
             	return false;

@@ -64,19 +64,6 @@ public abstract class Game {
         this.interpreter = new PlayerInterpreter();
     }
 
-    /**
-     *  Display the game menu
-     * @param menu The game menu
-     */
-    private void printMenu(ArrayList<GameConfiguration> menu) {
-
-        StringBuilder sb = new StringBuilder("Choose a game from the options to below or type 'help' for help. \n");
-        for (int i = 0; i < menu.size(); i++) {
-            sb.append( (i+1) + ":  " + menu.get(i).getName() + "\n");
-        }
-        gameInterface.println(context.getUserId(), MessageType.PRIVATE, sb.toString());
-    }
-
     protected GameConfiguration gameFromXML(GameMode mode) {
 		XmlParser parseXml;
 		try {
@@ -169,7 +156,6 @@ public abstract class Game {
             }
         } catch(TerminateGameException e) {
         	gameInterface.println(context.getUserId(), MessageType.LOSE, "Game Over");
-        	return;
         } catch(Exception e) {
         	gameLogger.severe("I don't understand that \n\nException: \n" + e);
         	gameLogger.severe(e.getMessage());

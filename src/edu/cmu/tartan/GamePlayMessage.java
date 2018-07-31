@@ -18,5 +18,8 @@ public final class GamePlayMessage {
 	public static final String LOAD_FAILURE_10_2 = "There is no saved game.\n";
 	public static final String SAVE_SUCCESSFUL_10_4 = "The current state is saved successfully.\n";
 	public static final String SAVE_CANNOT_10_6 = "You cannot save the current status in network game mode.\n";
+	
+	// 
+	public static final String POINTS = " points.";
 
 }
