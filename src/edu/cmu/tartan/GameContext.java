@@ -33,7 +33,6 @@ public class GameContext implements Comparable, Serializable {
      * The userId is user name with local game. But if game is network mode, user name set userId.
      */
     private String userId;
-	protected Logger gameLogger = Logger.getGlobal();
 
     public GameContext(String userId) {
     	this.userId = userId;
@@ -124,11 +123,7 @@ public class GameContext implements Comparable, Serializable {
 
 		GameValidate validater = new GameValidate(this);
 		configErrors = validater.check(); 
-		
-		for (MapConfig mapConfig : configErrors) {
-			gameLogger.info(mapConfig.name());
-		}
-		
+				
 		return configErrors.isEmpty();
 	}
     

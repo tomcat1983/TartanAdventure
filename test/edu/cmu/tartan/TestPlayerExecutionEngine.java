@@ -441,7 +441,7 @@ class TestPlayerExecutionEngine {
 	    	action = interpreter.interpretString("detonate dynamite", actionExecutionUnit);
 	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	    	
-	    	action = interpreter.interpretString("east room2", actionExecutionUnit);
+	    	action = interpreter.interpretString("go east", actionExecutionUnit);
 	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	    	
 	    	Room room2 = new Room();
@@ -462,10 +462,10 @@ class TestPlayerExecutionEngine {
 		room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2);
 		player.grabItem(flashlight);
 		
-		Action action = interpreter.interpretString("east", actionExecutionUnit);
+		Action action = interpreter.interpretString("go east", actionExecutionUnit);
     	try {
 			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
-	    	action = interpreter.interpretString("west", actionExecutionUnit);
+	    	action = interpreter.interpretString("go west", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	    	    	
 	    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
@@ -474,7 +474,7 @@ class TestPlayerExecutionEngine {
 			room2.setAdjacentRoom(Action.ACTION_GO_WEST, room3);
 			player.grabItem(mbox);
 			
-	    	action = interpreter.interpretString("w", actionExecutionUnit);
+	    	action = interpreter.interpretString("go w", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
@@ -506,7 +506,7 @@ class TestPlayerExecutionEngine {
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	    	
 	    	action = interpreter.interpretString("pass", actionExecutionUnit);
-	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
 		}
@@ -618,12 +618,12 @@ class TestPlayerExecutionEngine {
 		//player.grabItem(flashlight);
 		
 		Throwable exception = assertThrows(TerminateGameException.class,() -> {
-    		Action action = interpreter.interpretString("west", actionExecutionUnit);
+    		Action action = interpreter.interpretString("go west", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
-    		action = interpreter.interpretString("east", actionExecutionUnit);
+    		action = interpreter.interpretString("go east", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		((RoomLockable)end).setCausesDeath(true, "Bye~Bye~~");
-    		action = interpreter.interpretString("west", actionExecutionUnit);
+    		action = interpreter.interpretString("go west", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
 		assertEquals("Terminate Game", exception.getMessage());
@@ -640,7 +640,7 @@ class TestPlayerExecutionEngine {
 		((RoomRequiredItem)room2).setPlayerDiesOnEntry(true);
 		
 		Throwable exception = assertThrows(TerminateGameException.class,() -> {
-    		Action action = interpreter.interpretString("west", actionExecutionUnit);
+    		Action action = interpreter.interpretString("go west", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
 		assertEquals("Terminate Game", exception.getMessage());
@@ -651,6 +651,8 @@ class TestPlayerExecutionEngine {
 		ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
 		RoomRequiredItem room2 = new RoomRequiredItem("You are in the room that required food", "Required",
 	            "pit", "Warning you need key", mbox);
+		room2.setSafeDirection(Action.ACTION_GO_EAST);
+		room2.setLoseMessage("You Lose");
 		player = new Player(room2, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);	
 		player.grabItem(mbox);
@@ -673,7 +675,7 @@ class TestPlayerExecutionEngine {
 		playerExecutionEngine = new PlayerExecutionEngine(player);	
 		
 		Throwable exception = assertThrows(TerminateGameException.class,() -> {
-    		Action action = interpreter.interpretString("east", actionExecutionUnit);
+    		Action action = interpreter.interpretString("go east", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
 		assertEquals("Terminate Game", exception.getMessage());
@@ -686,7 +688,7 @@ class TestPlayerExecutionEngine {
 		playerExecutionEngine = new PlayerExecutionEngine(player);
 		
 		Throwable exception = assertThrows(TerminateGameException.class,() -> {
-			Action action = interpreter.interpretString("west", actionExecutionUnit);
+			Action action = interpreter.interpretString("go west", actionExecutionUnit);
 			playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
 		
