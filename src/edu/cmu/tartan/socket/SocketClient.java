@@ -27,16 +27,16 @@ public class SocketClient implements Runnable {
 	 * Game logger for game log
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
-	
+
 	private String serverIp = "127.0.0.1";
 	int serverPort = 10015;
-	
+
 	private Socket socket = null;
 	private ResponseMessage responseMessage;
 	private IQueueHandler queue;
-	
+
 	private boolean isLoop;
-	
+
 	public SocketClient(ResponseMessage responseMessage, IQueueHandler queue) {
 		isLoop = true;
 		this.responseMessage = responseMessage;
@@ -47,41 +47,41 @@ public class SocketClient implements Runnable {
 	public void run() {
 		connectToServer();
 	}
-	
+
 	public boolean connectToServer() {
 		serverIp = Config.getServerIp();
 		serverPort = Config.getServerPort();
-		
+
 		try {
 			socket = new Socket(serverIp, serverPort);
 			gameLogger.info("Connected to server");
-			 
+
 			InputStream input = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-			
+
             String message = "";
- 
+
             while(isLoop) {
-            	
+
             	if ((message = reader.readLine()) == null) break;
             	//TODO Check a null state
 				if (message.equals("null")
 						|| message.equals("exit")
 						|| message.equals("quit")) break;
-				
+
 				receiveMessage(message);
             }
- 
+
             stopSocket();
- 
+
         } catch (UnknownHostException e) {
- 
+
         	gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
 					"Server not found : " + e.getMessage()));
         	return false;
- 
+
         } catch (IOException e) {
- 
+
         	gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
 					"IOException : " + e.getMessage()));
         	return false;
@@ -89,7 +89,7 @@ public class SocketClient implements Runnable {
 
 		return true;
 	}
-	
+
 	public boolean waitToConnection(int timeout) {
 		while (timeout > 0 && socket == null) {
 			try {
@@ -98,33 +98,33 @@ public class SocketClient implements Runnable {
 				gameLogger.info("Exception :" + exception.getMessage());
 				break;
 			}
-			
+
 			timeout -= 10;
 		}
-		
+
 		return (socket != null);
 	}
-	
+
 	public boolean receiveMessage(String message) {
 		XmlParser xmlParser;
 		String messageType = null;
 		XmlResponseClient xr = null;
-		
+
 		try {
 			xmlParser = new XmlParser(XmlParserType.CLIENT);
 			xmlParser.parseXmlFromString(message);
 			messageType = xmlParser.getMessageType();
 			xr = (XmlResponseClient) xmlParser.getXmlResponse();
-			
+
 		} catch (ParserConfigurationException e) {
 			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
 					"ParserConfigurationException : " + e.getMessage()));
 			return false;
 		}
-		
+
 		gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
 				"Received message type : " + messageType));
-		
+
 		switch(messageType) {
 			case("REQ_LOGIN"):
 				sendByResponseMessage(xr.getResultStr(), null);
@@ -146,25 +146,25 @@ public class SocketClient implements Runnable {
 			default:
 				break;
 		}
-		
-		
+
+
 		return true;
 	}
-	
+
 	public boolean sendByQueue(String message) {
 		boolean returnValue = false;
 		returnValue = queue.produce(new SocketMessage(Thread.currentThread().getName(), message));
 		return returnValue;
 	}
-	
+
 	public boolean sendByResponseMessage(XmlResultString result, String message) {
-		
+
 		String returnValue = "FAIL";
-		
+
 		if(XmlResultString.OK == result) {
 			returnValue = "SUCCESS";
 		}
-		
+
 		try {
 			synchronized (responseMessage) {
 				responseMessage.setMessage(returnValue);
@@ -177,7 +177,7 @@ public class SocketClient implements Runnable {
 		}
 		return true;
 	}
-	
+
 	public boolean sendMessage(String message) {
 		if (socket == null || !socket.isConnected()) {
 			gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
@@ -196,17 +196,18 @@ public class SocketClient implements Runnable {
 		}
 		return false;
 	}
-	
+
 	public boolean stopSocket() {
-		
+
 		gameLogger.info(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
 				"Close a socket"));
-		
+
 		boolean returnValue = false;
 		isLoop = false;
-		
+
 		try {
-			socket.close();
+			if (socket != null)
+				socket.close();
 		} catch (IOException e) {
 			gameLogger.warning(String.format("[%s] %s", Thread.currentThread().getStackTrace()[1].getMethodName(),
 					"IOException : " + e.getMessage()));
