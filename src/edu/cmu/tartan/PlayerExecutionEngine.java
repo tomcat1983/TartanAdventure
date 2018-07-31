@@ -323,7 +323,7 @@ public class PlayerExecutionEngine {
             }
         }
         else {
-            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You do not have that item in your inventory.");
+            gameInterface.println(player.getUserName(), MessageType.PRIVATE, "That item is not in the room");
             return false;
         }    	
     }
@@ -430,7 +430,7 @@ public class PlayerExecutionEngine {
         switch(action) {
         	case ACTION_PUT:
         		return actionPut(directItem, indirectItem);
-        	case ACTION_TAKE:
+        	case ACTION_REMOVE:
         		return actionTake(directItem, indirectItem);
         	default :
         		 gameInterface.println(player.getUserName(), MessageType.PRIVATE, "There is not indirect object action");

@@ -473,7 +473,7 @@ class TestPlayerExecutionEngine {
 	    	
 	    	Room room2 = new Room();
 	    	dynamite.setRelatedRoom(room2);
-	    	room1.setAdjacentRoom(action, room2);
+	    	assertTrue(room1.setAdjacentRoom(action, room2));
 	    	action = interpreter.interpretString("detonate dynamite", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 	    	action = interpreter.interpretString("detonate dynamite", actionExecutionUnit);
@@ -488,7 +488,7 @@ class TestPlayerExecutionEngine {
 	void testWhenexecuteActionCallWithMove() {
 		RoomDark room2 = new RoomDark(TestRoomDark.DARK_ROOM_DESC1, TestRoomDark.DARK_ROOM_SHORT_DESC1, TestRoomDark.DARK_DESC, TestRoomDark.DARK_SHORT_DESC);
 		ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight", Player.DEFAULT_USER_NAME);
-		room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2);
+		assertTrue(room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2));
 		player.grabItem(flashlight);
 		
 		Action action = interpreter.interpretString("go east", actionExecutionUnit);
@@ -500,7 +500,7 @@ class TestPlayerExecutionEngine {
 	    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
 	    	RoomRequiredItem room3 = new RoomRequiredItem("You are in the room that required food", "Required",
 	                "pit", "Warning you need key", mbox);
-			room2.setAdjacentRoom(Action.ACTION_GO_WEST, room3);
+			assertTrue(room2.setAdjacentRoom(Action.ACTION_GO_WEST, room3));
 			player.grabItem(mbox);
 			
 	    	action = interpreter.interpretString("go w", actionExecutionUnit);
@@ -515,7 +515,7 @@ class TestPlayerExecutionEngine {
 	void testWhenexecuteActionCallWithMoveWithWrongDirection() {
 		RoomDark room2 = new RoomDark(TestRoomDark.DARK_ROOM_DESC1, TestRoomDark.DARK_ROOM_SHORT_DESC1, TestRoomDark.DARK_DESC, TestRoomDark.DARK_SHORT_DESC);
 		ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight", Player.DEFAULT_USER_NAME);
-		room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2);
+		assertTrue(room1.setAdjacentRoom(Action.ACTION_GO_DOWN, room2));
 		player.grabItem(flashlight);
 		
     	try {
@@ -531,12 +531,17 @@ class TestPlayerExecutionEngine {
 	    	action = interpreter.interpretString("go west go deefsdf", actionExecutionUnit);
 	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 
-	    	action = interpreter.interpretString("travel west", actionExecutionUnit);
+	    	action = interpreter.interpretString("travel up", actionExecutionUnit);
+	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+
+	    	action = interpreter.interpretString("move down", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 
-	    	action = interpreter.interpretString("move east", actionExecutionUnit);
-	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	    	action = interpreter.interpretString("move down", actionExecutionUnit);
+	    	assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 
+	    	action = interpreter.interpretString("move up", actionExecutionUnit);
+	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
 		}
@@ -680,7 +685,7 @@ class TestPlayerExecutionEngine {
 		Room end = new RoomLockable("You are inside of a building", "Building interior", true, Item.getInstance("key", Player.DEFAULT_USER_NAME));
 		//RoomDark room2 = new RoomDark(TestRoomDark.DARK_ROOM_DESC1, TestRoomDark.DARK_ROOM_SHORT_DESC1, TestRoomDark.DARK_DESC, TestRoomDark.DARK_SHORT_DESC);
 		//ItemFlashlight flashlight = (ItemFlashlight) Item.getInstance("flashlight", Player.DEFAULT_USER_NAME);
-		room1.setAdjacentRoom(Action.ACTION_GO_WEST, end);
+		assertTrue(room1.setAdjacentRoom(Action.ACTION_GO_WEST, end));
 		//player.grabItem(flashlight);
 		
 		Throwable exception = assertThrows(TerminateGameException.class,() -> {
@@ -702,7 +707,7 @@ class TestPlayerExecutionEngine {
 	            "pit", "Warning you need key", mbox);
 		player = new Player(room1, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);
-		room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2);
+		assertTrue(room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2));
 		((RoomRequiredItem)room2).setPlayerDiesOnEntry(true);
 		
 		Throwable exception = assertThrows(TerminateGameException.class,() -> {

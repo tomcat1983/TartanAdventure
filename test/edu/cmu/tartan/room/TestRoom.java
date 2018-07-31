@@ -192,9 +192,11 @@ public class TestRoom {
 		
 		assertFalse(room1.canMoveToRoomInDirection(Action.ACTION_GO_EAST));
 		
-		room1.setAdjacentRoom(Action.ACTION_GO_EAST, room2);
+		assertTrue(room1.setAdjacentRoom(Action.ACTION_GO_EAST, room2));
 		
 		assertTrue(room1.canMoveToRoomInDirection(Action.ACTION_GO_EAST));
+		
+		assertFalse(room1.setAdjacentRoom(Action.ACTION_GO_EAST, room2));
 	}
 	
 	@Test

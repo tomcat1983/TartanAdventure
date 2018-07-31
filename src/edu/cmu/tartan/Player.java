@@ -114,8 +114,8 @@ public class Player implements Comparable, Serializable {
         if(this.items.remove(item)) {
         	int s = item.value();
             this.score -= s;
-            gameInterface.println(userName, MessageType.PRIVATE, "You lost " + s + " points.");
-        	gameInterface.println(userName, MessageType.OTHER, userName + " lost " + s + " points.");
+            gameInterface.println(userName, MessageType.PRIVATE, "You lost " + s + GamePlayMessage.POINTS);
+        	gameInterface.println(userName, MessageType.OTHER, userName + " lost " + s + GamePlayMessage.POINTS);
             return item;
         }
         else {
@@ -371,8 +371,8 @@ public class Player implements Comparable, Serializable {
      * @param s the newly scored points.
      */
     public void score(int s) {
-    	gameInterface.println(userName, MessageType.PRIVATE, "You scored " + s + " points.");
-    	gameInterface.println(userName, MessageType.OTHER, userName + " scored " + s + " points.");
+    	gameInterface.println(userName, MessageType.PRIVATE, "You scored " + s + GamePlayMessage.POINTS);
+    	gameInterface.println(userName, MessageType.OTHER, userName + " scored " + s + GamePlayMessage.POINTS);
     	score += s;
     }
 
