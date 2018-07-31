@@ -134,7 +134,7 @@ public class Client {
 
 		XmlLoginRole role = XmlLoginRole.PLAYER;
 		if (isDesigner)
-			role = XmlLoginRole.PLAYER;
+			role = XmlLoginRole.DESIGNER;
 
 		if (gameManager.login("", loginInfo[0], loginInfo[1], role)) {
 			userId = id;

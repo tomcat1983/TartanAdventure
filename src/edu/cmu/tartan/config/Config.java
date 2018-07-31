@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 public class Config {
 
 	private static final int DEFAULT_PORT = 10015;
+	private static final int DEFAULT_DESIGNER_PORT = 10016; 
 
 	/**
 	 * Game interface for game message and log
@@ -80,10 +81,11 @@ public class Config {
 	}
 	
 	public static int getDesignerPort() {
-		int port = DEFAULT_PORT;
+		int port = DEFAULT_DESIGNER_PORT;
 
-		if (properties.containsKey("tartan.server.designer.port"))
+		if (properties.containsKey("tartan.server.designer.port")) {
 			port = Integer.parseInt(properties.getProperty("tartan.server.designer.port"));
+		}
 
 		return port;
 	}

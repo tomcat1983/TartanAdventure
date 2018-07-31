@@ -263,7 +263,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		boolean returnValue = false;
 		returnValue = accountManager.loginUser(userId, userPw, role.name());
 		
-		if (returnValue) {
+		if (returnValue && XmlLoginRole.PLAYER == role) {
 			returnValue = registerNewUser(userId);
 		}
 		
@@ -278,7 +278,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		}
 		
 		if (returnValue) {
-			loginUserCounter++;
+			if (XmlLoginRole.PLAYER == role) loginUserCounter++;
 			serverSocket.updateSocketState(userId, CommandResult.LOGIN_SUCCESS, threadName);
 			xmlMessage = xw.makeXmlForLogin(XmlResultString.OK, XmlNgReason.OK);
 		} else {
@@ -286,7 +286,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			xmlMessage = xw.makeXmlForLogin(XmlResultString.NG, XmlNgReason.INVALID_INFO);
 		}
 		
-		returnValue = socket.sendToClient(userId, xmlMessage);
+		returnValue = serverSocket.sendToClient(userId, xmlMessage);
 		
 		return returnValue;
 	}
