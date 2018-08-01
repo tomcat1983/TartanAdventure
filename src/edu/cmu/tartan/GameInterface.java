@@ -90,35 +90,34 @@ public class GameInterface {
 	}
 
 	public void print(String userId, MessageType type, String message) {
-		if (tartanManager == null) {
+		if (tartanManager != null) {
+			switch (type) {
+				case SYSTEM:
+					systemOut.print(message);
+					break;
+				case PRIVATE:
+					tartanManager.sendToClient(userId, message);
+					break;
+				case PUBLIC:
+					tartanManager.sendToAll(userId, message);
+					break;
+				case OTHER:
+					tartanManager.sendToOthers(userId, message);
+					break;
+				case WIN:
+					tartanManager.winTheGame(userId, message);
+					break;
+				case LOSE:
+					tartanManager.loseTheGame(userId, message);
+					break;
+				default:
+					break;
+			}
+		} else {
 			if (type == MessageType.OTHER) {
 				return;
 			}
-
-			type = MessageType.SYSTEM;
-		}
-
-		switch (type) {
-		case SYSTEM:
 			systemOut.print(message);
-			break;
-		case PRIVATE:
-			tartanManager.sendToClient(userId, message);
-			break;
-		case PUBLIC:
-			tartanManager.sendToAll(userId, message);
-			break;
-		case OTHER:
-			tartanManager.sendToOthers(userId, message);
-			break;
-		case WIN:
-			tartanManager.winTheGame(userId, message);
-			break;
-		case LOSE:
-			tartanManager.loseTheGame(userId, message);
-			break;
-		default:
-			break;
 		}
 	}
 
