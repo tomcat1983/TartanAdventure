@@ -1,6 +1,5 @@
 package edu.cmu.tartan.room;
 
-import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.item.Item;
 
 /**
@@ -15,8 +14,6 @@ import edu.cmu.tartan.item.Item;
 public class RoomLockable extends Room {
     private boolean locked;
     private Item key;
-    private boolean causesDeath;
-    private String deathMessage;
     private String unlockMessage;
 
     /**
@@ -31,8 +28,6 @@ public class RoomLockable extends Room {
 
 		this.locked = locked;
 		this.key = key;
-		this.causesDeath = false;
-		this.deathMessage = "";
 		this.unlockMessage = "Room unlocked.";
 	}
 
@@ -42,7 +37,6 @@ public class RoomLockable extends Room {
 	}
 	
 	public void setKey(Item key) {
-		
 		this.key = key;
 	}
 	
@@ -54,21 +48,6 @@ public class RoomLockable extends Room {
 		return this.locked;
 	}
 
-	// Handle player death
-
-	public void setCausesDeath(boolean causesDeath, String message) {
-		this.causesDeath = causesDeath;
-		this.deathMessage = message;
-	}
-
-	public boolean causesDeath() {
-		return this.causesDeath;
-	}
-
-	public String deathMessage() {
-		return this.deathMessage;
-	}
-
     /**
      * Set unlock message
      * @param s the unlock message
@@ -76,6 +55,10 @@ public class RoomLockable extends Room {
 	public void setUnlockMessage(String s){
 		this.unlockMessage = s;
 	}
+	
+	public String getUnlockMessage(){
+		return this.unlockMessage;
+	}	
 
     /**
      * Unlock the room
@@ -85,13 +68,9 @@ public class RoomLockable extends Room {
 	public boolean unlock(Item key) {
 		if(this.key.compareTo(key) == 0) {
 			this.locked = false;
-			gameInterface.println(getPlayer().getUserName(), MessageType.PRIVATE, this.unlockMessage);
 			return true;
 		}
 		else { 
-			if(!causesDeath()) {
-				gameInterface.println(getPlayer().getUserName(), MessageType.PRIVATE, "This key doesn't seem to fit");
-			}
 			return false;
 		}
 	}

@@ -28,7 +28,22 @@ public class TestGameContext {
 	private PlayerExecutionEngine playerExecutionEngine;
 	private ActionExecutionUnit actionExecutionUnit;
 	private GameContext context;
+	
+	private GameContext gameContext1;
+	private GameContext gameContext2;
 
+	public static final String KIM = "Kim";
+	public static final String Jon = "Jon";
+	public void makeSameGameContext() {
+		gameContext1 = new GameContext(KIM);
+		gameContext2 = new GameContext(KIM);
+	}
+	
+	public void makeDifferentGameContext() {
+		gameContext1 = new GameContext(KIM);
+		gameContext2 = new GameContext(Jon);
+	}
+	
 	@BeforeEach
 	void beforeEach() {
 		interpreter = new PlayerInterpreter();
@@ -76,6 +91,13 @@ public class TestGameContext {
 			ObjectInputStream in = new ObjectInputStream(bis);
 			final GameContext restoredGameContext = (GameContext) in.readObject();
 			assertEquals(restoredGameContext, context);
+			
+			assertTrue(restoredGameContext.getGoals().size()==context.getGoals().size());
+			assertTrue(restoredGameContext.getGameDescription().equals(context.getGameDescription()));
+			assertTrue(restoredGameContext.getGameName().equals(context.getGameName()));
+			assertTrue(restoredGameContext.getPlayer().equals(context.getPlayer()));
+			assertTrue(restoredGameContext.getRooms().equals(context.getRooms()));
+			assertTrue(restoredGameContext.getUserId().equals(context.getUserId()));
 			in.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -83,6 +105,40 @@ public class TestGameContext {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}				
+	}
+	
+	@Test
+	public void testNotEqualsAndHashCode() {
+		makeDifferentGameContext();
+		
+        assertFalse(gameContext1.equals(gameContext2) && gameContext2.equals(gameContext1));
+        assertFalse(gameContext1.hashCode() == gameContext2.hashCode());
+        assertEquals(-1, gameContext1.compareTo(gameContext2));
+        gameContext1.setUserId(null);
+        assertFalse(gameContext1.hashCode() == gameContext2.hashCode());
+	}
+
+	@Test
+	public void testNotEqualsCompareTo() {
+		makeDifferentGameContext();
+		
+        assertEquals(-1, gameContext1.compareTo(gameContext2));
+	}
+	
+	@Test
+	public void testEqualsAndHashCode() {
+		makeSameGameContext();
+		
+        assertTrue(gameContext1.equals(gameContext2) && gameContext2.equals(gameContext1));
+        assertTrue(gameContext1.hashCode() == gameContext2.hashCode());
+        assertEquals(0, gameContext1.compareTo(gameContext2));
+	}
+
+	@Test
+	public void testEqualsCompareTo() {
+		makeSameGameContext();
+		
+        assertEquals(0, gameContext1.compareTo(gameContext2));
 	}
 
 }

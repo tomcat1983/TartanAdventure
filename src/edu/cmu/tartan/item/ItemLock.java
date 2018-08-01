@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Openable;
 import edu.cmu.tartan.room.RoomLockable;
@@ -75,8 +76,13 @@ public class ItemLock extends Item implements Hostable, Openable {
     @Override
     public Boolean open() {
         if (installedItem instanceof ItemKey && this.relatedRoom instanceof RoomLockable) {
-            ((RoomLockable) this.relatedRoom).unlock(this.installedItem);
-            return true;
+            if(((RoomLockable) this.relatedRoom).unlock(this.installedItem)) {
+                gameInterface.println(userId, MessageType.PRIVATE, ((RoomLockable) this.relatedRoom).getUnlockMessage());
+                return true;
+            } else {
+            	gameInterface.println(userId, MessageType.PRIVATE, "This key doesn't seem to fit");
+            	return false;
+            }
         }
         return false;
     }
