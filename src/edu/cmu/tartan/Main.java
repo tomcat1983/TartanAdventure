@@ -34,6 +34,8 @@ public class Main {
 
 		Config config = new Config(fileUri);
 		if (config.readPropertyFile()) {
+			gameLogger.setLevel(Config.getLogLeve());
+
 			Config.RunningMode mode = Config.getMode();
 
 			switch (mode) {
