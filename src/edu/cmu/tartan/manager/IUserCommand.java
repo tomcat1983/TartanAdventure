@@ -8,10 +8,6 @@ public interface IUserCommand {
 	
 	public boolean register(String threadName, String userId, String userPw);
 	
-	public boolean validateUserId(String userId);
-	
-	public boolean validateUserPw(String userPw);
-	
 	public boolean startGame(String userId);
 	
 	public boolean endGame(String threadName, String userId);

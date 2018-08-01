@@ -5,11 +5,7 @@ import java.util.logging.Logger;
 
 import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.LocalGame;
-import edu.cmu.tartan.manager.IQueueHandler;
-import edu.cmu.tartan.manager.MessageQueue;
-import edu.cmu.tartan.manager.ResponseMessage;
 import edu.cmu.tartan.manager.TartanGameManagerClient;
-import edu.cmu.tartan.socket.SocketClient;
 import edu.cmu.tartan.xml.GameMode;
 import edu.cmu.tartan.xml.XmlLoginRole;
 
@@ -104,14 +100,8 @@ public class Client {
 	}
 
 	private boolean connectServer(int timeout, boolean isDesigner) {
-		IQueueHandler messageQueue = new MessageQueue();
-		ResponseMessage responseMessage = new ResponseMessage("");
-
-		SocketClient socketClient = new SocketClient(responseMessage, messageQueue, isDesigner);
-		Thread socketClientThread = new Thread(socketClient);
-		socketClientThread.start();
-
-		gameManager = new TartanGameManagerClient(socketClient, responseMessage, messageQueue);
+		
+		gameManager = new TartanGameManagerClient(isDesigner);
 		Thread gameManagerThread = new Thread(gameManager);
 		gameManagerThread.start();
 

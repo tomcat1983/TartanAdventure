@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.config.Config;
@@ -18,6 +19,8 @@ public class DbAccessor {
 	 * Game logger for game log
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
+	
+	static final String SQL_EXCEPTION = "SQLException";
 
 	private String url;
 	private String dbLocation = "./";
@@ -29,22 +32,6 @@ public class DbAccessor {
 	}
 
 	/**
-	 * Connect to the database
-	 *
-	 * @return the Connection object
-	 */
-	private Connection connect() {
-
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(url);
-		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
-		}
-		return conn;
-	}
-
-	/**
 	 * Connect to a sample database
 	 *
 	 */
@@ -53,19 +40,20 @@ public class DbAccessor {
 		File file = new File(dbLocation + dbName);
 		
 		if (file.isFile()) {
-			gameLogger.info("Database already exists");
+			gameLogger.log(Level.INFO, "Database already exists");
 			return false;
 		}
 
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
 				DatabaseMetaData meta = conn.getMetaData();
-				gameLogger.info("A new database has been created.");
+				
+				gameLogger.log(Level.INFO, "A new database({0}) has been created.", meta.getDatabaseProductName());
 			}
 			return true;
 
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 		}
 		return false;
 	}
@@ -89,7 +77,7 @@ public class DbAccessor {
 			stmt.execute(sql);
 			return true;
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 		}
 		return false;
 	}
@@ -114,7 +102,7 @@ public class DbAccessor {
 			pstmt.executeUpdate();
 			returnValue = true;
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 		}
 
 		return returnValue;
@@ -127,19 +115,26 @@ public class DbAccessor {
 		String sql = query;
 
 		String value = null;
+		ResultSet rs = null;
 
 		try (Connection conn = DriverManager.getConnection(url);
 				Statement stmt = conn.createStatement();
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			
 			pstmt.setString(1,  userId);
-			ResultSet rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				return value = rs.getString(param);
+				value = rs.getString(param);
 			}
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
+		} finally {
+			try {
+				if (rs != null) rs.close();
+			} catch (SQLException e) {
+				gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
+			}
 		}
 
 		return value;
@@ -182,7 +177,7 @@ public class DbAccessor {
             returnValue = true;
             
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 		}
 		
 		return returnValue;
@@ -193,19 +188,26 @@ public class DbAccessor {
 		String sql = "SELECT COUNT(user_id) FROM T_USER_INFO WHERE user_id=?";
 
 		int returnValue = 0;
+		ResultSet rs = null;
 		
 		try (Connection conn = DriverManager.getConnection(url);
 				Statement stmt = conn.createStatement();
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			
 			pstmt.setString(1,  userId);
-			ResultSet rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				returnValue = Integer.parseInt(rs.getString("COUNT(user_id)"));
 			}
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
+		} finally {
+			try {
+				if (rs != null) rs.close();
+			} catch (SQLException e) {
+				gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
+			}
 		}
 
 		return returnValue;
