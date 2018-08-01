@@ -72,14 +72,12 @@ public class SocketClient implements Runnable {
 
             	if ((message = reader.readLine()) == null) break;
             	//TODO Check a null state
-				if (message.equals("null")
-						|| message.equals("exit")
-						|| message.equals("quit")) break;
+				if (message.equals("null")) break;
 
 				receiveMessage(message);
             }
 
-            stopSocket();
+            if (socket != null) stopSocket();
 
         } catch (UnknownHostException e) {
 
@@ -218,10 +216,13 @@ public class SocketClient implements Runnable {
 		
 		boolean returnValue = false;
 		isLoop = false;
+		quitFromCli = false;
 
 		try {
 			Thread.sleep(1000);
+			queue.clearQueue();
 			if (socket != null) socket.close();
+			socket = null;
 		} catch (IOException e) {
 			gameLogger.warning("IOException : " + e.getMessage());
 		} catch (InterruptedException e) {
