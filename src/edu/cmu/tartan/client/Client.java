@@ -88,9 +88,11 @@ public class Client {
 
 	private boolean continueGame() {
 		LocalGame localGame = new LocalGame(GameInterface.USER_ID_LOCAL_USER);
-		if(localGame.loadAndStart(GameInterface.USER_ID_LOCAL_USER)) {
-
+		if (!localGame.loadAndStart(GameInterface.USER_ID_LOCAL_USER)) {
+			clientInterface.printLoadFailMessage();
+			return false;
 		}
+
 		return true;
 	}
 
@@ -103,7 +105,7 @@ public class Client {
 		return true;
 	}
 
-	private boolean connectServer(int timeout, boolean isDesigner) {
+	private boolean connectServer(boolean isDesigner) {
 		IQueueHandler messageQueue = new MessageQueue();
 		ResponseMessage responseMessage = new ResponseMessage("");
 
@@ -196,39 +198,41 @@ public class Client {
 			if (command.equals("quit")) {
 				clientInterface.printByeMessage();
 				running = false;
-			}
-			else if (isDesigner) {
-				File file = new File(command);
-
-				if (file.exists()) {
-					clientInterface.printValidateMessageForMapUpload();
-
-					if (gameManager.uploadMap(command))
-						clientInterface.printValidateSucceessMessageForMapUpload();
-					else
-						clientInterface.printValidateFailMessageForMapUpload();
+			} else if (isDesigner) {
+				uploadMap(command);
+			} else if (command.equals("start")) {
+				if (!gameManager.startGame(userId)) {
+					clientInterface.printCannotStartMessage();
 				}
-				else {
-					clientInterface.printNoMap();
-				}
-			}
-			else {
-				if (command.equals("start")) {
-					if (!gameManager.startGame(userId)) {
-						clientInterface.printCannotStartMessage();
-					}
-				}
-				else {
-					gameManager.updateGameState(userId, command);
-				}
+			} else {
+				gameManager.updateGameState(userId, command);
 			}
 		} while (running);
 
 		return true;
 	}
 
+	private boolean uploadMap(String fileName) {
+		File file = new File(fileName);
+
+		if (file.exists()) {
+			clientInterface.printValidateMessageForMapUpload();
+
+			if (gameManager.uploadMap(fileName)) {
+				clientInterface.printValidateSucceessMessageForMapUpload();
+				return true;
+			} else {
+				clientInterface.printValidateFailMessageForMapUpload();
+			}
+		} else {
+			clientInterface.printNoMap();
+		}
+
+		return false;
+	}
+
 	private boolean runNetworkMode(boolean isDesigner) {
-		connectServer(1000, isDesigner);
+		connectServer(isDesigner);
 
 		if (gameManager.waitForConnection()) {
 			boolean runNetwork = true;

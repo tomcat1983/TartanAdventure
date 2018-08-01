@@ -201,7 +201,9 @@ class TestClient {
 		assertEquals("", commander.getResultNextLine());
 		assertEquals("Please select the game play mode.", commander.getResultNextLine());
 		// > continue
-		assertEquals("> [Tartan Adventure]", commander.getResultNextLine());
+		assertEquals("> There is no saved game.", commander.getResultNextLine());
+		assertEquals("", commander.getResultNextLine());
+		assertEquals("[Tartan Adventure]", commander.getResultNextLine());
 		assertEquals("", commander.getResultNextLine());
 		assertEquals("Room Escape", commander.getResultNextLine());
 		assertEquals("", commander.getResultNextLine());
@@ -242,6 +244,7 @@ class TestClient {
 		// > 2
 		assertEquals("> I’m sorry. The game server is busy.", commander.getResultNextLine());
 		assertEquals("Please retry to connect later.", commander.getResultNextLine());
+		assertEquals("", commander.getResultNextLine());
 		assertEquals("[Tartan Adventure]", commander.getResultNextLine());
 		assertEquals("", commander.getResultNextLine());
 		assertEquals("Room Escape", commander.getResultNextLine());
