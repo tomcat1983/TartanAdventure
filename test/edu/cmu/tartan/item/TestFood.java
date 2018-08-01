@@ -55,6 +55,12 @@ class TestFood {
 	}
 	
 	@Test
+	void testFoodNotEqualFakeGold() {
+		ItemGold goldPretendToFood = new ItemGold(StringForItems.FOOD, StringForItems.FOOD, new String[]{StringForItems.FOOD, StringForItems.FOOD}, USER_ID);
+		assertFalse(food.equals(goldPretendToFood));
+	}
+	
+	@Test
 	void testFoodEqualWithoutHiddenItem() {
 		ItemFood food2 = new ItemFood(StringForItems.FOOD, StringForItems.FOOD, new String[]{StringForItems.FOOD}, USER_ID);
 		assertTrue(food2.equals(food));
