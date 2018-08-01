@@ -85,6 +85,10 @@ public class ItemKeycardReader extends Item implements Hostable {
     public void setInstallMessage(String s) {
         this.installMessage = s;
     }
+    
+    public String getInstallMessage() {
+        return installMessage;
+    }
 
     @Override
 	public int hashCode() {
@@ -107,12 +111,13 @@ public class ItemKeycardReader extends Item implements Hostable {
 		}
 		ItemKeycardReader other = (ItemKeycardReader) obj;
 		if (installMessage == null) {
-			if (other.installMessage != null) {
+			if (other.getInstallMessage() != null) {
 				return false;
 			}
-		} else if (!installMessage.equals(other.installMessage)) {
+		} else if (!installMessage.equals(other.getInstallMessage())) {
 			return false;
 		}
+
 		return true;
 	}
 }
