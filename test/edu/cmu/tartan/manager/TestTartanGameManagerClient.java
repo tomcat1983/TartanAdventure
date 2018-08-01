@@ -14,8 +14,8 @@ public class TestTartanGameManagerClient {
 	
 	@BeforeEach
 	public void beforeTest () {
-		gameMessage = new ResponseMessage("Start");
-		clientGameManager = new TartanGameManagerClient(socket, gameMessage, queue);
+		gameMessage = new ResponseMessage();
+		clientGameManager = new TartanGameManagerClient(false);
 		Thread th = new Thread(clientGameManager);
 		th.start();
 	}

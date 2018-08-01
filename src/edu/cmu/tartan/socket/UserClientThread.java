@@ -79,7 +79,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 				queue.produce(socketMessage);
 			}
 
-			stopSocket();
+			if (clientSocket != null ) stopSocket();
 
 		} catch (IOException e) {
 			gameLogger.warning("IOException : " + e.getMessage());
@@ -94,20 +94,22 @@ public class UserClientThread implements Runnable, ISocketMessage {
 		return threadName;
 	}
 	
-	public boolean stopSocket() {
-		boolean returnValue = false;
+	public void stopSocket() {
+		
 		isLoop = false;
 		
 		try {
-			clientSocket.close();
-			returnValue = true;
+			Thread.sleep(2000);
+			if (clientSocket != null) clientSocket.close();
+			clientSocket = null;
 		} catch (IOException e) {
 			gameLogger.warning("IOException : " + e.getMessage());
+		} catch (InterruptedException e) {
+			gameLogger.warning("InterruptedException : " + e.getMessage());
+			Thread.currentThread().interrupt();
 		}
 		
 		gameLogger.info("Closing user connection");
-		
-		return returnValue;
 	}
 	
 	

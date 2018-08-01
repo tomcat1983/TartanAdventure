@@ -160,10 +160,8 @@ public class SocketClient implements Runnable {
 		return true;
 	}
 
-	public boolean sendByQueue(String message) {
-		boolean returnValue = false;
-		returnValue = queue.produce(new SocketMessage(Thread.currentThread().getName(), message));
-		return returnValue;
+	public void sendByQueue(String message) {
+		queue.produce(new SocketMessage(Thread.currentThread().getName(), message));
 	}
 
 	public boolean sendByResponseMessage(XmlResultString result, String message) {
@@ -220,7 +218,6 @@ public class SocketClient implements Runnable {
 
 		try {
 			Thread.sleep(1000);
-			queue.clearQueue();
 			if (socket != null) socket.close();
 			socket = null;
 		} catch (IOException e) {

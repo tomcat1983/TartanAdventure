@@ -1,6 +1,9 @@
 package edu.cmu.tartan.manager;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -56,7 +59,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			gameLogger.warning("ParserConfigurationException : " + e.getMessage());
 		}
 		
-		tartanGames = new HashMap<String, TartanGameThread>();
+		tartanGames = new HashMap<>();
 	}
 
 	@Override
@@ -156,7 +159,6 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		for(String key : tartanGames.keySet()) {
 			if(!userId.equals(key)) {
-//				loseTheGame(key, key + " lose the game");
 				gameInterface.putCommand(key, "terminate");
 			}
 		}
@@ -232,17 +234,17 @@ public class TartanGameManager implements Runnable, IUserCommand{
 	public void processMessage(String threadName, String message) {
 		
 		String messageType = null;
-		gameLogger.info("Received message : " + message);
+		gameLogger.log(Level.INFO, "Received message : {0}", message);
 		try {
 			xmlParser = new XmlParser();
 		} catch (ParserConfigurationException e) {
-			gameLogger.warning("ParserConfigurationException  : " + e.getMessage());
+			gameLogger.log(Level.WARNING, "ParserConfigurationException  : {0}", e.getMessage());
 		}
 		xmlParser.parseXmlFromString(message);
 		messageType = xmlParser.getMessageType();
 		XmlResponse xr = xmlParser.getXmlResponse();
 		
-		gameLogger.info("Received message type : " + messageType);
+		gameLogger.log(Level.INFO, "Received message type : {0}", messageType);
 		
 		switch(messageType) {
 			case("REQ_LOGIN"):
@@ -327,18 +329,6 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		return returnValue;
 	}
 
-	@Deprecated
-	@Override
-	public boolean validateUserId(String userId) {
-		return false;
-	}
-
-	@Deprecated
-	@Override
-	public boolean validateUserPw(String userPw) {
-		return false;
-	}
-
 	@Override
 	public boolean startGame(String userId) {
 		
@@ -346,7 +336,6 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		String xmlMessage = null;
 		
 		if (loginUserCounter < 1) {
-			// TODO Send the result to client
 			xw = new XmlWriterServer();
 			
 			xmlMessage = xw.makeXmlForGameStart(XmlResultString.NG, XmlNgReason.NO_PLAYERS);
@@ -363,11 +352,17 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		
 		returnValue = socket.sendToClient(userId, xmlMessage);
 		
-		// TODO Make a thread
 		for (String key : tartanGames.keySet()) {
 			
 			Thread thread = new Thread(tartanGames.get(key));
 			thread.start();
+		}
+		
+		for (Map.Entry<String, TartanGameThread> entry : tartanGames.entrySet()) {
+			TartanGameThread tartanGame = entry.getValue();
+			Thread thread = new Thread(tartanGame);
+			thread.start();
+			
 		}
 		
 		return returnValue;
@@ -381,18 +376,21 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		if (tartanGames.containsKey(userId)) {
 			gameInterface.putCommand(userId, "terminate");
 			tartanGames.remove(userId);
+			loginUserCounter--;
 		}
 		
-		loginUserCounter--;
-		
-		returnValue = sendToOthers(userId, userId + " exits the game");
-		
-		if (returnValue) {
-//			socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
+		if (userId != null && !userId.isEmpty()) {
+			sendToOthers(userId, userId + " exits the game");
+		} else {
+			XmlWriterServer xw = new XmlWriterServer();
+			String xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE", "");
+			returnValue = socket.sendToClientByThreadName(threadName, xmlMessage);
 		}
+		
+		socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
 		
 		if (loginUserCounter < 1) {
-//			socket.updateSocketState(userId, CommandResult.END_GAME_ALL_USER, threadName);
+			socket.updateSocketState(userId, CommandResult.END_GAME_ALL_USER, threadName);
 		}
 		
 		return returnValue;

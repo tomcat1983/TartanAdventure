@@ -14,7 +14,7 @@ public class MessageQueue implements IQueueHandler{
 	private BlockingQueue<SocketMessage> queue;
 	
 	public MessageQueue() {
-		queue = new LinkedBlockingQueue<SocketMessage>(QUEUE_SIZE); 
+		queue = new LinkedBlockingQueue<>(QUEUE_SIZE); 
 	}
 	
 	public BlockingQueue<SocketMessage> getQueue() {
@@ -22,16 +22,13 @@ public class MessageQueue implements IQueueHandler{
 	}
 	
 	@Override
-	public boolean produce (SocketMessage message) {
+	public void produce (SocketMessage message) {
 		try {
 			queue.put(message);
-//			return queue.contains(message);
-			return true;
 		} catch (InterruptedException e) {
 			gameLogger.severe("InterruptException : " + e.getMessage());
 			Thread.currentThread().interrupt();
 		}
-		return false;
 	}
 	
 	@Override
