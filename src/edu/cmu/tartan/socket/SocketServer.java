@@ -28,7 +28,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	private boolean isLoop = true;
 	private boolean isPlaying = false;
 
-	private List<UserClientThread> clientThreadList = new ArrayList<UserClientThread>();
+	private List<UserClientThread> clientThreadList = new ArrayList<>();
 	private HashMap<String, UserClientThread> clientThreadMap = new HashMap<>();
 
 	private ServerSocket serverSocket;
