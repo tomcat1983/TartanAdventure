@@ -59,7 +59,6 @@ public class TestMain {
 		assertEquals("", commander.getResultNextLine());
 		// prompt
 		assertEquals("> ", commander.getResultNextLine());
-
 	}
 
 	@Test
@@ -85,7 +84,6 @@ public class TestMain {
 
 		// prompt + message
 		assertEquals("> Invalid command : invalidCmd", commander.getResultNextLine());
-
 	}
 
 	@Test
@@ -117,7 +115,6 @@ public class TestMain {
 		assertEquals("", commander.getResultNextLine());
 		assertEquals("Choose the mode", commander.getResultNextLine());
 		assertEquals("> ", commander.getResultNextLine());
-
 	}
 
 	@Test
@@ -155,7 +152,8 @@ public class TestMain {
 
 		assertEquals("", commander.getResultNextLine());
 		assertEquals("Choose the mode", commander.getResultNextLine());
-		assertEquals("> ", commander.getResultNextLine());}
+		assertEquals("> ", commander.getResultNextLine());
+	}
 
 	@Test
 	public void testNoArgs() {
