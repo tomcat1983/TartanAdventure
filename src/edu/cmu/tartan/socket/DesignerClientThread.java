@@ -69,9 +69,7 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 				if((message = reader.readLine()) == null) break;
 				
 				//TODO Check a null state
-				if (message.equals("null") 
-						|| message.equals("quit")
-						|| message.equals("exit")) break;
+				if (message.equals("null")) break;
 				
 				if (isLogin) {
 					getUserIdFromXml(message);
