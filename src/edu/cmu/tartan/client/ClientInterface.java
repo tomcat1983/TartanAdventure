@@ -112,7 +112,7 @@ public class ClientInterface {
 	}
 
 	public void printServerBusyMessage() {
-		gameInterface.println("I’m sorry. The game server is busy.");
+		gameInterface.println("I'm sorry. The game server is busy.");
 		gameInterface.println("Please retry to connect later.");
 		gameInterface.println("");
 	}
