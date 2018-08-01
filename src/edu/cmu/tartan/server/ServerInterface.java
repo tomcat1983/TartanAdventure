@@ -14,6 +14,7 @@ public class ServerInterface {
 	}
 
 	public ServerInterface() {
+		// Do nothing because there is no member variable.
 	}
 
 	public Command getCommand() {

@@ -1,6 +1,7 @@
 package edu.cmu.tartan;
 
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.client.Client;
@@ -54,7 +55,7 @@ public class Main {
 			}
 		} else {
 			gameInterface.println("Fail to read setting file. Can't run!!");
-			gameLogger.severe("Properties file doesn't exist. : " + fileUri);
+			gameLogger.log(Level.SEVERE, "Properties file doesn't exist. : {0} ", fileUri);
 		}
 	}
 }
