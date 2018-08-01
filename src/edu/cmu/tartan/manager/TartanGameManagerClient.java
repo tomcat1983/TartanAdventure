@@ -136,7 +136,6 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		
 		boolean returnValue = false;
 		
-		gameLogger.info("validUserId : " + userId );
 		ReturnType retValue = accountManager.validateId(userId);
 		if (ReturnType.SUCCESS == retValue) {
 			returnValue = true;
@@ -221,6 +220,8 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	@Override
 	public boolean uploadMap(String mapFile) {
 
+		boolean returnValue = false;
+		
 		String message = null;
 
 		XmlWriterClient xw = new XmlWriterClient();
@@ -231,9 +232,9 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		waitResponseMessage();
 
 		if (SUCCESS.equals((responseMessage).getMessage())) {
-			return true;
+			returnValue = true;
 		}
-		return false;
+		return returnValue;
 	}
 	
 	/**

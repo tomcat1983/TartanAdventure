@@ -12,7 +12,6 @@ public class TartanGameThread implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("Start Game : " + Thread.currentThread().getName());
 		serverGame.loadNetworkGame();
 		serverGame.start();
 	}

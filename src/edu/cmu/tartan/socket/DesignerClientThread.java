@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.manager.IQueueHandler;
@@ -22,7 +23,6 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 	private Socket clientSocket;
 	private IQueueHandler queue;
 	
-	private boolean isLogin = false;
 	private boolean isLoop = true;
 	private String designerId = "";
 	private String threadName;
@@ -48,7 +48,7 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 			writer.println(message);
 			return true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 		return false;
 	}
@@ -66,14 +66,8 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 
 			while (isLoop) {
 				
-				if((message = reader.readLine()) == null) break;
-				
-				//TODO Check a null state
-				if (message.equals("null")) break;
-				
-				if (isLogin) {
-					getUserIdFromXml(message);
-				}
+				if(((message = reader.readLine()) == null) 
+						|| message.equals("null")) break;
 				
 				socketMessage = new SocketMessage(threadName, message);
 
@@ -83,22 +77,12 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 			stopSocket();
 
 		} catch (IOException e) {
-			gameLogger.warning("IOException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 		}
-	}
-	
-	private String getUserIdFromXml(String message) {
-		// TODO : Process message
-		String id = null;
-		return id;
 	}
 	
 	public String getUserId() {
 		return designerId;
-	}
-	
-	public void setIsLogin(boolean isLogin) {
-		this.isLogin = isLogin;
 	}
 	
 	public String getThreadName() {
@@ -113,10 +97,10 @@ public class DesignerClientThread implements Runnable, ISocketMessage {
 			clientSocket.close();
 			returnValue = true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 		
-		gameLogger.info("Closing designer connection");
+		gameLogger.log(Level.INFO, "Closing designer connection");
 		
 		return returnValue;
 	}
