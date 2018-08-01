@@ -2,7 +2,6 @@ package edu.cmu.tartan.manager;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -351,12 +350,6 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		xmlMessage = xw.makeXmlForGameStart(XmlResultString.OK, XmlNgReason.OK);
 		
 		returnValue = socket.sendToClient(userId, xmlMessage);
-		
-		for (String key : tartanGames.keySet()) {
-			
-			Thread thread = new Thread(tartanGames.get(key));
-			thread.start();
-		}
 		
 		for (Map.Entry<String, TartanGameThread> entry : tartanGames.entrySet()) {
 			TartanGameThread tartanGame = entry.getValue();

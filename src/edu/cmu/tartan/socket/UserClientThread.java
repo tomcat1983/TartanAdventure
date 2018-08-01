@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.manager.IQueueHandler;
@@ -49,7 +50,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 			}
 			return true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 		return false;
 	}
@@ -67,22 +68,20 @@ public class UserClientThread implements Runnable, ISocketMessage {
 
 			while (isLoop) {
 				
-				if((message = reader.readLine()) == null) break;
+				if((message = reader.readLine()) == null
+						|| message.equals("null")) break;
 				
-				//TODO Check a null state
-				if (message.equals("null")) break;
-				
-				gameLogger.info("[Server] Received message : " + message);
+				gameLogger.log(Level.INFO, "[Server] Received message : {0}", message);
 				
 				socketMessage = new SocketMessage(threadName, message);
 
 				queue.produce(socketMessage);
 			}
 
-			if (clientSocket != null ) stopSocket();
+			stopSocket();
 
 		} catch (IOException e) {
-			gameLogger.warning("IOException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 	}
 	
@@ -103,13 +102,13 @@ public class UserClientThread implements Runnable, ISocketMessage {
 			if (clientSocket != null) clientSocket.close();
 			clientSocket = null;
 		} catch (IOException e) {
-			gameLogger.warning("IOException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 		} catch (InterruptedException e) {
-			gameLogger.warning("InterruptedException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 			Thread.currentThread().interrupt();
 		}
 		
-		gameLogger.info("Closing user connection");
+		gameLogger.log(Level.INFO, "Closing user connection");
 	}
 	
 	

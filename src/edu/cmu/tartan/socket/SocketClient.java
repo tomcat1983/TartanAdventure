@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,8 +29,6 @@ public class SocketClient implements Runnable {
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
 
-	private String serverIp = "127.0.0.1";
-	private int serverPort = 10015;
 	private boolean isDesigner = false;
 
 	private Socket socket = null;
@@ -51,8 +50,9 @@ public class SocketClient implements Runnable {
 		connectToServer();
 	}
 
-	public boolean connectToServer() {
-		serverIp = Config.getServerIp();
+	public void connectToServer() {
+		String serverIp = Config.getServerIp();
+		int serverPort;
 		if (isDesigner) {
 			serverPort = Config.getDesignerPort();
 		} else {
@@ -61,7 +61,7 @@ public class SocketClient implements Runnable {
 
 		try {
 			socket = new Socket(serverIp, serverPort);
-			gameLogger.info("Connected to server");
+			gameLogger.log(Level.INFO, "Connected to server");
 
 			InputStream input = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -70,9 +70,8 @@ public class SocketClient implements Runnable {
 
             while(isLoop) {
 
-            	if ((message = reader.readLine()) == null) break;
-            	//TODO Check a null state
-				if (message.equals("null")) break;
+            	if ((message = reader.readLine()) == null
+            			|| message.equals("null")) break;
 
 				receiveMessage(message);
             }
@@ -80,17 +79,10 @@ public class SocketClient implements Runnable {
             if (socket != null) stopSocket();
 
         } catch (UnknownHostException e) {
-
-        	gameLogger.warning("Server not found : " + e.getMessage());
-        	return false;
-
+        	gameLogger.log(Level.WARNING, "Server not found : {0}", e.getMessage());
         } catch (IOException e) {
-
-        	gameLogger.warning("IOException : " + e.getMessage());
-        	return false;
+        	gameLogger.log(Level.WARNING, e.getMessage());
         }
-
-		return true;
 	}
 
 	public boolean waitToConnection(int timeout) {
@@ -111,7 +103,9 @@ public class SocketClient implements Runnable {
 
 	public boolean receiveMessage(String message) {
 		
-		gameLogger.info("Received message : " + message);
+		boolean returnValue = false;
+		
+		gameLogger.log(Level.INFO, "Received message : {0}", message);
 		XmlParser xmlParser;
 		String messageType = null;
 		XmlResponseClient xr = null;
@@ -121,15 +115,16 @@ public class SocketClient implements Runnable {
 			xmlParser.parseXmlFromString(message);
 			messageType = xmlParser.getMessageType();
 			xr = (XmlResponseClient) xmlParser.getXmlResponse();
+			
+			returnValue = true;
 
 		} catch (ParserConfigurationException e) {
-			gameLogger.warning("ParserConfigurationException : " + e.getMessage());
-			return false;
+			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 
-		gameLogger.info("Received message type : " + messageType);
+		gameLogger.log(Level.INFO, "Received message type : {0}", messageType);
 
-    switch(messageType) {
+		switch(messageType) {
 			case("REQ_LOGIN"):
 				sendByResponseMessage(xr.getResultStr(), null);
 				break;
@@ -157,43 +152,37 @@ public class SocketClient implements Runnable {
 			default:
 				break;
 		}
-		return true;
+		return returnValue;
 	}
 
 	public void sendByQueue(String message) {
 		queue.produce(new SocketMessage(Thread.currentThread().getName(), message));
 	}
 
-	public boolean sendByResponseMessage(XmlResultString result, String message) {
+	public void sendByResponseMessage(XmlResultString result, String message) {
 
-		String returnValue = "FAIL";
+		String responseMsg = "FAIL";
 
 		if(XmlResultString.OK == result) {
-			returnValue = "SUCCESS";
+			responseMsg = "SUCCESS";
 		}
 
-		try {
-			synchronized (responseMessage) {
-				if (message == null ) {
-					responseMessage.setMessage(returnValue);
-				} else {
-					responseMessage.setMessage(message);
-				}
-				responseMessage.notify();
+		synchronized (responseMessage) {
+			if (message == null ) {
+				responseMessage.setMessage(responseMsg);
+			} else {
+				responseMessage.setMessage(message);
 			}
-		} catch (IllegalMonitorStateException e) {
-			gameLogger.warning("IllegalMonitorStateException : " + e.getMessage());
-			return false;
+			responseMessage.notify();
 		}
-		return true;
 	}
 
 	public boolean sendMessage(String message) {
 		
-		gameLogger.info("Send to Server : " + message);
+		gameLogger.log(Level.INFO, "Send to Server : {0}", message);
 		
 		if (socket == null || !socket.isConnected()) {
-			gameLogger.info("Socket is not connected to the server yet.");
+			gameLogger.log(Level.INFO, "Socket is not connected to the server yet.");
 			return false;
 		}
 		try {
@@ -203,14 +192,14 @@ public class SocketClient implements Runnable {
 			writer.println(message);
 			return true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 		return false;
 	}
 
 	public boolean stopSocket() {
 
-		gameLogger.info("Close a client socket");
+		gameLogger.log(Level.INFO, "Close a client socket");
 		
 		boolean returnValue = false;
 		isLoop = false;
