@@ -17,6 +17,11 @@ public class Main {
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
 
+	/**
+	 * Game interface for game message
+	 */
+	protected static final GameInterface gameInterface = GameInterface.getInterface();
+
 	public static void main(String[] args) {
 		String fileUri = "config.properties";
 
@@ -46,6 +51,7 @@ public class Main {
 				break;
 			}
 		} else {
+			gameInterface.println("Fail to read setting file. Can't run!!");
 			gameLogger.severe("Properties file doesn't exist. : " + fileUri);
 		}
 	}
