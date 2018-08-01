@@ -80,7 +80,6 @@ public abstract class Game {
      * Configure the game.
      */
     public boolean configureGame(GameMode mode) {
-    	boolean ret = true;
     	XmlParser parseXml;
     	
 		try {
@@ -95,20 +94,20 @@ public abstract class Game {
         context.setGameName(customGame.getName());
         
         try {
-        	ret = customGame.configure(context);
-        	if(ret) {
+        	if(customGame.configure(context)) {
                 // Once the game has been configured, it is time to play!
                 showIntro();
                 // Configure the game, add the goals and exe
                 context.setPlayerGameGoal();
-                playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());        		
+                playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());
+                return true;
         	}
 		} catch (InvalidGameException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
 	       	return false;
 		}
-        return ret;
+        return false;
     }
 
     private boolean processGameCommand(@NonNull String input) throws TerminateGameException {
