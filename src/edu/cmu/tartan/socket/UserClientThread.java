@@ -43,8 +43,10 @@ public class UserClientThread implements Runnable, ISocketMessage {
 		try {
 			OutputStream output = clientSocket.getOutputStream();
 			PrintWriter writer = new PrintWriter(output, true);
-
-			writer.println(message);
+			
+			if(clientSocket.isConnected()) {
+				writer.println(message);
+			}
 			return true;
 		} catch (IOException e) {
 			gameLogger.warning("IOException : " + e.getMessage());
@@ -109,5 +111,6 @@ public class UserClientThread implements Runnable, ISocketMessage {
 		
 		return returnValue;
 	}
+	
 	
 }

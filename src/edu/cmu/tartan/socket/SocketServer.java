@@ -140,6 +140,18 @@ public class SocketServer implements Runnable, ISocketHandler {
 
 		return returnValue;
 	}
+	
+	@Override
+	public boolean sendToOthers(String userId, String message) {
+		boolean returnValue = false;
+		
+		for(String key : clientThreadMap.keySet()) {
+			if(!userId.equals(key)) {
+				returnValue = clientThreadMap.get(key).sendMessage(message);
+			}
+		}
+		return returnValue;
+	}
 
 	@Override
 	public boolean addClient(String userId, String threadName) {
@@ -154,6 +166,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	@Override
 	public boolean removeClient(String userId) {
 		if (clientThreadMap.containsKey(userId)) {
+			clientThreadMap.get(userId).stopSocket();
 			clientThreadList.remove(clientThreadMap.get(userId));
 			clientThreadMap.remove(userId);
 
@@ -164,6 +177,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 	public boolean removeClientFromList(String threadName) {
 		for(UserClientThread client : clientThreadList) {
 			if (threadName.equals(client.getThreadName())) {
+				client.stopSocket();
 				return clientThreadList.remove(client);
 			}
 		}

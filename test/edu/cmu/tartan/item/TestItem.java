@@ -10,43 +10,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import edu.cmu.tartan.Player;
+
 
 class TestItem {
 
-	static final String USER_ID = "default";
-	ItemLock lock;
-	ItemKey key;
-	ItemFood food; 
-	
-	@BeforeEach
-	void setup() {
-		lock = new ItemLock(StringForItems.LOCK, StringForItems.GOLD_LOCK, new String[]{StringForItems.LOCK}, USER_ID);
-		key = new ItemKey(StringForItems.KEY, StringForItems.GOLD_KEY, new String[]{StringForItems.KEY}, USER_ID);
-		food = new ItemFood(StringForItems.FOOD, StringForItems.FOOD, new String[]{StringForItems.FOOD}, USER_ID);
-	}
-	
-	@Test
-	void testInstallKeyToLockReturnTrue() {
-		assertTrue(lock.install(key));
-	}
-	
-	@Test
-	void testInstallFoodToLockReturnFalse() {
-		assertFalse(lock.install(food));
-	}
-	
-	@Test
-	void testInstalledItemIsKey() {
-		lock.install(key);  
-		assertEquals(key, lock.installedItem());
-	}
-	
-	
-	
+
 	@Test
 	void testCanSerializeItem() {
 		ItemShovel itemShovel = (ItemShovel) Item.getInstance("shovel", Player.DEFAULT_USER_NAME);
