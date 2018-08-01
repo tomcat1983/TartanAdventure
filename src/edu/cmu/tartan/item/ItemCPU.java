@@ -5,6 +5,8 @@ import edu.cmu.tartan.properties.Installable;
 
 public class ItemCPU extends Item implements Holdable, Installable  {
 	
+	private static final long serialVersionUID = 1L;
+
 	/**
      * Constructor for a computer
      * @param s description

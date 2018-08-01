@@ -15,6 +15,7 @@ import edu.cmu.tartan.properties.Hostable;
  */
 public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable {
 
+	private static final long serialVersionUID = 1L;
 	private String destroyMessage;
     private Item installedItem;
     private boolean disappears;

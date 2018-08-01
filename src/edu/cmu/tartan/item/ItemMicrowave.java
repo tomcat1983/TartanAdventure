@@ -14,6 +14,8 @@ import edu.cmu.tartan.properties.Startable;
  * 1.0 March 2018 - initial version
  */
 public class ItemMicrowave extends Item implements Hostable, Startable {
+	private static final long serialVersionUID = 1L;
+
 	public static final int MIC_OP_TIME = 100;
 	
 	private Item installedItem;

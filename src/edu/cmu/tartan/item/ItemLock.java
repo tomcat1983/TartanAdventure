@@ -14,6 +14,7 @@ import edu.cmu.tartan.room.RoomLockable;
  * 1.0 March 2018 - initial version
  */
 public class ItemLock extends Item implements Hostable, Openable {
+	private static final long serialVersionUID = 1L;
 	private Item installedItem;
 
     /**

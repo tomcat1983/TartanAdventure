@@ -18,16 +18,11 @@ import edu.cmu.tartan.manager.IGameControlMessage;
 import edu.cmu.tartan.xml.GameMode;
 import edu.cmu.tartan.xml.XmlParser;
 
-public class LocalGame extends Game implements IGameControlMessage {
+public class LocalGame extends Game {
 	public static final String SAVE_FILE_NAME = "Tartan_save_file.dat";
 	
 	public LocalGame(@NonNull String userId) {
 		super(userId);
-	}
-	
-	@Override
-	public boolean controlGame(String message) {
-		return false;
 	}
 	
 	private boolean readGameData() {

@@ -10,7 +10,9 @@ package edu.cmu.tartan.item;
  */
 public class ItemUnknown extends Item {
 
-    public ItemUnknown(String s, String sd, String[] a, String userId) {
+	private static final long serialVersionUID = 1L;
+
+	public ItemUnknown(String s, String sd, String[] a, String userId) {
 
         super(s, sd, a, userId);
         setValue(0);

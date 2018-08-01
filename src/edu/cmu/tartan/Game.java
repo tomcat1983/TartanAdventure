@@ -63,19 +63,6 @@ public abstract class Game {
         this.interpreter = new PlayerInterpreter();
     }
 
-    protected GameConfiguration gameFromXML(GameMode mode) {
-		XmlParser parseXml;
-		try {
-			parseXml = new XmlParser();
-			return parseXml.loadGameMapXml(mode, context.getUserId());
-		} catch (ParserConfigurationException e) {
-			gameLogger.severe("Game loading failure. Exception: \n" + e);
-	       	gameLogger.severe(e.getMessage());
-	       	return null;
-		}
-
-    }
-
     /**
      * Configure the game.
      */

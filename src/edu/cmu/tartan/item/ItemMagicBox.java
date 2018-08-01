@@ -14,7 +14,9 @@ import edu.cmu.tartan.properties.Hostable;
  */
 public class ItemMagicBox extends Item implements Hostable {
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Constructor
      * @param s description
      * @param sd long description

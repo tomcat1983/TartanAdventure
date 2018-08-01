@@ -14,7 +14,9 @@ import edu.cmu.tartan.properties.Openable;
  */
 public class ItemSafe extends Item implements Hostable, Openable {
 
-    // Items installed in this safe
+	private static final long serialVersionUID = 1L;
+
+	// Items installed in this safe
     private Item installedItem = null;
 
     // The safe's pin, which controls entry
