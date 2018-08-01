@@ -110,13 +110,13 @@ public class GameInterface {
 			tartanManager.sendToAll(userId, message);
 			break;
 		case OTHER:
-			tartanManager.sendToOters(userId, message);
+			tartanManager.sendToOthers(userId, message);
 			break;
 		case WIN:
-			tartanManager.achievedGoal(userId);
+			tartanManager.winTheGame(userId, message);
 			break;
 		case LOSE:
-			tartanManager.sendToClient(userId, message);
+			tartanManager.loseTheGame(userId, message);
 			break;
 		default:
 			break;

@@ -201,5 +201,12 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 		
 		return returnValue;
 	}
+
+	@Deprecated
+	@Override
+	public boolean sendToOthers(String userId, String message) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }

@@ -149,7 +149,6 @@ public abstract class Game {
             String input = null;
             while(true) {
             	gameInterface.println(context.getUserId(), MessageType.PRIVATE, "> ");
-
                 input = gameInterface.getCommand(context.getUserId());
                 if(processGameCommand(input)) {
                 	break;

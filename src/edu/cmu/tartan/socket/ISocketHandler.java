@@ -11,6 +11,7 @@ public interface ISocketHandler {
 	public boolean sendToClientByThreadName(String threadName, String message);
 	public boolean sendToClient(String userId, String message);
 	public boolean sendToAll(String message);
+	public boolean sendToOthers(String userId, String message);
 	
 	public void updateSocketState(String userId, CommandResult result, String threadName);
 	

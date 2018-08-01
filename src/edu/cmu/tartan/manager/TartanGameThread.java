@@ -14,7 +14,5 @@ public class TartanGameThread implements Runnable {
 	public void run() {
 		serverGame.loadNetworkGame();
 		serverGame.start();
-
 	}
-
 }
