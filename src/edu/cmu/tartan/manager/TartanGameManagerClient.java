@@ -42,6 +42,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	 * Game logger for game log
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
+	private static final String SUCCESS = "SUCCESS";
 
 	private SocketClient socket;
 	private IQueueHandler messageQueue;
@@ -72,8 +73,6 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		
 		connectionState = ConnectionState.ENDED;
 
-		System.out.println("Stop Game Manager");
-		// TODO Sequence of an end game
 		isLoop = false;
 		socket.stopSocket();
 		messageQueue.produce(new SocketMessage("",""));
@@ -101,7 +100,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 		waitResponseMessage();
 
-		if ("SUCCESS".equals((responseMessage).getMessage())) {
+		if (SUCCESS.equals((responseMessage).getMessage())) {
 			connectionState = ConnectionState.LOGGED_IN;
 			return true;
 		}
@@ -111,6 +110,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	@Override
 	public boolean register(String threadName, String userId, String userPw) {
 
+		boolean returnValue = false;
 		String message = null;
 		
 		String encryptionPw = encryptPassword(userPw);
@@ -125,34 +125,39 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 		waitResponseMessage();
 
-		if ("SUCCESS".equals((responseMessage).getMessage())) {
-			return true;
+		if (SUCCESS.equals((responseMessage).getMessage())) {
+			returnValue = true;
 		}
 
-		return false;
+		return returnValue;
 	}
 
-	@Override
 	public boolean validateUserId(String userId) {
+		
+		boolean returnValue = false;
+		
 		gameLogger.info("validUserId : " + userId );
-		ReturnType returnValue = accountManager.validateId(userId);
-		if (ReturnType.SUCCESS == returnValue) {
-			return true;
+		ReturnType retValue = accountManager.validateId(userId);
+		if (ReturnType.SUCCESS == retValue) {
+			returnValue = true;
 		}
-		return false;
+		return returnValue;
 	}
 
-	@Override
 	public boolean validateUserPw(String userPw) {
-		ReturnType returnValue = accountManager.validatePassword(userPw);
-		if (ReturnType.SUCCESS == returnValue) {
-			return true;
+		boolean returnValue = false;
+		
+		ReturnType retValue = accountManager.validatePassword(userPw);
+		if (ReturnType.SUCCESS == retValue) {
+			returnValue = true;
 		}
-		return false;
+		return returnValue;
 	}
 
 	@Override
 	public boolean startGame(String userId) {
+		
+		boolean returnValue = false;
 		
 		if (connectionState != ConnectionState.LOGGED_IN) return false;
 
@@ -165,12 +170,12 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 		waitResponseMessage();
 
-		if ("SUCCESS".equals((responseMessage).getMessage())) {
+		if (SUCCESS.equals((responseMessage).getMessage())) {
 			connectionState = ConnectionState.STARTED;
-			return true;
+			returnValue = true;
 		}
 
-		return false;
+		return returnValue;
 	}
 
 	@Override
@@ -225,7 +230,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 		waitResponseMessage();
 
-		if ("SUCCESS".equals((responseMessage).getMessage())) {
+		if (SUCCESS.equals((responseMessage).getMessage())) {
 			return true;
 		}
 		return false;
@@ -283,9 +288,9 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		try{
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256"); 
 
-			byte byteData[] = messageDigest.digest(userPw.getBytes(StandardCharsets.UTF_8));
+			byte[] byteData = messageDigest.digest(userPw.getBytes(StandardCharsets.UTF_8));
 			
-			StringBuffer sb = new StringBuffer(); 
+			StringBuilder sb = new StringBuilder();
 			for(int i = 0 ; i < byteData.length ; i++){
 				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
 			}

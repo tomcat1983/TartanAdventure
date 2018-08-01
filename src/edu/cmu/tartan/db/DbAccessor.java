@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.config.Config;
@@ -18,6 +19,8 @@ public class DbAccessor {
 	 * Game logger for game log
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
+	
+	static final String SQL_EXCEPTION = "SQLException";
 
 	private String url;
 	private String dbLocation = "./";
@@ -37,19 +40,20 @@ public class DbAccessor {
 		File file = new File(dbLocation + dbName);
 		
 		if (file.isFile()) {
-			gameLogger.info("Database already exists");
+			gameLogger.log(Level.INFO, "Database already exists");
 			return false;
 		}
 
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
 				DatabaseMetaData meta = conn.getMetaData();
-				gameLogger.info("A new database has been created.");
+				
+				gameLogger.log(Level.INFO, "A new database({0}) has been created.", meta.getDatabaseProductName());
 			}
 			return true;
 
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 		}
 		return false;
 	}
@@ -73,7 +77,7 @@ public class DbAccessor {
 			stmt.execute(sql);
 			return true;
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 		}
 		return false;
 	}
@@ -98,7 +102,7 @@ public class DbAccessor {
 			pstmt.executeUpdate();
 			returnValue = true;
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 		}
 
 		return returnValue;
@@ -112,25 +116,24 @@ public class DbAccessor {
 
 		String value = null;
 		ResultSet rs = null;
-		PreparedStatement pstmt = null;
 
 		try (Connection conn = DriverManager.getConnection(url);
-				Statement stmt = conn.createStatement();) {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, userId);
+				Statement stmt = conn.createStatement();
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			
+			pstmt.setString(1,  userId);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				return value = rs.getString(param);
+				value = rs.getString(param);
 			}
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 		} finally {
 			try {
 				if (rs != null) rs.close();
-				if (pstmt != null) pstmt.close();
 			} catch (SQLException e) {
-				gameLogger.warning("SQLException : " + e.getMessage());
+				gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 			}
 		}
 
@@ -174,7 +177,7 @@ public class DbAccessor {
             returnValue = true;
             
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 		}
 		
 		return returnValue;
@@ -198,12 +201,12 @@ public class DbAccessor {
 				returnValue = Integer.parseInt(rs.getString("COUNT(user_id)"));
 			}
 		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 		} finally {
 			try {
 				if (rs != null) rs.close();
 			} catch (SQLException e) {
-				gameLogger.warning("SQLException : " + e.getMessage());
+				gameLogger.log(Level.WARNING, SQL_EXCEPTION + " : {0}", e.getMessage());
 			}
 		}
 

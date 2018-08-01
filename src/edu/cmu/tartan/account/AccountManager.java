@@ -1,5 +1,6 @@
 package edu.cmu.tartan.account;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.db.DbAccessor;
@@ -50,7 +51,7 @@ public class AccountManager implements IAccountHandler {
 			return true;
 		}
 		
-		gameLogger.info("Does not matched from DB info. User ID : " + userId);
+		gameLogger.log(Level.INFO, "Does not matched from DB info. User ID : {0}", userId);
 		return false;
 	}
 
