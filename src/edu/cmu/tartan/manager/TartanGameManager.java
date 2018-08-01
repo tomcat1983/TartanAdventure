@@ -381,18 +381,21 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		if (tartanGames.containsKey(userId)) {
 			gameInterface.putCommand(userId, "terminate");
 			tartanGames.remove(userId);
+			loginUserCounter--;
 		}
 		
-		loginUserCounter--;
-		
-		returnValue = sendToOthers(userId, userId + " exits the game");
-		
-		if (returnValue) {
-//			socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
+		if (userId != null && !userId.isEmpty()) {
+			sendToOthers(userId, userId + " exits the game");
+		} else {
+			XmlWriterServer xw = new XmlWriterServer();
+			String xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE", "");
+			returnValue = socket.sendToClientByThreadName(threadName, xmlMessage);
 		}
+		
+		socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
 		
 		if (loginUserCounter < 1) {
-//			socket.updateSocketState(userId, CommandResult.END_GAME_ALL_USER, threadName);
+			socket.updateSocketState(userId, CommandResult.END_GAME_ALL_USER, threadName);
 		}
 		
 		return returnValue;

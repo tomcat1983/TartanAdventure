@@ -220,7 +220,6 @@ public class SocketClient implements Runnable {
 
 		try {
 			Thread.sleep(1000);
-			queue.clearQueue();
 			if (socket != null) socket.close();
 			socket = null;
 		} catch (IOException e) {
