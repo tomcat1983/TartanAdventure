@@ -8,15 +8,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.eclipse.jdt.annotation.NonNull;
-
-import edu.cmu.tartan.GameInterface.MessageType;
-import edu.cmu.tartan.games.CustomizingGame;
-import edu.cmu.tartan.manager.IGameControlMessage;
 import edu.cmu.tartan.xml.GameMode;
-import edu.cmu.tartan.xml.XmlParser;
 
 public class LocalGame extends Game {
 	public static final String SAVE_FILE_NAME = "Tartan_save_file.dat";
