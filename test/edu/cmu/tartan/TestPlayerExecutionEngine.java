@@ -15,6 +15,7 @@ import edu.cmu.tartan.item.ItemBrick;
 import edu.cmu.tartan.item.ItemButton;
 import edu.cmu.tartan.item.ItemCPU;
 import edu.cmu.tartan.item.ItemClayPot;
+import edu.cmu.tartan.item.ItemCoffee;
 import edu.cmu.tartan.item.ItemComputer;
 import edu.cmu.tartan.item.ItemDocument;
 import edu.cmu.tartan.item.ItemDynamite;
@@ -388,6 +389,7 @@ class TestPlayerExecutionEngine {
 	@Test
 	void testWhenexecuteActionCallWithDirectObjectActionEat() {
 		ItemFood food = (ItemFood) Item.getInstance("food", Player.DEFAULT_USER_NAME);
+		ItemCoffee coffee = (ItemCoffee) Item.getInstance("coffee", Player.DEFAULT_USER_NAME);
     	Action action = interpreter.interpretString("eat food", actionExecutionUnit);
     	try {
 			assertFalse(playerExecutionEngine.executeAction(action, actionExecutionUnit));
@@ -395,12 +397,19 @@ class TestPlayerExecutionEngine {
 			room1.putItem(food);
 	    	action = interpreter.interpretString("eat food", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
-
+	    	
+	    	room1.putItem(coffee);
+	    	action = interpreter.interpretString("eat coffee", actionExecutionUnit);
+	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	    	
 	    	ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
 	    	RoomExcavatable romm2 = new RoomExcavatable("Shovel","digdig","^~~~^");
 	    	player = new Player(romm2, Player.DEFAULT_USER_NAME);
 			player.grabItem(food);
 			player.grabItem(mbox);
+			assertFalse(mbox.uninstall(food));
+			assertFalse(mbox.install(null));
+			assertTrue(mbox.installedItem()==null);
 			playerExecutionEngine = new PlayerExecutionEngine(player);
 	    	action = interpreter.interpretString("eat food", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));

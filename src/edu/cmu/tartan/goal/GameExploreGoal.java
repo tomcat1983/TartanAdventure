@@ -14,7 +14,8 @@ import java.util.List;
  * 1.0 March 2018 - initial version
  */
 public class GameExploreGoal implements GameGoal {
-    // the list of places required to visit
+    private static final long serialVersionUID = 1L;
+	// the list of places required to visit
     private List<String> itinerary;
     // progress towards the goal
     private int count = 0;

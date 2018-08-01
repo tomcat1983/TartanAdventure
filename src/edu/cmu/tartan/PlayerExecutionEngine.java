@@ -132,10 +132,10 @@ public class PlayerExecutionEngine {
     	if(player.hasItem(item)) {
             if(item instanceof Holdable) {
                 gameInterface.println(player.getUserName(), MessageType.PRIVATE, "Dropped.");
-                player.drop(item);
+                player.dropItem(item);
                 gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You Dropped '" +item.description() + "' costing you "
                         + item.value() + " points.");
-                player.currentRoom().putItem(item);
+                //player.currentRoom().putItem(item);
                 result = true;
             }
             else {

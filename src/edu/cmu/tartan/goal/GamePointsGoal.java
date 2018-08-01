@@ -11,7 +11,9 @@ import edu.cmu.tartan.Player;
  * 1.0 March 2018 - initial version
  */
 public class GamePointsGoal implements GameGoal {
-    // The score needed to reach this goal
+	private static final long serialVersionUID = 1L;
+
+	// The score needed to reach this goal
     private Integer winningScore = 0;
 
     // The player working to achieve this goal
