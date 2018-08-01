@@ -312,20 +312,20 @@ class TestPlayerExecutionEngine {
 	        elevator.putItem(Item.getInstance("3", Player.DEFAULT_USER_NAME));
 	        elevator.putItem(Item.getInstance("4", Player.DEFAULT_USER_NAME));
 	        // configure the floors and buttons needed to reach them
-	        Room floor1 = new Room("floor1", elevatorDescription);
+	        Room floor1 = new Room("floor1", elevatorDescription+"1");
 	        Item b1 = Item.getInstance("1", Player.DEFAULT_USER_NAME);
 	        b1.setRelatedRoom(elevator);
 	        floor1.putItem(b1);
-	        Room floor2 = new Room("floor2", elevatorDescription);
+	        Room floor2 = new Room("floor2", elevatorDescription+"2");
 	        Item b2 = Item.getInstance("2", Player.DEFAULT_USER_NAME);
 	        b2.setRelatedRoom(elevator);
 	        floor2.putItem(b2);
-	        Room floor3 = new Room("floor3", elevatorDescription);
+	        Room floor3 = new Room("floor3", elevatorDescription+"3");
 	        Item b3 = Item.getInstance("3", Player.DEFAULT_USER_NAME);
 	        b3.setRelatedRoom(elevator);
 	        floor3.putItem(b3);
 	        // restricted floors cannot be reached
-	        Room floor4 = new Room("floor4", elevatorDescription);
+	        Room floor4 = new Room("floor4", elevatorDescription+"4");
 	        Item b4 = Item.getInstance("4", Player.DEFAULT_USER_NAME);
 	        b4.setRelatedRoom(elevator);
 	        floor4.putItem(b4);
@@ -360,6 +360,14 @@ class TestPlayerExecutionEngine {
 	    	
 	    	action = interpreter.interpretString("push 4", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	    	
+	    	assertTrue((floor1.compareTo(floor2))==-1);
+	    	assertTrue((floor1.compareTo(floor1))==0);
+	    	assertTrue((floor1.hashCode())==(floor1.hashCode()));
+	    	assertTrue(floor1.hashCode()!=floor2.hashCode());
+	    	assertTrue(floor1.equals(floor1));
+	    	assertFalse(floor1.equals(floor2));
+
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
 		}

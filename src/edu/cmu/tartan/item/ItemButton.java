@@ -12,7 +12,8 @@ import edu.cmu.tartan.properties.Pushable;
  * 1.0 March 2018 - initial version
  */
 public class ItemButton extends Item implements Pushable {
-
+	private static final long serialVersionUID = 1L;
+	
 	protected String pushMessage;
 
     public ItemButton(String s, String sd, String[] a, String userId) {
