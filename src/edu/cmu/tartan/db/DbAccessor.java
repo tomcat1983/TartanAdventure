@@ -112,12 +112,12 @@ public class DbAccessor {
 
 		String value = null;
 		ResultSet rs = null;
+		PreparedStatement pstmt = null;
 
 		try (Connection conn = DriverManager.getConnection(url);
-				Statement stmt = conn.createStatement();
-				PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			
-			pstmt.setString(1,  userId);
+				Statement stmt = conn.createStatement();) {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -127,7 +127,8 @@ public class DbAccessor {
 			gameLogger.warning("SQLException : " + e.getMessage());
 		} finally {
 			try {
-				rs.close();
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
 			} catch (SQLException e) {
 				gameLogger.warning("SQLException : " + e.getMessage());
 			}
@@ -200,7 +201,7 @@ public class DbAccessor {
 			gameLogger.warning("SQLException : " + e.getMessage());
 		} finally {
 			try {
-				rs.close();
+				if (rs != null) rs.close();
 			} catch (SQLException e) {
 				gameLogger.warning("SQLException : " + e.getMessage());
 			}
