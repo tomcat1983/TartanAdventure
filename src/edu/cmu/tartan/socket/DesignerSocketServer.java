@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.config.Config;
@@ -22,11 +24,10 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 
 	static final int MAX_DESIGNER_CONNECTION = 1;
 	
-	private int serverPort = 10016;
 	private int socketCounter = 0;
 	private boolean isLoop = true;
 	
-	private List<DesignerClientThread> clientThreadList = new ArrayList<DesignerClientThread>();
+	private List<DesignerClientThread> clientThreadList = new ArrayList<>();
 	private HashMap<String, DesignerClientThread> clientThreadMap = new HashMap<>();
 	
 	private ServerSocket serverSocket;
@@ -45,7 +46,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	@Override
 	public void startSocket() {
 		
-		serverPort = Config.getDesignerPort();
+		int serverPort = Config.getDesignerPort();
 
 		try {
 			serverSocket = new ServerSocket(serverPort);
@@ -58,7 +59,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 					socket.close();
 				}
 
-				gameLogger.info("New client connected");
+				gameLogger.log(Level.INFO, "New client connected");
 				socketCounter++;
 				
 				String threadName = String.format("Designer %d", socketCounter);
@@ -70,7 +71,8 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 			}
 
 		} catch (IOException e) {
-			gameLogger.warning("IOException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 	}
 
@@ -87,7 +89,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 				serverSocket.close();
 			returnValue = true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 		socketCounter = 0;
 		
@@ -103,7 +105,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 			
 			return true;
 		} catch (IOException e) {
-			gameLogger.warning("IOException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 		return false;
 	}
@@ -120,9 +122,9 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	@Override
 	public boolean sendToAll(String message) {
 		boolean returnValue = false;
-
-		for (String userId : clientThreadMap.keySet()) {
-			returnValue = clientThreadMap.get(userId).sendMessage(message);
+		
+		for (Entry<String, DesignerClientThread> entry : clientThreadMap.entrySet()) {
+			returnValue = entry.getValue().sendMessage(message);
 		}
 
 		return returnValue;
@@ -183,7 +185,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 			returnValue = addClient(userId, threadName);
 		}
 		
-		gameLogger.info("Added a client to a map : " + returnValue);
+		gameLogger.log(Level.INFO, "Added a client to a map : {0}", returnValue);
 		
 		return returnValue;
 	}
@@ -202,10 +204,8 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 		return returnValue;
 	}
 
-	@Deprecated
 	@Override
 	public boolean sendToOthers(String userId, String message) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
