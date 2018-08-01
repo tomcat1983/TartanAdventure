@@ -268,7 +268,7 @@ public class Player implements Comparable, Serializable {
     }
 
     private void roomRequiredItemCheck(RoomRequiredItem room, Action action) throws TerminateGameException  {
-    	if(room.shouldLoseForAction(action)) {
+    	if(room.shouldLoseForAction(action, this)) {
             gameInterface.println(userName, MessageType.PRIVATE, room.loseMessage());
             terminate();
         }
@@ -298,28 +298,32 @@ public class Player implements Comparable, Serializable {
         }
     	return false;
     }
-    
+        
+    private void canYouSurvival(Action action, Room thisRoom) throws TerminateGameException {
+        if(thisRoom instanceof RoomRequiredItem) {
+            RoomRequiredItem room = (RoomRequiredItem)thisRoom;
+            roomRequiredItemCheck(room, action);
+        }
+        else if(thisRoom instanceof RoomDark) {
+            RoomDark room = (RoomDark)thisRoom;
+            roomRequiredLuminousItem(room);
+        }    	
+    }
+
     /**
      * Move version two based on an action
      * @param action the action associated with the move.
      * @throws TerminateGameException 
      */
     public boolean move(Action action) throws TerminateGameException {
-
-        if(this.currentRoom instanceof RoomRequiredItem) {
-            RoomRequiredItem room = (RoomRequiredItem)this.currentRoom;
-            roomRequiredItemCheck(room, action);
-        }
-        else if(this.currentRoom instanceof RoomDark) {
-            RoomDark room = (RoomDark)this.currentRoom;
-            roomRequiredLuminousItem(room);
-        }
-
+    	canYouSurvival(action, this.currentRoom);
+    	
         if(this.currentRoom.canMoveToRoomInDirection(action)) {
             Room nextRoom = this.currentRoom.getRoomForDirection(action);
             if(isNextRoomRequiredCheck(nextRoom)) {
             	return false;
             }
+            canYouSurvival(action, nextRoom);
             move(nextRoom);
             return true;
         }

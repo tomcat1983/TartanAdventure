@@ -2,6 +2,7 @@ package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.TerminateGameException;
 import edu.cmu.tartan.GameInterface.MessageType;
+import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 
@@ -84,8 +85,8 @@ public class RoomRequiredItem extends Room {
 		return this.diesOnEntry;
 	}
 
-	public boolean shouldLoseForAction(Action a) {
-		return !this.safeDirections.contains(a) && !this.getPlayer().hasItem(this.requiredItem);
+	public boolean shouldLoseForAction(Action a, Player player) {
+		return !this.safeDirections.contains(a) && !player.hasItem(this.requiredItem);
 	}
 
 	public void setLoseMessage(String s) {
