@@ -246,7 +246,7 @@ public class Player implements Comparable, Serializable {
 
         this.currentRoom = nextRoom;
         saveRoom(currentRoom);
-        gameInterface.println(userName, MessageType.PUBLIC, "You are in " + currentRoom.shortDescription());
+        gameInterface.println(userName, MessageType.OTHER, userName + "is in " + currentRoom.shortDescription());
         gameInterface.println(userName, MessageType.PRIVATE, this.currentRoom.description());
     }
 
