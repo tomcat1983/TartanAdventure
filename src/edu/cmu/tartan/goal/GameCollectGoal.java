@@ -14,7 +14,8 @@ import java.util.ArrayList;
  * 1.0 March 2018 - initial version
  */
 public class GameCollectGoal implements GameGoal {
-    private Player player = null;
+	private static final long serialVersionUID = 1L;
+	private Player player = null;
     private ArrayList<String> itemsList = null;
     private int count=0;
 

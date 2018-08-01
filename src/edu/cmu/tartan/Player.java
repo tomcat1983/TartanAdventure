@@ -11,6 +11,10 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.*;
 
 import java.util.Map;
+
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -74,7 +78,7 @@ public class Player implements Comparable, Serializable {
      *
      * @param currentRoom the current room
      */
-    public Player(Room currentRoom, String userName) {
+    public Player(@NonNull Room currentRoom, @NonNull String userName) {
         this(currentRoom, new ArrayList<>(), userName);
     }
 
@@ -83,7 +87,7 @@ public class Player implements Comparable, Serializable {
      * @param currentRoom the current room
      * @param items the player's items
      */
-    public Player(Room currentRoom, ArrayList<Item>items, String userName) {
+    public Player(@NonNull Room currentRoom, @NonNull ArrayList<Item>items, @NonNull String userName) {
         this.items = items;
         this.score = 0;
         this.currentRoom = currentRoom;
@@ -94,15 +98,20 @@ public class Player implements Comparable, Serializable {
     /**
 	 * @return the userName
 	 */
-	public String getUserName() {
+	public @Nullable String getUserName() {
 		return userName;
 	}
 
 	/**
 	 * @param userName the userName to set
 	 */
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public boolean setUserName(@Nullable String userName) {
+		if(userName==null) {
+			return false;
+		} else {
+			this.userName = userName;
+			return true;
+		}
 	}
 
     /**
@@ -110,10 +119,12 @@ public class Player implements Comparable, Serializable {
      * @param item the item to drop.
      * @return The dropped item or null if the item cannot be found.
      */
-    public Item drop(Item item) {
-        if(this.items.remove(item)) {
+    public @Nullable Item drop(@Nullable Item item) {
+    	if(item==null) {
+    		return null;
+    	} else if(items.remove(item)) {
         	int s = item.value();
-            this.score -= s;
+            score -= s;
             gameInterface.println(userName, MessageType.PRIVATE, "You lost " + s + GamePlayMessage.POINTS);
         	gameInterface.println(userName, MessageType.OTHER, userName + " lost " + s + GamePlayMessage.POINTS);
             return item;
@@ -137,39 +148,44 @@ public class Player implements Comparable, Serializable {
      * @param item the item to drop. The dropped item remains in the room.
      * @return true if the item is dropped, false otherwise.
      */
-    public boolean dropItem(Item item) {
+    public boolean dropItem(@Nullable Item item) {
 
         Item dropped = drop(item);
         if (dropped == null) {
         	gameInterface.println(userName, MessageType.PRIVATE, "You don't have this item to drop");
             return false;
         }
-        this.currentRoom.putItem(dropped);
-        return true;
+        return currentRoom.putItem(dropped);
     }
 
     /**
      * Pickup an item.
      * @param item the item to pickup.
-     * @return true
+     * @return If grab item success return true
      */
-    public boolean pickup(Item item){
-
-        this.grabItem(item);
-        return true;
+    public boolean pickup(@Nullable Item item){
+    	if(item==null) {
+    		return false;
+    	}
+        return grabItem(item);
     }
 
     /**
      * Actually add the item to the player's inventory.
      * @param item
      */
-    public void grabItem(Item item) {
-        this.items.add(item);
+    public boolean grabItem(@Nullable Item item) {
+    	if(item==null) {
+    		return false;
+    	}
+        return items.add(item);
     }
 
-    public boolean hasItem(Item item) {
-        if(item == null) return false;
-        return this.items.contains(item);
+    public boolean hasItem(@Nullable Item item) {
+        if(item == null) {
+        	return false;
+        }
+        return items.contains(item);
     }
 
     /**
@@ -190,22 +206,25 @@ public class Player implements Comparable, Serializable {
      * @return the items.
      */
     public ArrayList<Item> getCollectedItems() {
-        return this.items;
+        return items;
     }
     
     /**
      * Put the direct item in the indirect item.
      * @return the install() result.
      */
-    public boolean putItemInItem(Item direct, Item indirect) {
-        boolean ret = ((Hostable)indirect).install(direct);
-        if(ret && indirect instanceof ItemMagicBox && direct instanceof Valuable) {
-        	score((Valuable)direct);
-        }
-        return ret;
+    public boolean putItemInItem(@Nullable Item direct, @Nullable Item indirect) {
+    	if(indirect instanceof Hostable) {
+	        boolean ret = ((Hostable)indirect).install(direct);
+	        if(ret && indirect instanceof ItemMagicBox && direct instanceof Valuable) {
+	        	score((Valuable)direct);
+	        }
+	        return ret;
+    	}
+    	return false;
     }
 
-    private void requestDelay(String message, int delay) {
+    private boolean requestDelay(@Nullable String message, int delay) {
     	if(message != null) {
             if(delay != 0) {
                 for(int i=0; i < 3; i++) {
@@ -215,11 +234,14 @@ public class Player implements Comparable, Serializable {
                     }
                     catch(Exception e1) {
                         // pass
+                    	return false;
                     }
                 }
             }
             gameInterface.println(userName, MessageType.PRIVATE, message);
+            return true;
         }
+    	return false;
     }
     /**
      * Move the player to a new room.
@@ -281,7 +303,7 @@ public class Player implements Comparable, Serializable {
         }
     }
     
-    private boolean isNextRoomRequiredCheck(Room nextRoom) throws TerminateGameException {
+    private boolean isNextRoomRequiredCheck(Room nextRoom) {
     	if(nextRoom instanceof RoomLockable) {
             RoomLockable lockedRoom = (RoomLockable)nextRoom;
             if(lockedRoom.isLocked()) {
@@ -345,8 +367,11 @@ public class Player implements Comparable, Serializable {
      * Add a goal for this player
      * @param g the new goal.
      */
-    public void addGoal(GameGoal g) {
-        goals.add(g);
+    public boolean addGoal(@Nullable GameGoal g) {
+    	if(g==null) {
+    		return false;
+    	}
+        return goals.add(g);
     }
 
     /**
@@ -370,10 +395,14 @@ public class Player implements Comparable, Serializable {
      * Add to the Player's score
      * @param s the newly scored points.
      */
-    public void score(int s) {
-    	gameInterface.println(userName, MessageType.PRIVATE, "You scored " + s + GamePlayMessage.POINTS);
-    	gameInterface.println(userName, MessageType.OTHER, userName + " scored " + s + GamePlayMessage.POINTS);
-    	score += s;
+    public boolean score(int s) {
+    	if(s>0) {
+    		gameInterface.println(userName, MessageType.PRIVATE, "You scored " + s + GamePlayMessage.POINTS);
+    		gameInterface.println(userName, MessageType.OTHER, userName + " scored " + s + GamePlayMessage.POINTS);
+    		score += s;
+    		return true;
+    	}
+    	return false;
     }
 
     /**
@@ -389,8 +418,12 @@ public class Player implements Comparable, Serializable {
      * Add points available to this player.
      * @param p The new points available.
      */
-    public void addPossiblePoints(int p) {
-        possiblePoints += p;
+    public boolean addPossiblePoints(int p) {
+    	if(0 < p) {
+    		possiblePoints += p;
+    		return true;
+    	}
+    	return false;
     }
 
     /**
