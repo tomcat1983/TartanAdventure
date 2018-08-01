@@ -12,7 +12,8 @@ import edu.cmu.tartan.item.Item;
  * 1.0 March 2018 - initial version
  */
 public class RoomObscured extends Room {
-    // The item hiding this room
+	private static final long serialVersionUID = 1L;
+	// The item hiding this room
 	private Item obscuringItem;
 	private boolean isObscured;
     private String obscureMessage;
