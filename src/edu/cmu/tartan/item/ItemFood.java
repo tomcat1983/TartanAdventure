@@ -69,13 +69,11 @@ public class ItemFood extends Item implements Edible, Holdable, Meltable, Instal
 		if (this == obj) {
 			return true;
 		}
-		System.out.println("1 "+ getClass() + ", "+ obj.getClass());
 
 		if (!super.equals(obj)) {
 			return false;
 		}
 		
-		System.out.println("2 "+ getClass() + ", "+ obj.getClass());
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
