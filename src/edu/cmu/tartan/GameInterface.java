@@ -19,7 +19,7 @@ public class GameInterface {
 	/**
 	 * User ID for LOCAL_USER
 	 */
-	public static final String USER_ID_LOCAL_USER = "LOCAL_USER";
+	public static final String USER_ID_LOCAL_USER = "_LOCAL_USER_";
 
 	/**
 	 * Static variable for singleton
@@ -63,10 +63,8 @@ public class GameInterface {
 		return instance;
 	}
 
-	public boolean setGameManager(TartanGameManager manager) {
+	public void setGameManager(TartanGameManager manager) {
 		tartanManager = manager;
-
-		return true;
 	}
 
 	public void setSystemOut(PrintStream printStream) {
@@ -75,6 +73,7 @@ public class GameInterface {
 
 	public void resetInterface() {
 		scanner = new Scanner(System.in, "UTF-8");
+		commandMap.clear();
 	}
 
 	public enum MessageType {
@@ -110,13 +109,13 @@ public class GameInterface {
 			tartanManager.sendToAll(userId, message);
 			break;
 		case OTHER:
-			tartanManager.sendToOters(userId, message);
+			tartanManager.sendToOthers(userId, message);
 			break;
 		case WIN:
-			tartanManager.achievedGoal(userId);
+			tartanManager.winTheGame(userId, message);
 			break;
 		case LOSE:
-			tartanManager.sendToClient(userId, message);
+			tartanManager.loseTheGame(userId, message);
 			break;
 		default:
 			break;
@@ -128,11 +127,12 @@ public class GameInterface {
 	}
 
 	public String getCommand(String userId) {
-		if (tartanManager == null || userId == USER_ID_LOCAL_USER) {
-			putCommand(userId, scanner.nextLine());
-		}
-
 		LinkedList<String> commandQueue = getCommandQueue(userId);
+
+		if (tartanManager == null || userId == USER_ID_LOCAL_USER) {
+			if (userId != USER_ID_LOCAL_USER || commandQueue.isEmpty())
+				putCommand(userId, scanner.nextLine());
+		}
 
 		while (commandQueue.isEmpty()) {
 			synchronized(commandQueue) {

@@ -1,5 +1,8 @@
 package edu.cmu.tartan.manager;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
 import edu.cmu.tartan.GameInterface;
@@ -29,12 +32,24 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	private AccountManager accountManager;
 
 	private boolean isLoop = true;
+	private boolean isStart = false;
 
 	public TartanGameManagerClient(SocketClient socket, ResponseMessage responseMessage, IQueueHandler messageQueue) {
 		this.socket = socket;
 		this.responseMessage = responseMessage;
 		this.messageQueue = messageQueue;
 		accountManager = new AccountManager();
+	}
+	
+	public boolean stopManager() {
+
+		// TODO Sequence of an end game
+		isStart = false;
+		isLoop = false;
+		socket.stopSocket();
+//		messageQueue.produce(new SocketMessage("",""));
+
+		return false;
 	}
 
 	public boolean sendMessage(String message) {
@@ -46,9 +61,14 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	public boolean login(String threadName, String userId, String userPw, XmlLoginRole role) {
 
 		String message = null;
+		
+		String encryptionPw = encryptPassword(userPw);
+		if (encryptionPw == null) {
+			return false;
+		}
 
 		XmlWriterClient xw = new XmlWriterClient();
-		message = xw.makeXmlForLogin(userId, userPw, role);
+		message = xw.makeXmlForLogin(userId, encryptionPw, role);
 
 		sendMessage(message);
 
@@ -64,9 +84,14 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	public boolean register(String threadName, String userId, String userPw) {
 
 		String message = null;
+		
+		String encryptionPw = encryptPassword(userPw);
+		if (encryptionPw == null) {
+			return false;
+		}
 
 		XmlWriterClient xw = new XmlWriterClient();
-		message = xw.makeXmlForAddUser(userId, userPw);
+		message = xw.makeXmlForAddUser(userId, encryptionPw);
 
 		sendMessage(message);
 
@@ -100,6 +125,8 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 	@Override
 	public boolean startGame(String userId) {
+		
+		isStart = true;
 
 		String message = null;
 
@@ -119,22 +146,23 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 	@Override
 	public boolean endGame(String threadName, String userId) {
-
+		
+		if(!isStart) return true;
+		
+		socket.setQuitFromCli(true);
 		String message = null;
 
 		XmlWriterClient xw = new XmlWriterClient();
 		message = xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_END, userId);
 
 		sendMessage(message);
-
-
-		// TODO Sequence of an end game
-		socket.stopSocket();
-
-		isLoop = false;
-		messageQueue.produce(new SocketMessage(Thread.currentThread().getName(), userId));
-//		int returnValue = messageQueue.clearQueue();
-
+		
+		waitResponseMessage();
+		
+		gameInterface.println(responseMessage.getMessage());
+		
+//		stopManager();
+		
 		return true;
 	}
 
@@ -205,9 +233,38 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
             message = socketMessage.getMessage();
 
             if (message != null && !message.isEmpty()) {
-            	gameInterface.println(message);
+            	if("quit".equals(message)) {
+            		gameInterface.putCommand(GameInterface.USER_ID_LOCAL_USER, message);
+            		stopManager();
+            	} else {
+            		gameInterface.println(message);
+            	}
 
             }
         }
 	}
+	
+	public String encryptPassword(String userPw){
+
+		String encryptionPw = ""; 
+
+		try{
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256"); 
+
+			byte byteData[] = messageDigest.digest(userPw.getBytes(StandardCharsets.UTF_8));
+			
+			StringBuffer sb = new StringBuffer(); 
+			for(int i = 0 ; i < byteData.length ; i++){
+				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+			}
+			
+			encryptionPw = sb.toString();
+		}catch(NoSuchAlgorithmException e){
+			gameLogger.warning("NoSuchAlgorithmException : " + e.getMessage());
+			encryptionPw = null;
+		}
+
+		return encryptionPw;
+	}
+	
 }

@@ -43,8 +43,10 @@ public class UserClientThread implements Runnable, ISocketMessage {
 		try {
 			OutputStream output = clientSocket.getOutputStream();
 			PrintWriter writer = new PrintWriter(output, true);
-
-			writer.println(message);
+			
+			if(clientSocket.isConnected()) {
+				writer.println(message);
+			}
 			return true;
 		} catch (IOException e) {
 			gameLogger.warning("IOException : " + e.getMessage());
@@ -68,9 +70,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 				if((message = reader.readLine()) == null) break;
 				
 				//TODO Check a null state
-				if (message.equals("null") 
-						|| message.equals("quit")
-						|| message.equals("exit")) break;
+				if (message.equals("null")) break;
 				
 				gameLogger.info("[Server] Received message : " + message);
 				
@@ -109,5 +109,6 @@ public class UserClientThread implements Runnable, ISocketMessage {
 		
 		return returnValue;
 	}
+	
 	
 }

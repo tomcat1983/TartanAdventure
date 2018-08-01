@@ -58,7 +58,6 @@ public class Commander {
 	}
 
 	public String getResultNextLine() {
-//		System.out.println("[ " + outputStream.toString() + " ]");
 		if (bfReader == null) {
 			ByteArrayInputStream input = new ByteArrayInputStream(outputStream.toByteArray());
 			bfReader = new BufferedReader(new InputStreamReader(input));
