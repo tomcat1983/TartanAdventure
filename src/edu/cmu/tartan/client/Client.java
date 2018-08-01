@@ -21,11 +21,6 @@ public class Client {
 	private Logger logger = Logger.getGlobal();
 
 	/**
-	 * Game interface for game log
-	 */
-	private GameInterface gameInterface = GameInterface.getInterface();
-
-	/**
 	 * Client interface instance
 	 */
 	private ClientInterface clientInterface;
@@ -52,16 +47,13 @@ public class Client {
 
 			switch (clientInterface.getRunningMode()) {
 			case LOCAL:
-				if (!runLocalMode())
-					running = false;
+				runLocalMode();
 				break;
 			case NETWORK:
-				if (!runNetworkMode(false))
-					running = false;
+				runNetworkMode(false);
 				break;
 			case DESIGNER:
-				if (!runNetworkMode(true))
-					running = false;
+				runNetworkMode(true);
 				break;
 			case EXIT:
 				running = false;
@@ -202,6 +194,7 @@ public class Client {
 			String command = clientInterface.getNetworkCommand();
 
 			if (command.equals("quit")) {
+				clientInterface.printByeMessage();
 				running = false;
 			}
 			else if (isDesigner) {
