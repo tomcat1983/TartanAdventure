@@ -285,10 +285,6 @@ public class Player implements Comparable, Serializable {
     	if(nextRoom instanceof RoomLockable) {
             RoomLockable lockedRoom = (RoomLockable)nextRoom;
             if(lockedRoom.isLocked()) {
-                if(lockedRoom.causesDeath()) {
-                    gameInterface.println(userName, MessageType.PRIVATE, lockedRoom.deathMessage());
-                    terminate();
-                }
                 gameInterface.println(userName, MessageType.PRIVATE, "This door is locked.");
                 return true;
             }

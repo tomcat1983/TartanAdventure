@@ -356,6 +356,9 @@ class TestPlayerExecutionEngine {
 	    	
 	    	action = interpreter.interpretString("push 4", actionExecutionUnit);
 	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
+	    	
+	    	action = interpreter.interpretString("push 4", actionExecutionUnit);
+	    	assertTrue(playerExecutionEngine.executeAction(action, actionExecutionUnit));
 		} catch (TerminateGameException e) {
 			e.printStackTrace();
 		}
@@ -648,32 +651,32 @@ class TestPlayerExecutionEngine {
 	}
 	
 	@Test
-	public void testItShouldThrowTerminateGameExceptionWhenEatUneatableItem() {
+	public void testItShouldThrowTerminateGameExceptionWhenEatUneatableItem() throws TerminateGameException {
     	ItemShovel shovel = (ItemShovel) Item.getInstance("shovel", Player.DEFAULT_USER_NAME);
     	player.grabItem(shovel);
     	Action action = interpreter.interpretString("eat shovel", actionExecutionUnit);
-    	Throwable exception = assertThrows(TerminateGameException.class,() -> {
+    	assertThrows(TerminateGameException.class,() -> {
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);	
     	});
 	}
 	
 	@Test
-	public void testItShouldThrowTerminateGameExceptionWhenUserInputTerminate() {
+	public void testItShouldThrowTerminateGameExceptionWhenUserInputTerminate() throws TerminateGameException {
 		// terminate
     	Action action = interpreter.interpretString("terminate", actionExecutionUnit);
-    	Throwable exception = assertThrows(TerminateGameException.class,() -> {
+    	assertThrows(TerminateGameException.class,() -> {
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
 	}
 	
 	@Test
-	public void testItShouldThrowTerminateGameExceptionWhenUserShakeVendingMachine() {
+	public void testItShouldThrowTerminateGameExceptionWhenUserShakeVendingMachine() throws TerminateGameException {
 		// terminate
 		ItemVendingMachine vm = (ItemVendingMachine) Item.getInstance("machine", Player.DEFAULT_USER_NAME);
 		room1.putItem(vm);
 		// Shake
     	Action action = interpreter.interpretString("shake machine", actionExecutionUnit);
-    	Throwable exception = assertThrows(TerminateGameException.class,() -> {
+    	assertThrows(TerminateGameException.class,() -> {
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
@@ -688,20 +691,18 @@ class TestPlayerExecutionEngine {
 		assertTrue(room1.setAdjacentRoom(Action.ACTION_GO_WEST, end));
 		//player.grabItem(flashlight);
 		
-		Throwable exception = assertThrows(TerminateGameException.class,() -> {
-    		Action action = interpreter.interpretString("go west", actionExecutionUnit);
-    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
-    		action = interpreter.interpretString("go east", actionExecutionUnit);
-    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
-    		((RoomLockable)end).setCausesDeath(true, "Bye~Bye~~");
-    		action = interpreter.interpretString("go west", actionExecutionUnit);
-    		playerExecutionEngine.executeAction(action, actionExecutionUnit);
-    	});
-		assertEquals("Terminate Game", exception.getMessage());
+		try {
+			Action action = interpreter.interpretString("go west", actionExecutionUnit);
+			playerExecutionEngine.executeAction(action, actionExecutionUnit);
+			action = interpreter.interpretString("go east", actionExecutionUnit);
+			playerExecutionEngine.executeAction(action, actionExecutionUnit);    		
+		} catch (TerminateGameException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
-	public void testItShouldThrowTerminateGameExceptionWhenUserMoveRoomRequiredCheck() {
+	public void testItShouldThrowTerminateGameExceptionWhenUserMoveRoomRequiredCheck() throws TerminateGameException {
 		ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
 		RoomRequiredItem room2 = new RoomRequiredItem("You are in the room that required food", "Required",
 	            "pit", "Warning you need key", mbox);
@@ -710,15 +711,14 @@ class TestPlayerExecutionEngine {
 		assertTrue(room1.setAdjacentRoom(Action.ACTION_GO_WEST, room2));
 		((RoomRequiredItem)room2).setPlayerDiesOnEntry(true);
 		
-		Throwable exception = assertThrows(TerminateGameException.class,() -> {
+		assertThrows(TerminateGameException.class,() -> {
     		Action action = interpreter.interpretString("go west", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
-		assertEquals("Terminate Game", exception.getMessage());
 	}
 
 	@Test
-	public void testItShouldThrowTerminateGameExceptionWhenUserDropItemAboutRoomRequired() {
+	public void testItShouldThrowTerminateGameExceptionWhenUserDropItemAboutRoomRequired() throws TerminateGameException {
 		ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
 		RoomRequiredItem room2 = new RoomRequiredItem("You are in the room that required food", "Required",
 	            "pit", "Warning you need key", mbox);
@@ -728,41 +728,38 @@ class TestPlayerExecutionEngine {
 		playerExecutionEngine = new PlayerExecutionEngine(player);	
 		player.grabItem(mbox);
 		
-		Throwable exception = assertThrows(TerminateGameException.class,() -> {
+		assertThrows(TerminateGameException.class,() -> {
     		Action action = interpreter.interpretString("drop pit", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		((RoomRequiredItem)room2).setPlayerDiesOnItemDiscard(true);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
-		assertEquals("Terminate Game", exception.getMessage());
 	}
 	
 	@Test
-	public void testItShouldThrowTerminateGameExceptionWhenUserMoveOtherRoomInCurrentRoomTypeIsRoomRequired() {
+	public void testItShouldThrowTerminateGameExceptionWhenUserMoveOtherRoomInCurrentRoomTypeIsRoomRequired()throws TerminateGameException {
 		ItemMagicBox mbox = (ItemMagicBox) Item.getInstance("pit", Player.DEFAULT_USER_NAME);
 		RoomRequiredItem room2 = new RoomRequiredItem("You are in the room that required food", "Required",
 	            "pit", "Warning you need key", mbox);
 		player = new Player(room2, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);	
 		
-		Throwable exception = assertThrows(TerminateGameException.class,() -> {
+		assertThrows(TerminateGameException.class,() -> {
     		Action action = interpreter.interpretString("go east", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
-		assertEquals("Terminate Game", exception.getMessage());
 	}
 
 	@Test
-	public void testItShouldThrowTerminateGameExceptionWhenUserMoveRoomDarkWithLight() {
+	public void testItShouldThrowTerminateGameExceptionWhenUserMoveRoomDarkWithLight() throws TerminateGameException {
 		RoomDark room2 = new RoomDark(TestRoomDark.DARK_ROOM_DESC1, TestRoomDark.DARK_ROOM_SHORT_DESC1, TestRoomDark.DARK_DESC, TestRoomDark.DARK_SHORT_DESC);
 		player = new Player(room2, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);
 		
-		Throwable exception = assertThrows(TerminateGameException.class,() -> {
+		assertThrows(TerminateGameException.class,() -> {
 			Action action = interpreter.interpretString("go west", actionExecutionUnit);
 			playerExecutionEngine.executeAction(action, actionExecutionUnit);
     	});
 		
-		assertEquals("Terminate Game", exception.getMessage());
 	}
 }
