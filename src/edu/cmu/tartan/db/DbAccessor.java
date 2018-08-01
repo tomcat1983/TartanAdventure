@@ -108,16 +108,24 @@ public class DbAccessor {
 
 	/**
 	 * select all rows in the warehouses table
+	 * @return If you called wrong param return null
 	 */
-	public String selectByUserId(String query, String userId, String param) {
-		String sql = query;
+	public String selectByUserId(String userId, String param) {
+		String query = null;
+		if("user_pw".equals(param)) {
+			query = "SELECT user_id, user_pw, user_type FROM T_USER_INFO where user_id = ?";
+		} else if("user_type".equals(param)) {
+			query = "SELECT user_id, user_pw, user_type FROM T_USER_INFO WHERE user_id=?";
+		} else {
+			return null;
+		}
 
 		String value = null;
 		ResultSet rs = null;
 
 		try (Connection conn = DriverManager.getConnection(url);
 				Statement stmt = conn.createStatement();
-				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+				PreparedStatement pstmt = conn.prepareStatement(query)) {
 			
 			pstmt.setString(1,  userId);
 			rs = pstmt.executeQuery();
@@ -140,18 +148,16 @@ public class DbAccessor {
 
 	public String getPassword(String userId) {
 		
-		String query = "SELECT user_id, user_pw, user_type FROM T_USER_INFO where user_id = ?";
 		String userPw = null;
 		
-		userPw = selectByUserId(query, userId, "user_pw");
+		userPw = selectByUserId(userId, "user_pw");
 		
 		return userPw;
 	}
 	
 	public String getUserRole(String userId) {
 		
-		String query = "SELECT user_id, user_pw, user_type FROM T_USER_INFO WHERE user_id=?";
-		String userPw = selectByUserId(query, userId, "user_type");
+		String userPw = selectByUserId(userId, "user_type");
 
 		if (userPw == null)
 			return null;
