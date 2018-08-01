@@ -54,8 +54,9 @@ public class Main {
 				break;
 			}
 		} else {
+			final String errorFileUri = fileUri;
 			gameInterface.println("Fail to read setting file. Can't run!!");
-			gameLogger.log(Level.SEVERE, "Properties file doesn't exist. : {0} ", fileUri);
+			gameLogger.log(Level.SEVERE, () -> "Properties file doesn't exist. : " + errorFileUri);
 		}
 	}
 }
