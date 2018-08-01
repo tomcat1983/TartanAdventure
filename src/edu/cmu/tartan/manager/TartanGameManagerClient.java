@@ -31,7 +31,6 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	private ResponseMessage responseMessage;
 	private AccountManager accountManager;
 
-	private String userId = null;
 	private boolean isLoop = true;
 	private boolean isStart = false;
 
@@ -40,6 +39,17 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		this.responseMessage = responseMessage;
 		this.messageQueue = messageQueue;
 		accountManager = new AccountManager();
+	}
+	
+	public boolean stopManager() {
+
+		// TODO Sequence of an end game
+		isStart = false;
+		isLoop = false;
+		socket.stopSocket();
+//		messageQueue.produce(new SocketMessage("",""));
+
+		return false;
 	}
 
 	public boolean sendMessage(String message) {
@@ -65,7 +75,6 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		waitResponseMessage();
 
 		if ("SUCCESS".equals((responseMessage).getMessage())) {
-			this.userId = userId;
 			return true;
 		}
 		return false;
@@ -152,15 +161,8 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		
 		gameInterface.println(responseMessage.getMessage());
 		
-		isStart = false;
-
-		// TODO Sequence of an end game
-//		socket.stopSocket();
-
-//		isLoop = false;
-//		messageQueue.produce(new SocketMessage(Thread.currentThread().getName(), userId));
-//		int returnValue = messageQueue.clearQueue();
-
+//		stopManager();
+		
 		return true;
 	}
 
@@ -232,8 +234,8 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
             if (message != null && !message.isEmpty()) {
             	if("quit".equals(message)) {
-            		isStart = false;;
             		gameInterface.putCommand(GameInterface.USER_ID_LOCAL_USER, message);
+            		stopManager();
             	} else {
             		gameInterface.println(message);
             	}
@@ -264,4 +266,5 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 		return encryptionPw;
 	}
+	
 }

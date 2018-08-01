@@ -70,9 +70,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 				if((message = reader.readLine()) == null) break;
 				
 				//TODO Check a null state
-				if (message.equals("null") 
-						|| message.equals("quit")
-						|| message.equals("exit")) break;
+				if (message.equals("null")) break;
 				
 				gameLogger.info("[Server] Received message : " + message);
 				
