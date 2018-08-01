@@ -11,6 +11,7 @@ package edu.cmu.tartan.room;
  */
 public class RoomDark extends Room {
 
+	private static final long serialVersionUID = 1L;
 	private static final String DEATH_MESSAGE = "You are dead.";
 	// Descriptions
 	private String darkDescription;
