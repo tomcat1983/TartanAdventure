@@ -29,22 +29,6 @@ public class DbAccessor {
 	}
 
 	/**
-	 * Connect to the database
-	 *
-	 * @return the Connection object
-	 */
-	private Connection connect() {
-
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(url);
-		} catch (SQLException e) {
-			gameLogger.warning("SQLException : " + e.getMessage());
-		}
-		return conn;
-	}
-
-	/**
 	 * Connect to a sample database
 	 *
 	 */
@@ -127,19 +111,26 @@ public class DbAccessor {
 		String sql = query;
 
 		String value = null;
+		ResultSet rs = null;
 
 		try (Connection conn = DriverManager.getConnection(url);
 				Statement stmt = conn.createStatement();
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			
 			pstmt.setString(1,  userId);
-			ResultSet rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				return value = rs.getString(param);
 			}
 		} catch (SQLException e) {
 			gameLogger.warning("SQLException : " + e.getMessage());
+		} finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				gameLogger.warning("SQLException : " + e.getMessage());
+			}
 		}
 
 		return value;
@@ -193,19 +184,26 @@ public class DbAccessor {
 		String sql = "SELECT COUNT(user_id) FROM T_USER_INFO WHERE user_id=?";
 
 		int returnValue = 0;
+		ResultSet rs = null;
 		
 		try (Connection conn = DriverManager.getConnection(url);
 				Statement stmt = conn.createStatement();
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			
 			pstmt.setString(1,  userId);
-			ResultSet rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				returnValue = Integer.parseInt(rs.getString("COUNT(user_id)"));
 			}
 		} catch (SQLException e) {
 			gameLogger.warning("SQLException : " + e.getMessage());
+		} finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				gameLogger.warning("SQLException : " + e.getMessage());
+			}
 		}
 
 		return returnValue;
