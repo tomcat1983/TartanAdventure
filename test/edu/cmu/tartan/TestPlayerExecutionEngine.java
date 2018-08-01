@@ -408,6 +408,7 @@ class TestPlayerExecutionEngine {
 			player.grabItem(food);
 			player.grabItem(mbox);
 			assertFalse(mbox.uninstall(food));
+			assertFalse(mbox.install(null));
 			assertTrue(mbox.installedItem()==null);
 			playerExecutionEngine = new PlayerExecutionEngine(player);
 	    	action = interpreter.interpretString("eat food", actionExecutionUnit);
