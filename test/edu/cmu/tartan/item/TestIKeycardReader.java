@@ -103,4 +103,26 @@ class TestIKeycardReader {
 		int hashCodeOfKeycard = keycard.hashCode(); 
 		assertNotEquals(hashCodeOfReader, hashCodeOfKeycard);
 	}
+	
+	@Test
+	void testReaderNotEqualKeycard() {
+		assertFalse(keycardReader.equals(keycard));
+	}
+	
+	@Test
+	void testReaderNotEqualReader2BeacuseInstallMessage() {
+		ItemKeycardReader keycardReader2 = new ItemKeycardReader(StringForItems.KEYCARD_READER, StringForItems.METAL_KEYCARD_READER, new String[]{StringForItems.READER, StringForItems.SLOT}, "tak");
+		assertFalse(keycardReader2.equals(keycardReader));
+		assertFalse(keycardReader.equals(keycardReader2));
+	}
+	
+	@Test
+	void testReaderEqualReader2WameInstallMessage() {
+		ItemKeycardReader keycardReader2 = new ItemKeycardReader(StringForItems.KEYCARD_READER, StringForItems.METAL_KEYCARD_READER, new String[]{StringForItems.READER, StringForItems.SLOT}, "tak");
+		keycardReader2.setInstallMessage("installed message");
+		assertTrue(keycardReader2.equals(keycardReader));
+		assertTrue(keycardReader.equals(keycardReader2));
+	}
+
+	
 }
