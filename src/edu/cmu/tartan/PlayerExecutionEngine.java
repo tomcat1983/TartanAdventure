@@ -135,7 +135,6 @@ public class PlayerExecutionEngine {
                 player.dropItem(item);
                 gameInterface.println(player.getUserName(), MessageType.PRIVATE, "You Dropped '" +item.description() + "' costing you "
                         + item.value() + " points.");
-                //player.currentRoom().putItem(item);
                 result = true;
             }
             else {
