@@ -1,6 +1,5 @@
 package edu.cmu.tartan;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -81,7 +80,9 @@ public abstract class Game {
      * Configure the game.
      */
     public boolean configureGame(GameMode mode) {
+    	boolean ret = true;
     	XmlParser parseXml;
+    	
 		try {
 			parseXml = new XmlParser();
 		} catch (ParserConfigurationException e) {
@@ -94,18 +95,20 @@ public abstract class Game {
         context.setGameName(customGame.getName());
         
         try {
-			customGame.configure(context);
+        	ret = customGame.configure(context);
+        	if(ret) {
+                // Once the game has been configured, it is time to play!
+                showIntro();
+                // Configure the game, add the goals and exe
+                context.setPlayerGameGoal();
+                playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());        		
+        	}
 		} catch (InvalidGameException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
 	       	return false;
 		}
-        // Once the game has been configured, it is time to play!
-        showIntro();
-        // Configure the game, add the goals and exe
-        context.setPlayerGameGoal();
-        playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());
-        return true;
+        return ret;
     }
 
     private boolean processGameCommand(@NonNull String input) throws TerminateGameException {
