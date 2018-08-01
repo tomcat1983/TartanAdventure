@@ -129,8 +129,8 @@ public class GameInterface {
 	public String getCommand(String userId) {
 		LinkedList<String> commandQueue = getCommandQueue(userId);
 
-		if (tartanManager == null || userId == USER_ID_LOCAL_USER) {
-			if (userId != USER_ID_LOCAL_USER || commandQueue.isEmpty())
+		if ((tartanManager == null || userId.equals(USER_ID_LOCAL_USER))
+			&& (!userId.equals(USER_ID_LOCAL_USER) || commandQueue.isEmpty())) {
 				putCommand(userId, scanner.nextLine());
 		}
 
