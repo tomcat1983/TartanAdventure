@@ -53,7 +53,6 @@ public class TestMain {
 
 		commander.destory();
 
-
 		assertEquals("Run server", commander.getResultNextLine());
 
 		// newline
