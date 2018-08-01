@@ -1,5 +1,7 @@
 package edu.cmu.tartan.item;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import edu.cmu.tartan.properties.Hostable;
 
 /**
@@ -29,7 +31,10 @@ public class ItemMagicBox extends Item implements Hostable {
      * @param i the item to install
      */
     @Override
-    public boolean install(Item i) {
+    public boolean install(@Nullable Item i) {
+    	if(i==null) {
+    		return false;
+    	} 
         // items fall into black hole
     	i.setVisible(false);
     	return true;
@@ -40,7 +45,7 @@ public class ItemMagicBox extends Item implements Hostable {
      * @param i the item to uninstall
      */
     @Override
-    public boolean uninstall(Item i) {
+    public boolean uninstall(@Nullable Item i) {
         return false;
     }
 
@@ -48,7 +53,7 @@ public class ItemMagicBox extends Item implements Hostable {
      * Fetch the installed item
      */
     @Override
-    public Item installedItem() {
+    public @Nullable Item installedItem() {
         return null;
     }
 }
