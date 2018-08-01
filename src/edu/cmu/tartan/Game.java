@@ -48,11 +48,11 @@ public abstract class Game {
     /**
      * Attempt to interpret input more flexibly.
      */
-	private PlayerInterpreter interpreter;
+	protected PlayerInterpreter interpreter;
     /**
      * The game execute
      */
-    private PlayerExecutionEngine playerExecutionEngine;
+    protected PlayerExecutionEngine playerExecutionEngine;
 
     /**
      * Create and configure a new game.
@@ -300,7 +300,7 @@ public abstract class Game {
     		return false;
     	}
     	if(this instanceof LocalGame) {
-    		((LocalGame)this).save(context.getUserId());
+    		((LocalGame)this).save(context.getUserId(), LocalGame.SAVE_FILE_NAME);
     		gameInterface.print(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.SAVE_SUCCESSFUL_10_4);
     		return true;
     	} else {
