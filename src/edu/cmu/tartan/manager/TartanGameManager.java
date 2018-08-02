@@ -428,4 +428,10 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		gameInterface.putCommand(userId, command);
 		return returnValue;
 	}
+	
+	public void stopGameManager() {
+		isLoop = false;
+		socket.stopSocket();
+		designerSocket.stopSocket();
+	}
 }
