@@ -64,22 +64,39 @@ public abstract class Game {
     }
 
     /**
+     * @param mode
+     * @return
+     */
+    protected GameConfiguration gameFromXML(GameMode mode) {
+		XmlParser parseXml;
+		try {
+			parseXml = new XmlParser();
+			return parseXml.loadGameMapXml(mode, context.getUserId());
+		} catch (ParserConfigurationException e) {
+			gameLogger.severe("Game loading failure. Exception: \n" + e);
+	       	gameLogger.severe(e.getMessage());
+	       	return null;
+		}
+
+    }
+
+    /**
      * Configure the game.
      */
     public boolean configureGame(GameMode mode) {
     	XmlParser parseXml;
-    	
+
 		try {
 			parseXml = new XmlParser();
 		} catch (ParserConfigurationException e) {
 			gameLogger.severe("Xml Parser Failure \n" + e);
 	       	gameLogger.severe(e.getMessage());
 	       	return false;
-		} 
-		
-		CustomizingGame customGame = (CustomizingGame) parseXml.loadGameMapXml(mode, context.getUserId());		
+		}
+
+		CustomizingGame customGame = (CustomizingGame) parseXml.loadGameMapXml(mode, context.getUserId());
         context.setGameName(customGame.getName());
-        
+
         try {
         	if(customGame.configure(context)) {
                 // Once the game has been configured, it is time to play!
@@ -254,12 +271,12 @@ public abstract class Game {
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- To view your current items: type \"inventory\"\n");
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- You have a number of actions available:\n");
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- To save your current game status: type \"save\"\n* ‘save’ is only possible in local game mode.");
-        		
+
         StringBuilder directions = new StringBuilder("Direction: [");
         StringBuilder movement = new StringBuilder("Movement with fixed direction:[");
         StringBuilder dirobj = new StringBuilder("Manipulate object directly: [");
         StringBuilder indirobj = new StringBuilder("Manipulate objects indirectly, e.g. Put cpu in computer: [");
- 
+
         for( Action a : Action.values()) {
             if (a.type() == Type.TYPE_DIRECTIONAL) {
             	appendString(a, directions);
@@ -275,7 +292,7 @@ public abstract class Game {
         movement.append("]");
         dirobj.append("]");
         indirobj.append("]");
-        
+
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- "+ directions.toString() + "\n");
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- " + movement.toString() + "\n");
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "- " + dirobj.toString() + "\n");
@@ -294,6 +311,9 @@ public abstract class Game {
         gameInterface.println(context.getUserId(), MessageType.PRIVATE, "To get help type 'help' ... let's begin\n");
     }
 
+    /**
+     * @return
+     */
     public boolean handleSave() {
     	if(this instanceof ServerGame) {
     		gameInterface.print(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.SAVE_CANNOT_10_6);
@@ -309,6 +329,9 @@ public abstract class Game {
     	}
     }
 
+    /**
+     * @return
+     */
     public boolean handleQuit() {
         for (GameGoal g: context.getGoals()) {
         	gameInterface.println(context.getUserId(), MessageType.PRIVATE, g.getStatus());
@@ -316,7 +339,7 @@ public abstract class Game {
         if(this instanceof LocalGame) {
 	        gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.WILL_YOU_SAVE_2_1);
 	        gameInterface.print(context.getUserId(), MessageType.PRIVATE, "> ");
-	
+
 	        String input = gameInterface.getCommand(context.getUserId());
 	        if("yes".equalsIgnoreCase(input)) {
 	        	return handleSave();

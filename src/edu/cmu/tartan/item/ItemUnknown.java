@@ -12,6 +12,12 @@ public class ItemUnknown extends Item {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * @param s
+	 * @param sd
+	 * @param a
+	 * @param userId
+	 */
 	public ItemUnknown(String s, String sd, String[] a, String userId) {
 
         super(s, sd, a, userId);

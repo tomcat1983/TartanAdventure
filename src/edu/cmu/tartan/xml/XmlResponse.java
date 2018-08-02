@@ -10,29 +10,43 @@ import org.w3c.dom.NodeList;
 
 
 public abstract class XmlResponse {
-	
+
 	protected XmlMessageType msgType;
 	protected Logger gameLogger = Logger.getGlobal();
 
-	
-	//every child have different response 
+
+	//every child have different response
 	public abstract XmlParseResult doYourJob(Document doc);
-	
+
+	/**
+	 * @return
+	 */
 	public XmlMessageType getMsgType() {
 		return msgType;
 	}
-	
 
+
+	/**
+	 * @param tagName
+	 * @param doc
+	 * @return
+	 */
 	public NodeList getNodeListOfGivenTag(String tagName, Document doc) {
-		
+
 		return doc.getElementsByTagName(tagName);
 	}
-	
+
+	/**
+	 * @param attrName
+	 * @param nList
+	 * @param n
+	 * @return
+	 */
 	@Nullable
 	public String getAttributeValueAtNthTag(String attrName, NodeList nList, int n) {
 
 		String result = null;
-		Node node = nList.item(n); 
+		Node node = nList.item(n);
 
 		if (node.hasAttributes()) {
 
@@ -45,7 +59,7 @@ public abstract class XmlResponse {
 					result = attNode.getNodeValue();
 			}
 		}
-		
+
 		return result;
 	}
 }

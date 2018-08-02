@@ -31,6 +31,9 @@ public interface GameGoal extends Serializable {
      */
     public String getStatus();
 
+	/**
+	 * @param player
+	 */
 	public void setPlayer(Player player);
 
 }

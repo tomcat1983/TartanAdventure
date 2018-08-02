@@ -51,10 +51,16 @@ public class GameInterface {
 	 */
 	private PrintStream systemOut = System.out;
 
+	/**
+	 *
+	 */
 	public GameInterface() {
         scanner = new Scanner(System.in, "UTF-8");
 	}
 
+	/**
+	 * @return
+	 */
 	public static GameInterface getInterface() {
 		if (instance == null) {
 			instance = new GameInterface();
@@ -63,14 +69,23 @@ public class GameInterface {
 		return instance;
 	}
 
+	/**
+	 * @param manager
+	 */
 	public void setGameManager(TartanGameManager manager) {
 		tartanManager = manager;
 	}
 
+	/**
+	 * @param printStream
+	 */
 	public void setSystemOut(PrintStream printStream) {
 		systemOut = printStream;
 	}
 
+	/**
+	 *
+	 */
 	public void resetInterface() {
 		scanner = new Scanner(System.in, "UTF-8");
 		commandMap.clear();
@@ -81,14 +96,25 @@ public class GameInterface {
 	}
 
 	// For game message
+	/**
+	 * @param message
+	 */
 	public void print(String message) {
 		print(USER_ID_LOCAL_USER, MessageType.SYSTEM, message);
 	}
 
+	/**
+	 * @param message
+	 */
 	public void println(String message) {
 		print(USER_ID_LOCAL_USER, MessageType.SYSTEM, message + "\n");
 	}
 
+	/**
+	 * @param userId
+	 * @param type
+	 * @param message
+	 */
 	public void print(String userId, MessageType type, String message) {
 		if (tartanManager != null) {
 			switch (type) {
@@ -121,10 +147,19 @@ public class GameInterface {
 		}
 	}
 
+	/**
+	 * @param userId
+	 * @param type
+	 * @param message
+	 */
 	public void println(String userId, MessageType type, String message) {
 		print (userId, type, message + "\n");
 	}
 
+	/**
+	 * @param userId
+	 * @return
+	 */
 	public String getCommand(String userId) {
 		LinkedList<String> commandQueue = getCommandQueue(userId);
 
@@ -148,6 +183,11 @@ public class GameInterface {
 		return commandQueue.poll();
 	}
 
+	/**
+	 * @param userId
+	 * @param command
+	 * @return
+	 */
 	public boolean putCommand(String userId, String command) {
 		LinkedList<String> commandQueue = getCommandQueue(userId);
 

@@ -9,17 +9,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.eclipse.jdt.annotation.NonNull;
+
 import edu.cmu.tartan.xml.GameMode;
 
 public class LocalGame extends Game {
 	public static final String SAVE_FILE_NAME = "Tartan_save_file.dat";
-	
+
+	/**
+	 * @param userId
+	 */
 	public LocalGame(@NonNull String userId) {
 		super(userId);
 	}
-	
+
 	private boolean readGameData(String fileName) {
-		try ( 
+		try (
 			FileInputStream fis = new FileInputStream(fileName);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			ObjectInputStream in = new ObjectInputStream(bis)
@@ -33,7 +37,11 @@ public class LocalGame extends Game {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * @param userId
+	 * @return
+	 */
 	public boolean loadAndStart(String userId) {
 		if(context.getUserId().equals(userId)) {
 			configureGame(GameMode.LOCAL);
@@ -46,7 +54,7 @@ public class LocalGame extends Game {
 		}
 		return false;
 	}
-	
+
 	private boolean writeGameData(GameContext context, String fileName) {
 		try (
 			FileOutputStream fos = new FileOutputStream(fileName);
@@ -61,7 +69,12 @@ public class LocalGame extends Game {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * @param userId
+	 * @param fileName
+	 * @return
+	 */
 	public boolean save(String userId, String fileName) {
 		if(context.getUserId().equals(userId)) {
 			// 1. saving GameContext(Room information isn't save.)

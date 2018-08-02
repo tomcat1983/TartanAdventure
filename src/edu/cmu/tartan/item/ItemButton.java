@@ -13,9 +13,15 @@ import edu.cmu.tartan.properties.Pushable;
  */
 public class ItemButton extends Item implements Pushable {
 	private static final long serialVersionUID = 1L;
-	
+
 	protected String pushMessage;
 
+    /**
+     * @param s
+     * @param sd
+     * @param a
+     * @param userId
+     */
     public ItemButton(String s, String sd, String[] a, String userId) {
         super(s, sd, a, userId);
         this.pushMessage = "Pushed.";

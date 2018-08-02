@@ -14,7 +14,7 @@ public class TestDbAccessor {
 	String userPw = "1234";
 	String userType = "0";
 	String url = "test.db";
-	
+
 
 	@BeforeEach
 	public void beforeTest() {
@@ -76,7 +76,7 @@ public class TestDbAccessor {
 
 		// Then
 		assertEquals(true, returnValue);
-		
+
 	}
 
 	@Test
@@ -102,16 +102,16 @@ public class TestDbAccessor {
 		deleteFile(url);
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
-		
+
 		dbAccessor.insert(userId, userPw, userType);
 
 		// When
 		boolean returnValue = dbAccessor.delete(userId);
-		
+
 		// Then
 		assertEquals(true, returnValue);
 	}
-	
+
 	@Test
 	public void testShouldReturnOneWhenCheckTheUserId() {
 
@@ -119,16 +119,16 @@ public class TestDbAccessor {
 		deleteFile(url);
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
-		
+
 		dbAccessor.insert(userId, userPw, userType);
 
 		// When
 		int returnValue = dbAccessor.hasUserId(userId);
-		
+
 		// Then
 		assertEquals(1, returnValue);
 	}
-	
+
 	public void deleteFile(String fileLocation) {
 		File file = new File(fileLocation);
 		if (file.exists()) {

@@ -1,9 +1,9 @@
 package edu.cmu.tartan.room;
 
+import java.util.ArrayList;
+
 import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.item.Item;
-
-import java.util.ArrayList;
 
 public class RoomExcavatable extends Room {
 	private static final long serialVersionUID = 1L;
@@ -11,6 +11,11 @@ public class RoomExcavatable extends Room {
 	protected boolean wasDugUp;
 	protected ArrayList<Item> revealableItems;
 
+	/**
+	 * @param description
+	 * @param shortDescription
+	 * @param digMessage
+	 */
 	public RoomExcavatable(String description, String shortDescription, String digMessage) {
 		super(description, shortDescription);
 		this.digMessage = digMessage;
@@ -27,7 +32,7 @@ public class RoomExcavatable extends Room {
 			this.revealableItems = items;
 		}
 	}
-	
+
     /**
      * Perform the excavation
      */

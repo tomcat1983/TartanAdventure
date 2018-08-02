@@ -13,6 +13,12 @@ import edu.cmu.tartan.properties.Holdable;
 public class ItemShovel extends Item implements Holdable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * @param d
+	 * @param sd
+	 * @param a
+	 * @param userId
+	 */
 	public ItemShovel(String d, String sd, String[] a, String userId) {
 
         super(d, sd, a, userId);

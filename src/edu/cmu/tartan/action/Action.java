@@ -65,7 +65,7 @@ public enum Action {
         this.aliases = aliases;
         this.type = type;
     }
-        
+
     // Shortcuts to reverse movement
     static {
         ACTION_GO_EAST.opposite = ACTION_GO_WEST;
@@ -85,6 +85,9 @@ public enum Action {
         return this.aliases;
     }
 
+    /**
+     * @return
+     */
     public Type type() {
         return this.type;
     }

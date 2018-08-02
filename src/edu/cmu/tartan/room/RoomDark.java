@@ -55,12 +55,21 @@ public class RoomDark extends Room {
 	public boolean isDark() {
 		return isDark;
 	}
+	/**
+	 * @param isDark
+	 */
 	public void setDark(boolean isDark) {
 		this.isDark = isDark;
 	}
+	/**
+	 * @return
+	 */
 	public String deathMessage() {
 		return deathMessage;
-	}	
+	}
+	/**
+	 * @param message
+	 */
 	public void setDeathMessage(String message) {
 		this.deathMessage = message;
 	}
@@ -79,7 +88,7 @@ public class RoomDark extends Room {
 			return super.toString();
 		}
 	}
-	
+
 	@Override
 	public String description() {
 		if (isDark) {

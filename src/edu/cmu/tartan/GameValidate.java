@@ -34,39 +34,45 @@ public class GameValidate  {
 	private int gameCollectGoalCnt = 0;
 	private int gameExploreGoalCnt = 0;
 	private ArrayList<MapConfig> configErrors = new ArrayList<>();
-	private int obscuredRoomCnt = 0; 
+	private int obscuredRoomCnt = 0;
 	private int obstacleItemCnt = 0;
 	private int pointToAchive = 0;
 
+	/**
+	 * @param gameContext
+	 */
 	public GameValidate(GameContext gameContext) {
 		this.goals = gameContext.getGoals();
 		this.rooms = gameContext.getRooms();
 	}
 
+	/**
+	 * @return
+	 */
 	public List<MapConfig> check() {
 
 		if(rooms.isEmpty()) {
 			configErrors.add(MapConfig.NO_ROOM);
-			return configErrors; 
+			return configErrors;
 		}
-		
-		roomTypeCheck(); 
+
+		roomTypeCheck();
 
 		darkRoomCheck();
-		
+
 		requiredRoomCheck();
-		
+
 		obscuredRoomCheck();
-		
+
 		lockedRoomCheck();
-		
+
 		if(goals.isEmpty()) {
 			configErrors.add(MapConfig.NO_GOAL);
-			return configErrors; 
+			return configErrors;
 		}
-		
+
 		goalTypeCheck();
-		
+
 		dupGoalCheck();
 
 		collectGoalCheck();
@@ -74,7 +80,7 @@ public class GameValidate  {
 		exploreGoalCheck();
 
 		pointGoalCheck();
-		
+
 		return configErrors;
 	}
 
@@ -129,7 +135,7 @@ public class GameValidate  {
 			configErrors.add(MapConfig.NO_LUMINOUS);
 		}
 	}
-	
+
 	private void goalTypeCheck() {
 
 		for (GameGoal goal : goals) {
@@ -142,17 +148,17 @@ public class GameValidate  {
 				goalRooms = ((GameExploreGoal)goal).getItinerary();
 			}
 			else if(goal instanceof GamePointsGoal) {
-				gamePointGoalCnt++; 
+				gamePointGoalCnt++;
 				pointToAchive = ((GamePointsGoal)goal).getWinningScore().intValue();
 			}
 		}
 	}
-	
+
 	private void roomTypeCheck() {
 
 		for (Room room : rooms) {
 			if(room instanceof RoomDark) {
-				isDarkRoomExist = true; 
+				isDarkRoomExist = true;
 			}
 			else if(room instanceof RoomRequiredItem) {
 				isRequiredRoomExist = true;
@@ -161,14 +167,14 @@ public class GameValidate  {
 					requiredItems.add(requiredItem);
 			}
 			else if(room instanceof RoomObscured) {
-				isObscuredRoomExist = true; 
+				isObscuredRoomExist = true;
 				obscuredRoomCnt++;
 				Item obstacle = ((RoomObscured)room).getObscuringItem();
 				if(obstacle != null)
 					obstacleItemCnt++;
 			}
 			else if(room instanceof RoomLockable) {
-				isLockedRoomExist = true; 
+				isLockedRoomExist = true;
 			}
 		}
 	}
@@ -179,25 +185,25 @@ public class GameValidate  {
 			ArrayList<Item> items = room.getItems();
 			for (Item item : items) {
 				if(item instanceof Luminous)
-					return true; 
+					return true;
 			}
 		}
-		return false; 
+		return false;
 	}
 
 	private int getRequiredItemCount() {
-		return requiredItems.size(); 
+		return requiredItems.size();
 	}
 
 	private boolean isThereRequiredItem(int requiredItemCnt) {
 
-		int foundedItemCnt = 0; 
+		int foundedItemCnt = 0;
 
 		for (Item rItem : requiredItems) {
 			for (Room room : rooms) {
-				
+
 				foundedItemCnt += getRequiredItemPerRoom(rItem, room);
-				
+
 
 			}
 		}
@@ -206,18 +212,18 @@ public class GameValidate  {
 	}
 
 	private int getRequiredItemPerRoom(Item rItem, Room room) {
-		
+
 		int foundedItemCnt = 0;
-		
+
 		ArrayList<Item> items = room.getItems();
 		for (Item item : items) {
 			if(item.equals(rItem))
-				foundedItemCnt++; 
-			
-			if(item instanceof Meltable) { 
+				foundedItemCnt++;
+
+			if(item instanceof Meltable) {
 				Item melted = ((Meltable) item).meltItem();
 				if(melted.equals(rItem))
-					foundedItemCnt++; 
+					foundedItemCnt++;
 			}
 		}
 		return foundedItemCnt;
@@ -228,27 +234,27 @@ public class GameValidate  {
 			ArrayList<Item> items = room.getItems();
 			for (Item item : items) {
 				if(item instanceof ItemKey)
-					return true; 
+					return true;
 			}
 		}
-		return false; 
+		return false;
 	}
-	
+
 	private boolean isThereLockItem() {
 		for (Room room : rooms) {
 			ArrayList<Item> items = room.getItems();
 			for (Item item : items) {
 				if(item instanceof ItemLock)
-					return true; 
+					return true;
 			}
 		}
-		return false; 
+		return false;
 	}
 
 	private boolean isThereGoalItem() {
 
-		int goalItemCnt = goalItems.size(); 
-		int foundedItemCnt = 0; 
+		int goalItemCnt = goalItems.size();
+		int foundedItemCnt = 0;
 
 		for (String goalItem : goalItems) {
 			for (Room room : rooms) {
@@ -257,31 +263,31 @@ public class GameValidate  {
 		}
 		return (goalItemCnt == foundedItemCnt);
 	}
-	
+
 	private int getGoalItemPerRoom(String goalItem, Room room) {
-		
-		int foundedItemCnt = 0; 
+
+		int foundedItemCnt = 0;
 
 		ArrayList<Item> items = room.getItems();
 		for (Item item : items) {
 
 			if(item.toString().equals(goalItem))
-				foundedItemCnt++; 
-			
-			if(item instanceof Meltable) { 
+				foundedItemCnt++;
+
+			if(item instanceof Meltable) {
 				Item melted = ((Meltable) item).meltItem();
 				if(melted.toString().equals(goalItem))
-					foundedItemCnt++; 
+					foundedItemCnt++;
 			}
 		}
-		
-		return foundedItemCnt; 
+
+		return foundedItemCnt;
 	}
-	
+
 	private boolean isThereRoomToVisit() {
 
-		int roomToVisit = goalRooms.size(); 
-		int foundedRoomCnt = 0; 
+		int roomToVisit = goalRooms.size();
+		int foundedRoomCnt = 0;
 
 		for (String goalRoom : goalRooms) {
 			for (Room room : rooms) {
@@ -292,20 +298,20 @@ public class GameValidate  {
 
 		return (roomToVisit == foundedRoomCnt);
 	}
-	
+
 	private int calcPointsCanEarn() {
 
-		int sum = 0; 
+		int sum = 0;
 
 		for (Room room : rooms) {
 			ArrayList<Item> items = room.getItems();
 			for (Item item : items) {
 				sum += item.value();
-				
-				if(item instanceof Meltable) { 
+
+				if(item instanceof Meltable) {
 					Item melted = ((Meltable) item).meltItem();
 					if(melted != null)
-						sum += melted.value(); 
+						sum += melted.value();
 				}
 			}
 		}
