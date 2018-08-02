@@ -16,18 +16,18 @@ import edu.cmu.tartan.socket.SocketServer;
 import edu.cmu.tartan.xml.XmlLoginRole;
 
 public class TestNetwork {
-	
+
 	IQueueHandler messageQueue;
 	ISocketHandler socketServer;
 	ISocketHandler designerSocketServer;
 	TartanGameManager tartanGameManager;
-	
+
 	TartanGameManagerClient gameManager;
-	
+
 	public TestNetwork() {
 		beforeTest();
 	}
-	
+
 	public void beforeTest() {
 		messageQueue = new MessageQueue();
 
@@ -43,33 +43,34 @@ public class TestNetwork {
 
 		Thread gameManagerThread = new Thread(tartanGameManager);
 		gameManagerThread.start();
-		
+
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		gameManager = new TartanGameManagerClient(false);
 		Thread gameManagerClientThread = new Thread(gameManager);
 		gameManagerClientThread.start();
 	}
-	
+
+	@Disabled
 	@Test
 	public void testLogin() {
-		
+
 		boolean returnValue = false;
 		returnValue = gameManager.login("", "developer", "AAAAA000", XmlLoginRole.PLAYER);
-		
+
 		assertEquals(true, returnValue);
-		
+
 		returnValue = gameManager.startGame("developer");
 		assertEquals(true, returnValue);
-		
+
 		returnValue = gameManager.updateGameState("developer", "go east");
 		assertEquals(true, returnValue);
-		
+
 		returnValue = gameManager.endGame("","developer");
 		assertEquals(true, returnValue);
 	}
@@ -77,45 +78,45 @@ public class TestNetwork {
 	@Disabled
 	@Test
 	public void testResgiser() {
-		
+
 		boolean returnValue = false;
-		
+
 		returnValue = gameManager.register("", "test1234", "aaaaA000");
-		
+
 		assertEquals(true, returnValue);
-		
+
 		DbAccessor db = new DbAccessor();
 		db.delete("test1234");
 	}
-	
+
 	@Test
 	public void testShouldReturnTrueWhenInputValideUserId() {
 		String userId = "test1234";
 		boolean returnValue = gameManager.validateUserId(userId);
 		assertEquals(true, returnValue);
 	}
-	
+
 	@Test
 	public void testShouldReturnFalseWhenInputInvalideUserId() {
 		String userId = "test";
 		boolean returnValue = gameManager.validateUserId(userId);
 		assertEquals(false, returnValue);
 	}
-	
+
 	@Test
 	public void testShouldReturnTrueWhenInputValideUserPw() {
 		String userId = "aaaaA000";
 		boolean returnValue = gameManager.validateUserPw(userId);
 		assertEquals(true, returnValue);
 	}
-	
+
 	@Test
 	public void testShouldReturnFalseWhenInputInvalideUserPw() {
 		String userId = "aaaa";
 		boolean returnValue = gameManager.validateUserPw(userId);
 		assertEquals(false, returnValue);
 	}
-	
+
 	@Test
 	public void testEncryptionPassword() {
 		String encryptionPw = "fa876f642212ea67a08f0a56fbcf672e4e2c1f51a2d7d6aba6ee84a8bfca2340";
@@ -123,11 +124,11 @@ public class TestNetwork {
 		String returnValue = gameManager.encryptPassword(password);
 		assertEquals(encryptionPw, returnValue);
 	}
-	
+
 	@Test
 	public void testWaitForConnection() {
 		boolean returnValue = gameManager.waitForConnection();
 		assertEquals(true, returnValue);
 	}
-	
+
 }

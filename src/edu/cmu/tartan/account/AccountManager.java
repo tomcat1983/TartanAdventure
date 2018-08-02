@@ -7,25 +7,34 @@ import edu.cmu.tartan.db.DbAccessor;
 import edu.cmu.tartan.xml.XmlLoginRole;
 
 public class AccountManager implements IAccountHandler {
-	
+
 	/**
 	 * Game logger for game log
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
-	
+
 	DbAccessor dbAccessor;
 
+	/**
+	 *
+	 */
 	public AccountManager() {
 		dbAccessor = new DbAccessor();
 	}
-	
+
+	/**
+	 * @param mode
+	 */
 	public AccountManager(String mode) {
 		dbAccessor = new DbAccessor();
 		if ("server".equals(mode)) {
 			initialize();
 		}
 	}
-	
+
+	/**
+	 *
+	 */
 	private void initialize() {
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
@@ -47,18 +56,22 @@ public class AccountManager implements IAccountHandler {
 
 	@Override
 	public boolean loginUser(String userId, String userPw, String userRole) {
-		
+
 		String userPwInDB = dbAccessor.getPassword(userId);
 		String userRoleInDB = dbAccessor.getUserRole(userId);
-		
+
 		if (userPw.equals(userPwInDB) && userRole.equals(userRoleInDB)) {
 			return true;
 		}
-		
+
 		gameLogger.log(Level.INFO, "Does not matched from DB info. User ID : {0}", userId);
 		return false;
 	}
 
+	/**
+	 * @param userId
+	 * @return
+	 */
 	public ReturnType validateId(String userId) {
 
 		// 1. More than 6 characters && Smaller than 16
@@ -79,6 +92,10 @@ public class AccountManager implements IAccountHandler {
 		return ReturnType.SUCCESS;
 	}
 
+	/**
+	 * @param userPw
+	 * @return
+	 */
 	public ReturnType validatePassword(String userPw) {
 		// 1. More than 8 characters && smaller than 16
 		if (userPw.length() < 8 || userPw.length() > 16) {
@@ -94,7 +111,7 @@ public class AccountManager implements IAccountHandler {
 		if (!userPw.matches("^[a-zA-Z]\\w*")) {
 			return ReturnType.INVALID_PW;
 		}
-		
+
 		//4. Capital letters are more than one
 		if (!userPw.matches(".*[A-Z].*")) {
 			return ReturnType.INVALID_PW;

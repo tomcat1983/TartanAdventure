@@ -36,11 +36,14 @@ public class RoomLockable extends Room {
 	public RoomLockable(String description, String shortDescription, boolean locked) {
 		this(description, shortDescription, locked, null);
 	}
-	
+
+	/**
+	 * @param key
+	 */
 	public void setKey(Item key) {
 		this.key = key;
 	}
-	
+
     /**
      * Indicate whether room is locked
      * @return
@@ -56,10 +59,13 @@ public class RoomLockable extends Room {
 	public void setUnlockMessage(String s){
 		this.unlockMessage = s;
 	}
-	
+
+	/**
+	 * @return
+	 */
 	public String getUnlockMessage(){
 		return this.unlockMessage;
-	}	
+	}
 
     /**
      * Unlock the room
@@ -71,7 +77,7 @@ public class RoomLockable extends Room {
 			this.locked = false;
 			return true;
 		}
-		else { 
+		else {
 			return false;
 		}
 	}

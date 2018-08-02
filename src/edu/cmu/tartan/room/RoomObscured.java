@@ -33,34 +33,55 @@ public class RoomObscured extends Room {
 		this.unobscureMessage = null;
 	}
 
-	//make room first, set obscuringItem later 
+	//make room first, set obscuringItem later
 	public RoomObscured(String description, String shortDescription) {
 		this(description, shortDescription, null);
 	}
-	
+
     // Getters & setters
     public Item getObscuringItem() {
 		return obscuringItem;
 	}
 
+	/**
+	 * @param obscuringItem
+	 */
 	public void setObscuringItem(Item obscuringItem) {
 		this.obscuringItem = obscuringItem;
 	}
+	/**
+	 * @return
+	 */
 	public boolean isObscured() {
 		return this.isObscured;
 	}
+	/**
+	 * @param obscured
+	 */
 	public void setObscured(boolean obscured) {
 		this.isObscured = obscured;
 	}
+	/**
+	 * @param s
+	 */
 	public void setUnobscureMessage(String s) {
 		this.unobscureMessage = s;
 	}
+	/**
+	 * @return
+	 */
 	public String unobscureMessage() {
 		return this.unobscureMessage;
 	}
+	/**
+	 * @param s
+	 */
 	public void setObscureMessage(String s) {
 		this.obscureMessage = s;
 	}
+	/**
+	 * @return
+	 */
 	public String obscureMessage() {
 		return this.obscureMessage;
 	}

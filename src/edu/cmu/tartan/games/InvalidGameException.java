@@ -9,6 +9,9 @@ package edu.cmu.tartan.games;
  * 1.0 March 2018 - initial version
  */
 public class InvalidGameException extends Exception {
+    /**
+     * @param m
+     */
     public InvalidGameException(String m) {
         super(m);
     }

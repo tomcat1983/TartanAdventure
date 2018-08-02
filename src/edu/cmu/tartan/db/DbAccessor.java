@@ -19,7 +19,7 @@ public class DbAccessor {
 	 * Game logger for game log
 	 */
 	protected static final Logger gameLogger = Logger.getGlobal();
-	
+
 	private String url;
 	private String dbLocation = "./";
 	private String dbName = "TartanAdventure.db";
@@ -36,7 +36,7 @@ public class DbAccessor {
 	public boolean createNewDatabase() {
 
 		File file = new File(dbLocation + dbName);
-		
+
 		if (file.isFile()) {
 			gameLogger.log(Level.INFO, "Database already exists");
 			return false;
@@ -45,7 +45,7 @@ public class DbAccessor {
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
 				DatabaseMetaData meta = conn.getMetaData();
-				
+
 				gameLogger.log(Level.INFO, "A new database({0}) has been created.", meta.getDatabaseProductName());
 			}
 			return true;
@@ -87,11 +87,11 @@ public class DbAccessor {
 	 * @param capacity
 	 */
 	public boolean insert(String userId, String userPw, String userType) {
-		
+
 		String sql = "INSERT INTO T_USER_INFO(user_id, user_pw, user_type) VALUES(?,?,?)";
 
 		boolean returnValue = false;
-		
+
 		try (Connection conn = DriverManager.getConnection(url);
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, userId);
@@ -119,10 +119,10 @@ public class DbAccessor {
 		try (Connection conn = DriverManager.getConnection(url);
 				Statement stmt = conn.createStatement();
 				PreparedStatement pstmt = conn.prepareStatement(query)) {
-			
+
 			pstmt.setString(1,  userId);
 			rs = pstmt.executeQuery();
-			
+
 			while(rs.next()) {
 				value = rs.getString(param);
 			}
@@ -139,58 +139,75 @@ public class DbAccessor {
 		return value;
 	}
 
+	/**
+	 * @param userId
+	 * @return
+	 */
 	public String getPassword(String userId) {
-		
+
 		String userPw = null;
+
 		userPw = selectByUserId(userId, "user_pw");
-		
+
 		return userPw;
 	}
-	
+
+	/**
+	 * @param userId
+	 * @return
+	 */
 	public String getUserRole(String userId) {
-		
+
 		String userPw = null;
 		userPw = selectByUserId(userId, "user_type");
 
 		return userPw;
 	}
-	
+
+	/**
+	 * @param userId
+	 * @return
+	 */
 	public boolean delete(String userId) {
-		
+
 		String sql = "DELETE FROM T_USER_INFO WHERE user_id = ?";
-		
+
 		boolean returnValue = false;
 
 		try (Connection conn = DriverManager.getConnection(url);
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			
+
 			// set the corresponding param
             pstmt.setString(1, userId);
             // execute the delete statement
             pstmt.executeUpdate();
             returnValue = true;
-            
+
 		} catch (SQLException e) {
 			gameLogger.log(Level.WARNING, e.getMessage());
 		}
-		
+
 		return returnValue;
 	}
-	
+
+	/**
+	 * @param userId
+	 * @return
+	 */
 	public int hasUserId(String userId) {
-		
+
 		String sql = "SELECT COUNT(user_id) FROM T_USER_INFO WHERE user_id=?";
 
 		int returnValue = 0;
 		ResultSet rs = null;
-		
+
 		try (Connection conn = DriverManager.getConnection(url);
 				Statement stmt = conn.createStatement();
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			
+
 			pstmt.setString(1,  userId);
 			rs = pstmt.executeQuery();
-			
+
 			while(rs.next()) {
 				returnValue = Integer.parseInt(rs.getString("COUNT(user_id)"));
 			}

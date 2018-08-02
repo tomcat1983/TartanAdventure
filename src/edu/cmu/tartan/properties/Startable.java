@@ -9,5 +9,8 @@ package edu.cmu.tartan.properties;
  * 1.0 March 2018 - initial version
  */
 public interface Startable {
+	/**
+	 * @return
+	 */
 	Boolean start();
 }

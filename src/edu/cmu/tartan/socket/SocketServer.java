@@ -88,7 +88,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 
 	@Override
 	public boolean stopSocket() {
-		
+
 		gameLogger.log(Level.INFO, "Close a server socket");
 
 		boolean returnValue = false;
@@ -116,7 +116,7 @@ public class SocketServer implements Runnable, ISocketHandler {
 				break;
 			}
 		}
-		
+
 		return returnValue;
 	}
 
@@ -133,24 +133,24 @@ public class SocketServer implements Runnable, ISocketHandler {
 	@Override
 	public boolean sendToAll(String message) {
 		boolean returnValue = false;
-		
+
 		for (Entry<String, UserClientThread> entry : clientThreadMap.entrySet()) {
 			returnValue = entry.getValue().sendMessage(message);
 		}
 
 		return returnValue;
 	}
-	
+
 	@Override
 	public boolean sendToOthers(String userId, String message) {
 		boolean returnValue = false;
-		
+
 		for(Entry<String, UserClientThread> entry : clientThreadMap.entrySet()) {
 			if (!userId.equals(entry.getKey())) {
 				returnValue = entry.getValue().sendMessage(message);
 			}
 		}
-		
+
 		return returnValue;
 	}
 
@@ -174,6 +174,10 @@ public class SocketServer implements Runnable, ISocketHandler {
 		return !clientThreadMap.containsKey(userId);
 	}
 
+	/**
+	 * @param threadName
+	 * @return
+	 */
 	public boolean removeClientFromList(String threadName) {
 		for(UserClientThread client : clientThreadList) {
 			if (threadName.equals(client.getThreadName())) {
@@ -211,6 +215,12 @@ public class SocketServer implements Runnable, ISocketHandler {
 		}
 	}
 
+	/**
+	 * @param isSuccess
+	 * @param userId
+	 * @param threadName
+	 * @return
+	 */
 	public boolean login(boolean isSuccess, String userId, String threadName) {
 
 		boolean returnValue = false;
@@ -218,12 +228,18 @@ public class SocketServer implements Runnable, ISocketHandler {
 		if (isSuccess) {
 			returnValue = addClient(userId, threadName);
 		}
-		
+
 		gameLogger.log(Level.INFO, "Added a client to a map : {0}", returnValue);
-		
+
 		return returnValue;
 	}
 
+	/**
+	 * @param isSuccess
+	 * @param userId
+	 * @param threadName
+	 * @return
+	 */
 	public boolean endGame(boolean isSuccess, String userId, String threadName) {
 		boolean returnValue = false;
 
@@ -239,10 +255,16 @@ public class SocketServer implements Runnable, ISocketHandler {
 		return returnValue;
 	}
 
+	/**
+	 * @param isPlaying
+	 */
 	public void setIsPlaying(boolean isPlaying) {
 		this.isPlaying = isPlaying;
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean getIsPlaying() {
 		return isPlaying;
 	}

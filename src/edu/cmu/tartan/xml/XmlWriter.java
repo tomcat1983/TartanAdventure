@@ -39,9 +39,15 @@ public class XmlWriter {
 	DocumentBuilderFactory dbFactory;
 	DocumentBuilder dBuilder;
 	Document docWriting;
-	Element lastElement; 
-	Element parentElement; 
+	Element lastElement;
+	Element parentElement;
 
+	/**
+	 * @param msgType
+	 * @param sender
+	 * @param receiver
+	 * @throws ParserConfigurationException
+	 */
 	public void startWritingXml(XmlMessageType msgType, String sender, String receiver) throws ParserConfigurationException {
 
 		dbFactory =  DocumentBuilderFactory.newInstance();
@@ -54,23 +60,32 @@ public class XmlWriter {
 		setAttributeToElement("receiver", receiver);
 	}
 
+	/**
+	 * @param elementName
+	 */
 	public void rootElement(String elementName) {
 
 		Element rootElement = docWriting.createElement(elementName);
 		docWriting.appendChild(rootElement);
 		lastElement = rootElement;
-		parentElement = rootElement; 
+		parentElement = rootElement;
 	}
 
 
+	/**
+	 * @param elementName
+	 */
 	public void addChildElement(String elementName) {
 
 		Element childElement = docWriting.createElement(elementName);
 		lastElement.appendChild(childElement);
-		parentElement = lastElement; 
+		parentElement = lastElement;
 		lastElement = childElement;
 	}
 
+	/**
+	 * @param elementName
+	 */
 	public void addBrotherElement(String elementName) {
 
 		Element brotherElement = docWriting.createElement(elementName);
@@ -79,6 +94,10 @@ public class XmlWriter {
 	}
 
 
+	/**
+	 * @param attrName
+	 * @param value
+	 */
 	public void setAttributeToElement(String attrName, String value) {
 
 		Attr attr = docWriting.createAttribute(attrName);
@@ -87,11 +106,18 @@ public class XmlWriter {
 	}
 
 
+	/**
+	 * @return
+	 */
 	public String convertDocumentToString() {
 
-		return convertDocumentToString(docWriting); 
+		return convertDocumentToString(docWriting);
 	}
 
+	/**
+	 * @param doc
+	 * @return
+	 */
 	public static String convertDocumentToString(Document doc) {
 
 		String result = null;
@@ -114,14 +140,18 @@ public class XmlWriter {
 			gameLogger.severe("TransformerException");
 		}
 
-		return result; 
+		return result;
 	}
 
+	/**
+	 * @param fileName
+	 * @param xmlString
+	 */
 	public static void saveXmlStringToFile(String fileName, String xmlString) {
 
 		try (Writer out = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream(fileName), "UTF8"))) {
-			
+
 			out.append(xmlString);
 			out.flush();
 		} catch (FileNotFoundException e) {
@@ -135,10 +165,15 @@ public class XmlWriter {
 		}
 	}
 
+	/**
+	 * @param destFileName
+	 * @param sourceFileName
+	 * @return
+	 */
 	public static boolean overWriteFile(String destFileName, String sourceFileName) {
 
-		boolean result = true; 
-		
+		boolean result = true;
+
 		File source = new File(sourceFileName);
 		File dest = new File(destFileName);
 
@@ -162,12 +197,15 @@ public class XmlWriter {
 			gameLogger.severe("Exception occur when overWriteFile from " + sourceFileName + " to " + destFileName);
 			result = false;
 		}
-		
-		return result; 
+
+		return result;
 	}
 
+	/**
+	 * @param c
+	 */
 	public static void close(Closeable c) {
-		if (c == null) return; 
+		if (c == null) return;
 		try {
 			c.close();
 		} catch (IOException e) {

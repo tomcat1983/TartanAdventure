@@ -23,21 +23,24 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	protected static final Logger gameLogger = Logger.getGlobal();
 
 	static final int MAX_DESIGNER_CONNECTION = 1;
-	
+
 	private int socketCounter = 0;
 	private boolean isLoop = true;
-	
+
 	private List<DesignerClientThread> clientThreadList = new ArrayList<>();
 	private HashMap<String, DesignerClientThread> clientThreadMap = new HashMap<>();
-	
+
 	private ServerSocket serverSocket;
 	private IQueueHandler queue;
 
+	/**
+	 * @param queue
+	 */
 	public DesignerSocketServer(IQueueHandler queue) {
 		this.queue = queue;
 		serverSocket = null;
 	}
-	
+
 	@Override
 	public void run() {
 		startSocket();
@@ -45,7 +48,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 
 	@Override
 	public void startSocket() {
-		
+
 		int serverPort = Config.getDesignerPort();
 
 		try {
@@ -61,12 +64,12 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 
 				gameLogger.log(Level.INFO, "New client connected");
 				socketCounter++;
-				
+
 				String threadName = String.format("Designer %d", socketCounter);
 				DesignerClientThread clientHandler = new DesignerClientThread(socket, queue, threadName);
 				Thread thread = new Thread(clientHandler, threadName);
 				thread.start();
-				
+
 				clientThreadList.add(clientHandler);
 			}
 
@@ -78,12 +81,12 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 
 	@Override
 	public boolean stopSocket() {
-		
+
 		gameLogger.warning("Close a server designer socket");
 
 		boolean returnValue = false;
 		isLoop = false;
-		
+
 		try {
 			if (serverSocket != null)
 				serverSocket.close();
@@ -92,24 +95,24 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 		socketCounter = 0;
-		
+
 		return returnValue;
 	}
-	
+
 	private boolean sendMessage(Socket clientSocket, String message) {
 		try {
 			OutputStream output = clientSocket.getOutputStream();
 			PrintWriter writer = new PrintWriter(output, true);
-			
+
 			writer.println(message);
-			
+
 			return true;
 		} catch (IOException e) {
 			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean sendToClient(String userId, String message) {
 		boolean returnValue = false;
@@ -118,11 +121,11 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 		}
 		return returnValue;
 	}
-	
+
 	@Override
 	public boolean sendToAll(String message) {
 		boolean returnValue = false;
-		
+
 		for (Entry<String, DesignerClientThread> entry : clientThreadMap.entrySet()) {
 			returnValue = entry.getValue().sendMessage(message);
 		}
@@ -148,7 +151,11 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 		}
 		return !clientThreadMap.containsKey(userId);
 	}
-	
+
+	/**
+	 * @param threadName
+	 * @return
+	 */
 	public boolean removeClientFromList(String threadName) {
 		for(DesignerClientThread client : clientThreadList) {
 			if (threadName.equals(client.getThreadName())) {
@@ -158,7 +165,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 		socketCounter--;
 		return false;
 	}
-	
+
 	@Override
 	public void updateSocketState(String userId, CommandResult result, String threadName) {
 		switch (result) {
@@ -177,6 +184,12 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 		}
 	}
 
+	/**
+	 * @param isSuccess
+	 * @param userId
+	 * @param threadName
+	 * @return
+	 */
 	public boolean login(boolean isSuccess, String userId, String threadName) {
 
 		boolean returnValue = false;
@@ -184,9 +197,9 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 		if (isSuccess) {
 			returnValue = addClient(userId, threadName);
 		}
-		
+
 		gameLogger.log(Level.INFO, "Added a client to a map : {0}", returnValue);
-		
+
 		return returnValue;
 	}
 
@@ -200,7 +213,7 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 				break;
 			}
 		}
-		
+
 		return returnValue;
 	}
 
@@ -208,5 +221,5 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 	public boolean sendToOthers(String userId, String message) {
 		return false;
 	}
-	
+
 }

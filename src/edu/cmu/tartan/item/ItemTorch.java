@@ -15,6 +15,12 @@ public class ItemTorch extends Item implements Holdable, Luminous {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * @param d
+	 * @param sd
+	 * @param a
+	 * @param userId
+	 */
 	public ItemTorch(String d, String sd, String[] a, String userId) {
 
         super(d, sd, a, userId);

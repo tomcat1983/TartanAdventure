@@ -1,9 +1,9 @@
 package edu.cmu.tartan.goal;
 
+import java.util.List;
+
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.room.Room;
-
-import java.util.List;
 
 /**
  * A game goal based on exploration of different areas. Traveling to each place is necessary to achieve this goal.
@@ -31,16 +31,22 @@ public class GameExploreGoal implements GameGoal {
         itinerary = places;
         player = p;
     }
-    
+
+    /**
+     * @param places
+     */
     public GameExploreGoal(List<String> places) {
         this(places, null);
     }
 
-    
+
+    /**
+     * @return
+     */
     public List<String> getItinerary() {
-    	return itinerary; 
+    	return itinerary;
     }
-    
+
     /**
      * Describe the goal.
      * @return a description of the goal.
@@ -59,7 +65,8 @@ public class GameExploreGoal implements GameGoal {
      * Fetch status of this goal
      * @return a displayable string for progress towards this goal
      */
-    public String getStatus() {
+    @Override
+	public String getStatus() {
         return "You have explored " + count + " out of " + itinerary.size() + " rooms.";
     }
 

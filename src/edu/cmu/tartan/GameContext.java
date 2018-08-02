@@ -16,7 +16,7 @@ public class GameContext implements Comparable, Serializable {
      */
     private ArrayList<GameGoal> goals = new ArrayList<>();
     /**
-     * The set of rooms for a game(for validation only) 
+     * The set of rooms for a game(for validation only)
      */
     private ArrayList<Room> rooms = new ArrayList<>();
 	/**
@@ -33,6 +33,9 @@ public class GameContext implements Comparable, Serializable {
      */
     private String userId;
 
+    /**
+     * @param userId
+     */
     public GameContext(String userId) {
     	this.userId = userId;
     }
@@ -42,15 +45,21 @@ public class GameContext implements Comparable, Serializable {
 	public ArrayList<GameGoal> getGoals() {
 		return goals;
 	}
-	
+
+	/**
+	 * @return
+	 */
 	public ArrayList<Room> getRooms() {
 		return rooms;
 	}
-	
+
+	/**
+	 * @param rooms
+	 */
 	public void setRooms(ArrayList<Room> rooms) {
 		this.rooms = rooms;
 	}
-	
+
 	/**
 	 * @param goals the goals to set
 	 */
@@ -101,10 +110,16 @@ public class GameContext implements Comparable, Serializable {
 	public void setGameDescription(String gameDescription) {
 		this.gameDescription = gameDescription;
 	}
-	
+
+	/**
+	 * @return
+	 */
 	public String getGameName() {
 		return gameName;
 	}
+	/**
+	 * @param gameName
+	 */
 	public void setGameName(String gameName) {
 		this.gameName = gameName;
 	}
@@ -115,13 +130,13 @@ public class GameContext implements Comparable, Serializable {
 	 */
 	public boolean validate() {
 		if(gameName == null || gameDescription == null)
-			return false; 
+			return false;
 
 		GameValidate validater = new GameValidate(this);
-				
+
 		return validater.check().isEmpty();
 	}
-    
+
     @Override
 	public int hashCode() {
 		final int prime = 31;

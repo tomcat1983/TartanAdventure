@@ -1,9 +1,9 @@
 package edu.cmu.tartan.goal;
 
+import java.util.ArrayList;
+
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.item.Item;
-
-import java.util.ArrayList;
 
 /**
  * A game goal based on collecting items. If a player collects a designated set of items he/she will achieve this goal.
@@ -28,15 +28,21 @@ public class GameCollectGoal implements GameGoal {
         player = p;
         itemsList = items;
     }
-    
+
+    /**
+     * @param items
+     */
     public GameCollectGoal(ArrayList<String> items) {
         this(items, null);
     }
-    
+
+    /**
+     * @return
+     */
     public ArrayList<String> getItemList() {
-    	return itemsList; 
+    	return itemsList;
     }
-    
+
     @Override
     public Boolean isAchieved() {
         int newCount=0;
@@ -51,8 +57,9 @@ public class GameCollectGoal implements GameGoal {
         return count == itemsList.size();
     }
 
-    public String getStatus() {
-        return "You collected " + count + " out of " + itemsList.size() + " items.";	
+    @Override
+	public String getStatus() {
+        return "You collected " + count + " out of " + itemsList.size() + " items.";
     }
 
     @Override
@@ -64,7 +71,7 @@ public class GameCollectGoal implements GameGoal {
         }
         return sb.toString();
     }
-    
+
     @Override
 	public void setPlayer(Player player) {
 		this.player = player;

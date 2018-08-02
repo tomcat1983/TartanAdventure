@@ -28,10 +28,16 @@ public class Config {
 		UNKNOWN, SERVER, CLIENT
 	}
 
+	/**
+	 * @param fileName
+	 */
 	public Config (String fileName) {
 		this.fileName = fileName;
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean readPropertyFile() {
 
 		boolean returnValue = true;
@@ -61,6 +67,9 @@ public class Config {
 		return returnValue;
 	}
 
+	/**
+	 * @return
+	 */
 	public static RunningMode getMode() {
 		String mode = properties.getProperty("tartan.operation.mode").toUpperCase();
 
@@ -74,10 +83,16 @@ public class Config {
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	public static String getServerIp() {
 		return properties.getProperty("tartan.server.ip");
 	}
 
+	/**
+	 * @return
+	 */
 	public static int getUserPort() {
 		int port = DEFAULT_PORT;
 
@@ -87,6 +102,9 @@ public class Config {
 		return port;
 	}
 
+	/**
+	 * @return
+	 */
 	public static int getDesignerPort() {
 		int port = DEFAULT_DESIGNER_PORT;
 
@@ -97,10 +115,16 @@ public class Config {
 		return port;
 	}
 
+	/**
+	 * @return
+	 */
 	public static String getDbName() {
 		return properties.getProperty("tartan.db.name");
 	}
 
+	/**
+	 * @return
+	 */
 	public static Level getLogLeve() {
 		Level level = Level.OFF;
 

@@ -13,10 +13,16 @@ public class ServerInterface {
 		UNDECIDED, EXIT
 	}
 
+	/**
+	 *
+	 */
 	public ServerInterface() {
 		// Do nothing because there is no member variable.
 	}
 
+	/**
+	 * @return
+	 */
 	public Command getCommand() {
 		Command serverCommand = Command.UNDECIDED;
 
