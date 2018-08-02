@@ -30,7 +30,11 @@ public class AccountManager implements IAccountHandler {
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
 		if (dbAccessor.hasUserId("designer") == 0) {
-			dbAccessor.insert("designer", "abcD1234", XmlLoginRole.DESIGNER.name());
+			dbAccessor.insert("designer", "fa876f642212ea67a08f0a56fbcf672e4e2c1f51a2d7d6aba6ee84a8bfca2340", XmlLoginRole.DESIGNER.name());
+		}
+		
+		if (dbAccessor.hasUserId("developer") == 0) {
+			dbAccessor.insert("developer", "fa876f642212ea67a08f0a56fbcf672e4e2c1f51a2d7d6aba6ee84a8bfca2340", XmlLoginRole.PLAYER.name());
 		}
 	}
 

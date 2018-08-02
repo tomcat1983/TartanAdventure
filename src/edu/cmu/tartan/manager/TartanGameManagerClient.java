@@ -80,7 +80,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 	public boolean sendMessage(String message) {
 		socket.sendMessage(message);
-		return false;
+		return true;
 	}
 
 	@Override
