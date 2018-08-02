@@ -22,12 +22,13 @@ public class TestNetwork {
 	TartanGameManager tartanGameManager;
 
 	TartanGameManagerClient gameManager;
+	TartanGameManagerClient designerManager;
 
-	public TestNetwork() {
-		beforeTest();
-	}
-
-	public void beforeTest() {
+	@Test
+	public void testLogin() {
+		
+		String userId = "developer";
+		
 		messageQueue = new MessageQueue();
 
 		socketServer = new SocketServer(messageQueue);
@@ -39,7 +40,6 @@ public class TestNetwork {
 		designerSocketServerThread.start();
 
 		tartanGameManager = new TartanGameManager(socketServer, designerSocketServer, messageQueue);
-
 		Thread gameManagerThread = new Thread(tartanGameManager);
 		gameManagerThread.start();
 
@@ -53,16 +53,30 @@ public class TestNetwork {
 		gameManager = new TartanGameManagerClient(false);
 		Thread gameManagerClientThread = new Thread(gameManager);
 		gameManagerClientThread.start();
-	}
+		
+		designerManager = new TartanGameManagerClient(true);
+		Thread designerClientThread = new Thread(designerManager);
+		designerClientThread.start();
+		
+		
 
-	@Test
-	public void testLogin() {
-		
-		String userId = "developer";
-		
 		boolean returnValue = false;
-		returnValue = gameManager.login("", userId, "AAAAA000", XmlLoginRole.PLAYER);
+		returnValue = gameManager.waitForConnection();
+		assertEquals(true, returnValue);
 		
+		testEncryptionPassword();
+		testShouldReturnFalseWhenInputInvalideUserId();
+		testShouldReturnFalseWhenInputInvalideUserPw();
+		testShouldReturnTrueWhenInputValideUserId();
+		testShouldReturnTrueWhenInputValideUserPw();
+		
+		returnValue = designerManager.waitForConnection();
+		assertEquals(true, returnValue);
+		
+		returnValue = designerManager.login("", "designer", "AAAAA000", XmlLoginRole.DESIGNER);
+		assertEquals(true, returnValue);
+		
+		returnValue = gameManager.login("", userId, "AAAAA000", XmlLoginRole.PLAYER);
 		assertEquals(true, returnValue);
 		
 		returnValue = gameManager.startGame(userId);
@@ -72,16 +86,24 @@ public class TestNetwork {
 		assertEquals(true, returnValue);
 		
 		returnValue = tartanGameManager.sendToClient(userId, "go east");
-		assertEquals(false, returnValue);
+		assertEquals(true, returnValue);
 
 		returnValue = tartanGameManager.sendToAll(userId, "Hello2");
-		assertEquals(false, returnValue);
+		assertEquals(true, returnValue);
 		
 		returnValue = tartanGameManager.sendToOthers(userId, "Hello3");
 		assertEquals(false, returnValue);
 		
-		returnValue = gameManager.endGame("", userId);
-
+		Runnable endGame = new Runnable() {
+			public void run() {
+				gameManager.endGame("", userId);
+			}
+		};
+		
+		Thread endGameThread = new Thread(endGame);
+		endGameThread.start();
+		
+		returnValue = tartanGameManager.loseTheGame(userId, "LOSE");
 		assertEquals(true, returnValue);
 	}
 
@@ -96,46 +118,35 @@ public class TestNetwork {
 		assertEquals(true, returnValue);
 	}
 
-	@Test
 	public void testShouldReturnTrueWhenInputValideUserId() {
 		String userId = "test1234";
 		boolean returnValue = gameManager.validateUserId(userId);
 		assertEquals(true, returnValue);
 	}
 
-	@Test
 	public void testShouldReturnFalseWhenInputInvalideUserId() {
 		String userId = "test";
 		boolean returnValue = gameManager.validateUserId(userId);
 		assertEquals(false, returnValue);
 	}
 
-	@Test
 	public void testShouldReturnTrueWhenInputValideUserPw() {
 		String userId = "aaaaA000";
 		boolean returnValue = gameManager.validateUserPw(userId);
 		assertEquals(true, returnValue);
 	}
 
-	@Test
 	public void testShouldReturnFalseWhenInputInvalideUserPw() {
 		String userId = "aaaa";
 		boolean returnValue = gameManager.validateUserPw(userId);
 		assertEquals(false, returnValue);
 	}
 
-	@Test
 	public void testEncryptionPassword() {
 		String encryptionPw = "fa876f642212ea67a08f0a56fbcf672e4e2c1f51a2d7d6aba6ee84a8bfca2340";
 		String password = "AAAAA000";
 		String returnValue = gameManager.encryptPassword(password);
 		assertEquals(encryptionPw, returnValue);
-	}
-
-	@Test
-	public void testWaitForConnection() {
-		boolean returnValue = gameManager.waitForConnection();
-		assertEquals(true, returnValue);
 	}
 
 }
