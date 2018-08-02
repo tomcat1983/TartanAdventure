@@ -13,7 +13,7 @@ public class TestDbAccessor {
 	String userId = "gildong";
 	String userPw = "1234";
 	String userType = "0";
-	String url = "TartanAdventure.db";
+	String url = "test.db";
 	
 
 	@BeforeEach
@@ -21,14 +21,11 @@ public class TestDbAccessor {
 		dbAccessor = new DbAccessor();
 	}
 
-//	@Disabled
 	@Test
 	public void testTrueWhenCreateNewDatabase() {
 
 		// Given
-		File file = new File(url);
-		if (file.exists())
-			file.delete();
+		deleteFile(url);
 
 		// When
 		boolean returnValue = dbAccessor.createNewDatabase();
@@ -37,15 +34,11 @@ public class TestDbAccessor {
 		assertEquals(true, returnValue);
 	}
 
-//	@Disabled
 	@Test
 	public void testFalseWhenCreateNewDatabase() {
 
 		// Given
-		File file = new File(url);
-		if (!file.exists()) {
-			dbAccessor.createNewDatabase();
-		}
+		deleteFile(url);
 
 		// When
 		boolean returnValue = dbAccessor.createNewDatabase();
@@ -54,14 +47,10 @@ public class TestDbAccessor {
 		assertEquals(false, returnValue);
 	}
 
-//	@Disabled
 	@Test
 	public void testTrueWhenCreateNewTable() {
 		// Given
-		File file = new File(url);
-		if (file.exists()) {
-			file.delete();
-		}
+		deleteFile(url);
 		dbAccessor.createNewDatabase();
 
 		// When
@@ -75,10 +64,7 @@ public class TestDbAccessor {
 	public void testTrueWhenInsert() {
 
 		// Given
-		File file = new File(url);
-		if (file.exists()) {
-			file.delete();
-		}
+		deleteFile(url);
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
 
@@ -94,10 +80,7 @@ public class TestDbAccessor {
 	public void testTrueWhenGetPassword() {
 
 		// Given
-		File file = new File(url);
-		if (file.exists()) {
-			file.delete();
-		}
+		deleteFile(url);
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
 		dbAccessor.insert(userId, userPw, userType);
@@ -113,10 +96,7 @@ public class TestDbAccessor {
 	public void testTrueWhenDelete() {
 
 		// Given
-		File file = new File(url);
-		if (file.exists()) {
-			file.delete();
-		}
+		deleteFile(url);
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
 		
@@ -133,10 +113,7 @@ public class TestDbAccessor {
 	public void testShouldReturnOneWhenCheckTheUserId() {
 
 		// Given
-		File file = new File(url);
-		if (file.exists()) {
-			file.delete();
-		}
+		deleteFile(url);
 		dbAccessor.createNewDatabase();
 		dbAccessor.createNewTable();
 		
@@ -147,6 +124,13 @@ public class TestDbAccessor {
 		
 		// Then
 		assertEquals(1, returnValue);
+	}
+	
+	public void deleteFile(String fileLocation) {
+		File file = new File(fileLocation);
+		if (file.exists()) {
+			file.delete();
+		}
 	}
 
 }

@@ -65,7 +65,7 @@ public class DbAccessor {
 
 		// SQL statement for creating a new table
 		String sql = "CREATE TABLE IF NOT EXISTS T_USER_INFO (\n"
-				+ "	user_id varchar(20) NOT NULL PRIMARY KEY,\n"
+				+ "	user_id varchar(20) NOT NULL PRIMARY KEY CHECK(length(user_id) > 5),\n"
 				+ "	user_pw text NOT NULL,\n"
 				+ "	user_type int NOT NULL\n"
 				+ ");";
@@ -111,14 +111,7 @@ public class DbAccessor {
 	 * @return If you called wrong param return null
 	 */
 	public String selectByUserId(String userId, String param) {
-		String query = null;
-		if("user_pw".equals(param)) {
-			query = "SELECT user_id, user_pw, user_type FROM T_USER_INFO where user_id = ?";
-		} else if("user_type".equals(param)) {
-			query = "SELECT user_id, user_pw, user_type FROM T_USER_INFO WHERE user_id=?";
-		} else {
-			return null;
-		}
+		String query = "SELECT user_id, user_pw, user_type FROM T_USER_INFO WHERE user_id = ?";
 
 		String value = null;
 		ResultSet rs = null;
@@ -149,7 +142,6 @@ public class DbAccessor {
 	public String getPassword(String userId) {
 		
 		String userPw = null;
-		
 		userPw = selectByUserId(userId, "user_pw");
 		
 		return userPw;
@@ -157,17 +149,15 @@ public class DbAccessor {
 	
 	public String getUserRole(String userId) {
 		
-		String userPw = selectByUserId(userId, "user_type");
-
-		if (userPw == null)
-			return null;
+		String userPw = null;
+		userPw = selectByUserId(userId, "user_type");
 
 		return userPw;
 	}
 	
 	public boolean delete(String userId) {
 		
-		String sql = "DELETE FROM T_USER_INFO where user_id= ?";
+		String sql = "DELETE FROM T_USER_INFO WHERE user_id = ?";
 		
 		boolean returnValue = false;
 
