@@ -27,6 +27,7 @@ public class TestNetwork {
 	TartanGameManagerClient gameManager;
 	TartanGameManagerClient designerManager;
 
+	@Disabled
 	@Test
 	public void testLogin() {
 		
@@ -112,6 +113,7 @@ public class TestNetwork {
 		
 		returnValue = tartanGameManager.loseTheGame(userId, "LOSE");
 		assertEquals(true, returnValue);
+		
 	}
 
 	@Disabled
