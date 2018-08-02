@@ -15,6 +15,7 @@ import edu.cmu.tartan.properties.Meltable;
  * 1.0 March 2018 - initial version
  */
 public class ItemFood extends Item implements Edible, Holdable, Meltable, Installable {
+	private static final long serialVersionUID = 1L;
 	private Item hiddenItem = null;
 
     /**
@@ -69,13 +70,11 @@ public class ItemFood extends Item implements Edible, Holdable, Meltable, Instal
 		if (this == obj) {
 			return true;
 		}
-		System.out.println("1 "+ getClass() + ", "+ obj.getClass());
 
 		if (!super.equals(obj)) {
 			return false;
 		}
 		
-		System.out.println("2 "+ getClass() + ", "+ obj.getClass());
 		if (getClass() != obj.getClass()) {
 			return false;
 		}

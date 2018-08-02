@@ -24,7 +24,7 @@ public class TestLocalGame {
 		game.configureGame(GameMode.LOCAL);
 		game.start();	
 	}
-
+		
 	@Test
 	void testStartXMLLocalGame() {
 		commander.add("help");

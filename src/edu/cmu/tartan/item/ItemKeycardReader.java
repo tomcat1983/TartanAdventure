@@ -12,6 +12,7 @@ import edu.cmu.tartan.properties.Hostable;
  * 1.0 March 2018 - initial version
  */
 public class ItemKeycardReader extends Item implements Hostable {
+	private static final long serialVersionUID = 1L;
 	private Item installedItem;
     private String installMessage;
 

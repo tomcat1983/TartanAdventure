@@ -12,7 +12,8 @@ import edu.cmu.tartan.item.Item;
  * 1.0 March 2018 - initial version
  */
 public class RoomLockable extends Room {
-    private boolean locked;
+	private static final long serialVersionUID = 1L;
+	private boolean locked;
     private Item key;
     private String unlockMessage;
 

@@ -48,11 +48,11 @@ public abstract class Game {
     /**
      * Attempt to interpret input more flexibly.
      */
-	private PlayerInterpreter interpreter;
+	protected PlayerInterpreter interpreter;
     /**
      * The game execute
      */
-    private PlayerExecutionEngine playerExecutionEngine;
+    protected PlayerExecutionEngine playerExecutionEngine;
 
     /**
      * Create and configure a new game.
@@ -85,6 +85,7 @@ public abstract class Game {
      */
     public boolean configureGame(GameMode mode) {
     	XmlParser parseXml;
+
 		try {
 			parseXml = new XmlParser();
 		} catch (ParserConfigurationException e) {
@@ -97,18 +98,20 @@ public abstract class Game {
         context.setGameName(customGame.getName());
 
         try {
-			customGame.configure(context);
+        	if(customGame.configure(context)) {
+                // Once the game has been configured, it is time to play!
+                showIntro();
+                // Configure the game, add the goals and exe
+                context.setPlayerGameGoal();
+                playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());
+                return true;
+        	}
 		} catch (InvalidGameException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
 	       	return false;
 		}
-        // Once the game has been configured, it is time to play!
-        showIntro();
-        // Configure the game, add the goals and exe
-        context.setPlayerGameGoal();
-        playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());
-        return true;
+        return false;
     }
 
     private boolean processGameCommand(@NonNull String input) throws TerminateGameException {
@@ -317,7 +320,7 @@ public abstract class Game {
     		return false;
     	}
     	if(this instanceof LocalGame) {
-    		((LocalGame)this).save(context.getUserId());
+    		((LocalGame)this).save(context.getUserId(), LocalGame.SAVE_FILE_NAME);
     		gameInterface.print(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.SAVE_SUCCESSFUL_10_4);
     		return true;
     	} else {

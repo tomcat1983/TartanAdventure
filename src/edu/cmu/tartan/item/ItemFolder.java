@@ -13,6 +13,7 @@ import edu.cmu.tartan.properties.Openable;
  */
 public class ItemFolder extends Item implements Openable {
 
+	private static final long serialVersionUID = 1L;
 	private String openMessage;
 
     /**

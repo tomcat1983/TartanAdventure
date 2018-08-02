@@ -18,6 +18,7 @@ import edu.cmu.tartan.item.Item;
  * 1.0 March 2018 - initial version
  */
 public class RoomRequiredItem extends Room {
+	private static final long serialVersionUID = 1L;
 	private Item requiredItem;
     private boolean diesOnItemDiscard;
     private boolean diesOnEntry;

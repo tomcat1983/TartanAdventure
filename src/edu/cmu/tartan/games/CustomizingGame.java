@@ -2,6 +2,8 @@ package edu.cmu.tartan.games;
 
 import java.util.ArrayList;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
@@ -65,8 +67,10 @@ public class CustomizingGame extends GameConfiguration {
 	 * @throws InvalidGameException
 	 */
 	@Override
-	public boolean configure(GameContext context) throws InvalidGameException {
-
+	public boolean configure(@Nullable GameContext context) throws InvalidGameException {
+		if(context==null) {
+			return false;
+		}
 		// Set the initial room
 		Player player = new Player(rooms.get(0), context.getUserId());
 		context.setPlayer(player);

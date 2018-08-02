@@ -13,7 +13,9 @@ import edu.cmu.tartan.properties.Edible;
  */
 public class ItemCoffee extends Item implements Edible {
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Constructor
      * @param s description
      * @param sd long description

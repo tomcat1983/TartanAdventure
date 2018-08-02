@@ -13,7 +13,11 @@ import edu.cmu.tartan.room.RoomObscured;
  * 1.0 March 2018 - initial version
  */
 public class ItemFridge extends Item implements Pushable {
-	// indicates whether fridge has been pushed
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 *  indicates whether fridge has been pushed
+	 */
     private boolean wasPushed;
 
     /**

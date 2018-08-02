@@ -12,7 +12,9 @@ import edu.cmu.tartan.properties.Holdable;
  */
 public class ItemLadder extends Item implements Holdable {
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Constructor for a ladder
      * @param s description
      * @param sd long description

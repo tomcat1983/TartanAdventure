@@ -13,7 +13,9 @@ import edu.cmu.tartan.properties.Installable;
  */
 public class ItemGold extends Item implements Installable, Holdable {
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Constructor for a piece of gold
      * @param s description
      * @param sd long description

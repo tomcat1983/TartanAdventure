@@ -6,9 +6,6 @@ import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.item.Item;
 
 public class RoomExcavatable extends Room {
-	/**
-	 * serial Version ID
-	 */
 	private static final long serialVersionUID = 1L;
 	protected String digMessage;
 	protected boolean wasDugUp;
