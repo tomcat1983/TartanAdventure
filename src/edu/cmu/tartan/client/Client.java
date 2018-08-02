@@ -35,6 +35,9 @@ public class Client {
 		clientInterface = new ClientInterface();
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean start() {
 		boolean running = true;
 
@@ -102,7 +105,7 @@ public class Client {
 	}
 
 	private boolean connectServer(boolean isDesigner) {
-		
+
 		gameManager = new TartanGameManagerClient(isDesigner);
 		Thread gameManagerThread = new Thread(gameManager);
 		gameManagerThread.start();

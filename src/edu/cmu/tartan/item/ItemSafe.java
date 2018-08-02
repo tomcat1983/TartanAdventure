@@ -20,6 +20,12 @@ public class ItemSafe extends Item implements Hostable, Openable {
     // The safe's pin, which controls entry
     private Integer pin = null;
 
+    /**
+     * @param d
+     * @param sd
+     * @param a
+     * @param userId
+     */
     public ItemSafe(String d, String sd, String[] a, String userId) {
         super(d, sd, a, userId);
         installedItem = null;

@@ -31,7 +31,8 @@ public class ItemKeycardReader extends Item implements Hostable {
      * Install a keycard
      * @param item the keycard to install in the reader
      */
-    public boolean install(Item item) {
+    @Override
+	public boolean install(Item item) {
         if (!(item instanceof ItemKeycard)) return false;
         installedItem = item;
 
@@ -74,7 +75,8 @@ public class ItemKeycardReader extends Item implements Hostable {
      * Fetch the installed keycard
      * @return
      */
-    public Item installedItem() {
+    @Override
+	public Item installedItem() {
         return this.installedItem;
     }
 
@@ -85,7 +87,10 @@ public class ItemKeycardReader extends Item implements Hostable {
     public void setInstallMessage(String s) {
         this.installMessage = s;
     }
-    
+
+    /**
+     * @return
+     */
     public String getInstallMessage() {
         return installMessage;
     }

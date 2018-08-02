@@ -1,22 +1,22 @@
 package edu.cmu.tartan.room;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
+
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
 import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
-
-import java.util.Map;
-import java.io.Serializable;
-import java.util.EnumMap;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.Map.Entry;
-import java.util.logging.Logger;
-
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * The main class for a room. All room types must extend this class.
@@ -40,7 +40,7 @@ public class Room implements Comparable, Serializable {
 	 * Game logger for game log
 	 */
 	protected static final transient Logger gameLogger = Logger.getGlobal();
-	
+
 	/**
 	 * Game interface for game message
 	 */
@@ -62,7 +62,7 @@ public class Room implements Comparable, Serializable {
 
     // items in the room
     private ArrayList<Item> items;
-	
+
 	// the player within the room
     private Player player;
 
@@ -72,7 +72,10 @@ public class Room implements Comparable, Serializable {
     public Room() {
         this(DEFAULT_DESC, DEFAULT_SHORT_DESC);
     }
-    
+
+    /**
+     * @param description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
@@ -155,10 +158,19 @@ public class Room implements Comparable, Serializable {
         return adjacentRooms.containsKey(a);
     }
 
+    /**
+     * @param message
+     * @param direction
+     */
     public void setAdjacentRoomTransitionMessage(@NonNull String message, @NonNull Action direction) {
         transitionMessages.put(direction, message);
     }
 
+    /**
+     * @param message
+     * @param direction
+     * @param delay
+     */
     public void setAdjacentRoomTransitionMessageWithDelay(@NonNull String message, @NonNull Action direction, int delay) {
         setAdjacentRoomTransitionMessage(message, direction);
         transitionDelay = delay;
@@ -173,7 +185,7 @@ public class Room implements Comparable, Serializable {
     	if(other==null) {
     		return false;
     	}
-    	
+
         for (Room room : adjacentRooms.values()) {
             if (other.compareTo(room) == 0) {
                 return true;
@@ -220,7 +232,7 @@ public class Room implements Comparable, Serializable {
     	    this.items.add(item);
     	    insertSize++;
     	}
-    	
+
     	return (items.size()==insertSize);
     }
 
@@ -251,19 +263,32 @@ public class Room implements Comparable, Serializable {
         }
     }
 
+    /**
+     * @return
+     */
     public ArrayList<Item> getItems() {
 		return items;
 	}
-    
+
+	/**
+	 * @return
+	 */
 	public Player getPlayer() {
 		return player;
 	}
 
+    /**
+     * @param player
+     */
     public void setPlayer(@NonNull Player player) {
         this.player = player;
     }
 
-    public String toString() {
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+	public String toString() {
         return description + visibleItems();
     }
 
@@ -281,12 +306,18 @@ public class Room implements Comparable, Serializable {
         return s.toString();
     }
 
+    /**
+     * @return
+     */
     public String description() {
         String d = roomWasVisited ? shortDescription : description + visibleItems();
         roomWasVisited = true;
         return d;
     }
 
+    /**
+     * @return
+     */
     public String shortDescription() {
         return shortDescription;
     }
@@ -298,7 +329,7 @@ public class Room implements Comparable, Serializable {
         }
         return -1;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
     	if(obj instanceof Room) {
@@ -309,7 +340,7 @@ public class Room implements Comparable, Serializable {
     	}
     	return false;
     }
-    
+
     @Override
     public int hashCode() {
         return description.hashCode()+shortDescription.hashCode();

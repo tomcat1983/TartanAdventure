@@ -1,10 +1,10 @@
 package edu.cmu.tartan.room;
 
-import edu.cmu.tartan.GameInterface.MessageType;
-import edu.cmu.tartan.action.Action;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.cmu.tartan.GameInterface.MessageType;
+import edu.cmu.tartan.action.Action;
 
 /**
  * The class for an elevator
@@ -56,7 +56,10 @@ public class RoomElevator extends Room {
 
 		setFloor(initial);
 	}
-	
+
+	/**
+	 * @param restrictedFloors
+	 */
 	public void setRestrictedFloors(List<Integer> restrictedFloors) {
 		this.restrictedFloors = restrictedFloors;
 	}

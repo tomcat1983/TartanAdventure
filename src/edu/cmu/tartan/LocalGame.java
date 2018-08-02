@@ -20,18 +20,21 @@ import edu.cmu.tartan.xml.XmlParser;
 
 public class LocalGame extends Game implements IGameControlMessage {
 	public static final String SAVE_FILE_NAME = "Tartan_save_file.dat";
-	
+
+	/**
+	 * @param userId
+	 */
 	public LocalGame(@NonNull String userId) {
 		super(userId);
 	}
-	
+
 	@Override
 	public boolean controlGame(String message) {
 		return false;
 	}
-	
+
 	private boolean readGameData() {
-		try ( 
+		try (
 			FileInputStream fis = new FileInputStream(SAVE_FILE_NAME);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			ObjectInputStream in = new ObjectInputStream(bis)
@@ -44,15 +47,19 @@ public class LocalGame extends Game implements IGameControlMessage {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * @param userId
+	 * @return
+	 */
 	public boolean loadAndStart(String userId) {
 		if(context.getUserId().equals(userId)) {
 			// 0. loading local game XML
 			XmlParser parseXml;
 			try {
-				parseXml = new XmlParser(); 
+				parseXml = new XmlParser();
 				CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(GameMode.LOCAL, userId);
-				
+
 				if(cGame!=null && readGameData()) {
 					gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.GANE_IS_STARTED_10_1);
 					// 1. loading Player(with Items) and GameContext(without room?)
@@ -70,7 +77,7 @@ public class LocalGame extends Game implements IGameControlMessage {
 		}
 		return false;
 	}
-	
+
 	private boolean writeGameData(GameContext context) {
 		try (
 			FileOutputStream fos = new FileOutputStream(SAVE_FILE_NAME);
@@ -85,7 +92,11 @@ public class LocalGame extends Game implements IGameControlMessage {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * @param userId
+	 * @return
+	 */
 	public boolean save(String userId) {
 		if(context.getUserId().equals(userId)) {
 			// 1. saving GameContext(Room information isn't save.)

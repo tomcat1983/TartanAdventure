@@ -14,7 +14,7 @@ import edu.cmu.tartan.manager.IQueueHandler;
 import edu.cmu.tartan.manager.SocketMessage;
 
 public class UserClientThread implements Runnable, ISocketMessage {
-	
+
 	/**
 	 * Game logger for game log
 	 */
@@ -22,12 +22,17 @@ public class UserClientThread implements Runnable, ISocketMessage {
 
 	private Socket clientSocket;
 	private IQueueHandler queue;
-	
+
 	private boolean isLoop = true;
 	private String userId = "";
 	private String threadName = "";
-	
 
+
+	/**
+	 * @param clientSocket
+	 * @param queue
+	 * @param threadName
+	 */
 	public UserClientThread(Socket clientSocket, IQueueHandler queue, String threadName) {
 		this.clientSocket = clientSocket;
 		this.queue = queue;
@@ -44,7 +49,7 @@ public class UserClientThread implements Runnable, ISocketMessage {
 		try {
 			OutputStream output = clientSocket.getOutputStream();
 			PrintWriter writer = new PrintWriter(output, true);
-			
+
 			if(clientSocket.isConnected()) {
 				writer.println(message);
 			}
@@ -57,9 +62,9 @@ public class UserClientThread implements Runnable, ISocketMessage {
 
 	@Override
 	public void receiveMessage() {
-		
+
 		SocketMessage socketMessage = null;
-		
+
 		try {
 			InputStream input = clientSocket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -67,12 +72,12 @@ public class UserClientThread implements Runnable, ISocketMessage {
 			String message = null;
 
 			while (isLoop) {
-				
+
 				if((message = reader.readLine()) == null
 						|| message.equals("null")) break;
-				
+
 				gameLogger.log(Level.INFO, "[Server] Received message : {0}", message);
-				
+
 				socketMessage = new SocketMessage(threadName, message);
 
 				queue.produce(socketMessage);
@@ -84,19 +89,28 @@ public class UserClientThread implements Runnable, ISocketMessage {
 			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * @return
+	 */
 	public String getUserId() {
 		return userId;
 	}
-	
+
+	/**
+	 * @return
+	 */
 	public String getThreadName() {
 		return threadName;
 	}
-	
+
+	/**
+	 *
+	 */
 	public void stopSocket() {
-		
+
 		isLoop = false;
-		
+
 		try {
 			Thread.sleep(2000);
 			if (clientSocket != null) clientSocket.close();
@@ -107,9 +121,9 @@ public class UserClientThread implements Runnable, ISocketMessage {
 			gameLogger.log(Level.WARNING, e.getMessage());
 			Thread.currentThread().interrupt();
 		}
-		
+
 		gameLogger.log(Level.INFO, "Closing user connection");
 	}
-	
-	
+
+
 }

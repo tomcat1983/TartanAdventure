@@ -23,6 +23,9 @@ public class Main {
 	 */
 	protected static final GameInterface gameInterface = GameInterface.getInterface();
 
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		String fileUri = "config.properties";
 

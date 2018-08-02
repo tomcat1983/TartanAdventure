@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.GameContext;
 import edu.cmu.tartan.Player;
-import edu.cmu.tartan.goal.*;
-import edu.cmu.tartan.room.*;
+import edu.cmu.tartan.goal.GameCollectGoal;
+import edu.cmu.tartan.goal.GameExploreGoal;
+import edu.cmu.tartan.goal.GameGoal;
+import edu.cmu.tartan.goal.GamePointsGoal;
+import edu.cmu.tartan.room.Room;
 
 /**
  * Example game to explore a series of rooms. This is the configuraion discussed in the project description.
@@ -26,18 +29,32 @@ public class CustomizingGame extends GameConfiguration {
 	private ArrayList<GameGoal> goals = new ArrayList<>();
 
 
+	/**
+	 * @param room
+	 */
 	public void addRoom(Room room) {
 		rooms.add(room);
 	}
 
+	/**
+	 * @param i
+	 * @return
+	 */
 	public Room getRoomIndex(int i) {
 		return rooms.get(i);
 	}
 
+	/**
+	 * @param goal
+	 */
 	public void addGoal(GameGoal goal) {
-		goals.add(goal); 
+		goals.add(goal);
 	}
 
+	/**
+	 * @param i
+	 * @return
+	 */
 	public GameGoal getGameGoalIndex(int i) {
 		return goals.get(i);
 	}
@@ -67,12 +84,15 @@ public class CustomizingGame extends GameConfiguration {
 		return true;
 	}
 
+	/**
+	 * @return
+	 */
 	public String makeGameDescription() {
-		
+
 		StringBuilder gameDescription = new StringBuilder();
-		
+
 		gameDescription.append("This is ");
-		
+
 		for (GameGoal gameGoal : goals) {
 
 			if(gameGoal instanceof GameCollectGoal) {
@@ -85,9 +105,9 @@ public class CustomizingGame extends GameConfiguration {
 				gameDescription.append("[Get Point] ");
 			}
 		}
-		
+
 		gameDescription.append("Game");
 
-		return gameDescription.toString(); 
+		return gameDescription.toString();
 	}
 }

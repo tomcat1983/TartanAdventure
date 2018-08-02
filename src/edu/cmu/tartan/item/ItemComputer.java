@@ -27,7 +27,8 @@ public class ItemComputer extends Item implements Hostable {
      * Install an item in the microwave
      * @param i the item to install
      */
-    public boolean install(Item item) {
+    @Override
+	public boolean install(Item item) {
     	if (!(item instanceof ItemCPU)) return false;
     	if(installedItem==null) {
     		installedItem = item;
@@ -37,7 +38,11 @@ public class ItemComputer extends Item implements Hostable {
     	return false;
     }
 
-    public boolean uninstall(Item i) {
+    /* (non-Javadoc)
+     * @see edu.cmu.tartan.properties.Hostable#uninstall(edu.cmu.tartan.item.Item)
+     */
+    @Override
+	public boolean uninstall(Item i) {
         if (this.installedItem == null) {
             return false;
         } else if (this.installedItem == i) {
@@ -48,7 +53,11 @@ public class ItemComputer extends Item implements Hostable {
         }
     }
 
-    public Item installedItem() {
+    /* (non-Javadoc)
+     * @see edu.cmu.tartan.properties.Hostable#installedItem()
+     */
+    @Override
+	public Item installedItem() {
         return this.installedItem;
     }
 

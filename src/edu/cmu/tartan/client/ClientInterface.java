@@ -31,6 +31,9 @@ public class ClientInterface {
 		gameInterface.println("> exit    The game will be terminated.");
 	}
 
+	/**
+	 * @return
+	 */
 	public RunningMode getRunningMode() {
 		RunningMode gameMode = RunningMode.UNDECIDED;
 
@@ -78,6 +81,9 @@ public class ClientInterface {
 		UNDECIDED, CONTINUE, NEW, QUIT
 	}
 
+	/**
+	 *
+	 */
 	public void printLocalModeMessage() {
 		gameInterface.println("[Local mode]");
 		gameInterface.println("");
@@ -87,6 +93,9 @@ public class ClientInterface {
 		gameInterface.println("");
 	}
 
+	/**
+	 * @return
+	 */
 	public LocalModeCommand getLocalModeCommand() {
 		LocalModeCommand localCommand = LocalModeCommand.UNDECIDED;
 
@@ -111,12 +120,18 @@ public class ClientInterface {
 		return localCommand;
 	}
 
+	/**
+	 *
+	 */
 	public void printServerBusyMessage() {
 		gameInterface.println("I’m sorry. The game server is busy.");
 		gameInterface.println("Please retry to connect later.");
 		gameInterface.println("");
 	}
 
+	/**
+	 *
+	 */
 	public void printLoadFailMessage() {
 		gameInterface.println("There is no saved game.");
 		gameInterface.println("");
@@ -129,6 +144,9 @@ public class ClientInterface {
 		UNDECIDED, LOGIN, REGISTER, QUIT
 	}
 
+	/**
+	 * @return
+	 */
 	public NetworkModeCommand getNetworkModeCommand() {
 		NetworkModeCommand networkCommand = NetworkModeCommand.UNDECIDED;
 
@@ -157,6 +175,9 @@ public class ClientInterface {
 		return networkCommand;
 	}
 
+	/**
+	 * @return
+	 */
 	public String[] getLoginInfo() {
 		String[] loginInfo = new String[2];
 
@@ -173,6 +194,9 @@ public class ClientInterface {
 		return loginInfo;
 	}
 
+	/**
+	 * @param isDesigner
+	 */
 	public void printWelcomMessage(boolean isDesigner) {
 		if (isDesigner) {
 			gameInterface.println("");
@@ -189,11 +213,17 @@ public class ClientInterface {
 		}
 	}
 
+	/**
+	 *
+	 */
 	public void printByeMessage() {
 		gameInterface.println("");
 		gameInterface.println("Bye! See you again!");
 	}
 
+	/**
+	 * @return
+	 */
 	public String getUserIdForRegister() {
 		gameInterface.println("");
 		gameInterface.println("Please enter the ID you want to use :");
@@ -203,12 +233,18 @@ public class ClientInterface {
 		return gameInterface.getCommand(GameInterface.USER_ID_LOCAL_USER);
 	}
 
+	/**
+	 *
+	 */
 	public void printInvalidIdMessageForRegister() {
 		gameInterface.println("");
 		gameInterface.println("The ID you entered is invalid.");
 		gameInterface.println("Please enter valid ID.");
 	}
 
+	/**
+	 * @return
+	 */
 	public String getUserPwForRegister() {
 		gameInterface.println("");
 		gameInterface.println("Please enter the password you want.");
@@ -218,12 +254,18 @@ public class ClientInterface {
 		return gameInterface.getCommand(GameInterface.USER_ID_LOCAL_USER);
 	}
 
+	/**
+	 *
+	 */
 	public void printInvalidPwMessageForRegister() {
 		gameInterface.println("");
 		gameInterface.println("The password you entered is invalid.");
 		gameInterface.println("Please enter valid password.");
 	}
 
+	/**
+	 * @return
+	 */
 	public String getUserMatchPwForRegister() {
 		gameInterface.println("");
 		gameInterface.println("Re-enter the password to confirm.");
@@ -232,22 +274,34 @@ public class ClientInterface {
 		return gameInterface.getCommand(GameInterface.USER_ID_LOCAL_USER);
 	}
 
+	/**
+	 *
+	 */
 	public void printUnmatchPwMessageForRegister() {
 		gameInterface.println("");
 		gameInterface.println("The password is different with the previous one.");
 	}
 
+	/**
+	 *
+	 */
 	public void printSuccessMessageForRegister() {
 		gameInterface.println("");
 		gameInterface.println("Your account is registered successfully.");
 		gameInterface.println("You will go to the game mode selection menu.");
 	}
 
+	/**
+	 *
+	 */
 	public void printFailMessageForRegister() {
 		gameInterface.println("");
 		gameInterface.println("I'm sorry. The ID is already occupied. Please retry registration.");
 	}
 
+	/**
+	 * @return
+	 */
 	String getNetworkCommand() {
 		String command = "";
 
@@ -261,12 +315,18 @@ public class ClientInterface {
 		return command;
 	}
 
+	/**
+	 *
+	 */
 	public void printCannotStartMessage() {
 		gameInterface.println("");
 		gameInterface.println("No other player in this room.");
 		gameInterface.println("Please wait until another player logs in and retry after few minutes.");
 	}
 
+	/**
+	 *
+	 */
 	public void printNoMap() {
 		gameInterface.println("There is no file which of the name is what you entered.");
 		gameInterface.println("Please check whether the file is in the folder which the game is saved or not.");
@@ -274,16 +334,25 @@ public class ClientInterface {
 		gameInterface.println("Re-enter the file name.");
 	}
 
+	/**
+	 *
+	 */
 	public void printValidateMessageForMapUpload() {
 		gameInterface.println("");
 		gameInterface.println("The server is validating the map file.");
 	}
 
+	/**
+	 *
+	 */
 	public void printValidateSucceessMessageForMapUpload() {
 		gameInterface.println("");
 		gameInterface.println("The map file is valid and saved successfully in the server.");
 	}
 
+	/**
+	 *
+	 */
 	public void printValidateFailMessageForMapUpload() {
 		gameInterface.println("");
 		gameInterface.println("The map file is invalid.");

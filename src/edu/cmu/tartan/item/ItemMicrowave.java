@@ -15,7 +15,7 @@ import edu.cmu.tartan.properties.Startable;
  */
 public class ItemMicrowave extends Item implements Hostable, Startable {
 	public static final int MIC_OP_TIME = 100;
-	
+
 	private Item installedItem;
 
     /**
@@ -63,7 +63,8 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
      * Install an item in the microwave
      * @param i the item to install
      */
-    public boolean install(Item i) {
+    @Override
+	public boolean install(Item i) {
     	if(installedItem==null) {
     		installedItem = i;
     		return true;
@@ -71,7 +72,11 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
     	return false;
     }
 
-    public boolean uninstall(Item i) {
+    /* (non-Javadoc)
+     * @see edu.cmu.tartan.properties.Hostable#uninstall(edu.cmu.tartan.item.Item)
+     */
+    @Override
+	public boolean uninstall(Item i) {
         if (this.installedItem == null) {
             return false;
         } else if (this.installedItem == i) {
@@ -82,10 +87,14 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
         }
     }
 
-    public Item installedItem() {
+    /* (non-Javadoc)
+     * @see edu.cmu.tartan.properties.Hostable#installedItem()
+     */
+    @Override
+	public Item installedItem() {
         return this.installedItem;
     }
-    
+
     @Override
 	public int hashCode() {
 		final int prime = 31;
@@ -100,8 +109,8 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
 			return false;
 		} else if (this == obj) {
 			return true;
-		}		
-		
+		}
+
 		ItemMicrowave other = (ItemMicrowave) obj;
 		if (installedItem == null) {
 			if (other.installedItem != null) {

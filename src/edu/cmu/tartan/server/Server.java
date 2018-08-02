@@ -20,10 +20,16 @@ public class Server {
 	 */
 	private ServerInterface serverInterface;
 
+	/**
+	 *
+	 */
 	public Server() {
 		serverInterface = new ServerInterface();
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean start() {
 		gameInterface.println("Run server");
 

@@ -19,19 +19,29 @@ public class GamePointsGoal implements GameGoal {
     // The player working to achieve this goal
     private Player player;
 
+    /**
+     * @param g
+     * @param p
+     */
     public GamePointsGoal(Integer g, Player p) {
         this.winningScore = g;
         this.player = p;
     }
 
+    /**
+     * @param g
+     */
     public GamePointsGoal(Integer g) {
         this(g, null);
     }
-    
+
+    /**
+     * @return
+     */
     public Integer getWinningScore() {
     	return winningScore;
     }
-    
+
     /**
      * Describe this goal
      * @return
@@ -47,7 +57,8 @@ public class GamePointsGoal implements GameGoal {
      * Fetch the current status of this goal.
      * @return the current status for display.
      */
-    public String getStatus() {
+    @Override
+	public String getStatus() {
         return "You scored " + player.getScore() + " out of " + winningScore + " points.";
     }
 
@@ -59,7 +70,7 @@ public class GamePointsGoal implements GameGoal {
     public Boolean isAchieved() {
         return player.getScore() >= winningScore;
     }
-    
+
 	@Override
 	public void setPlayer(Player player) {
 		this.player = player;

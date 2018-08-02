@@ -19,13 +19,13 @@ enum ConnectionState {
 	LOGGED_IN(2),
 	STARTED(3)
 	;
-	
+
 	private int state;
-	
+
 	public int getConnectionState() {
 		return state;
 	}
-	
+
 	ConnectionState(int state) {
 		this.state = state;
 	}
@@ -50,13 +50,19 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	private AccountManager accountManager;
 
 	private boolean isLoop = true;
-	
+
 	private ConnectionState connectionState;
 
+	/**
+	 * @param isDesigner
+	 */
 	public TartanGameManagerClient(boolean isDesigner) {
 		initialize(isDesigner);
 	}
-	
+
+	/**
+	 * @param isDesigner
+	 */
 	public void initialize(boolean isDesigner) {
 		responseMessage = new ResponseMessage();
 		messageQueue = new MessageQueue();
@@ -65,12 +71,15 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		socket = new SocketClient(responseMessage, messageQueue, isDesigner);
 		Thread socketThread = new Thread(socket);
 		socketThread.start();
-		
+
 		connectionState = ConnectionState.CONNECTED;
 	}
-	
+
+	/**
+	 *
+	 */
 	public void stopGameManager() {
-		
+
 		connectionState = ConnectionState.ENDED;
 
 		isLoop = false;
@@ -78,6 +87,10 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		messageQueue.produce(new SocketMessage("",""));
 	}
 
+	/**
+	 * @param message
+	 * @return
+	 */
 	public boolean sendMessage(String message) {
 		socket.sendMessage(message);
 		return false;
@@ -87,7 +100,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	public boolean login(String threadName, String userId, String userPw, XmlLoginRole role) {
 
 		String message = null;
-		
+
 		String encryptionPw = encryptPassword(userPw);
 		if (encryptionPw == null) {
 			return false;
@@ -112,7 +125,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 		boolean returnValue = false;
 		String message = null;
-		
+
 		String encryptionPw = encryptPassword(userPw);
 		if (encryptionPw == null) {
 			return false;
@@ -132,10 +145,14 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		return returnValue;
 	}
 
+	/**
+	 * @param userId
+	 * @return
+	 */
 	public boolean validateUserId(String userId) {
-		
+
 		boolean returnValue = false;
-		
+
 		ReturnType retValue = accountManager.validateId(userId);
 		if (ReturnType.SUCCESS == retValue) {
 			returnValue = true;
@@ -143,9 +160,13 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		return returnValue;
 	}
 
+	/**
+	 * @param userPw
+	 * @return
+	 */
 	public boolean validateUserPw(String userPw) {
 		boolean returnValue = false;
-		
+
 		ReturnType retValue = accountManager.validatePassword(userPw);
 		if (ReturnType.SUCCESS == retValue) {
 			returnValue = true;
@@ -155,9 +176,9 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 	@Override
 	public boolean startGame(String userId) {
-		
+
 		boolean returnValue = false;
-		
+
 		if (connectionState != ConnectionState.LOGGED_IN) return false;
 
 		String message = null;
@@ -179,9 +200,9 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 	@Override
 	public boolean endGame(String threadName, String userId) {
-		
+
 		if (connectionState == ConnectionState.ENDED) return false;
-		
+
 		socket.setQuitFromCli(true);
 		String message = null;
 
@@ -189,21 +210,21 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		message = xw.makeXmlForGameStartEnd(XmlMessageType.REQ_GAME_END, userId);
 
 		sendMessage(message);
-		
+
 		waitResponseMessage();
-		
+
 		gameInterface.println(responseMessage.getMessage());
-		
-		
+
+
 		stopGameManager();
-		
+
 		return true;
 	}
 
 	@Override
 	public boolean updateGameState(String userId, String command) {
-		
-		if (connectionState != ConnectionState.STARTED) return false; 
+
+		if (connectionState != ConnectionState.STARTED) return false;
 
 		boolean returnValue = false;
 
@@ -221,7 +242,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	public boolean uploadMap(String mapFile) {
 
 		boolean returnValue = false;
-		
+
 		String message = null;
 
 		XmlWriterClient xw = new XmlWriterClient();
@@ -236,7 +257,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		}
 		return returnValue;
 	}
-	
+
 	/**
 	 * Wait for socket connection
 	 * @return
@@ -245,6 +266,9 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		return socket.waitToConnection(1000);
 	}
 
+	/**
+	 *
+	 */
 	public void waitResponseMessage() {
 
 		synchronized (responseMessage) {
@@ -262,6 +286,9 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 		dequeue();
 	}
 
+	/**
+	 *
+	 */
 	public void dequeue() {
 		SocketMessage socketMessage = null;
 		String message = null;
@@ -281,21 +308,25 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
             }
         }
 	}
-	
+
+	/**
+	 * @param userPw
+	 * @return
+	 */
 	public String encryptPassword(String userPw){
 
-		String encryptionPw = ""; 
+		String encryptionPw = "";
 
 		try{
-			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256"); 
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
 			byte[] byteData = messageDigest.digest(userPw.getBytes(StandardCharsets.UTF_8));
-			
+
 			StringBuilder sb = new StringBuilder();
 			for(int i = 0 ; i < byteData.length ; i++){
 				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
 			}
-			
+
 			encryptionPw = sb.toString();
 		}catch(NoSuchAlgorithmException e){
 			gameLogger.warning("NoSuchAlgorithmException : " + e.getMessage());
@@ -304,5 +335,5 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 
 		return encryptionPw;
 	}
-	
+
 }

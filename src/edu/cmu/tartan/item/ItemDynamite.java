@@ -14,7 +14,7 @@ import edu.cmu.tartan.room.RoomObscured;
  * 1.0 March 2018 - initial version
  */
 public class ItemDynamite extends Item implements Explodable, Holdable {
-    
+
 	// Indicates whether dynamite has been detonated
     private boolean exploded;
 
@@ -50,6 +50,9 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
         return exploded;
     }
 
+    /**
+     * @param s
+     */
     public void setExplodeMessage(String s) {
         if (this.relatedRoom instanceof RoomObscured) {
             ((RoomObscured) this.relatedRoom).setUnobscureMessage(s);
@@ -63,7 +66,7 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
     public Boolean getExploded() {
         return exploded;
     }
-    
+
     @Override
 	public int hashCode() {
 		final int prime = 31;

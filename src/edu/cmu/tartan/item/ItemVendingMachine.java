@@ -29,11 +29,16 @@ public class ItemVendingMachine extends Item implements Shakeable {
      * Shaking this machine too much can cause an accident
      * @return true if an accident can occur; false otherwise
      */
-    public boolean accident() {
+    @Override
+	public boolean accident() {
         return this.count > 2;
     }
 
-    public void shake() {
+    /* (non-Javadoc)
+     * @see edu.cmu.tartan.properties.Shakeable#shake()
+     */
+    @Override
+	public void shake() {
         switch (this.count) {
             case 0:
                 gameInterface.println(userId, MessageType.PRIVATE, "You shake the vending machine, and your favorite treat inches its way off the tray.");
@@ -49,7 +54,10 @@ public class ItemVendingMachine extends Item implements Shakeable {
         }
         this.count++;
     }
-    
+
+    /**
+     * @param count
+     */
     public void setCount(int count) {
     	this.count = count;
     }

@@ -1,5 +1,12 @@
 package edu.cmu.tartan;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Map;
+
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
 import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.GameGoal;
@@ -8,15 +15,11 @@ import edu.cmu.tartan.item.ItemMagicBox;
 import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Luminous;
 import edu.cmu.tartan.properties.Valuable;
-import edu.cmu.tartan.room.*;
-
-import java.util.Map;
-
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.Serializable;
-import java.util.ArrayList;
+import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.room.RoomDark;
+import edu.cmu.tartan.room.RoomLockable;
+import edu.cmu.tartan.room.RoomObscured;
+import edu.cmu.tartan.room.RoomRequiredItem;
 
 /**
  * The player for a game.
@@ -181,6 +184,10 @@ public class Player implements Comparable, Serializable {
         return items.add(item);
     }
 
+    /**
+     * @param item
+     * @return
+     */
     public boolean hasItem(@Nullable Item item) {
         if(item == null) {
         	return false;
@@ -208,7 +215,7 @@ public class Player implements Comparable, Serializable {
     public ArrayList<Item> getCollectedItems() {
         return items;
     }
-    
+
     /**
      * Put the direct item in the indirect item.
      * @return the install() result.
@@ -217,7 +224,7 @@ public class Player implements Comparable, Serializable {
     	if(indirect instanceof Hostable) {
 	        boolean ret = ((Hostable)indirect).install(direct);
 	        if(ret && indirect instanceof ItemMagicBox && direct instanceof Valuable) {
-	        	score((Valuable)direct);
+	        	score(direct);
 	        }
 	        return ret;
     	}
@@ -246,7 +253,7 @@ public class Player implements Comparable, Serializable {
     /**
      * Move the player to a new room.
      * @param nextRoom the new room.
-     * @throws TerminateGameException 
+     * @throws TerminateGameException
      */
     public void move(Room nextRoom) throws TerminateGameException {
 
@@ -295,14 +302,14 @@ public class Player implements Comparable, Serializable {
             terminate();
         }
     }
-    
+
     private void roomRequiredLuminousItem(RoomDark room) throws TerminateGameException {
     	if(room.isDark() && !hasLuminousItem()) {
             gameInterface.println(userName, MessageType.PRIVATE, room.deathMessage());
             terminate();
         }
     }
-    
+
     private boolean isNextRoomRequiredCheck(Room nextRoom) {
     	if(nextRoom instanceof RoomLockable) {
             RoomLockable lockedRoom = (RoomLockable)nextRoom;
@@ -320,7 +327,7 @@ public class Player implements Comparable, Serializable {
         }
     	return false;
     }
-        
+
     private void canYouSurvival(Action action, Room thisRoom) throws TerminateGameException {
         if(thisRoom instanceof RoomRequiredItem) {
             RoomRequiredItem room = (RoomRequiredItem)thisRoom;
@@ -329,17 +336,17 @@ public class Player implements Comparable, Serializable {
         else if(thisRoom instanceof RoomDark) {
             RoomDark room = (RoomDark)thisRoom;
             roomRequiredLuminousItem(room);
-        }    	
+        }
     }
 
     /**
      * Move version two based on an action
      * @param action the action associated with the move.
-     * @throws TerminateGameException 
+     * @throws TerminateGameException
      */
     public boolean move(Action action) throws TerminateGameException {
     	canYouSurvival(action, this.currentRoom);
-    	
+
         if(this.currentRoom.canMoveToRoomInDirection(action)) {
             Room nextRoom = this.currentRoom.getRoomForDirection(action);
             if(isNextRoomRequiredCheck(nextRoom)) {

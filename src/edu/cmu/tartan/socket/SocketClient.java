@@ -38,6 +38,11 @@ public class SocketClient implements Runnable {
 	private boolean isLoop;
 	private boolean quitFromCli = false;
 
+	/**
+	 * @param responseMessage
+	 * @param queue
+	 * @param isDesigner
+	 */
 	public SocketClient(ResponseMessage responseMessage, IQueueHandler queue, boolean isDesigner) {
 		isLoop = true;
 		this.responseMessage = responseMessage;
@@ -50,6 +55,9 @@ public class SocketClient implements Runnable {
 		connectToServer();
 	}
 
+	/**
+	 *
+	 */
 	public void connectToServer() {
 		String serverIp = Config.getServerIp();
 		int serverPort;
@@ -85,6 +93,10 @@ public class SocketClient implements Runnable {
         }
 	}
 
+	/**
+	 * @param timeout
+	 * @return
+	 */
 	public boolean waitToConnection(int timeout) {
 		while (timeout > 0 && socket == null) {
 			try {
@@ -101,10 +113,14 @@ public class SocketClient implements Runnable {
 		return (socket != null && socket.isConnected());
 	}
 
+	/**
+	 * @param message
+	 * @return
+	 */
 	public boolean receiveMessage(String message) {
-		
+
 		boolean returnValue = false;
-		
+
 		gameLogger.log(Level.INFO, "Received message : {0}", message);
 		XmlParser xmlParser;
 		String messageType = null;
@@ -115,7 +131,7 @@ public class SocketClient implements Runnable {
 			xmlParser.parseXmlFromString(message);
 			messageType = xmlParser.getMessageType();
 			xr = (XmlResponseClient) xmlParser.getXmlResponse();
-			
+
 			returnValue = true;
 
 		} catch (ParserConfigurationException e) {
@@ -155,10 +171,17 @@ public class SocketClient implements Runnable {
 		return returnValue;
 	}
 
+	/**
+	 * @param message
+	 */
 	public void sendByQueue(String message) {
 		queue.produce(new SocketMessage(Thread.currentThread().getName(), message));
 	}
 
+	/**
+	 * @param result
+	 * @param message
+	 */
 	public void sendByResponseMessage(XmlResultString result, String message) {
 
 		String responseMsg = "FAIL";
@@ -177,10 +200,14 @@ public class SocketClient implements Runnable {
 		}
 	}
 
+	/**
+	 * @param message
+	 * @return
+	 */
 	public boolean sendMessage(String message) {
-		
+
 		gameLogger.log(Level.INFO, "Send to Server : {0}", message);
-		
+
 		if (socket == null || !socket.isConnected()) {
 			gameLogger.log(Level.INFO, "Socket is not connected to the server yet.");
 			return false;
@@ -197,10 +224,13 @@ public class SocketClient implements Runnable {
 		return false;
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean stopSocket() {
 
 		gameLogger.log(Level.INFO, "Close a client socket");
-		
+
 		boolean returnValue = false;
 		isLoop = false;
 		quitFromCli = false;
@@ -217,7 +247,10 @@ public class SocketClient implements Runnable {
 		}
 		return returnValue;
 	}
-	
+
+	/**
+	 * @param value
+	 */
 	public void setQuitFromCli(boolean value) {
 		this.quitFromCli = value;
 	}

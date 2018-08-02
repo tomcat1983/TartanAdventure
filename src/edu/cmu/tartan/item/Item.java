@@ -1,17 +1,17 @@
 package edu.cmu.tartan.item;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
 import edu.cmu.tartan.GameInterface;
 import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.properties.Inspectable;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 import edu.cmu.tartan.room.Room;
-
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
 /**
  * This is the main class for game items. Items are things that can be used in the game
  * <p>
@@ -35,7 +35,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
 	 * Game interface for game message
 	 */
 	protected static final transient GameInterface gameInterface = GameInterface.getInterface();
-	
+
 
     // every item is visible by default
     private boolean visible = true;
@@ -56,15 +56,15 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
      *  items can open rooms, call elevators, etc (e.g., an ItemButton instance)
      */
     protected Room relatedRoom;
-    
+
     /*
-     *  items can also affect other items, 
+     *  items can also affect other items,
      *  like setting other items breakable (like a junction box)
      */
-    protected Item relatedItem; 
+    protected Item relatedItem;
 
     private String inspectMessage;
-    
+
     private static Map<String, Map<String, Item>>itemMapbyUser;
 	private static Map<String, Item>itemMap;
 	protected String userId;
@@ -117,7 +117,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
         itemMap.put(StringForItems.DYNAMITE, new ItemDynamite(StringForItems.DYNAMITE, StringForItems.BUNDLE_OF_DYNAMITE, new String[]{StringForItems.DYNAMITE, StringForItems.EXPLOSIVE, StringForItems.EXPLOSIVES}, userId));
         itemMap.put(StringForItems.BUTTON, new ItemButton(StringForItems.BUTTON, StringForItems.ELEVATOR_BUTTON, new String[]{StringForItems.BUTTON_SMALL}, userId));
         for(int i=1; i<5; i++) {
-        	StringBuilder s  = new StringBuilder("Floor_").append(i).append(" Button"); 
+        	StringBuilder s  = new StringBuilder("Floor_").append(i).append(" Button");
         	StringBuilder sd =  new StringBuilder("Elevator_Floor_").append(i).append(" Button");
         	itemMap.put(s.toString(), new ItemButton(s.toString(), sd.toString(), new String[]{Integer.toString(i)}, userId));
         }
@@ -139,7 +139,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
         if(itemMapbyUser.get(userId)==null) {
         	makeItems(userId);
         }
-        
+
         for (Item i : itemMapbyUser.get(userId).values()) {
             for (String a : i.getAliases()) {
                 if (itemName.equals(a)) {
@@ -160,7 +160,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
             }
         }
     }
-    
+
     /**
      * Ensure that aliases are unique
      */
@@ -179,35 +179,63 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
     public Item relatedItem() {
         return this.relatedItem;
     }
+    /**
+     * @param i
+     */
     public void setRelatedItem(Item i) {
         this.relatedItem = i;
     }
 
+    /**
+     * @return
+     */
     public Room relatedRoom() {
         return this.relatedRoom;
     }
+    /**
+     * @param r
+     */
     public void setRelatedRoom(Room r) {
         this.relatedRoom = r;
     }
 
+    /**
+     * @return
+     */
     public String[] getAliases() {
         return this.aliases;
     }
 
-    public String toString() {
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+	public String toString() {
         return this.description;
     }
 
+    /**
+     * @return
+     */
     public String detailDescription() {
         return this.detailDescription;
     }
+    /**
+     * @return
+     */
     public String description() {
         return this.description;
     }
 
+    /**
+     * @param s
+     */
     public void setDescription(String s) {
         this.description = s;
     }
+    /**
+     * @param s
+     */
     public void setDetailDescription(String s) {
         this.detailDescription = s;
     }
@@ -215,16 +243,22 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
     /**
      * Control visibility
      */
-    public boolean isVisible() {
+    @Override
+	public boolean isVisible() {
         return visible;
     }
 
-    public void setVisible(boolean b) {
+    /* (non-Javadoc)
+     * @see edu.cmu.tartan.properties.Visible#setVisible(boolean)
+     */
+    @Override
+	public void setVisible(boolean b) {
         this.visible = b;
     }
 
     // Inspectable
-    public Boolean inspect() {
+    @Override
+	public Boolean inspect() {
         if (this.inspectMessage != null) {
         	gameInterface.println(userId, MessageType.PRIVATE, this.inspectMessage);
         } else {
@@ -233,7 +267,11 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
         return true;
     }
 
-    public void setInspectMessage(String message) {
+    /* (non-Javadoc)
+     * @see edu.cmu.tartan.properties.Inspectable#setInspectMessage(java.lang.String)
+     */
+    @Override
+	public void setInspectMessage(String message) {
         this.inspectMessage = message;
     }
 
@@ -246,7 +284,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
     public void setValue(int value) {
         this.value = value;
     }
-    
+
     /**
      * The comparison is based on description
      * @param i
@@ -260,7 +298,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
             return 1;
         }
     }
-    
+
     @Override
     public boolean equals(Object obj) {
     	if(obj instanceof Item) {
@@ -271,7 +309,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
     	}
     	return false;
     }
-    
+
     @Override
     public int hashCode() {
     	return description.hashCode() + detailDescription.hashCode();
