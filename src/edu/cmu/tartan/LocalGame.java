@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.xml.GameMode;
 
 public class LocalGame extends Game {
@@ -42,14 +43,15 @@ public class LocalGame extends Game {
 	 * @param userId
 	 * @return
 	 */
-	public boolean loadAndStart(String userId) {
+	public boolean loadAndStart(String userId, String fileName) {
 		if(context.getUserId().equals(userId)) {
 			configureGame(GameMode.LOCAL);
 			context.setPlayerGameGoal();
 	    	context = new GameContext(userId);
 	        interpreter = new PlayerInterpreter();
-	        if(readGameData(SAVE_FILE_NAME)) {
+	        if(readGameData(fileName)) {
 	        	start();
+	        	return true;
 	        }
 		}
 		return false;
