@@ -27,7 +27,6 @@ public class TestNetwork {
 	TartanGameManagerClient gameManager;
 	TartanGameManagerClient designerManager;
 
-	@Disabled
 	@Test
 	public void testLogin() {
 		
