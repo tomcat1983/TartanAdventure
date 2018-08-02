@@ -2,9 +2,12 @@ package edu.cmu.tartan;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.File;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.manager.IQueueHandler;
 import edu.cmu.tartan.manager.MessageQueue;
 import edu.cmu.tartan.manager.TartanGameManager;
@@ -24,9 +27,12 @@ public class TestNetwork {
 	TartanGameManagerClient gameManager;
 	TartanGameManagerClient designerManager;
 
-	@Disabled
 	@Test
 	public void testLogin() {
+		
+		String fileUri = System.getProperty("user.dir") + File.separator + "config.properties";
+		Config config = new Config(fileUri);
+		config.readPropertyFile();
 		
 		String userId = "developer";
 		
