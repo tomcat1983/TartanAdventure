@@ -18,7 +18,7 @@ public class TestDbAccessor {
 
 	@BeforeEach
 	public void beforeTest() {
-		dbAccessor = new DbAccessor();
+		dbAccessor = new DbAccessor(url);
 	}
 
 	@Test
@@ -38,7 +38,10 @@ public class TestDbAccessor {
 	public void testFalseWhenCreateNewDatabase() {
 
 		// Given
-		deleteFile(url);
+		File file = new File(url);
+		if (!file.exists()) {
+			dbAccessor.createNewDatabase();
+		}
 
 		// When
 		boolean returnValue = dbAccessor.createNewDatabase();

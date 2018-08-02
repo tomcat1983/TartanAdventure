@@ -11,8 +11,6 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import edu.cmu.tartan.config.Config;
-
 public class DbAccessor {
 
 	/**
@@ -24,8 +22,9 @@ public class DbAccessor {
 	private String dbLocation = "./";
 	private String dbName = "TartanAdventure.db";
 
-	public DbAccessor() {
-		if (Config.getDbName() != null) dbName = Config.getDbName();
+	public DbAccessor(String dbName) {
+		this.dbName = dbName;
+		
 		url = "jdbc:sqlite:" + dbLocation + dbName;
 	}
 
