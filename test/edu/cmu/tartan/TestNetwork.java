@@ -2,8 +2,6 @@ package edu.cmu.tartan;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -18,18 +16,20 @@ import edu.cmu.tartan.xml.XmlLoginRole;
 
 public class TestNetwork {
 
-	static IQueueHandler messageQueue;
-	static ISocketHandler socketServer;
-	static ISocketHandler designerSocketServer;
-	static TartanGameManager tartanGameManager;
+	IQueueHandler messageQueue;
+	ISocketHandler socketServer;
+	ISocketHandler designerSocketServer;
+	TartanGameManager tartanGameManager;
 
-	static TartanGameManagerClient gameManager;
-	static TartanGameManagerClient designerManager;
-	
-	@BeforeAll
-	public static void beforeTest() {
+	TartanGameManagerClient gameManager;
+
+	public TestNetwork() {
+		beforeTest();
+	}
+
+	public void beforeTest() {
 		messageQueue = new MessageQueue();
-		
+
 		socketServer = new SocketServer(messageQueue);
 		Thread socketServerThread = new Thread((Runnable)socketServer);
 		socketServerThread.start();
@@ -46,27 +46,13 @@ public class TestNetwork {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		gameManager = new TartanGameManagerClient(false);
 		Thread gameManagerClientThread = new Thread(gameManager);
 		gameManagerClientThread.start();
-		
-		designerManager = new TartanGameManagerClient(true);
-		Thread designerClientThread = new Thread(designerManager);
-		designerClientThread.start();
-	}
-	
-	@AfterAll
-	public static void afterTest() {
-		messageQueue = null;
-		socketServer = null;
-		designerSocketServer = null;
-		tartanGameManager = null;
-
-		gameManager = null;
-		designerManager = null;
 	}
 
 	@Test
@@ -75,10 +61,8 @@ public class TestNetwork {
 		String userId = "developer";
 		
 		boolean returnValue = false;
-		returnValue = gameManager.waitForConnection();
-		assertEquals(true, returnValue);
-		
 		returnValue = gameManager.login("", userId, "AAAAA000", XmlLoginRole.PLAYER);
+		
 		assertEquals(true, returnValue);
 		
 		returnValue = gameManager.startGame(userId);
@@ -88,24 +72,16 @@ public class TestNetwork {
 		assertEquals(true, returnValue);
 		
 		returnValue = tartanGameManager.sendToClient(userId, "go east");
-		assertEquals(true, returnValue);
+		assertEquals(false, returnValue);
 
 		returnValue = tartanGameManager.sendToAll(userId, "Hello2");
-		assertEquals(true, returnValue);
+		assertEquals(false, returnValue);
 		
 		returnValue = tartanGameManager.sendToOthers(userId, "Hello3");
 		assertEquals(false, returnValue);
 		
-		Runnable endGame = new Runnable() {
-			public void run() {
-				gameManager.endGame("", userId);
-			}
-		};
-		
-		Thread endGameThread = new Thread(endGame);
-		endGameThread.start();
-		
-		returnValue = tartanGameManager.loseTheGame(userId, "LOSE");
+		returnValue = gameManager.endGame("", userId);
+
 		assertEquals(true, returnValue);
 	}
 
@@ -157,14 +133,8 @@ public class TestNetwork {
 	}
 
 	@Test
-	public void testLoginDesignerMode() {
-		String userId = "designer";
-		
-		boolean returnValue = false;
-		returnValue = designerManager.waitForConnection();
-		assertEquals(true, returnValue);
-		
-		returnValue = designerManager.login("", userId, "AAAAA000", XmlLoginRole.DESIGNER);
+	public void testWaitForConnection() {
+		boolean returnValue = gameManager.waitForConnection();
 		assertEquals(true, returnValue);
 	}
 

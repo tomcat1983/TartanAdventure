@@ -61,7 +61,7 @@ public class Config {
 			file.close();
 		} catch (IOException e) {
 			// Do nothing
-			gameLogger.log(Level.SEVERE, "Cannot close : ", e.getMessage());
+			gameLogger.log(Level.SEVERE, "Cannot close : {0}", e.getMessage());
 		}
 
 		return returnValue;
