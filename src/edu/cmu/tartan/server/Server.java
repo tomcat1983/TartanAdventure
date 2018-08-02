@@ -58,7 +58,8 @@ public class Server {
 			case EXIT:
 				tartanGameManager.endGame("threadName","quit");
 				gameManagerThread.interrupt();
-				socketServer.stopSocket();
+//				socketServer.stopSocket();
+				tartanGameManager.stopGameManager();
 				running = false;
 				break;
 			default:
