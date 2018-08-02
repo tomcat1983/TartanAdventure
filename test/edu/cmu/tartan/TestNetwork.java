@@ -2,6 +2,7 @@ package edu.cmu.tartan;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -16,20 +17,18 @@ import edu.cmu.tartan.xml.XmlLoginRole;
 
 public class TestNetwork {
 
-	IQueueHandler messageQueue;
-	ISocketHandler socketServer;
-	ISocketHandler designerSocketServer;
-	TartanGameManager tartanGameManager;
+	static IQueueHandler messageQueue;
+	static ISocketHandler socketServer;
+	static ISocketHandler designerSocketServer;
+	static TartanGameManager tartanGameManager;
 
-	TartanGameManagerClient gameManager;
-
-	public TestNetwork() {
-		beforeTest();
-	}
-
-	public void beforeTest() {
+	static TartanGameManagerClient gameManager;
+	static TartanGameManagerClient designerManager;
+	
+	@BeforeAll
+	public static void beforeTest() {
 		messageQueue = new MessageQueue();
-
+		
 		socketServer = new SocketServer(messageQueue);
 		Thread socketServerThread = new Thread((Runnable)socketServer);
 		socketServerThread.start();
@@ -46,13 +45,16 @@ public class TestNetwork {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		gameManager = new TartanGameManagerClient(false);
 		Thread gameManagerClientThread = new Thread(gameManager);
 		gameManagerClientThread.start();
+		
+		designerManager = new TartanGameManagerClient(true);
+		Thread designerClientThread = new Thread(designerManager);
+		designerClientThread.start();
 	}
 
 	@Test
@@ -61,8 +63,10 @@ public class TestNetwork {
 		String userId = "developer";
 		
 		boolean returnValue = false;
-		returnValue = gameManager.login("", userId, "AAAAA000", XmlLoginRole.PLAYER);
+		returnValue = gameManager.waitForConnection();
+		assertEquals(true, returnValue);
 		
+		returnValue = gameManager.login("", userId, "AAAAA000", XmlLoginRole.PLAYER);
 		assertEquals(true, returnValue);
 		
 		returnValue = gameManager.startGame(userId);
@@ -72,16 +76,24 @@ public class TestNetwork {
 		assertEquals(true, returnValue);
 		
 		returnValue = tartanGameManager.sendToClient(userId, "go east");
-		assertEquals(false, returnValue);
+		assertEquals(true, returnValue);
 
 		returnValue = tartanGameManager.sendToAll(userId, "Hello2");
-		assertEquals(false, returnValue);
+		assertEquals(true, returnValue);
 		
 		returnValue = tartanGameManager.sendToOthers(userId, "Hello3");
 		assertEquals(false, returnValue);
 		
-		returnValue = gameManager.endGame("", userId);
-
+		Runnable endGame = new Runnable() {
+			public void run() {
+				gameManager.endGame("", userId);
+			}
+		};
+		
+		Thread endGameThread = new Thread(endGame);
+		endGameThread.start();
+		
+		returnValue = tartanGameManager.loseTheGame(userId, "LOSE");
 		assertEquals(true, returnValue);
 	}
 
@@ -133,8 +145,14 @@ public class TestNetwork {
 	}
 
 	@Test
-	public void testWaitForConnection() {
-		boolean returnValue = gameManager.waitForConnection();
+	public void testLoginDesignerMode() {
+		String userId = "designer";
+		
+		boolean returnValue = false;
+		returnValue = designerManager.waitForConnection();
+		assertEquals(true, returnValue);
+		
+		returnValue = designerManager.login("", userId, "AAAAA000", XmlLoginRole.DESIGNER);
 		assertEquals(true, returnValue);
 	}
 
