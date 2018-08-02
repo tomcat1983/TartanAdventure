@@ -20,7 +20,12 @@ public class GameInterface {
 	 * User ID for LOCAL_USER
 	 */
 	public static final String USER_ID_LOCAL_USER = "_LOCAL_USER_";
-
+	
+	/**
+	 * Save file name for LOCAL_USER
+	 */
+	public static final String SAVE_FILE_NAME = "save.dat";
+	
 	/**
 	 * Static variable for singleton
 	 */
