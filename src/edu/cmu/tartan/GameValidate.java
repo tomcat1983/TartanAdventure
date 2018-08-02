@@ -9,8 +9,6 @@ import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemKey;
-import edu.cmu.tartan.item.ItemKeycard;
-import edu.cmu.tartan.item.ItemKeycardReader;
 import edu.cmu.tartan.item.ItemLock;
 import edu.cmu.tartan.properties.Luminous;
 import edu.cmu.tartan.properties.Meltable;

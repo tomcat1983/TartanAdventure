@@ -12,7 +12,8 @@ import edu.cmu.tartan.properties.Shakeable;
  * 1.0 March 2018 - initial version
  */
 public class ItemVendingMachine extends Item implements Shakeable {
-    protected int count;
+	private static final long serialVersionUID = 1L;
+	protected int count;
 	/**
      * Constructor
      * @param d description

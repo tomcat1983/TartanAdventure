@@ -13,7 +13,9 @@ import edu.cmu.tartan.properties.Installable;
  */
 public class ItemKey extends Item implements Holdable, Installable {
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Constructor for a key
      * @param s description
      * @param sd long description

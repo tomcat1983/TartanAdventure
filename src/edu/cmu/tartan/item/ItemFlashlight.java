@@ -14,7 +14,9 @@ import edu.cmu.tartan.properties.Luminous;
  */
 public class ItemFlashlight extends Item implements Holdable, Installable, Luminous {
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Constructor
      * @param s description
      * @param sd long description

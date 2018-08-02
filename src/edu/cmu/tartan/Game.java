@@ -48,11 +48,11 @@ public abstract class Game {
     /**
      * Attempt to interpret input more flexibly.
      */
-	private PlayerInterpreter interpreter;
+	protected PlayerInterpreter interpreter;
     /**
      * The game execute
      */
-    private PlayerExecutionEngine playerExecutionEngine;
+    protected PlayerExecutionEngine playerExecutionEngine;
 
     /**
      * Create and configure a new game.
@@ -61,19 +61,6 @@ public abstract class Game {
         // Parse room from file
     	this.context = new GameContext(userId);
         this.interpreter = new PlayerInterpreter();
-    }
-
-    protected GameConfiguration gameFromXML(GameMode mode) {
-		XmlParser parseXml;
-		try {
-			parseXml = new XmlParser();
-			return parseXml.loadGameMapXml(mode, context.getUserId());
-		} catch (ParserConfigurationException e) {
-			gameLogger.severe("Game loading failure. Exception: \n" + e);
-	       	gameLogger.severe(e.getMessage());
-	       	return null;
-		}
-
     }
 
     /**
@@ -313,7 +300,7 @@ public abstract class Game {
     		return false;
     	}
     	if(this instanceof LocalGame) {
-    		((LocalGame)this).save(context.getUserId());
+    		((LocalGame)this).save(context.getUserId(), LocalGame.SAVE_FILE_NAME);
     		gameInterface.print(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.SAVE_SUCCESSFUL_10_4);
     		return true;
     	} else {

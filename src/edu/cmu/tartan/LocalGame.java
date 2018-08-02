@@ -8,35 +8,24 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.eclipse.jdt.annotation.NonNull;
-
-import edu.cmu.tartan.GameInterface.MessageType;
-import edu.cmu.tartan.games.CustomizingGame;
-import edu.cmu.tartan.manager.IGameControlMessage;
 import edu.cmu.tartan.xml.GameMode;
-import edu.cmu.tartan.xml.XmlParser;
 
-public class LocalGame extends Game implements IGameControlMessage {
+public class LocalGame extends Game {
 	public static final String SAVE_FILE_NAME = "Tartan_save_file.dat";
 	
 	public LocalGame(@NonNull String userId) {
 		super(userId);
 	}
 	
-	@Override
-	public boolean controlGame(String message) {
-		return false;
-	}
-	
-	private boolean readGameData() {
+	private boolean readGameData(String fileName) {
 		try ( 
-			FileInputStream fis = new FileInputStream(SAVE_FILE_NAME);
+			FileInputStream fis = new FileInputStream(fileName);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			ObjectInputStream in = new ObjectInputStream(bis)
 		) {
 			context = ((GameContext)in.readObject());
+			playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());
 		} catch (IOException|ClassNotFoundException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
@@ -47,33 +36,20 @@ public class LocalGame extends Game implements IGameControlMessage {
 	
 	public boolean loadAndStart(String userId) {
 		if(context.getUserId().equals(userId)) {
-			// 0. loading local game XML
-			XmlParser parseXml;
-			try {
-				parseXml = new XmlParser(); 
-				CustomizingGame cGame = (CustomizingGame) parseXml.loadGameMapXml(GameMode.LOCAL, userId);
-				
-				if(cGame!=null && readGameData()) {
-					gameInterface.println(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.GANE_IS_STARTED_10_1);
-					// 1. loading Player(with Items) and GameContext(without room?)
-					start();
-				} else {
-					gameLogger.severe(GamePlayMessage.LOAD_FAILURE_10_2);
-					return false;
-				}
-			} catch (ParserConfigurationException e) {
-				gameLogger.severe("Game loading failure. Exception: \n" + e);
-		       	gameLogger.severe(e.getMessage());
-		       	return false;
-			}
-			return true;
+			configureGame(GameMode.LOCAL);
+			context.setPlayerGameGoal();
+	    	context = new GameContext(userId);
+	        interpreter = new PlayerInterpreter();
+	        if(readGameData(SAVE_FILE_NAME)) {
+	        	start();
+	        }
 		}
 		return false;
 	}
 	
-	private boolean writeGameData(GameContext context) {
+	private boolean writeGameData(GameContext context, String fileName) {
 		try (
-			FileOutputStream fos = new FileOutputStream(SAVE_FILE_NAME);
+			FileOutputStream fos = new FileOutputStream(fileName);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			ObjectOutputStream out = new ObjectOutputStream(bos)
 		) {
@@ -86,11 +62,11 @@ public class LocalGame extends Game implements IGameControlMessage {
 		return true;
 	}
 	
-	public boolean save(String userId) {
+	public boolean save(String userId, String fileName) {
 		if(context.getUserId().equals(userId)) {
 			// 1. saving GameContext(Room information isn't save.)
 			// 2. saving Player(with Items)
-			return writeGameData(context);
+			return writeGameData(context, fileName);
 		}
 		return false;
 	}

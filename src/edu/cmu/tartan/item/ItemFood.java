@@ -15,6 +15,7 @@ import edu.cmu.tartan.properties.Meltable;
  * 1.0 March 2018 - initial version
  */
 public class ItemFood extends Item implements Edible, Holdable, Meltable, Installable {
+	private static final long serialVersionUID = 1L;
 	private Item hiddenItem = null;
 
     /**

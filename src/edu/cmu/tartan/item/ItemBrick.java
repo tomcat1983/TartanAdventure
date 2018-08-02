@@ -14,7 +14,9 @@ import edu.cmu.tartan.properties.Holdable;
  */
 public class ItemBrick extends Item implements Holdable, Chuckable {
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Create a brick
      * @param s description
      * @param sd long description

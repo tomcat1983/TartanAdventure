@@ -13,7 +13,9 @@ import edu.cmu.tartan.properties.Luminous;
  */
 public class ItemTorch extends Item implements Holdable, Luminous {
 
-    public ItemTorch(String d, String sd, String[] a, String userId) {
+	private static final long serialVersionUID = 1L;
+
+	public ItemTorch(String d, String sd, String[] a, String userId) {
 
         super(d, sd, a, userId);
         setValue(10);
