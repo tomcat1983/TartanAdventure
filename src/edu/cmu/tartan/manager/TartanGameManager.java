@@ -185,6 +185,8 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		XmlWriterServer xw = new XmlWriterServer();
 		String xmlMessage = xw.makeXmlForGameEnd(userId, "LOSE", message);
 		returnValue = socket.sendToClient(userId, xmlMessage);
+		
+		socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, "");
 
 		return returnValue;
 	}
@@ -397,7 +399,9 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			returnValue = socket.sendToClientByThreadName(threadName, xmlMessage);
 		}
 
-		socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
+		if (userId == null || userId.isEmpty()) {
+			socket.updateSocketState(userId, CommandResult.END_GAME_SUCCESS, threadName);
+		}
 
 		if (loginUserCounter < 1) {
 			socket.updateSocketState(userId, CommandResult.END_GAME_ALL_USER, threadName);
