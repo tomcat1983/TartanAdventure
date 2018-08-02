@@ -82,6 +82,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 
         while(isLoop){
             socketMessage = queue.consume();
+            if (socketMessage == null) return;
             threadName = socketMessage.getThreadName();
             message = socketMessage.getMessage();
 
