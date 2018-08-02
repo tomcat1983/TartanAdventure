@@ -225,7 +225,7 @@ public class TartanGameManagerClient implements Runnable, IUserCommand{
 	public boolean updateGameState(String userId, String command) {
 
 		if (connectionState != ConnectionState.STARTED) return false;
-
+		
 		boolean returnValue = false;
 
 		String message = null;
