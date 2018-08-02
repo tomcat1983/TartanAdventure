@@ -2,6 +2,7 @@ package edu.cmu.tartan.manager;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -32,7 +33,7 @@ public class MessageQueue implements IQueueHandler{
 		try {
 			queue.put(message);
 		} catch (InterruptedException e) {
-			gameLogger.severe("InterruptException : " + e.getMessage());
+			gameLogger.log(Level.WARNING, e.getMessage());
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -43,14 +44,12 @@ public class MessageQueue implements IQueueHandler{
 
 		try{
 			message = queue.take();
-			if (message != null) return message;
-
         }catch(InterruptedException e) {
-        	gameLogger.severe("InterruptException : " + e.getMessage());
+        	gameLogger.log(Level.WARNING, e.getMessage());
         	Thread.currentThread().interrupt();
         }
 
-		return null;
+		return message;
 	}
 
 	@Override

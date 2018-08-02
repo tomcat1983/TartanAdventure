@@ -1,8 +1,6 @@
 package edu.cmu.tartan.socket;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -53,16 +51,17 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 
 		try {
 			serverSocket = new ServerSocket(serverPort);
+			
+			gameLogger.log(Level.INFO, "Server is listening on port {0}", serverPort);
 
 			while (isLoop) {
 				Socket socket = serverSocket.accept();
 
 				if (socketCounter > MAX_DESIGNER_CONNECTION) {
-					sendMessage(socket, "I’m sorry. The game server is busy. Please retry to connect later.");
 					socket.close();
 				}
 
-				gameLogger.log(Level.INFO, "New client connected");
+				gameLogger.log(Level.INFO, "New designer client connected");
 				socketCounter++;
 
 				String threadName = String.format("Designer %d", socketCounter);
@@ -74,7 +73,6 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 			}
 
 		} catch (IOException e) {
-			gameLogger.log(Level.WARNING, e.getMessage());
 			gameLogger.log(Level.WARNING, e.getMessage());
 		}
 	}
@@ -97,20 +95,6 @@ public class DesignerSocketServer implements Runnable, ISocketHandler {
 		socketCounter = 0;
 
 		return returnValue;
-	}
-
-	private boolean sendMessage(Socket clientSocket, String message) {
-		try {
-			OutputStream output = clientSocket.getOutputStream();
-			PrintWriter writer = new PrintWriter(output, true);
-
-			writer.println(message);
-
-			return true;
-		} catch (IOException e) {
-			gameLogger.log(Level.WARNING, e.getMessage());
-		}
-		return false;
 	}
 
 	@Override
