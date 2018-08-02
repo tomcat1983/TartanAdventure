@@ -2,6 +2,7 @@ package edu.cmu.tartan;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -55,6 +56,17 @@ public class TestNetwork {
 		designerManager = new TartanGameManagerClient(true);
 		Thread designerClientThread = new Thread(designerManager);
 		designerClientThread.start();
+	}
+	
+	@AfterAll
+	public static void afterTest() {
+		messageQueue = null;
+		socketServer = null;
+		designerSocketServer = null;
+		tartanGameManager = null;
+
+		gameManager = null;
+		designerManager = null;
 	}
 
 	@Test
