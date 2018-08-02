@@ -30,13 +30,13 @@ public class TestNetwork {
 	@Disabled
 	@Test
 	public void testLogin() {
-		
+
 		String fileUri = System.getProperty("user.dir") + File.separator + "config.properties";
 		Config config = new Config(fileUri);
 		config.readPropertyFile();
-		
+
 		String userId = "developer";
-		
+
 		messageQueue = new MessageQueue();
 
 		socketServer = new SocketServer(messageQueue);
@@ -61,56 +61,57 @@ public class TestNetwork {
 		gameManager = new TartanGameManagerClient(false);
 		Thread gameManagerClientThread = new Thread(gameManager);
 		gameManagerClientThread.start();
-		
+
 		designerManager = new TartanGameManagerClient(true);
 		Thread designerClientThread = new Thread(designerManager);
 		designerClientThread.start();
-		
-		
+
+
 
 		boolean returnValue = false;
 		returnValue = gameManager.waitForConnection();
 		assertEquals(true, returnValue);
-		
+
 		testEncryptionPassword();
 		testShouldReturnFalseWhenInputInvalideUserId();
 		testShouldReturnFalseWhenInputInvalideUserPw();
 		testShouldReturnTrueWhenInputValideUserId();
 		testShouldReturnTrueWhenInputValideUserPw();
-		
+
 		returnValue = designerManager.waitForConnection();
 		assertEquals(true, returnValue);
-		
+
 		returnValue = designerManager.login("", "designer", "AAAAA000", XmlLoginRole.DESIGNER);
 		assertEquals(true, returnValue);
-		
+
 		returnValue = gameManager.login("", userId, "AAAAA000", XmlLoginRole.PLAYER);
 		assertEquals(true, returnValue);
-		
+
 		returnValue = gameManager.startGame(userId);
 		assertEquals(true, returnValue);
-		
+
 		returnValue = gameManager.updateGameState(userId, "go east");
 		assertEquals(true, returnValue);
-		
+
 		returnValue = tartanGameManager.sendToClient(userId, "go east");
 		assertEquals(true, returnValue);
 
 		returnValue = tartanGameManager.sendToAll(userId, "Hello2");
 		assertEquals(true, returnValue);
-		
+
 		returnValue = tartanGameManager.sendToOthers(userId, "Hello3");
 		assertEquals(false, returnValue);
-		
+
 		Runnable endGame = new Runnable() {
+			@Override
 			public void run() {
 				gameManager.endGame("", userId);
 			}
 		};
-		
+
 		Thread endGameThread = new Thread(endGame);
 		endGameThread.start();
-		
+
 		returnValue = tartanGameManager.loseTheGame(userId, "LOSE");
 		assertEquals(true, returnValue);
 		
