@@ -353,7 +353,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		XmlWriterServer xw;
 		String xmlMessage = null;
 
-		if (loginUserCounter < 2) {
+		if (loginUserCounter < 1) {
 			xw = new XmlWriterServer();
 
 			xmlMessage = xw.makeXmlForGameStart(XmlResultString.NG, XmlNgReason.NO_PLAYERS);
