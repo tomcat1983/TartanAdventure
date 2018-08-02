@@ -534,15 +534,6 @@ public class TestRandom {
     }
 
     @Test
-    public void test058() throws Throwable {
-        if (debug)
-            System.out.format("%n%s%n", "RegressionTest0.test058");
-        edu.cmu.tartan.db.DbAccessor dbAccessor0 = new edu.cmu.tartan.db.DbAccessor();
-        boolean boolean1 = dbAccessor0.createNewTable();
-        this.assertTrue("'" + boolean1 + "' != '" + true + "'", boolean1 == true);
-    }
-
-    @Test
     public void test059() throws Throwable {
         if (debug)
             System.out.format("%n%s%n", "RegressionTest0.test059");

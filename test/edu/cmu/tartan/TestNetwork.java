@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import edu.cmu.tartan.db.DbAccessor;
 import edu.cmu.tartan.manager.IQueueHandler;
 import edu.cmu.tartan.manager.MessageQueue;
 import edu.cmu.tartan.manager.TartanGameManager;
@@ -56,22 +55,33 @@ public class TestNetwork {
 		gameManagerClientThread.start();
 	}
 
-	@Disabled
 	@Test
 	public void testLogin() {
-
+		
+		String userId = "developer";
+		
 		boolean returnValue = false;
-		returnValue = gameManager.login("", "developer", "AAAAA000", XmlLoginRole.PLAYER);
-
+		returnValue = gameManager.login("", userId, "AAAAA000", XmlLoginRole.PLAYER);
+		
 		assertEquals(true, returnValue);
-
-		returnValue = gameManager.startGame("developer");
+		
+		returnValue = gameManager.startGame(userId);
 		assertEquals(true, returnValue);
-
-		returnValue = gameManager.updateGameState("developer", "go east");
+		
+		returnValue = gameManager.updateGameState(userId, "go east");
 		assertEquals(true, returnValue);
+		
+		returnValue = tartanGameManager.sendToClient(userId, "go east");
+		assertEquals(false, returnValue);
 
-		returnValue = gameManager.endGame("","developer");
+		returnValue = tartanGameManager.sendToAll(userId, "Hello2");
+		assertEquals(false, returnValue);
+		
+		returnValue = tartanGameManager.sendToOthers(userId, "Hello3");
+		assertEquals(false, returnValue);
+		
+		returnValue = gameManager.endGame("", userId);
+
 		assertEquals(true, returnValue);
 	}
 
@@ -84,9 +94,6 @@ public class TestNetwork {
 		returnValue = gameManager.register("", "test1234", "aaaaA000");
 
 		assertEquals(true, returnValue);
-
-		DbAccessor db = new DbAccessor();
-		db.delete("test1234");
 	}
 
 	@Test

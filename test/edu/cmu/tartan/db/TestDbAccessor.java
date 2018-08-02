@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class TestDbAccessor {
@@ -19,10 +18,9 @@ public class TestDbAccessor {
 
 	@BeforeEach
 	public void beforeTest() {
-		dbAccessor = new DbAccessor();
+		dbAccessor = new DbAccessor(url);
 	}
 
-	@Disabled
 	@Test
 	public void testTrueWhenCreateNewDatabase() {
 
@@ -40,7 +38,10 @@ public class TestDbAccessor {
 	public void testFalseWhenCreateNewDatabase() {
 
 		// Given
-		deleteFile(url);
+		File file = new File(url);
+		if (!file.exists()) {
+			dbAccessor.createNewDatabase();
+		}
 
 		// When
 		boolean returnValue = dbAccessor.createNewDatabase();

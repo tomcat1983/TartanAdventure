@@ -3,6 +3,7 @@ package edu.cmu.tartan.account;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import edu.cmu.tartan.config.Config;
 import edu.cmu.tartan.db.DbAccessor;
 import edu.cmu.tartan.xml.XmlLoginRole;
 
@@ -14,19 +15,22 @@ public class AccountManager implements IAccountHandler {
 	protected static final Logger gameLogger = Logger.getGlobal();
 
 	DbAccessor dbAccessor;
+	String dbName;
 
 	/**
 	 *
 	 */
 	public AccountManager() {
-		dbAccessor = new DbAccessor();
+		if (Config.getDbName() != null) dbName = Config.getDbName();
+		dbAccessor = new DbAccessor(dbName);
 	}
 
 	/**
 	 * @param mode
 	 */
 	public AccountManager(String mode) {
-		dbAccessor = new DbAccessor();
+		if (Config.getDbName() != null) dbName = Config.getDbName();
+		dbAccessor = new DbAccessor(dbName);
 		if ("server".equals(mode)) {
 			initialize();
 		}
