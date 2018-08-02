@@ -124,7 +124,7 @@ public class ClientInterface {
 	 *
 	 */
 	public void printServerBusyMessage() {
-		gameInterface.println("I’m sorry. The game server is busy.");
+		gameInterface.println("I'm sorry. The game server is busy.");
 		gameInterface.println("Please retry to connect later.");
 		gameInterface.println("");
 	}
@@ -227,7 +227,9 @@ public class ClientInterface {
 	public String getUserIdForRegister() {
 		gameInterface.println("");
 		gameInterface.println("Please enter the ID you want to use :");
-		gameInterface.println("/Rule of ID/");
+		gameInterface.println("1. More than 6 characters and Smaller than 16");
+		gameInterface.println("2. Only english letter and numbers are allowed");
+		gameInterface.println("3. First letter is an alphabet");
 		gameInterface.print("> ");
 
 		return gameInterface.getCommand(GameInterface.USER_ID_LOCAL_USER);
@@ -248,7 +250,9 @@ public class ClientInterface {
 	public String getUserPwForRegister() {
 		gameInterface.println("");
 		gameInterface.println("Please enter the password you want.");
-		gameInterface.println("/Rule for password/");
+		gameInterface.println("1. More than 8 characters && smaller than 16");
+		gameInterface.println("2. Only English and numbers are allowed");
+		gameInterface.println("3. First letter is an alphabet");
 		gameInterface.print("> ");
 
 		return gameInterface.getCommand(GameInterface.USER_ID_LOCAL_USER);
