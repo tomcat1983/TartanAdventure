@@ -340,6 +340,7 @@ class TestGameValidate {
 	void testPointsGoalHaveEnoughPoint() {
 		gc.addGoal(pointGoal);
 		gc.setRooms(rooms);
+		gc.setPlayer(player);
 		GameValidate gv = new GameValidate(gc);
 		errorList = gv.check();
 		assertFalse(errorList.contains(MapConfig.CANT_ACHIVE_POINT));
