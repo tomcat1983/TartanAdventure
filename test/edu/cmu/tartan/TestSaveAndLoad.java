@@ -50,6 +50,7 @@ class TestSaveAndLoad {
 		commander.apply();
 
 		assertTrue(game.loadAndStart(Player.DEFAULT_USER_NAME, TEST_FILE_NAME));
+		commander.destory();
 		deleteFile(TEST_FILE_NAME);		
 	}
 }

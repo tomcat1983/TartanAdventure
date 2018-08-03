@@ -64,5 +64,6 @@ public class TestLocalGame {
 		commander.add("quit");
 		commander.add("no");
 		commander.apply();
+		commander.destory();
 	}
 }
