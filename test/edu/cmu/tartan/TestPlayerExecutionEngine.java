@@ -53,6 +53,7 @@ class TestPlayerExecutionEngine {
 		player = new Player(room1, Player.DEFAULT_USER_NAME);
 		playerExecutionEngine = new PlayerExecutionEngine(player);
 		actionExecutionUnit = new ActionExecutionUnit(null, null);
+		actionExecutionUnit.setUserId(Player.DEFAULT_USER_NAME);
 		
 		Item.getInstance("pot", Player.DEFAULT_USER_NAME).setVisible(true);
 		Item.getInstance("key", Player.DEFAULT_USER_NAME).setVisible(true);
@@ -688,12 +689,11 @@ class TestPlayerExecutionEngine {
 	
 	@Test
 	public void testItShouldThrowTerminateGameExceptionWhenUserShakeVendingMachine() throws TerminateGameException {
-		// terminate
-		ItemVendingMachine vm = (ItemVendingMachine) Item.getInstance("machine", Player.DEFAULT_USER_NAME);
-		room1.putItem(vm);
-		// Shake
-    	Action action = interpreter.interpretString("shake machine", actionExecutionUnit);
     	assertThrows(TerminateGameException.class,() -> {
+    		// Shake
+    		ItemVendingMachine vm = (ItemVendingMachine) Item.getInstance("machine", Player.DEFAULT_USER_NAME);
+    		room1.putItem(vm);
+    		Action action = interpreter.interpretString("shake machine", actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
     		playerExecutionEngine.executeAction(action, actionExecutionUnit);
