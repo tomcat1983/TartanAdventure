@@ -35,8 +35,8 @@ public class TestRandom {
     public void test002() throws Throwable {
         if (debug)
             System.out.format("%n%s%n", "RegressionTest0.test002");
-        java.lang.String str0 = edu.cmu.tartan.LocalGame.SAVE_FILE_NAME;
-        this.assertTrue("'" + str0 + "' != '" + "Tartan_save_file.dat" + "'", str0.equals("Tartan_save_file.dat"));
+        java.lang.String str0 = edu.cmu.tartan.GameInterface.SAVE_FILE_NAME;
+        this.assertTrue("'" + str0 + "' != '" + "save.dat" + "'", str0.equals("save.dat"));
     }
 
     @Test
