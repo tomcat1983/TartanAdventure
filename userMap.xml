@@ -1,25 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<message type="UPLOAD_MAP_DESIGN" sender="designer" receiver="server">
-	<room_info room_cnt="14" >
-		<room index="0" type="normal" east="1" />	<!-- index 0 is start room -->
-		<room index="1" type="normal" north="2" west="0" east="6" item_list="shovel-document" />
-		<room index="2" type="normal" north="3" south="1" west="4" />
-		<room index="3" type="normal" south="2" />
-		<room index="4" type="lockable" west="5" east="2" lock_item="lock:2" key_item="key:3" />
-		<room index="5" type="normal" east="4" item_list="torch" />
-		<room index="6" type="dark" south="7" west="1" />
-		<room index="7" type="normal" north="6" south="8" />
-		<room index="8" type="excavatable" north="7" west="9" east="13" item_list="microwave" />
-		<room index="9" type="normal" west="10" east="8" />
-		<room index="10" type="obscured" north="12" west="11" east="9" obstacle="fridge:9" />
-		<room index="11" type="normal" east="10" />
-		<room index="12" type="normal" south="10" item_list="food" hidden_item="diamond"/>
-		<room index="13" type="require" west="8" require_item="gold:11"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><message receiver="server" sender="designer" type="UPLOAD_MAP_DESIGN">
+	<room_info room_cnt="14">
+		<room east="1" index="0" type="normal"/>	<!-- index 0 is start room -->
+		<room east="6" index="1" item_list="shovel-document" north="2" type="normal" west="0"/>
+		<room index="2" north="3" south="1" type="normal" west="4"/>
+		<room index="3" south="2" type="normal"/>
+		<room east="2" index="4" key_item="key:3" lock_item="lock:2" type="lockable" west="5"/>
+		<room east="4" index="5" item_list="torch" type="normal"/>
+		<room index="6" south="7" type="dark" west="1"/>
+		<room index="7" north="6" south="8" type="normal"/>
+		<room east="13" index="8" item_list="microwave" north="7" type="excavatable" west="9"/>
+		<room east="8" index="9" type="normal" west="10"/>
+		<room east="9" index="10" north="12" obstacle="fridge:9" type="obscured" west="11"/>
+		<room east="10" index="11" type="normal"/>
+		<room hidden_item="diamond" index="12" item_list="food" south="10" type="normal"/>
+		<room index="13" require_item="gold:11" type="require" west="8"/>
 		<!-- each room informations..  -->
 	</room_info>
-	<goal_info goal_cnt="3" >
-		<goal index="0" type="collect" object="diamond-shovel" />
-		<goal index="1" type="explore" object="6-11-12-13" />
-		<goal index="2" type="point" object="100" />
+	<goal_info goal_cnt="3">
+		<goal index="0" object="diamond-shovel" type="collect"/>
+		<goal index="1" object="6-11-12-13" type="explore"/>
+		<goal index="2" object="100" type="point"/>
 	</goal_info>
 </message>
