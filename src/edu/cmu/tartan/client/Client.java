@@ -225,11 +225,12 @@ public class Client {
 	}
 
 	private boolean runNetworkMode(boolean isDesigner) {
+		boolean result = true;
+
 		connectServer(isDesigner);
 
 		if (gameManager.waitForConnection()) {
 			boolean runNetwork = true;
-			boolean result = true;
 
 			do {
 				ClientInterface.NetworkModeCommand networkCommand = ClientInterface.NetworkModeCommand.LOGIN;
@@ -258,14 +259,13 @@ public class Client {
 					break;
 				}
 			} while (runNetwork);
-
-			gameManager.endGame("", userId);
-
-			return result;
 		} else {
 			clientInterface.printServerBusyMessage();
+			result = false;
 		}
 
-		return false;
+		gameManager.stopGameManager();
+
+		return result;
 	}
 }
