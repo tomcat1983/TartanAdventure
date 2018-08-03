@@ -3,6 +3,8 @@ package edu.cmu.tartan;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.Context;
+
 import edu.cmu.tartan.goal.GameCollectGoal;
 import edu.cmu.tartan.goal.GameExploreGoal;
 import edu.cmu.tartan.goal.GameGoal;
@@ -37,6 +39,8 @@ public class GameValidate  {
 	private int obscuredRoomCnt = 0;
 	private int obstacleItemCnt = 0;
 	private int pointToAchive = 0;
+	
+	private Player player;
 
 	/**
 	 * @param gameContext
@@ -44,6 +48,7 @@ public class GameValidate  {
 	public GameValidate(GameContext gameContext) {
 		this.goals = gameContext.getGoals();
 		this.rooms = gameContext.getRooms();
+		this.player = gameContext.getPlayer();
 	}
 
 	/**
@@ -89,6 +94,8 @@ public class GameValidate  {
 			int pointCanEarn = calcPointsCanEarn();
 			if(pointCanEarn < pointToAchive)
 				configErrors.add(MapConfig.CANT_ACHIVE_POINT);
+			else
+				player.addPossiblePoints(pointCanEarn);
 		}
 	}
 
