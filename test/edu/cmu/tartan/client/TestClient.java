@@ -6,7 +6,6 @@ import java.io.File;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import edu.cmu.tartan.config.Config;
@@ -164,15 +163,12 @@ class TestClient {
 		assertEquals("> ", commander.getResultNextLine());
 	}
 
-	@Disabled
 	@Test
 	void testWhenSelectLocalGameAndContinueGameWithoutSavedGame() {
 		System.out.println("testWhenSelectLocalGameAndContinueGameWithoutSavedGame");
 
 		commander.add("1");
 		commander.add("continue");
-		commander.add("quit");
-		commander.add("no");
 		commander.add("exit");
 		commander.apply();
 
@@ -260,7 +256,6 @@ class TestClient {
 		assertEquals("> ", commander.getResultNextLine());
 	}
 
-	@Disabled
 	@Test
 	void testWhenSelectDesignerModeWithoutNetwork() {
 		System.out.println("testWhenSelectDesignerModeWithoutNetwork");
@@ -288,6 +283,7 @@ class TestClient {
 		// > 99
 		assertEquals("> I'm sorry. The game server is busy.", commander.getResultNextLine());
 		assertEquals("Please retry to connect later.", commander.getResultNextLine());
+		assertEquals("", commander.getResultNextLine());
 		assertEquals("[Tartan Adventure]", commander.getResultNextLine());
 		assertEquals("", commander.getResultNextLine());
 		assertEquals("Room Escape", commander.getResultNextLine());
