@@ -30,6 +30,7 @@ class TestClient {
 
 	}
 
+	@Disabled
 	@Test
 	void testWhenInputHelp() {
 		System.out.println("testWhenInputHelp");
