@@ -83,7 +83,7 @@ public abstract class Game {
     /**
      * Configure the game.
      */
-    public synchronized boolean configureGame(GameMode mode) {
+    public boolean configureGame(GameMode mode) {
     	XmlParser parseXml;
 
 		try {

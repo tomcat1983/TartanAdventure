@@ -168,6 +168,7 @@ public class XmlWriterClient extends XmlWriter {
 	private String readAllBytes(String filePath) throws IOException{
 	    String content = "";
         content = new String (Files.readAllBytes( Paths.get(filePath)), StandardCharsets.UTF_8);
+        content = content.replace("\n", "").replace("\r", "");
 
 	    return content;
 	}
