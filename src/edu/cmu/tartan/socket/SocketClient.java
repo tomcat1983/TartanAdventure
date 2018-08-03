@@ -84,12 +84,13 @@ public class SocketClient implements Runnable {
 				receiveMessage(message);
             }
 
-            if (socket != null) stopSocket();
 
         } catch (UnknownHostException e) {
         	gameLogger.log(Level.WARNING, "Server not found : {0}", e.getMessage());
         } catch (IOException e) {
         	gameLogger.log(Level.WARNING, e.getMessage());
+        } finally {
+        	stopSocket();
         }
 	}
 
