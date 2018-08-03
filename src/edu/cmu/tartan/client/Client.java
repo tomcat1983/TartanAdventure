@@ -244,6 +244,8 @@ public class Client {
 						clientInterface.printWelcomMessage(isDesigner);
 						runNetworkCommander(isDesigner);
 						runNetwork = false;
+					} else {
+						clientInterface.printLoginFailMessage();
 					}
 					break;
 				case REGISTER:

@@ -216,6 +216,15 @@ public class ClientInterface {
 	/**
 	 *
 	 */
+	public void printLoginFailMessage() {
+		gameInterface.println("");
+		gameInterface.println("The ID and password is invalid. Please check the ID and password again.");
+		gameInterface.println("");
+	}
+
+	/**
+	 *
+	 */
 	public void printByeMessage() {
 		gameInterface.println("");
 		gameInterface.println("Bye! See you again!");
