@@ -163,7 +163,7 @@ public class TartanGameManager implements Runnable, IUserCommand{
 		String xmlMessage = xw.makeXmlForGameEnd(userId, "WIN", message);
 		returnValue = socket.sendToClient(userId, xmlMessage);
 
-		sendToOthers(userId, userId + " lose the game");
+		sendToOthers(userId,  "You lose the game");
 
 		for(String key : tartanGames.keySet()) {
 			if(!userId.equals(key)) {
@@ -374,6 +374,12 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			TartanGameThread tartanGame = entry.getValue();
 			Thread thread = new Thread(tartanGame);
 			thread.start();
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				gameLogger.log(Level.WARNING, e.getMessage());
+				Thread.currentThread().interrupt();
+			}
 
 		}
 
