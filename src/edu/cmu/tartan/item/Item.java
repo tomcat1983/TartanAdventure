@@ -131,7 +131,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
      * @param s the name of the item (or perhaps it's alias)
      * @return the newly instantiated item
      */
-    public static Item getInstance(String itemName, String userId) {
+    public synchronized static Item getInstance(String itemName, String userId) {
     	if(itemMapbyUser == null) {
     		itemMapbyUser = new HashMap<>();
         	itemMap = new HashMap<>();

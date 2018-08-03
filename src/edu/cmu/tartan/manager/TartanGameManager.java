@@ -374,6 +374,12 @@ public class TartanGameManager implements Runnable, IUserCommand{
 			TartanGameThread tartanGame = entry.getValue();
 			Thread thread = new Thread(tartanGame);
 			thread.start();
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				gameLogger.log(Level.WARNING, e.getMessage());
+				Thread.currentThread().interrupt();
+			}
 
 		}
 
