@@ -320,7 +320,7 @@ public abstract class Game {
     		return false;
     	}
     	if(this instanceof LocalGame) {
-    		((LocalGame)this).save(context.getUserId(), LocalGame.SAVE_FILE_NAME);
+    		((LocalGame)this).save(context.getUserId(), GameInterface.SAVE_FILE_NAME);
     		gameInterface.print(context.getUserId(), MessageType.PRIVATE, GamePlayMessage.SAVE_SUCCESSFUL_10_4);
     		return true;
     	} else {
