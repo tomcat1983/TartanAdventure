@@ -89,6 +89,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
      * Initialize default items. These are the items initially available
      */
     private static void makeItems(String userId) {
+    	itemMap = new HashMap<>();
     	itemMap.put(StringForItems.SHOVEL, new ItemShovel(StringForItems.SHOVEL, StringForItems.METAL_SHOVEL, new String[]{StringForItems.SHOVEL}, userId));
     	itemMap.put(StringForItems.BRICK, new ItemBrick(StringForItems.BRICK, StringForItems.CLAY_BRICK, new String[]{StringForItems.BRICK}, userId));
     	itemMap.put(StringForItems.FOOD, new ItemFood(StringForItems.FOOD, StringForItems.FOOD, new String[]{StringForItems.FOOD}, userId));
@@ -134,7 +135,6 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Seriali
     public static Item getInstance(String itemName, String userId) {
     	if(itemMapbyUser == null) {
     		itemMapbyUser = new HashMap<>();
-        	itemMap = new HashMap<>();
         }
         if(itemMapbyUser.get(userId)==null) {
         	makeItems(userId);
