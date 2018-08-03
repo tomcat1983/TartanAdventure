@@ -145,7 +145,6 @@ public class PlayerInterpreter {
             String s = string[0];
             Action action = stringCompareToActionAliases(s);
             if(action == null) {
-            	gameInterface.println(actionExecutionUnit.getUserId(), MessageType.PRIVATE, GamePlayMessage.I_DO_NOT_UNDERSTAND);
                 return Action.ACTION_ERROR;
             }
             return findAction(action, string, actionExecutionUnit);

@@ -264,28 +264,28 @@ public class Room implements Comparable, Serializable {
     }
 
     /**
-     * @return
+     * @return itmes that room have it.
      */
     public ArrayList<Item> getItems() {
 		return items;
 	}
 
 	/**
-	 * @return
+	 * @return player that in here.
 	 */
 	public Player getPlayer() {
 		return player;
 	}
 
     /**
-     * @param player
+     * @param Set the player in room.
      */
     public void setPlayer(@NonNull Player player) {
         this.player = player;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /* 
+     * @return when player entered room at that time print this message.
      */
     @Override
 	public String toString() {

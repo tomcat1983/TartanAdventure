@@ -14,8 +14,6 @@ import edu.cmu.tartan.GameInterface.MessageType;
 import edu.cmu.tartan.xml.GameMode;
 
 public class LocalGame extends Game {
-	public static final String SAVE_FILE_NAME = "Tartan_save_file.dat";
-
 	/**
 	 * @param userId
 	 */
@@ -23,20 +21,19 @@ public class LocalGame extends Game {
 		super(userId);
 	}
 
-	private boolean readGameData(String fileName) {
+	private GameContext readGameData(String fileName) {
 		try (
 			FileInputStream fis = new FileInputStream(fileName);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			ObjectInputStream in = new ObjectInputStream(bis)
 		) {
 			context = ((GameContext)in.readObject());
-			playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());
+			return context;
 		} catch (IOException|ClassNotFoundException e) {
 			gameLogger.severe("Game loading failure. Exception: \n" + e);
 	       	gameLogger.severe(e.getMessage());
-	       	return false;
+	       	return null;
 		}
-		return true;
 	}
 
 	/**
@@ -45,11 +42,14 @@ public class LocalGame extends Game {
 	 */
 	public boolean loadAndStart(String userId, String fileName) {
 		if(context.getUserId().equals(userId)) {
-			configureGame(GameMode.LOCAL);
-			context.setPlayerGameGoal();
-	    	context = new GameContext(userId);
-	        interpreter = new PlayerInterpreter();
-	        if(readGameData(fileName)) {
+			GameContext readContext = readGameData(fileName);
+	        if(readContext!=null) {
+	        	context = new GameContext(userId);
+	        	configureGame(GameMode.LOCAL);
+	        	context = readContext;
+				context.setPlayerGameGoal();
+		        interpreter = new PlayerInterpreter();
+				playerExecutionEngine = new PlayerExecutionEngine(context.getPlayer());
 	        	start();
 	        	return true;
 	        }
